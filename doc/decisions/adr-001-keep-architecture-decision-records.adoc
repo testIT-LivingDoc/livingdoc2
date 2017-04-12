@@ -1,0 +1,59 @@
+= ADR 1: Keep Architecture Decision Records (ADRs)
+
+== Context
+
+During the entire life-cycle of LivingDoc 2, but especially in the beginning,
+we are going to make potentially far reaching design decisions. Source code
+alone is not sufficient to communicate these decisions. On the other hand, we
+develop LD2 with limited capacity and do not want to spend more time than
+necessary on keeping design documentation up-to-date. We fully expect some
+decisions to change or become superseded as the LD2 architecture evolves.
+
+As such, we need a method that allows us to
+
+* document our decisions immediately;
+* promote strong shared understanding of the design among all developers;
+* revisit decisions later and confirm or revise them with an understanding of
+  the context in which they were made;
+* minimize the amount of work required to keep code and design documents in
+  sync.
+
+
+== Decision
+
+We will use
+http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions[lightweight
+Architecture Decision Records]. We will write ADRs in text-based markup and
+store them in the development documentation folder of our main git repository.
+
+ADRs follow a life-cycle with their current state documented in the <<Status>>
+section.
+
+_proposed_:: A _proposed_ ADR is subject to further review and discussion.
+Changes to a proposal are allowed and pull requests welcome.
+
+_accepted, rejected_:: Once we made a decision about an ADR, its status changes
+to either _accepted_ or _rejected_. We will no longer change the content of
+such an ADR. We will merge pull requests implementing code changes proposed in
+an ADR only after we decided to accept it.
+
+_superseded_:: A decision may become obsolete or overridden by a later
+decision. In such a case, we update its status to _superseded_ and possibly
+add a reference to the overriding ADR.
+
+
+== Status
+
+Proposed.
+
+
+== Consequences
+
+* We record the context of all decisions, allowing us to revisit them as
+  development moves along.
+* Every developer can propose design decisions by writing an ADR and submitting
+  a pull request.
+* We can review and discuss design decisions in the same way we review code.
+* The record of decisions is readily available alongside with the code for
+  every developer.
+
