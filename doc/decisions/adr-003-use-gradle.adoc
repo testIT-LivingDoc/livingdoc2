@@ -1,0 +1,27 @@
+= ADR 3: Use Gradle
+
+== Context
+
+In order to build the different components of LivingDoc 2 we need
+a build tool. There are two major tools available:
+
+- Maven
+- Gradle
+
+Maven is good for straight forward and simple projects like libraries
+or micro services. But as our experience in many projects taught us,
+Maven reaches its limit with more complex projects.
+
+LivingDoc is _not_ a simple project.
+
+== Decision
+
+We will use Gradle.
+
+== Status
+
+Proposed.
+
+== Consequences
+
+* Every team member should learn Gradle
