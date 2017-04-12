@@ -1,0 +1,39 @@
+= ADR 2: Use AsciiDoc Markup For Documentation
+
+== Context
+
+We want to create developer and end-user documentation in a textual format that
+we can manage alongside with code in git. Our experience suggests that it is
+easier to keep documentation in sync when we can keep it in version control
+with the code and edit it with the same tools.
+
+Markdown is a simple markup language that is widely supported and optimized for
+readability in text form without having to use a renderer. However, it lacks
+some features such as _includes_ (e.g. for code fragments) and _tables_.
+
+AsciiDoc is also widely adopted, but sacrifices some readability to support
+richer markup which includes the features we are missing in Markdown.
+
+
+== Decision
+
+We will use AsciiDoc as markup language for documentation.
+
+AsciiDoc text files should be properly formatted, so that they can be read
+without a renderer. They should wrap lines using hard line breaks after about
+70 characters.
+
+We will render end-user documentation as HTML.
+
+
+== Status
+
+Proposed.
+
+
+== Consequences
+
+* We have support for _includes_ and _tables_.
+* Documentation is readable, with and without a renderer.
+* It is easier to update documentation alongside with the code.
+
