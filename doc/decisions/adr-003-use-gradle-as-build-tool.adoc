@@ -1,0 +1,40 @@
+= ADR 3: Use Gradle as Build Tool
+
+== Context
+
+In order to build the different components of LivingDoc 2 we need a build tool.
+We considered the two major Java build tools:
+
+- Maven
+- Gradle
+
+Maven is good for straight-forward and simple projects like libraries or
+microservices, because it offers a lot of structure and convention that can
+initially boost development speed. Experience has taught us that Maven reaches
+its limit with more complex projects, which require a customized build.
+Customization in Maven means plugin development.
+
+Gradle on the other hand is an internal DSL, which gives us the option to fall
+back on Groovy to _program_ a build.
+
+LivingDoc is a complex project and we expect to profit from build customization
+fairly early during LD2 development.
+
+
+== Decision
+
+We will use Gradle from the outset.
+
+
+== Status
+
+Proposed.
+
+
+== Consequences
+
+* We can gradually move from a simple initial build to a more involved build
+  process.
+* Developers have to be familiar with Gradle and, for customizing the build,
+  with Groovy.
+
