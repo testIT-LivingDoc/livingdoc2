@@ -1,0 +1,5 @@
+= LivingDoc 2
+
+The next version of LivingDoc, the acceptance testing tool with integrated
+support for Atlassian Confluence.
+
