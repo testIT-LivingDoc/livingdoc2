@@ -1,0 +1,83 @@
+= Quality Goals
+
+.Primary Quality Goals
+|===
+|Quality Goal|Stakeholder|Description
+
+|User experience (non-technical)
+a|* Business Expert
+|Creating and editing of executable documentations for users without
+ technical knowledge is easy.
+
+|Usability (control of execution)
+a|* Business Expert
+  * Developer
+  * Tester
+|It is possible to define and execute a subset of executable
+ documentations with minimal effort.
+
+|User experience (technical)
+a|* Developer
+  * Tester
+|For developers creating and editing of fixtures is easy to realize.
+ Fixtures are readable and minimal in size and complexity.
+
+|Cloud readiness
+a|* tbd
+|tbd
+
+|Security
+a|* tbd
+|tbd
+
+|Fault tolerance
+a|* Business Expert
+  * Administrator
+  * Developer
+  * Tester
+|The system is able to return in a consistent state in any situation.
+ The system reports error states in which tests can not be executed
+ or repairs them automatically.
+
+|Robustness
+a|* tbd
+|tbd
+
+|Maintainability
+a|* tbd
+|tbd
+|===
+
+.Secondary Quality Goals
+|===
+|Quality Goal|Stakeholder|Description
+
+|Expandability - KMS (Knowledge Management System)
+a|* Business Expert
+  * Administrator
+  * Developer
+  * Tester
+|New formats of executable documentations are able to realize
+ with minimal effort. (independence from Atlassian Confluence)
+
+|Expandability - Reporting
+a|* Tester
+|New formats of test reports are able to realize with minimal effort.
+
+|Expandability - Platform
+a|* Administrator
+|LivingDoc is able to run on most common platforms.
+
+|Performance execution
+a|* Business Expert
+  * Developer
+  * Tester
+|The system uses the resources of the platform optimally to get fast
+ feedback in form of test results.
+
+|Expandability - Programming language
+a|* Developer
+  * Tester
+|Support for new programming languages for fixtures can be realized
+ with minimal effort.
+|===
