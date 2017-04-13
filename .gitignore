@@ -1,0 +1,17 @@
+!.gitignore
+
+# eclipse
+.project
+.classpath
+.eclipse-pmd
+**/.settings/
+**/.metadata/
+
+# intellij
+.idea/
+*.iml
+
+# gradle
+**/build/
+build
+.gradle

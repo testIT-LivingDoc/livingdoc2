@@ -1,0 +1,4 @@
+allprojects {
+    group 'org.livingdoc'
+    version '2.0-SNAPSHOT'
+}
