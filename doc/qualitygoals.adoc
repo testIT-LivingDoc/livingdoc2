@@ -1,14 +1,17 @@
 = Quality Goals
 
-.Primary Quality Goals
-|===
-|Quality Goal|Stakeholder|Description
+== Primary Quality Goals
 
+|===
+|Priority|Quality Goal|Stakeholder|Description
+
+|1
 |User experience (non-technical)
 a|* Business Expert
 |Creating and editing of executable documentations for users without
  technical knowledge is easy.
 
+|2
 |Usability (control of execution)
 a|* Business Expert
   * Developer
@@ -16,20 +19,24 @@ a|* Business Expert
 |It is possible to define and execute a subset of executable
  documentations with minimal effort.
 
+|3
 |User experience (technical)
 a|* Developer
   * Tester
 |For developers creating and editing of fixtures is easy to realize.
  Fixtures are readable and minimal in size and complexity.
 
+|4
 |Cloud readiness
 a|* tbd
 |tbd
 
+|5
 |Security
 a|* tbd
 |tbd
 
+|6
 |Fault tolerance
 a|* Business Expert
   * Administrator
@@ -39,19 +46,23 @@ a|* Business Expert
  The system reports error states in which tests can not be executed
  or repairs them automatically.
 
+|7
 |Robustness
 a|* tbd
 |tbd
 
+|8
 |Maintainability
 a|* tbd
 |tbd
 |===
 
-.Secondary Quality Goals
-|===
-|Quality Goal|Stakeholder|Description
+== Secondary Quality Goals
 
+|===
+|Priority|Quality Goal|Stakeholder|Description
+
+|9
 |Expandability - KMS (Knowledge Management System)
 a|* Business Expert
   * Administrator
@@ -60,14 +71,17 @@ a|* Business Expert
 |New formats of executable documentations are able to realize
  with minimal effort. (independence from Atlassian Confluence)
 
+|10
 |Expandability - Reporting
 a|* Tester
 |New formats of test reports are able to realize with minimal effort.
 
+|11
 |Expandability - Platform
 a|* Administrator
 |LivingDoc is able to run on most common platforms.
 
+|12
 |Performance execution
 a|* Business Expert
   * Developer
@@ -75,6 +89,7 @@ a|* Business Expert
 |The system uses the resources of the platform optimally to get fast
  feedback in form of test results.
 
+|13
 |Expandability - Programming language
 a|* Developer
   * Tester
