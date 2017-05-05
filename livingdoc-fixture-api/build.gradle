@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-
+    testCompile 'org.assertj:assertj-core:3.6.2'
 }
 
 task javadocJar(type: Jar) {
