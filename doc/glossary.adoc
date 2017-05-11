@@ -2,47 +2,50 @@
 
 == LivingDoc 2 - Core Domain
 
-Decision Table:: [[decision-table]] A table where each line represents
-a <<test-case,Test Case>>.  A column can contain either a <<test-input,Test
-Input>> or an <<expectation,Expectation>>.
+Decision Table:: [[decision-table]]
+A table where each row represents a <<test-case,Test Case>>.  A column can
+contain either a <<test-input,Test Input>> or an <<expectation,Expectation>>.
 
-Example:: A description of the behavior of the <<system-under-test,System under
+Example:: [[example]]
+A description of the behavior of the <<system-under-test,System under
 Test>>, which can be automatically verified by LivingDoc. <<scenario,Scenario>>
 and <<decision-table,Decision Table>> are examples.
 
-Executable Document:: [[executable-document]]A document describing the
-<<system-under-test,System under Test>>. It contains zero or more
-<<example,Examples>>.
+Executable Document:: [[executable-document]]
+A document describing the <<system-under-test,System under Test>>. It contains
+zero or more <<example,Examples>>.
 
-Expectation:: [[expectation]]A value that is passed to the <<fixture,Fixture>>
-to determine the outcome of a <<test-case,Test Case>>.
+Expectation:: [[expectation]]
+A value that is passed to the <<fixture,Fixture>> to determine the outcome of a
+<<test-case,Test Case>>.
 
-Fixture:: [[fixture]]Coded by a developer, a fixture is used by an
-<<interpreter,Interpreter>> to execute a <<test-case,Test Case>>. The fixture
-maps <<test-input,Test Inputs>> to a series of interactions with the
-<<system-under-test,System under Test>> and evaluates
-<<expectations,Expectations>>.
+Fixture:: [[fixture]]
+Coded by a developer, a fixture is used to execute a <<test-case,Test Case>>.
+The fixture maps <<test-input,Test Inputs>> to a series of interactions with the
+<<system-under-test,System under Test>> and evaluates <<expectations,Expectations>>.
 
-Interpreter:: [[interpreter]] Takes an <<example,Example>>, determines required
-<<fixture,Fixtures>> and executes specified <<test-case,Test Cases>>.
+Scenario:: [[scenario]]
+An <<example, Example>> describing a single <<test-case,Test Case>> as a
+sequence of <<scenario-step, Steps>>.
 
-Scenario:: [[scenario]]A table describing a <<test-case,Test Case>>. Each line
-of the table represents an individual test step, which consists of keywords,
-<<fixture-command,Fixture Commands>>, <<test-input,Test Inputs>> and
-<<expectation,Expectations>>.
+Scenario Step:: [[scenario-step]]
+A single step of a <<scenario, Scenario>> represented as a sentence containing
+either one or more <<test-input,Test Inputs>> or one or more <<expectation,Expectations>>.
 
-System under Test (SuT):: [[system-under-test]] The system against which
-<<test-case,Test Cases>> are executed.
+System under Test (SuT):: [[system-under-test]]
+The system against which <<test-case,Test Cases>> are executed.
 
-Test Case:: [[test-case]]The smallest independently executable part of an
+Test Case:: [[test-case]]
+The smallest independently executable part of an
 <<executable-document,Executable Document>>. A test case has to define one or
 more <<expectation,Expectations>>. If all expectations are met, the test case
 succeeds, otherwise it fails.
 
-Test Input:: [[test-input]] A value that is passed to the <<fixture,Fixture>>
-to set up an interaction with the <<system-under-test,System under Test>>.
+Test Input:: [[test-input]]
+A value that is passed to the <<fixture,Fixture>> to set up an interaction
+with the <<system-under-test,System under Test>>.
 
-Type Converter:: Referenced by a <<fixture,Fixture>>, a type converter takes
+Type Converter:: [[type-converter]]
+Referenced by a <<fixture,Fixture>>, a type converter takes
 <<test-input,Test Inputs>> and maps them to types in the test domain (e.g.
 converts the string `"5 €"` to `Currency(Type.EURO, 5)`).
-
