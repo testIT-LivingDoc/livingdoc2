@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.api;
+package examples;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.api;
+package examples;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
