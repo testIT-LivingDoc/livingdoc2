@@ -28,7 +28,7 @@ We will use Gradle from the outset.
 
 == Status
 
-Proposed.
+Accepted.
 
 
 == Consequences

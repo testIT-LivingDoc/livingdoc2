@@ -44,7 +44,7 @@ add a reference to the overriding ADR.
 
 == Status
 
-Proposed.
+Accepted.
 
 
 == Consequences

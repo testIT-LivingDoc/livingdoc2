@@ -28,7 +28,7 @@ We will render end-user documentation as HTML.
 
 == Status
 
-Proposed.
+Accepted.
 
 
 == Consequences
