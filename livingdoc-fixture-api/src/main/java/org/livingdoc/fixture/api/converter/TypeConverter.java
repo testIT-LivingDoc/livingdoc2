@@ -1,7 +1,16 @@
 package org.livingdoc.fixture.api.converter;
 
+import java.lang.reflect.AnnotatedElement;
+
+import org.livingdoc.fixture.api.converter.exceptions.ConversionException;
+
+
 public interface TypeConverter<T> {
 
-    T convert(String value) throws ConversionException;
+    default T convert(String value) {
+        return convert(value, null);
+    }
+
+    T convert(String value, AnnotatedElement element) throws ConversionException;
 
 }

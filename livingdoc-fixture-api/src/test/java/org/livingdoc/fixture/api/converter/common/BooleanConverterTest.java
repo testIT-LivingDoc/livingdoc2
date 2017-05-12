@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.livingdoc.fixture.api.converter.ConversionException;
+import org.livingdoc.fixture.api.converter.exceptions.ConversionException;
 
 
 class BooleanConverterTest {

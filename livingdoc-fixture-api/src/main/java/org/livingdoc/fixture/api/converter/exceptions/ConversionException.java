@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.api.converter;
+package org.livingdoc.fixture.api.converter.exceptions;
 
 public class ConversionException extends RuntimeException {
 

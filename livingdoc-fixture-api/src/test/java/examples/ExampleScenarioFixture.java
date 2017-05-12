@@ -1,7 +1,9 @@
 package examples;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
+import org.livingdoc.fixture.api.converter.exceptions.ConversionException;
 import org.livingdoc.fixture.api.converter.Converter;
 import org.livingdoc.fixture.api.converter.TypeConverter;
 import org.livingdoc.fixture.api.scenario.After;
@@ -53,7 +55,7 @@ public class ExampleScenarioFixture {
     public static class MovieConverter implements TypeConverter<Movie> {
 
         @Override
-        public Movie convert(String value) {
+        public Movie convert(String value, AnnotatedElement element) throws ConversionException {
             return null;
         }
 

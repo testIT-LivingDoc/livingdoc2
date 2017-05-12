@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
-import org.livingdoc.fixture.api.converter.ConversionException;
+import org.livingdoc.fixture.api.converter.exceptions.ConversionException;
 
 
 class IntegerConverterTest {
