@@ -1,0 +1,4 @@
+= LivingDoc Fixture API
+
+include::chapters/decision-table.adoc[]
+include::chapters/scenario.adoc[]

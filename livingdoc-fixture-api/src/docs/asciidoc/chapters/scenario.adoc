@@ -1,0 +1,13 @@
+== Scenario Fixture
+
+An _example_ describing a single _test case_ as a sequence of _steps_. A single
+step of is represented as a sentence containing either one or more _test inputs_
+or one or more _expectations_.
+
+
+=== Example Fixture
+
+[source, java]
+----
+include::{moduleBase}/src/test/java/documentation/examples/ExampleScenarioFixture.java[]
+----
