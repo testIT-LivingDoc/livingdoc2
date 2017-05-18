@@ -2,3 +2,4 @@ rootProject.name = 'livingdoc'
 
 include 'livingdoc-engine'
 include 'livingdoc-fixture-api'
+include 'livingdoc-fixture-converter'

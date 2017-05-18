@@ -2,7 +2,7 @@ package org.livingdoc.fixture.api.converter;
 
 import java.lang.reflect.AnnotatedElement;
 
-import org.livingdoc.fixture.api.converter.exceptions.ConversionException;
+import org.livingdoc.fixture.api.converter.ConversionException;
 
 
 public interface TypeConverter<T> {
