@@ -5,8 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.fixture.api.converter.Format
 import org.livingdoc.fixture.converter.exceptions.MalformedFormatException
 import org.livingdoc.fixture.converter.exceptions.ValueFormatException
@@ -20,14 +18,10 @@ internal class LocalDateConverterTest {
 
     val cut = LocalDateConverter()
 
-    @ParameterizedTest(name = "{0}")
-    @ValueSource(strings = arrayOf(
-            "2017-05-12",
-            "2017-05-12+01:00"
-    ))
-    fun `ISO dates are converted correctly`(value: String) {
-        val parsed = LocalDate.parse(value, DateTimeFormatter.ISO_DATE)
-        assertThat(cut.convert(value)).isEqualTo(parsed)
+    @Test
+    fun `ISO dates are converted correctly`() {
+        val parsed = LocalDate.parse("2017-05-12", DateTimeFormatter.ISO_LOCAL_DATE)
+        assertThat(cut.convert("2017-05-12")).isEqualTo(parsed)
     }
 
     @Nested

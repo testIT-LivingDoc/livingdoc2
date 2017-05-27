@@ -23,8 +23,7 @@ internal class LocalTimeConverterTest {
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = arrayOf(
             "12:34",
-            "12:34:56",
-            "12:34:56+01:00"
+            "12:34:56"
     ))
     fun `times are converted correctly`(value: String) {
         val parsed = LocalTime.parse(value, DateTimeFormatter.ISO_TIME)
