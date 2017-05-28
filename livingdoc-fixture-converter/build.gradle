@@ -20,12 +20,13 @@ repositories {
 }
 
 dependencies {
-    compile(project(':livingdoc-fixture-api'))
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version")
+    compile(project(':livingdoc-fixture-api'))
 
     testCompile('org.assertj:assertj-core:3.6.2')
     testCompile('org.mockito:mockito-core:2.7.22')
     testCompile('com.nhaarman:mockito-kotlin:1.4.0') { transitive = false }
+
     testCompile('org.junit.jupiter:junit-jupiter-api:5.0.0-M4')
     testCompile('org.junit.jupiter:junit-jupiter-params:5.0.0-M4')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0-M4')
