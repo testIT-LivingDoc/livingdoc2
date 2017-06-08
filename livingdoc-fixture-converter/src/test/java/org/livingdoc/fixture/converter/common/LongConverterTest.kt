@@ -5,61 +5,56 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.fixture.api.converter.ConversionException
 import org.livingdoc.fixture.api.converter.Language
 import org.mockito.BDDMockito.given
 import utils.EnglishDefaultLocale
-import java.lang.Double.MAX_VALUE
-import java.lang.Double.MIN_VALUE
 import java.lang.reflect.AnnotatedElement
 import java.util.*
 
 
 @EnglishDefaultLocale
-internal class DoubleConverterTest {
+internal class LongConverterTest {
 
-    val cut = DoubleConverter()
+    val cut = LongConverter()
 
-    @ParameterizedTest(name = "\"{0}\" is converted to 0.0d")
-    @ValueSource(strings = arrayOf("0", "0.", "0.0", "0.00", "0.000", "0.0000"))
-    fun `zero values can be converted`(value: String) {
-        assertThat(cut.convert(value)).isEqualTo(0.0)
+    @Test
+    fun `zero value can be converted`() {
+        val result = cut.convert("0")
+        assertThat(result).isEqualTo(0L)
     }
 
     @Test
-    fun `smallest double can be converted`() {
-        val value = MIN_VALUE.toString()
+    fun `smallest long can be converted`() {
+        val value = java.lang.Long.MIN_VALUE.toString()
         val result = cut.convert(value)
-        assertThat(result).isEqualTo(MIN_VALUE)
+        assertThat(result).isEqualTo(java.lang.Long.MIN_VALUE)
     }
 
     @Test
-    fun `small double can be converted`() {
-        val value = "-10000000.0000001"
+    fun `small long can be converted`() {
+        val value = "-10000000"
         val result = cut.convert(value)
-        assertThat(result).isEqualTo(-10000000.0000001)
+        assertThat(result).isEqualTo(-10000000L)
     }
 
     @Test
-    fun `largest double can be converted`() {
-        val value = MAX_VALUE.toString()
+    fun `largest long can be converted`() {
+        val value = java.lang.Long.MAX_VALUE.toString()
         val result = cut.convert(value)
-        assertThat(result).isEqualTo(MAX_VALUE)
+        assertThat(result).isEqualTo(java.lang.Long.MAX_VALUE)
     }
 
     @Test
-    fun `large double can be converted`() {
-        val value = "10000000.0000001"
+    fun `large long can be converted`() {
+        val value = "10000000"
         val result = cut.convert(value)
-        assertThat(result).isEqualTo(10000000.0000001)
+        assertThat(result).isEqualTo(10000000L)
     }
 
     @Test
-    fun `any double can be converted`() {
-        Random().doubles(1000)//
-                .map { value -> value * (MAX_VALUE - 1.0) }//
+    fun `any long can be converted`() {
+        Random().longs(1000)//
                 .forEach { value ->
                     val positiveValue = value.toString()
                     val negativeValue = (-value).toString()
@@ -70,21 +65,23 @@ internal class DoubleConverterTest {
 
     @Test
     fun `leading whitespaces are removed`() {
-        assertThat(cut.convert(" 1.0")).isEqualTo(1.0)
-        assertThat(cut.convert("\t1.0")).isEqualTo(1.0)
-        assertThat(cut.convert("\n1.0")).isEqualTo(1.0)
+        assertThat(cut.convert(" 1")).isEqualTo(1L)
+        assertThat(cut.convert("\t1")).isEqualTo(1L)
+        assertThat(cut.convert("\n1")).isEqualTo(1L)
     }
 
     @Test
     fun `trailing whitespaces are removed`() {
-        assertThat(cut.convert("1.0 ")).isEqualTo(1.0)
-        assertThat(cut.convert("1.0\t")).isEqualTo(1.0)
-        assertThat(cut.convert("1.0\n")).isEqualTo(1.0)
+        assertThat(cut.convert("1 ")).isEqualTo(1L)
+        assertThat(cut.convert("1\t")).isEqualTo(1L)
+        assertThat(cut.convert("1\n")).isEqualTo(1L)
     }
 
     @Test
     fun `illegal format throws ConversionException`() {
-        assertThrows(ConversionException::class.java) { cut.convert("hello world") }
+        assertThrows(ConversionException::class.java) {
+            cut.convert("hello world")
+        }
     }
 
     @Nested
@@ -95,16 +92,16 @@ internal class DoubleConverterTest {
 
         @Test
         fun `default language assumed if no element given`() {
-            val result = cut.convert("42.0", null)
-            assertThat(result).isEqualTo(42.0)
+            val result = cut.convert("42,000", null)
+            assertThat(result).isEqualTo(42000L)
         }
 
         @Test
         fun `default language assumed if no annotation present`() {
             given(element.getAnnotation(Language::class.java)).willReturn(null)
 
-            val result = cut.convert("42.0", element)
-            assertThat(result).isEqualTo(42.0)
+            val result = cut.convert("42,000", element)
+            assertThat(result).isEqualTo(42000L)
         }
 
         @Test
@@ -112,8 +109,8 @@ internal class DoubleConverterTest {
             given(element.getAnnotation(Language::class.java)).willReturn(language)
             given(language.value).willReturn("de")
 
-            val result = cut.convert("42,0", element)
-            assertThat(result).isEqualTo(42.0)
+            val result = cut.convert("42.000", element)
+            assertThat(result).isEqualTo(42000L)
         }
 
     }

@@ -1,16 +1,22 @@
 package org.livingdoc.fixture.converter.common
 
+import com.nhaarman.mockito_kotlin.mock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.fixture.api.converter.ConversionException
+import org.livingdoc.fixture.api.converter.Language
+import org.mockito.BDDMockito.given
+import utils.EnglishDefaultLocale
 import java.lang.Float.MAX_VALUE
 import java.lang.Float.MIN_VALUE
+import java.lang.reflect.AnnotatedElement
 import java.util.*
 
-
+@EnglishDefaultLocale
 internal class FloatConverterTest {
 
     val cut = FloatConverter()
@@ -80,6 +86,37 @@ internal class FloatConverterTest {
     @Test
     fun `illegal format throws ConversionException`() {
         assertThrows(ConversionException::class.java) { cut.convert("hello world") }
+    }
+
+    @Nested
+    inner class LanguageOverride {
+
+        val language: Language = mock()
+        val element: AnnotatedElement = mock()
+
+        @Test
+        fun `default language assumed if no element given`() {
+            val result = cut.convert("42.0", null)
+            assertThat(result).isEqualTo(42.0f)
+        }
+
+        @Test
+        fun `default language assumed if no annotation present`() {
+            given(element.getAnnotation(Language::class.java)).willReturn(null)
+
+            val result = cut.convert("42.0", element)
+            assertThat(result).isEqualTo(42.0f)
+        }
+
+        @Test
+        fun `language can be overridden via annotation`() {
+            given(element.getAnnotation(Language::class.java)).willReturn(language)
+            given(language.value).willReturn("de")
+
+            val result = cut.convert("42,0", element)
+            assertThat(result).isEqualTo(42.0f)
+        }
+
     }
 
 }
