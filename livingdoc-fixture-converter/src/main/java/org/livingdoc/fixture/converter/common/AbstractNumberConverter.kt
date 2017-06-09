@@ -33,7 +33,7 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
             val trimmedValue = value.trim()
             return format.parse(trimmedValue)
         } catch (e: ParseException) {
-            throw ConversionException("not a parsable number value: " + value)
+            throw ConversionException("not a number value: '$value'")
         }
     }
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource
 
 internal class StringConverterTest {
 
-    var cut = StringConverter()
+    val cut = StringConverter()
 
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = arrayOf("", " ", "foo", "foo bar"))

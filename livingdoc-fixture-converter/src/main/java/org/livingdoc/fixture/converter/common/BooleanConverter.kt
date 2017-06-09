@@ -14,7 +14,7 @@ open class BooleanConverter : TypeConverter<Boolean> {
             "true" -> return true
             "false" -> return false
         }
-        throw ConversionException("'$value' cannot be converted to a Boolean")
+        throw ConversionException("Not a boolean value: '$value'")
     }
 
 }
