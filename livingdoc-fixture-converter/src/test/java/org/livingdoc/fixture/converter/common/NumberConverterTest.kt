@@ -1,27 +1,20 @@
 package org.livingdoc.fixture.converter.common
 
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-import utils.EnglishDefaultLocale
+import org.livingdoc.fixture.api.converter.TypeConverter
 
-/**
- * Since there are a lot of sub-classes of [NumberConverter], this class
- * contains only one simple smoke test to demonstrate, that any kind of number
- * can be handled by this converter.
- */
-@EnglishDefaultLocale
-internal class NumberConverterTest {
+internal class NumberConverterTest : NumberConverterContract<Number>() {
 
     val cut = NumberConverter()
 
-    @ParameterizedTest
-    @ValueSource(strings = arrayOf(
-            "0", "0.00", "0000",
-            "100,000", "100,000.42",
-            "100000", "100000.42"
-    ))
-    fun `all kinds of numbers can be converted without problems`(value: String) {
-        cut.convert(value)
-    }
+    override fun getCut(): TypeConverter<Number> = cut
+
+    override fun getMinValue() = Double.MIN_VALUE
+    override fun getNegativeValue() = -42.000000000001
+    override fun getZeroValue() = 0L
+    override fun getPositiveValue() = 42.000000000001
+    override fun getMaxValue() = Double.MAX_VALUE
+
+    override fun getEnglishValue() = "42,000.24" to 42000.24
+    override fun getGermanValue() = "42.000,24" to 42000.24
 
 }
