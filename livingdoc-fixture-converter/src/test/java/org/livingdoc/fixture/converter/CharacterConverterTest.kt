@@ -1,8 +1,7 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.fixture.api.converter.ConversionException
@@ -18,19 +17,19 @@ internal class CharacterConverterTest {
         assertThat(cut.convert(value)).isNotNull()
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `empty string is not a valid char`() {
         assertThrows(ConversionException::class.java, {
             cut.convert("")
         })
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `one character string is a valid char`() {
         assertThat(cut.convert("a")).isEqualTo('a')
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun `two character string is not a valid char`() {
         assertThrows(ConversionException::class.java, {
             cut.convert("ab")

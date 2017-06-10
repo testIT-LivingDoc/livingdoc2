@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter.number
 
 import org.livingdoc.fixture.api.converter.TypeConverter
 

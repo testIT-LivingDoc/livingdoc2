@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter.number
 
 import org.livingdoc.fixture.api.converter.ConversionException
 import org.livingdoc.fixture.api.converter.Language
@@ -8,7 +8,6 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.*
-import java.util.Locale.Category
 
 abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
@@ -25,7 +24,7 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
                 ?.getAnnotation(Language::class.java)
                 ?.value
                 ?.let { Locale.forLanguageTag(it) }
-        return customLocale ?: Locale.getDefault(Category.FORMAT)
+        return customLocale ?: Locale.getDefault(Locale.Category.FORMAT)
     }
 
     private fun parse(format: NumberFormat, value: String): Number {

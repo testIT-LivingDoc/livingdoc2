@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter.number
 
 
 open class DoubleConverter : AbstractNumberConverter<Double>() {

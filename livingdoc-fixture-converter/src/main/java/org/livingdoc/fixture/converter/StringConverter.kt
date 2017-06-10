@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter
 
 import org.livingdoc.fixture.api.converter.TypeConverter
 import java.lang.reflect.AnnotatedElement
