@@ -1,81 +1,25 @@
 package org.livingdoc.fixture.converter.time
 
-import com.nhaarman.mockito_kotlin.mock
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-import org.livingdoc.fixture.api.converter.Format
-import org.livingdoc.fixture.converter.exceptions.MalformedFormatException
-import org.livingdoc.fixture.converter.exceptions.ValueFormatException
-import org.mockito.BDDMockito.given
-import java.lang.reflect.AnnotatedElement
+import org.livingdoc.fixture.api.converter.TypeConverter
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import java.time.LocalTime.parse
 
 
-internal class LocalTimeConverterTest {
+internal class LocalTimeConverterTest : TemporalConverterContract<LocalTime>() {
 
     val cut = LocalTimeConverter()
 
-    @ParameterizedTest(name = "{0}")
-    @ValueSource(strings = arrayOf(
-            "12:34",
-            "12:34:56"
-    ))
-    fun `times are converted correctly`(value: String) {
-        val parsed = LocalTime.parse(value, DateTimeFormatter.ISO_TIME)
-        assertThat(cut.convert(value)).isEqualTo(parsed)
-    }
+    override fun getCut(): TypeConverter<LocalTime> = cut
 
-    @Nested
-    inner class FormatOverride {
+    override fun getValidInputVariations() = mapOf(
+            "12:34" to parse("12:34"),
+            "12:34:56" to parse("12:34:56")
+    )
 
-        val format: Format = mock()
-        val element: AnnotatedElement = mock()
+    override fun getDefaultFormatValue() = "12:34" to parse("12:34")
 
-        @Test
-        fun `default format assumed if no element given`() {
-            val time = cut.convert("12:34", null)
-            assertThat(time).isEqualTo("12:34:00")
-        }
-
-        @Test
-        fun `default format assumed if no annotation present`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(null)
-
-            val time = cut.convert("12:34", element)
-            assertThat(time).isEqualTo("12:34:00")
-        }
-
-        @Test
-        fun `pattern can be overridden via annotation`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn("HH:mm 'Uhr'")
-
-            val time = cut.convert("12:34 Uhr", element)
-            assertThat(time).isEqualTo("12:34:00")
-        }
-
-        @Test
-        fun `malformed custom pattern throws exception`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn("HH:mm V")
-
-            assertThrows(MalformedFormatException::class.java) {
-                cut.convert("12:34", element)
-            }
-        }
-
-    }
-
-    @Test
-    fun `illegal value throws exception`() {
-        assertThrows(ValueFormatException::class.java) {
-            cut.convert("not Time")
-        }
-    }
+    override fun getCustomFormat() = "HH:mm 'Uhr'"
+    override fun getCustomFormatValue() = "12:34 Uhr" to parse("12:34:00")
+    override fun getMalformedCustomFormat() = "HH:mm V"
 
 }
