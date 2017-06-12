@@ -15,70 +15,70 @@ import java.lang.reflect.AnnotatedElement
 @EnglishDefaultLocale
 internal abstract class NumberConverterContract<T : Number> {
 
-    abstract fun getCut(): TypeConverter<T>
+    abstract val cut: TypeConverter<T>
 
-    abstract fun getMinValue(): T
-    abstract fun getNegativeValue(): T
-    abstract fun getZeroValue(): T
-    abstract fun getPositiveValue(): T
-    abstract fun getMaxValue(): T
+    abstract val minValue: T
+    abstract val negativeValue: T
+    abstract val zeroValue: T
+    abstract val positiveValue: T
+    abstract val maxValue: T
 
-    abstract fun getEnglishValue(): Pair<String, T>
-    abstract fun getGermanValue(): Pair<String, T>
+    abstract val englishValue: Pair<String, T>
+    abstract val germanValue: Pair<String, T>
 
     @Test
     fun `the smallest possible value can be converted`() {
-        assertThatValueCanBeConverted(getMinValue())
+        assertThatValueCanBeConverted(minValue)
     }
 
     @Test
     fun `negative value can be converted`() {
-        assertThatValueCanBeConverted(getNegativeValue())
+        assertThatValueCanBeConverted(negativeValue)
     }
 
     @Test
     fun `zero value can be converted`() {
-        assertThatValueCanBeConverted(getZeroValue())
+        assertThatValueCanBeConverted(zeroValue)
     }
 
     @Test
     fun `positive value can be converted`() {
-        assertThatValueCanBeConverted(getPositiveValue())
+        assertThatValueCanBeConverted(positiveValue)
     }
 
     @Test
     fun `the largest possible value can be converted`() {
-        assertThatValueCanBeConverted(getMaxValue())
+        assertThatValueCanBeConverted(maxValue)
     }
 
     private fun assertThatValueCanBeConverted(value: T) {
-        val result = getCut().convert("$value")
+        val result = cut.convert("$value")
         assertThat(result).isEqualTo(value)
     }
 
     @Test
     fun `leading whitespaces are ignored`() {
-        assertThatValueCanBeConverted(" ${getPositiveValue()}", getPositiveValue())
-        assertThatValueCanBeConverted("\t${getPositiveValue()}", getPositiveValue())
-        assertThatValueCanBeConverted("\n${getPositiveValue()}", getPositiveValue())
+        assertThatValueCanBeConverted(" $positiveValue", positiveValue)
+        assertThatValueCanBeConverted("\t$positiveValue", positiveValue)
+        assertThatValueCanBeConverted("\n$positiveValue", positiveValue)
     }
 
     @Test
     fun `trailing whitespaces are ignored`() {
-        assertThatValueCanBeConverted("${getPositiveValue()} ", getPositiveValue())
-        assertThatValueCanBeConverted("${getPositiveValue()}\t", getPositiveValue())
-        assertThatValueCanBeConverted("${getPositiveValue()}\n", getPositiveValue())
+        assertThatValueCanBeConverted("$positiveValue ", positiveValue)
+        assertThatValueCanBeConverted("$positiveValue\t", positiveValue)
+        assertThatValueCanBeConverted("$positiveValue\n", positiveValue)
     }
 
     private fun assertThatValueCanBeConverted(value: String, expected: T) {
-        val result = getCut().convert(value)
+        val result = cut.convert(value)
         assertThat(result).isEqualTo(expected)
     }
 
     @Test
     fun `non number cannot be converted`() {
         assertThrows(ConversionException::class.java) {
-            getCut().convert("not a number")
+            cut.convert("not a number")
         }
     }
 
@@ -90,8 +90,8 @@ internal abstract class NumberConverterContract<T : Number> {
 
         @Test
         fun `default locale used if no element given`() {
-            val (stringValue, value) = getEnglishValue()
-            val result = getCut().convert(stringValue, null)
+            val (stringValue, value) = englishValue
+            val result = cut.convert(stringValue, null)
             assertThat(result).isEqualTo(value)
         }
 
@@ -99,8 +99,8 @@ internal abstract class NumberConverterContract<T : Number> {
         fun `default locale used if no annotation present`() {
             given(element.getAnnotation(Language::class.java)).willReturn(null)
 
-            val (stringValue, value) = getEnglishValue()
-            val result = getCut().convert(stringValue, element)
+            val (stringValue, value) = englishValue
+            val result = cut.convert(stringValue, element)
             assertThat(result).isEqualTo(value)
         }
 
@@ -109,8 +109,8 @@ internal abstract class NumberConverterContract<T : Number> {
             given(element.getAnnotation(Language::class.java)).willReturn(language)
             given(language.value).willReturn("de")
 
-            val (stringValue, value) = getGermanValue()
-            val result = getCut().convert(stringValue, element)
+            val (stringValue, value) = germanValue
+            val result = cut.convert(stringValue, element)
             assertThat(result).isEqualTo(value)
         }
 

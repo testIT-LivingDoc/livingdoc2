@@ -19,22 +19,22 @@ import java.time.temporal.Temporal
 
 internal abstract class TemporalConverterContract<T : Temporal> {
 
-    abstract fun getCut(): TypeConverter<T>
+    abstract val cut: TypeConverter<T>
 
-    abstract fun getValidInputVariations(): Map<String, T>
+    abstract val validInputVariations: Map<String, T>
 
-    abstract fun getDefaultFormatValue(): Pair<String, T>
+    abstract val defaultFormatValue: Pair<String, T>
 
-    abstract fun getCustomFormat(): String
-    abstract fun getCustomFormatValue(): Pair<String, T>
-    abstract fun getMalformedCustomFormat(): String
+    abstract val customFormat: String
+    abstract val customFormatValue: Pair<String, T>
+    abstract val malformedCustomFormat: String
 
     @TestFactory
     fun `default input format variations`(): List<DynamicTest> {
-        return getValidInputVariations()
+        return validInputVariations
                 .map { (value, expectedResult) ->
                     dynamicTest("$value is valid input format", {
-                        val result = getCut().convert(value)
+                        val result = cut.convert(value)
                         assertThat(result).isEqualTo(expectedResult)
                     })
                 }
@@ -44,7 +44,7 @@ internal abstract class TemporalConverterContract<T : Temporal> {
     @Test
     fun `non temporal cannot be converted`() {
         assertThrows(ValueFormatException::class.java) {
-            getCut().convert("not a temporal value")
+            cut.convert("not a temporal value")
         }
     }
 
@@ -56,8 +56,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
 
         @Test
         fun `default format used if no element given`() {
-            val (value, expectedResult) = getDefaultFormatValue()
-            val date = getCut().convert(value, null)
+            val (value, expectedResult) = defaultFormatValue
+            val date = cut.convert(value, null)
             assertThat(date).isEqualTo(expectedResult)
         }
 
@@ -65,29 +65,29 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         fun `default format used if no annotation present`() {
             given(element.getAnnotation(Format::class.java)).willReturn(null)
 
-            val (value, expectedResult) = getDefaultFormatValue()
-            val date = getCut().convert(value, element)
+            val (value, expectedResult) = defaultFormatValue
+            val date = cut.convert(value, element)
             assertThat(date).isEqualTo(expectedResult)
         }
 
         @Test
         fun `format can be overridden via annotation`() {
             given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn(getCustomFormat())
+            given(format.value).willReturn(customFormat)
 
-            val (value, expectedResult) = getCustomFormatValue()
-            val date = getCut().convert(value, element)
+            val (value, expectedResult) = customFormatValue
+            val date = cut.convert(value, element)
             assertThat(date).isEqualTo(expectedResult)
         }
 
         @Test
         fun `malformed custom pattern throws exception`() {
             given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn(getMalformedCustomFormat())
+            given(format.value).willReturn(malformedCustomFormat)
 
-            val (value) = getCustomFormatValue()
+            val (value) = customFormatValue
             assertThrows(MalformedFormatException::class.java) {
-                getCut().convert(value, element)
+                cut.convert(value, element)
             }
         }
 
