@@ -1,4 +1,4 @@
-package org.livingdoc.fixture.converter.common
+package org.livingdoc.fixture.converter
 
 import org.livingdoc.fixture.api.converter.ConversionException
 import org.livingdoc.fixture.api.converter.TypeConverter
@@ -14,7 +14,7 @@ open class BooleanConverter : TypeConverter<Boolean> {
             "true" -> return true
             "false" -> return false
         }
-        throw ConversionException("'$value' cannot be converted to a Boolean")
+        throw ConversionException("Not a boolean value: '$value'")
     }
 
 }
