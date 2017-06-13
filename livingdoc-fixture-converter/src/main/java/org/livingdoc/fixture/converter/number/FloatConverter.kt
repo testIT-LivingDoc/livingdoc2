@@ -1,6 +1,7 @@
 package org.livingdoc.fixture.converter.number
 
 import java.lang.reflect.AnnotatedElement
+import java.math.BigDecimal
 
 open class FloatConverter : AbstractNumberConverter<Float>() {
 
@@ -9,6 +10,9 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
         const val POSITIVE_INFINITY = "Infinity"
         const val NEGATIVE_INFINITY = "-Infinity"
     }
+
+    override val lowerBound: Float = -Float.MAX_VALUE
+    override val upperBound: Float = Float.MAX_VALUE
 
     override fun convert(value: String, element: AnnotatedElement?): Float {
         return when (value) {
@@ -19,6 +23,6 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
         }
     }
 
-    override fun convertToTarget(number: Number): Float = number.toFloat()
+    override fun convertToTarget(number: BigDecimal): Float = number.toFloat()
 
 }

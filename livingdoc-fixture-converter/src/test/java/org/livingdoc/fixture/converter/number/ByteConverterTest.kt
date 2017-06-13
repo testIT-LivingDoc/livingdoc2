@@ -1,6 +1,6 @@
 package org.livingdoc.fixture.converter.number
 
-internal class ByteConverterTest : NumberConverterContract<Byte>() {
+internal class ByteConverterTest : NumberConverterContract<Byte>(), BoundedNumberContract<Byte> {
 
     override val cut = ByteConverter()
 

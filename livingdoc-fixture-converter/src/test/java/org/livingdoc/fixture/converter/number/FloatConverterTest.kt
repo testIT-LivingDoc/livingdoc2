@@ -2,7 +2,7 @@ package org.livingdoc.fixture.converter.number
 
 import org.junit.jupiter.api.Test
 
-internal class FloatConverterTest : NumberConverterContract<Float>() {
+internal class FloatConverterTest : NumberConverterContract<Float>(), BoundedNumberContract<Float> {
 
     override val cut = FloatConverter()
 

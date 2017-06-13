@@ -1,7 +1,7 @@
 package org.livingdoc.fixture.converter.number
 
 
-internal class LongConverterTest : NumberConverterContract<Long>() {
+internal class LongConverterTest : NumberConverterContract<Long>(), BoundedNumberContract<Long> {
 
     override val cut = LongConverter()
 

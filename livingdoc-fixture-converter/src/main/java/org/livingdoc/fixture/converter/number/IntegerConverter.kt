@@ -1,6 +1,13 @@
 package org.livingdoc.fixture.converter.number
 
+import java.math.BigDecimal
+
 
 open class IntegerConverter : AbstractNumberConverter<Int>() {
-    override fun convertToTarget(number: Number): Int = number.toInt()
+
+    override val lowerBound: Int = Int.MIN_VALUE
+    override val upperBound: Int = Int.MAX_VALUE
+
+    override fun convertToTarget(number: BigDecimal): Int = number.toInt()
+
 }
