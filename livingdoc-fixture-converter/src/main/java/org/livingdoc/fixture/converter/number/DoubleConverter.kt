@@ -12,11 +12,11 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
     }
 
     override fun convert(value: String, element: AnnotatedElement?): Double {
-        when (value) {
-            NOT_A_NUMBER -> return Double.NaN
-            POSITIVE_INFINITY -> return Double.POSITIVE_INFINITY
-            NEGATIVE_INFINITY -> return Double.NEGATIVE_INFINITY
-            else -> return super.convert(value, element)
+        return when (value) {
+            NOT_A_NUMBER -> Double.NaN
+            POSITIVE_INFINITY -> Double.POSITIVE_INFINITY
+            NEGATIVE_INFINITY -> Double.NEGATIVE_INFINITY
+            else -> super.convert(value, element)
         }
     }
 

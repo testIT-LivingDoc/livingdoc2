@@ -11,11 +11,11 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
     }
 
     override fun convert(value: String, element: AnnotatedElement?): Float {
-        when (value) {
-            NOT_A_NUMBER -> return Float.NaN
-            POSITIVE_INFINITY -> return Float.POSITIVE_INFINITY
-            NEGATIVE_INFINITY -> return Float.NEGATIVE_INFINITY
-            else -> return super.convert(value, element)
+        return when (value) {
+            NOT_A_NUMBER -> Float.NaN
+            POSITIVE_INFINITY -> Float.POSITIVE_INFINITY
+            NEGATIVE_INFINITY -> Float.NEGATIVE_INFINITY
+            else -> super.convert(value, element)
         }
     }
 
