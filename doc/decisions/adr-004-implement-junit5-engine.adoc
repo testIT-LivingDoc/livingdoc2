@@ -1,0 +1,39 @@
+= ADR 4: Implement JUnit 5 Test Engine
+
+== Context
+
+In LivingDoc Legacy we had multiple plugins which provided execution of documents
+for different contexts:
+
+- Eclipse
+- IntelliJ
+- Maven
+- Gradle
+
+Each of which needed to be maintained. Having just one way of executing documents,
+which works for all of these contexts, would save us a lot of maintenance work.
+
+With the development of JUnit 5 there is a way of implementing generic _test engines_
+which are used by the _JUnit Platform_ to execute all kinds of custom tests. The
+platform is integrated in all of the popular IDEs and build tools.
+
+We will implement a JUnit 5 _test engine_ for the execution of LivingDoc documents.
+This test engine will be the bridge between the _JUnit Platform_ and LivingDoc.
+
+
+== Decision
+
+We will implement a JUnit 5 test engine.
+
+
+== Status
+
+Proposed.
+
+
+== Consequences
+
+* We'll have to maintain only one integration module.
+* We don't need to handle the integration into IDEs or build tools
+* We won't provide UIs for the IDEs like we did in LivingDoc Legacy
+
