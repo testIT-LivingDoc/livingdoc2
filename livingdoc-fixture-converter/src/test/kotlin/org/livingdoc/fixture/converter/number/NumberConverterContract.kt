@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.fixture.api.converter.ConversionException
 import org.livingdoc.fixture.api.converter.Language
-import org.livingdoc.fixture.api.converter.TypeConverter
 import org.mockito.BDDMockito.given
 import utils.EnglishDefaultLocale
 import java.lang.reflect.AnnotatedElement
@@ -15,7 +14,7 @@ import java.lang.reflect.AnnotatedElement
 @EnglishDefaultLocale
 internal abstract class NumberConverterContract<T : Number> {
 
-    abstract val cut: TypeConverter<T>
+    abstract val cut: AbstractNumberConverter<T>
 
     abstract val minValue: T
     abstract val negativeValue: T

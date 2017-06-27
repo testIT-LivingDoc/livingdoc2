@@ -1,6 +1,6 @@
 package org.livingdoc.fixture.converter.number
 
-internal class ShortConverterTest : NumberConverterContract<Short>() {
+internal class ShortConverterTest : NumberConverterContract<Short>(), BoundedNumberContract<Short> {
 
     override val cut = ShortConverter()
 

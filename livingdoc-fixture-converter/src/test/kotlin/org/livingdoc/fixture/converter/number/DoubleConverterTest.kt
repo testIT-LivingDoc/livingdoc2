@@ -3,11 +3,11 @@ package org.livingdoc.fixture.converter.number
 import org.junit.jupiter.api.Test
 
 
-internal class DoubleConverterTest : NumberConverterContract<Double>() {
+internal class DoubleConverterTest : NumberConverterContract<Double>(), BoundedNumberContract<Double> {
 
     override val cut = DoubleConverter()
 
-    override val minValue = Double.MIN_VALUE
+    override val minValue = -Double.MIN_VALUE
     override val negativeValue = -42.24
     override val zeroValue = 0.0
     override val positiveValue = 42.24
