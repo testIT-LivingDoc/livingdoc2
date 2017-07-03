@@ -13,6 +13,14 @@ apply plugin: 'org.asciidoctor.convert'
 
 sourceCompatibility = 1.8
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.junit.platform:junit-platform-commons:1.0.0-M4"
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
