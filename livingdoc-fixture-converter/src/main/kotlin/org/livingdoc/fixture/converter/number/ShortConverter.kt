@@ -10,4 +10,10 @@ open class ShortConverter : AbstractNumberConverter<Short>() {
 
     override fun convertToTarget(number: BigDecimal): Short = number.toShort()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Short::class.javaObjectType == targetType
+        val isKotlinType = Short::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

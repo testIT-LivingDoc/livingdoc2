@@ -10,4 +10,10 @@ open class LongConverter : AbstractNumberConverter<Long>() {
 
     override fun convertToTarget(number: BigDecimal): Long = number.toLong()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Long::class.javaObjectType == targetType
+        val isKotlinType = Long::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

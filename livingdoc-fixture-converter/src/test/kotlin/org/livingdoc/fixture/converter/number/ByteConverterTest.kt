@@ -1,5 +1,8 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
 internal class ByteConverterTest : NumberConverterContract<Byte>(), BoundedNumberContract<Byte> {
 
     override val cut = ByteConverter()
@@ -12,5 +15,10 @@ internal class ByteConverterTest : NumberConverterContract<Byte>(), BoundedNumbe
 
     override val englishValue = "100.12" to 100.toByte()
     override val germanValue = "100,12" to 100.toByte()
+
+    @Test
+    fun `converter can converted to Kotlin Byte`() {
+        assertThat(cut.canConvertTo(Byte::class.java)).isTrue()
+    }
 
 }

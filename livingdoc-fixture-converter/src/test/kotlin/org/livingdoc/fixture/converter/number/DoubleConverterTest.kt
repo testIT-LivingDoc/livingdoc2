@@ -1,5 +1,6 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
@@ -29,6 +30,11 @@ internal class DoubleConverterTest : NumberConverterContract<Double>(), BoundedN
     @Test
     fun `negative infinity is handled correctly`(){
         cut.convert(Double.NEGATIVE_INFINITY.toString())
+    }
+
+    @Test
+    fun `converter can converted to Kotlin Double`() {
+        assertThat(cut.canConvertTo(Double::class.java)).isTrue()
     }
 
 }

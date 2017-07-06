@@ -11,4 +11,6 @@ open class BigIntegerConverter : AbstractNumberConverter<BigInteger>() {
 
     override fun convertToTarget(number: BigDecimal): BigInteger = number.toBigInteger()
 
+    override fun canConvertTo(targetType: Class<*>) = BigInteger::class.java == targetType
+
 }

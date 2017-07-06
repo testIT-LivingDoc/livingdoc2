@@ -1,5 +1,8 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
 internal class IntegerConverterTest : NumberConverterContract<Int>(), BoundedNumberContract<Int> {
 
     override val cut = IntegerConverter()
@@ -12,5 +15,10 @@ internal class IntegerConverterTest : NumberConverterContract<Int>(), BoundedNum
 
     override val englishValue = "42,000.12" to 42000
     override val germanValue = "42.000,12" to 42000
+
+    @Test
+    fun `converter can converted to Kotlin Int`() {
+        assertThat(cut.canConvertTo(Int::class.java)).isTrue()
+    }
 
 }

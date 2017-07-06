@@ -1,5 +1,8 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
 
 internal class LongConverterTest : NumberConverterContract<Long>(), BoundedNumberContract<Long> {
 
@@ -13,5 +16,10 @@ internal class LongConverterTest : NumberConverterContract<Long>(), BoundedNumbe
 
     override val englishValue = "42,000.12" to 42000L
     override val germanValue = "42.000,12" to 42000L
+
+    @Test
+    fun `converter can converted to Kotlin Long`() {
+        assertThat(cut.canConvertTo(Long::class.java)).isTrue()
+    }
 
 }

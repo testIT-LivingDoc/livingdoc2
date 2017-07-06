@@ -1,5 +1,8 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
 internal class ShortConverterTest : NumberConverterContract<Short>(), BoundedNumberContract<Short> {
 
     override val cut = ShortConverter()
@@ -12,5 +15,10 @@ internal class ShortConverterTest : NumberConverterContract<Short>(), BoundedNum
 
     override val englishValue = "10,000.12" to 10000.toShort()
     override val germanValue = "10.000,12" to 10000.toShort()
+
+    @Test
+    fun `converter can converted to Kotlin Short`() {
+        assertThat(cut.canConvertTo(Short::class.java)).isTrue()
+    }
 
 }

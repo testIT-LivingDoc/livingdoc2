@@ -17,4 +17,10 @@ open class BooleanConverter : TypeConverter<Boolean> {
         throw ConversionException("Not a boolean value: '$value'")
     }
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Boolean::class.javaObjectType == targetType
+        val isKotlinType = Boolean::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

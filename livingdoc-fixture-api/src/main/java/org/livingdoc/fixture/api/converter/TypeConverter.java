@@ -50,4 +50,13 @@ public interface TypeConverter<T> {
      */
     T convert(String value, AnnotatedElement element) throws ConversionException;
 
+    /**
+     * Checks whether this {@link TypeConverter} can convert strings to the given type.
+     *
+     * @param targetType the type to convert to
+     * @return true if the converter can convert to the given type
+     * @since 2.0
+     */
+    boolean canConvertTo(Class<?> targetType);
+
 }

@@ -10,4 +10,10 @@ open class IntegerConverter : AbstractNumberConverter<Int>() {
 
     override fun convertToTarget(number: BigDecimal): Int = number.toInt()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Int::class.javaObjectType == targetType
+        val isKotlinType = Int::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

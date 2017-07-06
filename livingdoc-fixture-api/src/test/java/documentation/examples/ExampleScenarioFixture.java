@@ -59,6 +59,11 @@ public class ExampleScenarioFixture {
             return null;
         }
 
+        @Override
+        public boolean canConvertTo(Class<?> targetType) {
+            return false;
+        }
+
     }
 
 }

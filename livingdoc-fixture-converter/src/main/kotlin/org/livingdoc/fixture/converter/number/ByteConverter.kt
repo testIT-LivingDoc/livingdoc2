@@ -10,4 +10,10 @@ open class ByteConverter : AbstractNumberConverter<Byte>() {
 
     override fun convertToTarget(number: BigDecimal): Byte = number.toByte()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Byte::class.javaObjectType == targetType
+        val isKotlinType = Byte::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

@@ -42,4 +42,9 @@ internal class BooleanConverterTest {
         assertThrows(ConversionException::class.java) { cut.convert("neither") }
     }
 
+    @Test
+    fun `converter can converted to Kotlin Boolean`() {
+        assertThat(cut.canConvertTo(Boolean::class.java)).isTrue()
+    }
+
 }

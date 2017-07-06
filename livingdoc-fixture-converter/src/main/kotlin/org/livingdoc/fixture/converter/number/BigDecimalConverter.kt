@@ -10,4 +10,6 @@ open class BigDecimalConverter : AbstractNumberConverter<BigDecimal>() {
 
     override fun convertToTarget(number: BigDecimal): BigDecimal = number
 
+    override fun canConvertTo(targetType: Class<*>) = BigDecimal::class.java == targetType
+
 }

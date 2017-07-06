@@ -25,4 +25,10 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
 
     override fun convertToTarget(number: BigDecimal): Float = number.toFloat()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Float::class.javaObjectType == targetType
+        val isKotlinType = Float::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

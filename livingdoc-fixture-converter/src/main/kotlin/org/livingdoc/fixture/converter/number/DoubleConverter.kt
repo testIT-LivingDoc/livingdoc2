@@ -26,4 +26,10 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
 
     override fun convertToTarget(number: BigDecimal): Double = number.toDouble()
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Double::class.javaObjectType == targetType
+        val isKotlinType = Double::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

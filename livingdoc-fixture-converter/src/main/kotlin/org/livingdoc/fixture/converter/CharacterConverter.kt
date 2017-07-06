@@ -14,4 +14,10 @@ open class CharacterConverter : TypeConverter<Char> {
         return value[0]
     }
 
+    override fun canConvertTo(targetType: Class<*>): Boolean {
+        val isJavaObjectType = Char::class.javaObjectType == targetType
+        val isKotlinType = Char::class.java == targetType
+        return isJavaObjectType || isKotlinType
+    }
+
 }

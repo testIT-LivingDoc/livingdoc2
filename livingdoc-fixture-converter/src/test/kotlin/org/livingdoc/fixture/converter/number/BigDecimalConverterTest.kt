@@ -1,5 +1,7 @@
 package org.livingdoc.fixture.converter.number
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
 internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>() {
@@ -14,5 +16,10 @@ internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>() {
 
     override val englishValue = "42,000,000,000,000.12" to BigDecimal("42000000000000.12")
     override val germanValue = "42.000.000.000.000,12" to BigDecimal("42000000000000.12")
+
+    @Test
+    fun `converter can converted to BigDecimal`() {
+        assertThat(cut.canConvertTo(BigDecimal::class.java)).isTrue()
+    }
 
 }

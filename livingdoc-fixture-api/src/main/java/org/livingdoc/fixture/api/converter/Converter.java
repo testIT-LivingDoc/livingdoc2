@@ -22,14 +22,14 @@ import java.lang.annotation.Target;
  * @since 2.0
  */
 @Repeatable(Converter.Converters.class)
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 public @interface Converter {
 
     Class<? extends TypeConverter>[] value();
 
-    @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
     @Retention(RetentionPolicy.RUNTIME)
+    @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
     @interface Converters {
         Converter[] value();
     }
