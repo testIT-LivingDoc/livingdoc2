@@ -5,8 +5,6 @@ import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
-import org.livingdoc.engine.execution.DocumentSelector
-import org.livingdoc.fixture.api.binding.ExecutableDocument
 import org.livingdoc.junit.engine.EngineExecutionContext
 
 class ExecutableDocumentDescriptor(
@@ -34,8 +32,8 @@ class ExecutableDocumentDescriptor(
     ): EngineExecutionContext {
         println("ExecutableDocumentTestDescriptor: execute with context=[$context] and dynamicTestExecutor=[$dynamicTestExecutor]")
         // TODO: are examples within a document dynamic tests?
-        val uriValue = documentClass.getAnnotation(ExecutableDocument::class.java).value
-        context.livingDoc.execute(DocumentSelector(uriValue))
+        val documentInstance = documentClass.newInstance()
+        context.livingDoc.execute(documentInstance)
         return context
     }
 
