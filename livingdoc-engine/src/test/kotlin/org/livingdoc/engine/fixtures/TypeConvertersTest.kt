@@ -1,4 +1,4 @@
-package org.livingdoc.engine.reflection
+package org.livingdoc.engine.fixtures
 
 import fixtures.TypeConvertersTestFixtures.*
 import org.assertj.core.api.Assertions.assertThat

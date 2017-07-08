@@ -1,12 +1,12 @@
-package org.livingdoc.engine.reflection
+package org.livingdoc.engine.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.livingdoc.engine.reflection.FixtureFieldInjector.FixtureFieldInjectionException
-import org.livingdoc.engine.reflection.FixtureFieldInjector.NoTypeConverterFoundException
+import org.livingdoc.engine.fixtures.FixtureFieldInjector.FixtureFieldInjectionException
+import org.livingdoc.engine.fixtures.FixtureFieldInjector.NoTypeConverterFoundException
 import java.lang.reflect.Field
 
 
