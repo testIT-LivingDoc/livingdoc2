@@ -3,7 +3,7 @@ package org.livingdoc.fixture.converter.number
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ShortConverterTest : NumberConverterContract<Short>(), BoundedNumberContract<Short> {
+internal class ShortConverterTest : BoundedNumberConverterContract<Short>() {
 
     override val cut = ShortConverter()
 

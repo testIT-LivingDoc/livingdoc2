@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
-internal class DoubleConverterTest : NumberConverterContract<Double>(), BoundedNumberContract<Double> {
+internal class DoubleConverterTest : BoundedNumberConverterContract<Double>() {
 
     override val cut = DoubleConverter()
 
