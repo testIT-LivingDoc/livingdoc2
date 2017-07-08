@@ -6,14 +6,18 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import kotlin.reflect.KClass
 
+
+/**
+ * This object manages [TypeConverter] instances. It has two responsibilities:
+ *
+ * 1. load and manage default type converters provided by LivingDoc
+ * 2. create and cache instances of (custom) type converters
+ */
 internal object TypeConverterManager {
 
     private val log: Logger = LoggerFactory.getLogger(javaClass)
 
-    /** Remembers created [TypeConverter] instances for faster access to them. */
     private val cache: MutableMap<Class<out TypeConverter<out Any>>, TypeConverter<*>> = mutableMapOf()
-
-    /** List of default [TypeConverter] instances loaded via Java's [ServiceLoader] API. */
     private val defaultConverters: List<TypeConverter<*>>
 
     init {
@@ -26,8 +30,8 @@ internal object TypeConverterManager {
     }
 
     /**
-     * Returns an instance of the given converter class. Instances are created lazily and then cached. Repeated invocations
-     * of this method will always return the same instance.
+     * Returns an instance of the given [TypeConverter] class. Instances are created lazily and then cached. Repeated
+     * invocations of this method will always return the same instance.
      *
      * @param converterType the class of the type converter
      * @return the type converter instance for the given type
@@ -37,8 +41,8 @@ internal object TypeConverterManager {
     }
 
     /**
-     * Returns an instance of the given converter class. Instances are created lazily and then cached. Repeated invocations
-     * of this method will always return the same instance.
+     * Returns an instance of the given [TypeConverter] class. Instances are created lazily and then cached. Repeated
+     * invocations of this method will always return the same instance.
      *
      * @param converterType the class of the type converter
      * @return the type converter instance for the given type

@@ -9,7 +9,7 @@ import java.lang.reflect.Parameter
 /**
  * Utility object providing [TypeConverter] related operations.
  */
-class TypeConverters {
+internal object TypeConverters {
 
     // TODO for future development
     // - inheritance >> loading converters from annotations down the inheritance stack (class level only)

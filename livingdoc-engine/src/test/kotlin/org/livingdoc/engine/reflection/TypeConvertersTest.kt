@@ -11,8 +11,6 @@ import kotlin.reflect.KClass
 
 internal class TypeConvertersTest {
 
-
-    val cut = TypeConverters()
     val booleanClass = java.lang.Boolean::class.java
 
     @Nested
@@ -62,7 +60,7 @@ internal class TypeConvertersTest {
         private fun getParameterTypeConverter(fixtureClass: KClass<*>, documentClass: KClass<*>? = null): TypeConverter<*>? {
             val method = fixtureClass.java.getMethod("method", booleanClass)
             val parameter = method.parameters[0]
-            return cut.findTypeConverter(parameter, documentClass?.java)
+            return TypeConverters.findTypeConverter(parameter, documentClass?.java)
         }
 
     }
@@ -107,7 +105,7 @@ internal class TypeConvertersTest {
 
         private fun getFieldTypeConverter(fixtureClass: KClass<*>, documentClass: KClass<*>? = null): TypeConverter<*>? {
             val field = fixtureClass.java.getField("field")
-            return cut.findTypeConverter(field, documentClass?.java)
+            return TypeConverters.findTypeConverter(field, documentClass?.java)
         }
 
     }
