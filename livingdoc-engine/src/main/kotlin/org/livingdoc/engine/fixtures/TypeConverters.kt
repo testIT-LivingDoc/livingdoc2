@@ -34,20 +34,14 @@ internal object TypeConverters {
      * @return the found type converter or `null` if no matching converter was found
      */
     fun findTypeConverter(parameter: Parameter, documentClass: Class<*>? = null): TypeConverter<*>? {
-
         val type = parameter.type
         val executable = parameter.declaringExecutable
         val clazz = executable.declaringClass
-
-        findConverterFor(converting = type, from = parameter)?.let { return it }
-        findConverterFor(converting = type, from = executable)?.let { return it }
-        findConverterFor(converting = type, from = clazz)?.let { return it }
-
-        documentClass?.run {
-            findConverterFor(converting = type, from = documentClass)?.let { return it }
-        }
-
-        return findDefaultConverterFor(type)
+        return findConverterFor(converting = type, from = parameter)
+                ?: findConverterFor(converting = type, from = executable)
+                ?: findConverterFor(converting = type, from = clazz)
+                ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
+                ?: findDefaultConverterFor(type)
     }
 
     /**
@@ -66,35 +60,27 @@ internal object TypeConverters {
      * @return the found type converter or `null` if no matching converter was found
      */
     fun findTypeConverter(field: Field, documentClass: Class<*>? = null): TypeConverter<*>? {
-
         val type = field.type
         val clazz = field.declaringClass
-
-        findConverterFor(converting = type, from = field)?.let { return it }
-        findConverterFor(converting = type, from = clazz)?.let { return it }
-
-        documentClass?.run {
-            findConverterFor(converting = type, from = documentClass)?.let { return it }
-        }
-
-        return findDefaultConverterFor(type)
+        return findConverterFor(converting = type, from = field)
+                ?: findConverterFor(converting = type, from = clazz)
+                ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
+                ?: findDefaultConverterFor(type)
     }
 
     private fun findConverterFor(converting: Class<*>, from: AnnotatedElement): TypeConverter<*>? {
         val annotations = from.getAnnotationsByType(Converter::class.java)
-        return annotations.toList().stream()
-                .flatMap { it.value.toList().stream() }
+        return annotations.toList()
+                .flatMap { it.value.toList() }
                 .map { TypeConverterManager.getInstance(it) }
                 .filter { it.canConvertTo(converting) }
-                .findFirst()
-                .orElse(null)
+                .firstOrNull()
     }
 
     private fun findDefaultConverterFor(type: Class<*>?): TypeConverter<out Any>? {
-        return TypeConverterManager.getDefaultConverters().stream()
+        return TypeConverterManager.getDefaultConverters()
                 .filter { it.canConvertTo(type) }
-                .findFirst()
-                .orElse(null)
+                .firstOrNull()
     }
 
 }

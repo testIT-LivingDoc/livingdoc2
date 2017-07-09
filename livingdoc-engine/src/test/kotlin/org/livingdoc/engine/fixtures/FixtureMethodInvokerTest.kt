@@ -62,7 +62,7 @@ internal class FixtureMethodInvokerTest {
                 val exception = assertThrows(FixtureMethodInvocationException::class.java, {
                     cut.invoke(method, fixture, emptyArray())
                 })
-                assertThat(exception).hasCauseExactlyInstanceOf(MismatchingNumberOfArgumentsException::class.java)
+                assertThat(exception).hasCauseExactlyInstanceOf(MismatchedNumberOfArgumentsException::class.java)
             }
 
             @Test fun `to many arguments`() {
@@ -70,7 +70,7 @@ internal class FixtureMethodInvokerTest {
                 val exception = assertThrows(FixtureMethodInvocationException::class.java, {
                     cut.invoke(method, fixture, arrayOf("true", "true"))
                 })
-                assertThat(exception).hasCauseExactlyInstanceOf(MismatchingNumberOfArgumentsException::class.java)
+                assertThat(exception).hasCauseExactlyInstanceOf(MismatchedNumberOfArgumentsException::class.java)
             }
 
         }

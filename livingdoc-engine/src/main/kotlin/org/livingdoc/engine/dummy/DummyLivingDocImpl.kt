@@ -9,7 +9,7 @@ class DummyLivingDocImpl : LivingDoc {
     @Throws(ExecutionException::class)
     override fun execute(document: Any): Result {
         println("this would be the execution of: $document")
-        return object : Result {}
+        return Result.Executed
     }
 
 }
