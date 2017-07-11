@@ -20,37 +20,31 @@ the basics with minimal or no training. Fixtures are readable and minimal in
 size and complexity.
 
 |3
-|Usability (Control of Execution)
-a|* Developer
-|It is possible to select a subset of Executable Documents and trigger their
-execution quickly.
-
-|4
 |Cloud-Readiness
 a|* Administrator
 |All LD2 server components follow 12-Factor principles. LD2 integrates well
 with public and private cloud environments.
 
-|5
+|4
 |Confidentiality
 a|* All Users
 |Use of LD2 does not compromise the confidentiality of information contained in
 executable documents or any systems with which it integrates.
 
-|6
+|5
 |Fault Tolerance
 a|* All Users
 |LD2 is able to return to a consistent state when handling malformed
 inputs (including Executable Documents and Fixtures). It degrades gracefully
 in case of partial failure of its components.
 
-|7
+|6
 |Robustness to Vendor Updates
 a|* Administrator
 |Using LD2 should not prevent updates to components shared with other systems.
 Especially patches of Atlassian Confluence should not break LD2.
 
-|8
+|7
 |Maintainability
 a|* All Users
 |Changes and bugfixes to LD2 can be implemented quickly.
@@ -62,26 +56,26 @@ a|* All Users
 |===
 |Priority|Quality Goal|Stakeholder|Description
 
-|9
+|8
 |Extensibility - KMS (Knowledge Management System)
 a|* Business Expert
   * Administrator
 |Support for Executable Documents in different storage formats can be
 implemented with minimal effort.
 
-|10
+|9
 |Extensibility - Reporting
 a|* Developer
 |Support for different test report formats can be implemented with minimal
 effort.
 
-|11
+|10
 |Performance of Execution
 a|* Business Expert
   * Developer
 |The system makes optimal use of its resources to enable fast feedback.
 
-|12
+|11
 |Extensibility - Programming Language
 a|* Developer
 |Support for Fixtures written in different programming languages can be
