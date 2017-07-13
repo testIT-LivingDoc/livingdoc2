@@ -1,4 +1,4 @@
-package org.livingdoc.engine.executor.scenario
+package org.livingdoc.engine.execution.examples.scenarios.matching
 
 
 /**
@@ -108,6 +108,9 @@ internal class StepTemplate(
 
     }
 }
+
+
+internal class IllegalFormatException(val msg: String) : IllegalArgumentException(msg)
 
 internal sealed class Fragment
 internal data class Text(val content: String) : Fragment()

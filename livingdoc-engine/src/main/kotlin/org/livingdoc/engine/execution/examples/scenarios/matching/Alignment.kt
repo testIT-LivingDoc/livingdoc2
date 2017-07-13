@@ -1,4 +1,4 @@
-package org.livingdoc.engine.executor.scenario
+package org.livingdoc.engine.execution.examples.scenarios.matching
 
 import java.lang.Math.min
 

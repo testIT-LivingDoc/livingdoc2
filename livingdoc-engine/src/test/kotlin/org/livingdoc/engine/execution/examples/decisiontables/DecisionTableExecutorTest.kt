@@ -21,7 +21,6 @@ internal class DecisionTableExecutorTest {
     }
 
     @Test fun `life cycle of simple fixture`() {
-
         val input = Header("input")
         val check = Header("check")
         val headers = arrayListOf(input, check)
@@ -49,11 +48,9 @@ internal class DecisionTableExecutorTest {
             verify(fixture).afterTable()
             verifyNoMoreInteractions()
         }
-
     }
 
     @Test fun `malformed fixtures throw a special exception class`() {
-
         val headers = emptyList<Header>()
         val rows = arrayListOf(Row(emptyMap()))
         val decisionTable = DecisionTable(headers, rows)
@@ -64,11 +61,9 @@ internal class DecisionTableExecutorTest {
 
         val exception = (tableResult as Exception).exception
         assertThat(exception).isInstanceOf(MalformedDecisionTableFixtureException::class.java)
-
     }
 
     @Test fun `unmapped headers throw special exception class`() {
-
         val input = Header("input")
         val check = Header("check")
         val unknown = Header("unknown")
@@ -87,7 +82,6 @@ internal class DecisionTableExecutorTest {
 
         val fixture = LifeCycleFixture.callback
         verify(fixture, never()).beforeTable()
-
     }
 
     @Nested inner class `life cycle methods can exist multiple times` {

@@ -116,10 +116,10 @@ class FixtureMethodInvoker(
     }
 
     class FixtureMethodInvocationException(method: Method, fixture: Any, e: Exception)
-        : RuntimeException("Could not invoke method '$method' on fixture '$fixture' because of an exception:", e)
+        : RuntimeException("Could not invoke method '${method.name}' on fixture '$fixture' because of an exception:", e)
 
     class StaticFixtureMethodInvocationException(method: Method, fixtureClass: Class<*>, e: Exception)
-        : RuntimeException("Could not invoke method '$method' on fixture class '$fixtureClass' because of an exception:", e)
+        : RuntimeException("Could not invoke method '${method.name}' on fixture class '$fixtureClass' because of an exception:", e)
 
     internal class MismatchedNumberOfArgumentsException(args: Int, params: Int)
         : RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")

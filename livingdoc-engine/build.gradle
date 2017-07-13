@@ -39,6 +39,10 @@ dependencies {
     testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
 }
 
+compileTestJava {
+    options.compilerArgs << "-parameters"
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc

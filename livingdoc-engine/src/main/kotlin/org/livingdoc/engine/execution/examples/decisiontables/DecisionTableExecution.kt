@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.decisiontables.model.*
+import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 
@@ -144,30 +145,6 @@ internal class DecisionTableExecution(
             }
             if (row.result is Result.Unknown) {
                 row.result = Result.Skipped
-            }
-        }
-    }
-
-    private fun executeWithBeforeAndAfter(before: () -> Unit, body: () -> Unit, after: () -> Unit) {
-        var exception: Throwable? = null
-        try {
-            before.invoke()
-            body.invoke()
-        } catch (e: Throwable) {
-            exception = e
-        } finally {
-            try {
-                after.invoke()
-            } catch (e: Throwable) {
-                if (exception != null) {
-                    exception.addSuppressed(e)
-                } else {
-                    exception = e
-                }
-            } finally {
-                if (exception != null) {
-                    throw exception
-                }
             }
         }
     }
