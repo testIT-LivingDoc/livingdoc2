@@ -11,10 +11,7 @@ internal class DecisionTableExecution(
         document: Any?
 ) {
 
-    // TODO: implement JUnit Style exception handling for life cycle methods
-
     private val fixtureModel = DecisionTableFixtureModel(fixtureClass)
-
     private val decisionTable = DecisionTableResult.from(decisionTable)
 
     private val fieldInjector = FixtureFieldInjector(document)
@@ -29,7 +26,7 @@ internal class DecisionTableExecution(
     fun execute(): DecisionTableResult {
         try {
             assertFixtureIsDefinedCorrectly()
-            executeTable()
+            executeTableWithBeforeAndAfter()
             markTableAsSuccessfullyExecuted()
         } catch (e: Exception) {
             markTableAsExecutedWithException(e)
@@ -47,14 +44,20 @@ internal class DecisionTableExecution(
         }
     }
 
+    private fun executeTableWithBeforeAndAfter() {
+        executeWithBeforeAndAfter(
+                before = { invokeBeforeTableMethods() },
+                body = { executeTable() },
+                after = { invokeAfterTableMethods() }
+        )
+    }
+
     private fun executeTable() {
         val inputHeaders = filterHeaders({ (name) -> fixtureModel.isInputAlias(name) })
         val checkHeaders = filterHeaders({ (name) -> fixtureModel.isCheckAlias(name) })
-
-        invokeBeforeTableMethods()
         decisionTable.rows.forEach { row ->
             try {
-                executeRow(row, inputHeaders, checkHeaders)
+                executeRowWithBeforeAndAfter(row, inputHeaders, checkHeaders)
                 markRowAsSuccessfullyExecuted(row)
             } catch (e: Exception) {
                 markRowAsExecutedWithException(row, e)
@@ -62,14 +65,18 @@ internal class DecisionTableExecution(
                 markRowAsExecutedWithException(row, e)
             }
         }
-        invokeAfterTableMethods()
     }
 
-    private fun executeRow(row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
+    private fun executeRowWithBeforeAndAfter(row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
         val fixture = createFixtureInstance()
+        executeWithBeforeAndAfter(
+                before = { invokeBeforeRowMethods(fixture) },
+                body = { executeRow(fixture, row, inputHeaders, checkHeaders) },
+                after = { invokeAfterRowMethods(fixture) }
+        )
+    }
 
-        invokeBeforeRowMethods(fixture)
-
+    private fun executeRow(fixture: Any, row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
         var allInputsSucceeded = true
         filter(row, inputHeaders).forEach { inputColumn, tableField ->
             val success = setInput(fixture, inputColumn, tableField)
@@ -82,8 +89,6 @@ internal class DecisionTableExecution(
                 executeCheck(fixture, checkColumn, tableField)
             }
         }
-
-        invokeAfterRowMethods(fixture)
     }
 
     private fun setInput(fixture: Any, header: Header, tableField: FieldResult): Boolean {
@@ -128,6 +133,30 @@ internal class DecisionTableExecution(
             }
             if (row.result is Result.Unknown) {
                 row.result = Result.Skipped
+            }
+        }
+    }
+
+    private fun executeWithBeforeAndAfter(before: () -> Unit, body: () -> Unit, after: () -> Unit) {
+        var exception: Throwable? = null
+        try {
+            before.invoke()
+            body.invoke()
+        } catch (e: Throwable) {
+            exception = e
+        } finally {
+            try {
+                after.invoke()
+            } catch (e: Throwable) {
+                if (exception != null) {
+                    exception.addSuppressed(e)
+                } else {
+                    exception = e
+                }
+            } finally {
+                if (exception != null) {
+                    throw exception
+                }
             }
         }
     }

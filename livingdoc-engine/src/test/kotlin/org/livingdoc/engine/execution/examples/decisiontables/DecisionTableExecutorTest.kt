@@ -283,7 +283,7 @@ internal class DecisionTableExecutorTest {
                 verify(callback, never()).input(anyString())
                 verify(callback, never()).beforeFirstCheck()
                 verify(callback, never()).check(anyString())
-                verify(callback, never()).afterRow()
+                verify(callback).afterRow()
                 verify(callback).afterTable()
             }
 
@@ -315,7 +315,7 @@ internal class DecisionTableExecutorTest {
                 verify(callback, never()).input(anyString())
                 verify(callback, never()).beforeFirstCheck()
                 verify(callback, never()).check(anyString())
-                verify(callback, never()).afterRow()
+                verify(callback).afterRow()
                 verify(callback).afterTable()
             }
 
@@ -348,7 +348,7 @@ internal class DecisionTableExecutorTest {
                 execute(row)
 
                 verify(callback, never()).check(anyString())
-                verify(callback, never()).afterRow()
+                verify(callback).afterRow()
                 verify(callback).afterTable()
             }
 
@@ -377,7 +377,7 @@ internal class DecisionTableExecutorTest {
                 execute(row)
 
                 verify(callback, never()).check(anyString())
-                verify(callback, never()).afterRow()
+                verify(callback).afterRow()
                 verify(callback).afterTable()
             }
 
