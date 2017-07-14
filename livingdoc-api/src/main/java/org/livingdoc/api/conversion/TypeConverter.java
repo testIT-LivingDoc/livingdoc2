@@ -34,16 +34,15 @@ public interface TypeConverter<T> {
     /**
      * Converts the given {@link String} value into an instance of this {@link TypeConverter}'s target type.
      * <p>
-     * The {@link AnnotatedElement} is either the {@code class}, {@code method} or {@code field} for which this converter
-     * was
-     * invoked or {@code null}. It can be used to access additional configuration annotations like {@link Format}.
+     * The {@link AnnotatedElement} is the element who's value should be converted ({@code method} or {@code field})
+     * or {@code null}. It can be used to access additional configuration annotations like {@link Format}.
      * <p>
      * The only exception this method is allowed to throw is a {@link ConversionException}. If any other runtime exception
      * is thrown during the conversion it has to be either packaged as a {@link ConversionException} or LivingDoc might
      * exhibit undefined behavior.
      *
      * @param value the value to convert
-     * @param element the annotated element - might be {@code null}!
+     * @param element the element being converted - might be {@code null}!
      * @return the converted target instance
      * @throws ConversionException in case the conversion failed
      * @since 2.0
