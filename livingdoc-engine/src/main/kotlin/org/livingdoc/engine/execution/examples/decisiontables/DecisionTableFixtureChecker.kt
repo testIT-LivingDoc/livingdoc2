@@ -1,6 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.fixtures.decisiontables.*
+import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
@@ -36,37 +37,30 @@ internal object DecisionTableFixtureChecker {
         return emptyList()
     }
 
-    private fun noAliasIsUsedTwice(model: DecisionTableFixtureModel): Collection<String> { // TODO: abstraction
+    private fun noAliasIsUsedTwice(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
         val knownAliases = mutableSetOf<String>()
-        model.inputFields.forEach { field ->
-            field.getAnnotationsByType(Input::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        if (knownAliases.contains(alias))
-                            errors.add("Alias <$alias> is used multiple times!")
-                        else knownAliases.add(alias)
-                    }
+
+        val handleAlias: (String) -> Unit = {
+            if (knownAliases.contains(it))
+                errors.add("Alias <$it> is used multiple times!")
+            else knownAliases.add(it)
         }
-        model.inputMethods.forEach { method ->
-            method.getAnnotationsByType(Input::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        if (knownAliases.contains(alias))
-                            errors.add("Alias <$alias> is used multiple times!")
-                        else knownAliases.add(alias)
-                    }
-        }
-        model.checkMethods.forEach { method ->
-            method.getAnnotationsByType(Check::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        if (knownAliases.contains(alias))
-                            errors.add("Alias <$alias> is used multiple times!")
-                        else knownAliases.add(alias)
-                    }
-        }
+
+        checkAliasesOf(model.inputFields, Input::class, { it.value.asIterable() }, handleAlias)
+        checkAliasesOf(model.inputMethods, Input::class, { it.value.asIterable() }, handleAlias)
+        checkAliasesOf(model.checkMethods, Check::class, { it.value.asIterable() }, handleAlias)
+
         return errors
+    }
+
+    private fun <T : Annotation> checkAliasesOf(elements: Iterable<AnnotatedElement>, annotation: KClass<T>,
+                                                flatMapper: (T) -> Iterable<String>, handler: (String) -> Unit) {
+        elements.forEach {
+            it.getAnnotationsByType(annotation.java)
+                    .flatMap { flatMapper.invoke(it) }
+                    .forEach { handler.invoke(it) }
+        }
     }
 
     private fun beforeTableMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {

@@ -67,7 +67,6 @@ internal class DecisionTableFixtureModel(
 
         // input alias analysis
 
-        // TODO: how can this be plausibility checked? each alias should be unique?
         val inputAliases = mutableSetOf<String>()
 
         val inputAliasToField = mutableMapOf<String, Field>()
