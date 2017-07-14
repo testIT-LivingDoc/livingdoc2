@@ -1,6 +1,6 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
-import org.livingdoc.fixture.api.decisiontable.*
+import org.livingdoc.api.fixtures.decisiontables.*
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass

@@ -32,8 +32,7 @@ class ExecutableDocumentDescriptor(
     ): EngineExecutionContext {
         println("ExecutableDocumentTestDescriptor: execute with context=[$context] and dynamicTestExecutor=[$dynamicTestExecutor]")
         // TODO: are examples within a document dynamic tests?
-        val documentInstance = documentClass.newInstance()
-        context.livingDoc.execute(documentInstance)
+        context.livingDoc.execute(documentClass)
         return context
     }
 

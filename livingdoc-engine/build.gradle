@@ -20,8 +20,8 @@ repositories {
 }
 
 dependencies {
-    compile project(":livingdoc-fixture-api")
-    compile project(":livingdoc-fixture-converter")
+    compile project(":livingdoc-api")
+    compile project(":livingdoc-converters")
 
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"

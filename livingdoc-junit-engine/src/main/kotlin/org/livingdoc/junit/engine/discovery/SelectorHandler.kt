@@ -1,7 +1,7 @@
 package org.livingdoc.junit.engine.discovery
 
 import org.junit.platform.engine.DiscoverySelector
-import org.livingdoc.fixture.api.binding.ExecutableDocument
+import org.livingdoc.api.documents.ExecutableDocument
 
 abstract class SelectorHandler<in T : DiscoverySelector> {
 

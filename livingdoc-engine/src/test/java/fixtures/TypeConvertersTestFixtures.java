@@ -2,10 +2,10 @@ package fixtures;
 
 import java.lang.reflect.AnnotatedElement;
 
-import org.livingdoc.fixture.api.binding.ExecutableDocument;
-import org.livingdoc.fixture.api.converter.ConversionException;
-import org.livingdoc.fixture.api.converter.Converter;
-import org.livingdoc.fixture.api.converter.TypeConverter;
+import org.livingdoc.api.documents.ExecutableDocument;
+import org.livingdoc.api.conversion.ConversionException;
+import org.livingdoc.api.conversion.Converter;
+import org.livingdoc.api.conversion.TypeConverter;
 
 
 public class TypeConvertersTestFixtures {

@@ -4,8 +4,8 @@ import fixtures.TypeConvertersTestFixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.livingdoc.fixture.api.converter.TypeConverter
-import org.livingdoc.fixture.converter.BooleanConverter
+import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.converters.BooleanConverter
 import kotlin.reflect.KClass
 
 

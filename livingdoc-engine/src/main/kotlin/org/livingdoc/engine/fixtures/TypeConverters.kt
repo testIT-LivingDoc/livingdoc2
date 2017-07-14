@@ -1,7 +1,7 @@
 package org.livingdoc.engine.fixtures
 
-import org.livingdoc.fixture.api.converter.Converter
-import org.livingdoc.fixture.api.converter.TypeConverter
+import org.livingdoc.api.conversion.Converter
+import org.livingdoc.api.conversion.TypeConverter
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Field
 import java.lang.reflect.Parameter

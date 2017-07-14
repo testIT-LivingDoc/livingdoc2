@@ -1,6 +1,6 @@
 package org.livingdoc.engine.fixtures
 
-import org.livingdoc.fixture.api.converter.TypeConverter
+import org.livingdoc.api.conversion.TypeConverter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*

@@ -1,8 +1,8 @@
 package org.livingdoc.engine
 
+import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
-import org.livingdoc.engine.execution.Result
-import org.livingdoc.fixture.api.binding.ExecutableDocument
+import org.livingdoc.api.documents.ExecutableDocument
 
 
 /**
@@ -13,15 +13,15 @@ import org.livingdoc.fixture.api.binding.ExecutableDocument
 interface LivingDoc {
 
     /**
-     * Executes the given document instance and returns the [Result]. The given document instance must be of a class
-     * annotated with [ExecutableDocument].
+     * Executes the given document class and returns the [DocumentResult]. The document's class must be annotated
+     * with [ExecutableDocument].
      *
-     * @param document the document to execute
-     * @return the [Result] of the execution
+     * @param document the binding class of the document to execute
+     * @return the [DocumentResult] of the execution
      * @throws ExecutionException in case the execution failed in a way that did not produce a viable result
      * @since 2.0
      */
     @Throws(ExecutionException::class)
-    fun execute(document: Any): Result
+    fun execute(document: Class<*>): DocumentResult
 
 }

@@ -1,12 +1,12 @@
 package org.livingdoc.engine.execution.examples.decisiontables;
 
-import org.livingdoc.fixture.api.decisiontable.AfterRow;
-import org.livingdoc.fixture.api.decisiontable.AfterTable;
-import org.livingdoc.fixture.api.decisiontable.BeforeFirstCheck;
-import org.livingdoc.fixture.api.decisiontable.BeforeRow;
-import org.livingdoc.fixture.api.decisiontable.BeforeTable;
-import org.livingdoc.fixture.api.decisiontable.Check;
-import org.livingdoc.fixture.api.decisiontable.Input;
+import org.livingdoc.api.fixtures.decisiontables.AfterRow;
+import org.livingdoc.api.fixtures.decisiontables.AfterTable;
+import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck;
+import org.livingdoc.api.fixtures.decisiontables.BeforeRow;
+import org.livingdoc.api.fixtures.decisiontables.BeforeTable;
+import org.livingdoc.api.fixtures.decisiontables.Check;
+import org.livingdoc.api.fixtures.decisiontables.Input;
 
 
 public class MalformedFixtures {

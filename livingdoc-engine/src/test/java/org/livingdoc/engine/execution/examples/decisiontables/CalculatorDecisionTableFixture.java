@@ -2,9 +2,9 @@ package org.livingdoc.engine.execution.examples.decisiontables;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.livingdoc.fixture.api.decisiontable.BeforeRow;
-import org.livingdoc.fixture.api.decisiontable.Check;
-import org.livingdoc.fixture.api.decisiontable.Input;
+import org.livingdoc.api.fixtures.decisiontables.BeforeRow;
+import org.livingdoc.api.fixtures.decisiontables.Check;
+import org.livingdoc.api.fixtures.decisiontables.Input;
 
 
 public class CalculatorDecisionTableFixture {

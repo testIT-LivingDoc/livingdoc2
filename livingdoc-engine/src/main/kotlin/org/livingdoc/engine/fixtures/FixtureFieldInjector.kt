@@ -1,6 +1,6 @@
 package org.livingdoc.engine.fixtures
 
-import org.livingdoc.fixture.api.converter.TypeConverter
+import org.livingdoc.api.conversion.TypeConverter
 import java.lang.reflect.Field
 
 class FixtureFieldInjector(
