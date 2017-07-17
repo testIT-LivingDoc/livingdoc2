@@ -108,7 +108,7 @@ internal class FixtureMethodInvokerTest {
         protected fun protectedMethod() = "worked"
         public fun publicMethod() = "worked"
 
-        fun typeConverterNotFound(param: CustomType) = ""
+        fun typeConverterNotFound(param: CustomType) = "$param"
 
     }
 

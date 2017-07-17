@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "org.junit.platform:junit-platform-commons:1.0.0-M4"
+    compileOnly "org.junit.platform:junit-platform-commons:1.0.0-RC2"
 }
 
 task javadocJar(type: Jar) {
