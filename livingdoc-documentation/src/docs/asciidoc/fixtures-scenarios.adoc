@@ -1,0 +1,6 @@
+=== Scenario Fixtures
+
+> Scenario: An example describing a single test case as a sequence of steps.
+Each step is represented as a sentence containing either one or more test inputs
+or one or more expectations.
+

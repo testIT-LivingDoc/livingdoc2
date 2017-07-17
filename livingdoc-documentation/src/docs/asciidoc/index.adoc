@@ -1,0 +1,3 @@
+= LivingDoc Documentation
+
+include::fixtures.adoc[]

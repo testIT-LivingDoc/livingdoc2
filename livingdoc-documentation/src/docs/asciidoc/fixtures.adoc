@@ -1,0 +1,5 @@
+== Writing Fixture Code
+
+include::fixtures-decision-tables.adoc[]
+
+include::fixtures-scenarios.adoc[]

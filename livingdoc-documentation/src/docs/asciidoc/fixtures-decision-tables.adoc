@@ -1,0 +1,260 @@
+=== Decision Table Fixtures
+
+> Decision Table: A table where each row represents a test case. A column can contain
+either a test input or an expectation.
+
+.Example Decision Table
+
+|===
+|value a |value b |a + b = ?
+
+|1
+|2
+|3
+
+|-1
+|2
+|1
+|===
+
+In this example the columns `value a` and `value b` are test inputs and the column
+`a + b = ?` is an expectation.
+
+==== Life Cycle
+
+The execution of a decision table follows a very specific life cycle. It is
+comparable to the phases of a unit test class:
+
+.Execution Phases
+* `before table`
+* create fixture instance
+* `before row`
+* set inputs
+* `before first check`
+* execute checks
+* `after row`
+* `after table`
+
+Given the example at the beginning of this chapter, the execution would be as
+follows:
+
+* execute `before table` methods
+* create new fixture instance
+* execute `before row` methods
+* set input matching `value a` to `1`
+* set input matching `value b` to `2`
+* execute `before first check` methods
+* execute check matching `a + b = ?` with expectation `3`
+* execute `after row` methods
+* create new fixture instance
+* execute `before row` methods
+* set input matching `value a` to `-1`
+* set input matching `value b` to `2`
+* execute `before first check` methods
+* execute check matching `a + b = ?` with expectation `1`
+* execute `after row` methods
+* execute `after table` methods
+
+==== Exception Handling
+
+When executing a decision table, there are multiple points where exceptions
+can occur.
+
+* An exception in a `before table` method will stop the table from being
+executed with the exception of `after table` methods.
+* An exception in a `before row` method will stop the row from being
+executed with the exception of `after row` methods.
+* An exception in `set input` will stop the row from being executed any further
+with the exception of `after row` methods.
+* An exception in a `before first check` method will stop the row from being
+executed any further with the exception of `after row` methods.
+* An exception in a `execute check` method will fail the check but continue
+the row execution.
+
+==== Effects of Exceptions
+
+LivingDoc distinguishes exceptional cases between `AssertionError` and any
+other `Exception`:
+
+The occurrence of an `AssertionError` in `set input` or `execute check` will
+result in the this step being marked as `failed`. The occurrence of any other
+`Exception` will mark it with `exception`.
+
+The occurrence of any `Exception` in `before row`, `before first check` or
+`after row` will mark the entire row with `exception`. As will the occurrence
+of any `Exception` in `before table` or `after table` mark the entire table
+with `exception`.
+
+==== Annotations
+
+The following annotations can be used to implement a decision table fixture.
+
+===== @BeforeTable
+
+This annotation is used on static methods in order to bind them to the life
+cycle phase `before table`. The annotated method must be static and is _not_
+allowed to have any parameters.
+
+These methods are generally used to execute setup code only once before the
+table is evaluated. This could be the initialization of a browser or start
+of a server. Basically any expensive required setup.
+
+Multiple methods can be bound by this annotation. The order in which they are
+executed is non-deterministic. As a general rule there should not be any
+chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@BeforeTable
+static void createTestData() {
+  ...
+}
+----
+
+===== @BeforeRow
+
+This annotation is used on instance methods in order to bind them to the life
+cycle phase `before row`. The annotated method must _not_ be static and is
+_not_ allowed to have any parameters.
+
+These methods are generally used to execute setup code for each test case.
+As an example, this could be the reset of the system under test.
+
+Multiple methods can be bound by this annotation. The order in which they are
+executed is non-deterministic. As a general rule there should not be any
+chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@BeforeRow
+void resetState() {
+  ...
+}
+----
+
+===== @Input
+
+This annotation is used on instance fields or methods in order to set a test
+input value on the fixture. If it is used on a method, this method must _not_
+be static and must have exactly _one_ parameter.
+
+For most test inputs it should be enough to annotate the corresponding field.
+Input methods are often used when additional logic is required to set the
+actual value (e.g. loading a value from a database).
+
+This annotation can be used multiple times on the same target in order to
+define additional mappings for this test input. This can be useful if multiple
+languages or alternative spelling need to be supported.
+
+.Example
+[source, java]
+----
+@Input("value a")
+void setValueA(Double valueA) {
+  this.valueA = valueA;
+}
+
+@Input("value b")
+Double valueB;
+----
+
+===== @BeforeFirstCheck
+
+This annotation is used on instance methods in order to bind them to the life
+cycle phase `before first check`. The annotated method must _not_ be static
+and is _not_ allowed to have any parameters.
+
+These methods are generally used in order to gather same data used by the
+checks in case gathering that data inside the check methods would take too long.
+This is often the case when the fixture is based on UI-Interactions.
+
+Multiple methods can be bound by this annotation. The order in which they are
+executed is non-deterministic. As a general rule there should not be any
+chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@BeforeFirstCheck
+void gatherDataForChecks() {
+  ...
+}
+----
+
+===== @Check
+
+This annotation is used on instance methods in order to bind that method to
+an expectation column of the decision table. The annotated method must _not_ be
+static and must have exactly one parameter.
+
+These methods must execute some assertion logic to verify that the actual
+value resulting from some action is equal to the expressed expectation provided
+as the parameter of the method.
+
+This annotation can be used multiple times on the same target in order to
+define additional mappings for this check. This can be useful if multiple
+languages or alternative spelling need to be supported.
+
+.Example
+[source, java]
+----
+@Check("a + b = ?")
+void checkSum(Double expectedValue) {
+  Double actualValue = ...
+  assertThat(actualValue).isEqualTo(expectedValue);
+}
+----
+
+===== @AfterRow
+
+This annotation is used on instance methods in order to bin them to the life
+cycle phase `after row`. The annotated method must _not_ be static and is
+_not_ allowed to have any parameters.
+
+These methods are generally used to cleanup whatever was created in a
+corresponding `@BeforeRow` method.
+
+Multiple methods can be bound by this annotation. The order in which they are
+executed is non-deterministic. As a general rule there should not be any
+chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@AfterRow
+void resetState() {
+  ...
+}
+----
+
+===== @AfterTable
+
+This annotation is used on static methods in order to bind them to the life
+cycle phase `after table`. The annotated method must be static and is _not_
+allowed to have any parameters.
+
+These methods are generally used to cleanup whatever was created in a
+corresponding `@BeforeTable` method.
+
+Multiple methods can be bound by this annotation. The order in which they are
+executed is non-deterministic. As a general rule there should not be any
+chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@AfterTable
+void deleteTestData() {
+  ...
+}
+----
+
+==== Examples
+
+.Calculator Example
+[source, java]
+----
+include::{moduleBase}/src/main/java/examples/decisiontables/CalculatorFixture.java[]
+----

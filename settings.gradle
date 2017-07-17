@@ -1,6 +1,8 @@
 rootProject.name = 'livingdoc'
 
-include 'livingdoc-engine'
 include 'livingdoc-api'
 include 'livingdoc-converters'
+include 'livingdoc-documentation'
+include 'livingdoc-engine'
 include 'livingdoc-junit-engine'
+

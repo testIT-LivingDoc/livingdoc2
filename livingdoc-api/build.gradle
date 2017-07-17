@@ -1,15 +1,4 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-    }
-}
-
 apply plugin: 'java'
-apply plugin: 'org.asciidoctor.convert'
 
 sourceCompatibility = 1.8
 
@@ -35,19 +24,3 @@ artifacts {
     archives(javadocJar)
     archives(sourcesJar)
 }
-
-asciidoctor {
-    // Documentation: http://asciidoctor.org/docs/asciidoctor-gradle-plugin/
-    sources {
-        include 'fixture-api-documentation.adoc'
-    }
-    options doctype: 'book', backend: 'html5'
-    attributes 'moduleBase': "${projectDir}",
-            'source-highlighter': 'coderay',
-            'toc': 'left',
-            'toclevels': '3',
-            'sectlinks': 'true'
-}
-
-tasks.asciidoctor.mustRunAfter test
-tasks.build.dependsOn asciidoctor
