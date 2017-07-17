@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.Result.*
-import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.MalformedDecisionTableFixtureException
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.*
 import org.livingdoc.engine.execution.examples.decisiontables.model.*
 import org.mockito.ArgumentMatchers.anyString
 
@@ -24,13 +24,13 @@ internal class DecisionTableExecutorTest {
 
         val input = Header("input")
         val check = Header("check")
-        val columns = arrayListOf(input, check)
+        val headers = arrayListOf(input, check)
 
         val row1 = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
         val row2 = Row(mapOf(input to Field("r2i"), check to Field("r2c")))
         val rows = arrayListOf(row1, row2)
 
-        val resultTable = cut.execute(DecisionTable(columns, rows), LifeCycleFixture::class.java, null)
+        val resultTable = cut.execute(DecisionTable(headers, rows), LifeCycleFixture::class.java, null)
         assertThat(resultTable.result).isInstanceOf(Executed::class.java)
 
         val fixture = LifeCycleFixture.callback
@@ -54,9 +54,9 @@ internal class DecisionTableExecutorTest {
 
     @Test fun `malformed fixtures throw a special exception class`() {
 
-        val columns = emptyList<Header>()
+        val headers = emptyList<Header>()
         val rows = arrayListOf(Row(emptyMap()))
-        val decisionTable = DecisionTable(columns, rows)
+        val decisionTable = DecisionTable(headers, rows)
         val fixtureClass = MalformedFixtures.NoDefaultConstructor::class.java
 
         val tableResult = cut.execute(decisionTable, fixtureClass, null).result
@@ -64,6 +64,29 @@ internal class DecisionTableExecutorTest {
 
         val exception = (tableResult as Exception).exception
         assertThat(exception).isInstanceOf(MalformedDecisionTableFixtureException::class.java)
+
+    }
+
+    @Test fun `unmapped headers throw special exception class`() {
+
+        val input = Header("input")
+        val check = Header("check")
+        val unknown = Header("unknown")
+
+        val headers = listOf(input, check, unknown)
+        val rows = emptyList<Row>()
+        val decisionTable = DecisionTable(headers, rows)
+        val fixtureClass = LifeCycleFixture::class.java
+
+        val tableResult = cut.execute(decisionTable, fixtureClass, null).result
+        assertThat(tableResult).isInstanceOf(Exception::class.java)
+
+        val exception = (tableResult as Exception).exception
+        assertThat(exception).isInstanceOf(UnmappedHeaderException::class.java)
+        assertThat(exception).hasMessageContaining("- unknown")
+
+        val fixture = LifeCycleFixture.callback
+        verify(fixture, never()).beforeTable()
 
     }
 
@@ -104,9 +127,9 @@ internal class DecisionTableExecutorTest {
         private fun execute(): DecisionTableResult {
             val input = Header("input")
             val check = Header("check")
-            val columns = arrayListOf(input, check)
+            val headers = arrayListOf(input, check)
             val row = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
-            val decisionTable = DecisionTable(columns, listOf(row))
+            val decisionTable = DecisionTable(headers, listOf(row))
             return cut.execute(decisionTable, ExtendedLifeCycleFixture::class.java, null)
         }
 
@@ -116,7 +139,7 @@ internal class DecisionTableExecutorTest {
 
         val input = Header("input")
         val check = Header("check")
-        val columns = arrayListOf(input, check)
+        val headers = arrayListOf(input, check)
 
         val row = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
         val anotherRow = Row(mapOf(input to Field("r2i"), check to Field("r2c")))
@@ -508,7 +531,7 @@ internal class DecisionTableExecutorTest {
         }
 
         private fun execute(vararg rows: Row): DecisionTableResult {
-            val decisionTable = DecisionTable(columns, rows.asList())
+            val decisionTable = DecisionTable(headers, rows.asList())
             return cut.execute(decisionTable, LifeCycleFixture::class.java, null)
         }
 
@@ -522,7 +545,7 @@ internal class DecisionTableExecutorTest {
         val diffColumn = Header("a - b = ?")
         val multiplyColumn = Header("a * b = ?")
         val divideColumn = Header("a / b = ?")
-        val columns = arrayListOf(valueAColumn, valueBColumn, sumColumn, diffColumn, multiplyColumn, divideColumn)
+        val headers = arrayListOf(valueAColumn, valueBColumn, sumColumn, diffColumn, multiplyColumn, divideColumn)
 
         val rows = arrayListOf(
                 Row(mapOf(
@@ -558,7 +581,7 @@ internal class DecisionTableExecutorTest {
                         divideColumn to Field("1")
                 )))
 
-        val resultTable = cut.execute(DecisionTable(columns, rows), CalculatorDecisionTableFixture::class.java, null)
+        val resultTable = cut.execute(DecisionTable(headers, rows), CalculatorDecisionTableFixture::class.java, null)
 
         assertThat(resultTable.result).isEqualTo(Executed)
         assertThat(resultTable.rows).hasSize(4)

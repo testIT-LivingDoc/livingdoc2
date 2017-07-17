@@ -42,6 +42,17 @@ internal class DecisionTableExecution(
         if (errors.isNotEmpty()) {
             throw MalformedDecisionTableFixtureException(fixtureClass, errors)
         }
+
+        val unmappedHeaders = findUnmappedHeaders()
+        if (unmappedHeaders.isNotEmpty()) {
+            throw UnmappedHeaderException(fixtureClass, unmappedHeaders)
+        }
+    }
+
+    private fun findUnmappedHeaders(): List<String> {
+        return decisionTable.headers
+                .filter { (name) -> !fixtureModel.isInputAlias(name) && !fixtureModel.isCheckAlias(name) }
+                .map { it.name }
     }
 
     private fun executeTableWithBeforeAndAfter() {
@@ -238,5 +249,8 @@ internal class DecisionTableExecution(
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>)
         : RuntimeException("The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(separator = "\n", prefix = "  - ")}")
+
+    internal class UnmappedHeaderException(fixtureClass: Class<*>, unmappedHeaders: List<String>)
+        : RuntimeException("The fixture class <$fixtureClass> has no methods for the following columns: \n${unmappedHeaders.joinToString(separator = "\n", prefix = "  - ")}")
 
 }
