@@ -1,6 +1,7 @@
 package org.livingdoc.engine.fixtures
 
 import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.converters.TypeConverters
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter

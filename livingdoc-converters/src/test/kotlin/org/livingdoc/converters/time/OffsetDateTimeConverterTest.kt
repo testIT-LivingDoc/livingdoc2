@@ -2,11 +2,12 @@ package org.livingdoc.converters.time
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.converters.DefaultTypeConverterContract
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.parse
 
 
-internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDateTime>() {
+internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDateTime>(), DefaultTypeConverterContract {
 
     override val cut = OffsetDateTimeConverter()
 

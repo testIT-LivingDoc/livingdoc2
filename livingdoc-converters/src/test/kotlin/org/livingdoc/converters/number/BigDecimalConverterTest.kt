@@ -2,9 +2,10 @@ package org.livingdoc.converters.number
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.converters.DefaultTypeConverterContract
 import java.math.BigDecimal
 
-internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>() {
+internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>(), DefaultTypeConverterContract {
 
     override val cut = BigDecimalConverter()
 

@@ -1,4 +1,4 @@
-package org.livingdoc.engine.fixtures
+package org.livingdoc.converters
 
 import org.livingdoc.api.conversion.TypeConverter
 import org.slf4j.Logger
@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  * 1. load and manage default type converters provided by LivingDoc
  * 2. create and cache instances of (custom) type converters
  */
-internal object TypeConverterManager {
+object TypeConverterManager {
 
     private val log: Logger = LoggerFactory.getLogger(javaClass)
 

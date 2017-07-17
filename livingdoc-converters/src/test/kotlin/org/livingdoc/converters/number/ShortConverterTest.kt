@@ -2,8 +2,9 @@ package org.livingdoc.converters.number
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.converters.DefaultTypeConverterContract
 
-internal class ShortConverterTest : BoundedNumberConverterContract<Short>() {
+internal class ShortConverterTest : BoundedNumberConverterContract<Short>(), DefaultTypeConverterContract {
 
     override val cut = ShortConverter()
 

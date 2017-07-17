@@ -8,9 +8,9 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.api.conversion.ConversionException
 
 
-internal class CharacterConverterTest {
+internal class CharacterConverterTest : DefaultTypeConverterContract {
 
-    val cut = CharacterConverter()
+    override val cut = CharacterConverter()
 
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = arrayOf(" ", "\t", "a", "z", "0", "9", "-", "$", "|"))

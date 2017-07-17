@@ -8,9 +8,9 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.livingdoc.api.conversion.ConversionException
 
 
-internal class BooleanConverterTest {
+internal class BooleanConverterTest : DefaultTypeConverterContract {
 
-    val cut = BooleanConverter()
+    override val cut = BooleanConverter()
 
     @ParameterizedTest(name = "\"{0}\" is converted to: {1}")
     @CsvSource("true, true",

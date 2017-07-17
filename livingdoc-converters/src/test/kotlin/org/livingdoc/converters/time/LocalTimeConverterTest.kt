@@ -2,11 +2,12 @@ package org.livingdoc.converters.time
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.converters.DefaultTypeConverterContract
 import java.time.LocalTime
 import java.time.LocalTime.parse
 
 
-internal class LocalTimeConverterTest : TemporalConverterContract<LocalTime>() {
+internal class LocalTimeConverterTest : TemporalConverterContract<LocalTime>(), DefaultTypeConverterContract {
 
     override val cut = LocalTimeConverter()
 

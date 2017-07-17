@@ -1,11 +1,12 @@
 package org.livingdoc.engine.fixtures
 
-import fixtures.TypeConvertersTestFixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.BooleanConverter
+import org.livingdoc.converters.TypeConverters
+import org.livingdoc.converters.TypeConvertersTestFixtures.*
 import kotlin.reflect.KClass
 
 

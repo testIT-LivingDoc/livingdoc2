@@ -1,4 +1,4 @@
-package org.livingdoc.engine.fixtures
+package org.livingdoc.converters
 
 import org.livingdoc.api.conversion.Converter
 import org.livingdoc.api.conversion.TypeConverter
@@ -9,7 +9,7 @@ import java.lang.reflect.Parameter
 /**
  * Utility object providing [TypeConverter] related operations.
  */
-internal object TypeConverters {
+object TypeConverters {
 
     // TODO for future development
     // - inheritance >> loading converters from annotations down the inheritance stack (class level only)

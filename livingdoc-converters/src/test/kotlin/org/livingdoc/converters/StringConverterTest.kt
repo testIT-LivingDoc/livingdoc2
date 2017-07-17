@@ -6,9 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 
-internal class StringConverterTest {
+internal class StringConverterTest : DefaultTypeConverterContract {
 
-    val cut = StringConverter()
+    override val cut = StringConverter()
 
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = arrayOf("", " ", "foo", "foo bar"))
