@@ -80,7 +80,7 @@ internal abstract class NumberConverterContract<T : Number> {
 
         @Test fun `default locale used if no element given`() {
             val (stringValue, value) = englishValue
-            val result = cut.convert(stringValue, null)
+            val result = cut.convert(stringValue, null, null)
             assertThat(result).isEqualTo(value)
         }
 
@@ -88,7 +88,7 @@ internal abstract class NumberConverterContract<T : Number> {
             given(element.getAnnotation(Language::class.java)).willReturn(null)
 
             val (stringValue, value) = englishValue
-            val result = cut.convert(stringValue, element)
+            val result = cut.convert(stringValue, element, null)
             assertThat(result).isEqualTo(value)
         }
 
@@ -97,7 +97,7 @@ internal abstract class NumberConverterContract<T : Number> {
             given(language.value).willReturn("de")
 
             val (stringValue, value) = germanValue
-            val result = cut.convert(stringValue, element)
+            val result = cut.convert(stringValue, element, null)
             assertThat(result).isEqualTo(value)
         }
 

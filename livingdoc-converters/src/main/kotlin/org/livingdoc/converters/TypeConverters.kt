@@ -35,6 +35,10 @@ object TypeConverters {
      */
     fun findTypeConverter(parameter: Parameter, documentClass: Class<*>? = null): TypeConverter<*>? {
         val type = parameter.type
+        return findTypeConverter(type, parameter, documentClass)
+    }
+
+    fun findTypeConverter(type: Class<*>, parameter: Parameter, documentClass: Class<*>?): TypeConverter<*>? {
         val executable = parameter.declaringExecutable
         val clazz = executable.declaringClass
         return findConverterFor(converting = type, from = parameter)
@@ -61,6 +65,10 @@ object TypeConverters {
      */
     fun findTypeConverter(field: Field, documentClass: Class<*>? = null): TypeConverter<*>? {
         val type = field.type
+        return findTypeConverter(type, field, documentClass)
+    }
+
+    fun findTypeConverter(type: Class<*>, field: Field, documentClass: Class<*>?): TypeConverter<*>? {
         val clazz = field.declaringClass
         return findConverterFor(converting = type, from = field)
                 ?: findConverterFor(converting = type, from = clazz)
@@ -82,5 +90,4 @@ object TypeConverters {
                 .filter { it.canConvertTo(type) }
                 .firstOrNull()
     }
-
 }

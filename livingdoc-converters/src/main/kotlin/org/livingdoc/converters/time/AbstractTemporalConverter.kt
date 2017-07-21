@@ -13,7 +13,7 @@ import java.time.temporal.Temporal
 abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
 
     @Throws(ValueFormatException::class, MalformedFormatException::class)
-    override fun convert(value: String, element: AnnotatedElement?): T {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
         val formatter = getDateTimeFormatter(element)
         return parse(value, formatter)
     }

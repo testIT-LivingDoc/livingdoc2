@@ -16,7 +16,7 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
     abstract val upperBound: T?
 
     @Throws(ConversionException::class)
-    override fun convert(value: String, element: AnnotatedElement?): T {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
         val locale = getLocale(element)
         val format = getFormat(locale)
         val number = parse(format, value)

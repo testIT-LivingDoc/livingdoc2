@@ -14,12 +14,12 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
     override val lowerBound: Float = -Float.MAX_VALUE
     override val upperBound: Float = Float.MAX_VALUE
 
-    override fun convert(value: String, element: AnnotatedElement?): Float {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Float {
         return when (value) {
             NOT_A_NUMBER -> Float.NaN
             POSITIVE_INFINITY -> Float.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Float.NEGATIVE_INFINITY
-            else -> super.convert(value, element)
+            else -> super.convert(value, element, documentClass)
         }
     }
 

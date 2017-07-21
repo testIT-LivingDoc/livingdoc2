@@ -16,3 +16,6 @@ org.livingdoc.converters.time.LocalTimeConverter
 org.livingdoc.converters.time.LocalDateTimeConverter
 org.livingdoc.converters.time.OffsetDateTimeConverter
 org.livingdoc.converters.time.ZonedDateTimeConverter
+
+org.livingdoc.converters.collection.ListConverter
+org.livingdoc.converters.collection.SetConverter

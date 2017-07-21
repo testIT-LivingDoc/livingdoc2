@@ -13,6 +13,7 @@ public class TypeConvertersTestFixtures {
     public static class AnnotatedMethodParameter {
 
         public void method(@Converter(CustomBooleanConverter.class) Boolean value) {
+
             System.out.println(value);
         }
 
@@ -69,7 +70,7 @@ public class TypeConvertersTestFixtures {
     public static class CustomBooleanConverter implements TypeConverter<Boolean> {
 
         @Override
-        public Boolean convert(String value, AnnotatedElement element) throws ConversionException {
+        public Boolean convert(String value, AnnotatedElement element, Class<?> documentClass) throws ConversionException {
             return "true".equalsIgnoreCase(value);
         }
 

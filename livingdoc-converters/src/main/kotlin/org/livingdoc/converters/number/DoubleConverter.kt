@@ -15,12 +15,12 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
     override val lowerBound: Double = -Double.MAX_VALUE
     override val upperBound: Double = Double.MAX_VALUE
 
-    override fun convert(value: String, element: AnnotatedElement?): Double {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Double {
         return when (value) {
             NOT_A_NUMBER -> Double.NaN
             POSITIVE_INFINITY -> Double.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Double.NEGATIVE_INFINITY
-            else -> super.convert(value, element)
+            else -> super.convert(value, element, documentClass)
         }
     }
 

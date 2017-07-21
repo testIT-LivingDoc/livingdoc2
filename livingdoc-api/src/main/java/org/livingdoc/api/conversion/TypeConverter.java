@@ -20,7 +20,7 @@ import java.lang.reflect.AnnotatedElement;
 public interface TypeConverter<T> {
 
     /**
-     * Same as {@link #convert(String, AnnotatedElement)} with the annotated element being {@code null}.
+     * Same as {@link #convert(String, AnnotatedElement, Class)} with the annotated element and the class being {@code null}.
      *
      * @param value the value to convert
      * @return the converted target instance
@@ -28,7 +28,7 @@ public interface TypeConverter<T> {
      * @since 2.0
      */
     default T convert(String value) throws ConversionException {
-        return convert(value, null);
+        return convert(value, null, null);
     }
 
     /**
@@ -43,11 +43,12 @@ public interface TypeConverter<T> {
      *
      * @param value the value to convert
      * @param element the element being converted - might be {@code null}!
+     * @param documentClass the documentClasss
      * @return the converted target instance
      * @throws ConversionException in case the conversion failed
      * @since 2.0
      */
-    T convert(String value, AnnotatedElement element) throws ConversionException;
+    T convert(String value, AnnotatedElement element, Class<?> documentClass) throws ConversionException;
 
     /**
      * Checks whether this {@link TypeConverter} can convert strings to the given type.
