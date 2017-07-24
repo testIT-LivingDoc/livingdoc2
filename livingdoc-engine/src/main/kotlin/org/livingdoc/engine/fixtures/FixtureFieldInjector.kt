@@ -47,7 +47,7 @@ class FixtureFieldInjector(
         val documentClass = document?.javaClass
         val typeConverter = TypeConverters.findTypeConverter(field, documentClass)
                 ?: throw NoTypeConverterFoundException(field)
-        return typeConverter.convert(value, field)
+        return typeConverter.convert(value, field, documentClass)
     }
 
     class FixtureFieldInjectionException(field: Field, fixture: Any, e: Exception)

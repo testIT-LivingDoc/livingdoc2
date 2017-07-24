@@ -103,7 +103,7 @@ class FixtureMethodInvoker(
         val documentClass = document?.javaClass
         val typeConverter = TypeConverters.findTypeConverter(methodParameter, documentClass)
                 ?: throw NoTypeConverterFoundException(methodParameter)
-        return typeConverter.convert(argument, methodParameter)
+        return typeConverter.convert(argument, methodParameter, documentClass)
     }
 
     private fun forceInvocation(method: Method, arguments: Array<Any>, instance: Any? = null): Any? {
