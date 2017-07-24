@@ -19,7 +19,7 @@ class DoubleConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Double value = cut.convert("42.01");
+        Double value = cut.convert("42.01", null, null);
         assertThat(value).isEqualTo(42.01d);
     }
 

@@ -19,7 +19,7 @@ class ZonedDateTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime value = cut.convert(now.toString());
+        ZonedDateTime value = cut.convert(now.toString(), null, null);
         assertThat(value).isEqualTo(now);
     }
 

@@ -21,7 +21,7 @@ class BigIntegerConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        BigInteger value = cut.convert("42");
+        BigInteger value = cut.convert("42", null, null);
         assertThat(value).isEqualTo(BigInteger.valueOf(42L));
     }
 

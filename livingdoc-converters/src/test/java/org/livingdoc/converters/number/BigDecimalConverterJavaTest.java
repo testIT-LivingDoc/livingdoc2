@@ -21,7 +21,7 @@ class BigDecimalConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        BigDecimal value = cut.convert("42.01");
+        BigDecimal value = cut.convert("42.01", null, null);
         assertThat(value).isEqualTo(BigDecimal.valueOf(42.01d));
     }
 

@@ -13,6 +13,7 @@ import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
 import org.mockito.BDDMockito.given
+import utils.convert
 import java.lang.reflect.AnnotatedElement
 import java.time.temporal.Temporal
 

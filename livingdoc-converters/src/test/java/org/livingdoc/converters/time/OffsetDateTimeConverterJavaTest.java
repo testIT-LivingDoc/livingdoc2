@@ -19,7 +19,7 @@ class OffsetDateTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         OffsetDateTime now = OffsetDateTime.now();
-        OffsetDateTime value = cut.convert(now.toString());
+        OffsetDateTime value = cut.convert(now.toString(), null, null);
         assertThat(value).isEqualTo(now);
     }
 

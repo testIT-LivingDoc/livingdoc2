@@ -16,7 +16,7 @@ class BooleanConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Boolean value = cut.convert("true");
+        Boolean value = cut.convert("true", null, null);
         assertThat(value).isTrue();
     }
 

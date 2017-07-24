@@ -19,7 +19,7 @@ class LongConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Long value = cut.convert("42");
+        Long value = cut.convert("42", null, null);
         assertThat(value).isEqualTo(42L);
     }
 

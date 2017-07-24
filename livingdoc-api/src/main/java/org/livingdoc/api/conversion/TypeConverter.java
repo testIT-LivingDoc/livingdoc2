@@ -20,18 +20,6 @@ import java.lang.reflect.AnnotatedElement;
 public interface TypeConverter<T> {
 
     /**
-     * Same as {@link #convert(String, AnnotatedElement, Class)} with the annotated element and the class being {@code null}.
-     *
-     * @param value the value to convert
-     * @return the converted target instance
-     * @throws ConversionException in case the conversion failed
-     * @since 2.0
-     */
-    default T convert(String value) throws ConversionException {
-        return convert(value, null, null);
-    }
-
-    /**
      * Converts the given {@link String} value into an instance of this {@link TypeConverter}'s target type.
      * <p>
      * The {@link AnnotatedElement} is the element who's value should be converted ({@code method} or {@code field})

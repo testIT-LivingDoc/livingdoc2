@@ -19,7 +19,7 @@ class LocalTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         LocalTime now = LocalTime.now();
-        LocalTime value = cut.convert(now.toString());
+        LocalTime value = cut.convert(now.toString(), null, null);
         assertThat(value).isEqualTo(now);
     }
 

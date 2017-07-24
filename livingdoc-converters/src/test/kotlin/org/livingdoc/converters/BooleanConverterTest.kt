@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.livingdoc.api.conversion.ConversionException
+import utils.convert
 
 
 internal class BooleanConverterTest : DefaultTypeConverterContract {
@@ -42,5 +43,4 @@ internal class BooleanConverterTest : DefaultTypeConverterContract {
     @Test fun `converter can converted to Kotlin Boolean`() {
         assertThat(cut.canConvertTo(Boolean::class.java)).isTrue()
     }
-
 }

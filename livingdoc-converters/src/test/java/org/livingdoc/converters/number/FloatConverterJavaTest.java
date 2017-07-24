@@ -19,7 +19,7 @@ class FloatConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Float value = cut.convert("42.01");
+        Float value = cut.convert("42.01", null, null);
         assertThat(value).isEqualTo(42.01f);
     }
 

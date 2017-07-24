@@ -19,7 +19,7 @@ class ByteConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Byte value = cut.convert("42");
+        Byte value = cut.convert("42", null, null);
         assertThat(value).isEqualTo(( byte ) 42);
     }
 

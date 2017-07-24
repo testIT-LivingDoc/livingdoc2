@@ -3,6 +3,7 @@ package org.livingdoc.converters.number
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.DefaultTypeConverterContract
+import utils.convert
 
 internal class FloatConverterTest : BoundedNumberConverterContract<Float>(), DefaultTypeConverterContract {
 

@@ -9,6 +9,7 @@ import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.Language
 import org.mockito.BDDMockito.given
 import utils.EnglishDefaultLocale
+import utils.convert
 import java.lang.reflect.AnnotatedElement
 
 @EnglishDefaultLocale

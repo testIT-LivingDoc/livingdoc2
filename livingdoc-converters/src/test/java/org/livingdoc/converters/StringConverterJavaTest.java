@@ -16,7 +16,7 @@ class StringConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        String value = cut.convert("abc");
+        String value = cut.convert("abc", null, null);
         assertThat(value).isEqualTo("abc");
     }
 

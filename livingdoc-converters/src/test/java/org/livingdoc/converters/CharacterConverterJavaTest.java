@@ -16,7 +16,7 @@ class CharacterConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Character value = cut.convert("a");
+        Character value = cut.convert("a", null, null);
         assertThat(value).isEqualTo('a');
     }
 

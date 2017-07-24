@@ -19,7 +19,7 @@ class ShortConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Short value = cut.convert("42");
+        Short value = cut.convert("42", null, null);
         assertThat(value).isEqualTo(( short ) 42);
     }
 
