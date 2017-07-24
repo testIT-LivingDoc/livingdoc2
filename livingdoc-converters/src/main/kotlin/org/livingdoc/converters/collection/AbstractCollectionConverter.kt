@@ -11,37 +11,33 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
 
     @Throws(ConversionException::class)
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
-        val tokenized: List<String> = tokenize(value)
-        val paramsConverted = convertIntoParameterType(element, documentClass, tokenized)
+        val tokens: List<String> = tokenize(value)
+        val convertedParams = convertToTypedParameters(element, documentClass, tokens)
 
-        return convertToTarget(paramsConverted)
+        return convertToTarget(convertedParams)
     }
 
     private fun tokenize(value: String): List<String> {
         return value.split(delimiters = defaultSeparator).map { it.trim() }
     }
 
-    private fun convertIntoParameterType(element: AnnotatedElement?, documentClass: Class<*>?, tokenized: List<String>): List<Any> {
+    private fun convertToTypedParameters(element: AnnotatedElement?, documentClass: Class<*>?, tokenized: List<String>): List<Any> {
 
         val paramTypeConverter = when (element) {
-            is Field -> {
-                converterFromField(element, documentClass)
-            }
-            is Parameter -> {
-                converterFromParameter(element, documentClass)
-            }
+            is Field -> { findTypeConverterForTypedParam(element, documentClass) }
+            is Parameter -> { findTypeConverterForTypedParam(element, documentClass) }
             else -> null
         } ?: throw IllegalStateException()
 
         return tokenized.map { paramTypeConverter.convert(it, element, documentClass) }.toList()
     }
 
-    private fun converterFromParameter(parameter: Parameter, documentClass: Class<*>?): TypeConverter<*>? {
+    private fun findTypeConverterForTypedParam(parameter: Parameter, documentClass: Class<*>?): TypeConverter<*>? {
         val targetType = getTargetType(parameter.parameterizedType)
         return TypeConverters.findTypeConverter(targetType as Class<*>, parameter, documentClass)
     }
 
-    private fun converterFromField(field: Field, documentClass: Class<*>?): TypeConverter<*>? {
+    private fun findTypeConverterForTypedParam(field: Field, documentClass: Class<*>?): TypeConverter<*>? {
         val targetType = getTargetType(field.genericType)
         return TypeConverters.findTypeConverter(targetType as Class<*>, field, documentClass)
     }

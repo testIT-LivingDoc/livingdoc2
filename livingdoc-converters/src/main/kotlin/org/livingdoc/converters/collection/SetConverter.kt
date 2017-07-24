@@ -3,8 +3,8 @@ package org.livingdoc.converters.collection
 open class SetConverter : AbstractCollectionConverter<Set<Any>>(){
 
     override fun canConvertTo(targetType: Class<*>?): Boolean {
-        val isJavaObjectType = Set::class.javaObjectType == targetType
-        val isKotlinType = Set::class.java == targetType
+        val isJavaObjectType = Set::class.java == targetType
+        val isKotlinType = Set::class == targetType
         return isJavaObjectType || isKotlinType
     }
 

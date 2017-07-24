@@ -7,8 +7,8 @@ open class ListConverter : AbstractCollectionConverter<List<Any>>() {
     }
 
     override fun canConvertTo(targetType: Class<*>?): Boolean {
-        val isJavaObjectType = List::class.javaObjectType == targetType
-        val isKotlinType = List::class.java == targetType
+        val isJavaObjectType = List::class.java == targetType
+        val isKotlinType = List::class == targetType
         return isJavaObjectType || isKotlinType
     }
 }
