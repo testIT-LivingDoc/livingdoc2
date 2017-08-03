@@ -6,7 +6,10 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
+import utils.EnglishDefaultLocale;
 
+
+@EnglishDefaultLocale
 class BigIntegerConverterJavaTest {
 
     BigIntegerConverter cut = new BigIntegerConverter();

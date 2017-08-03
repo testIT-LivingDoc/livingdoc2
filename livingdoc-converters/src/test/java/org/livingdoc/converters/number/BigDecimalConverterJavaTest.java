@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
+import utils.EnglishDefaultLocale;
 
+
+@EnglishDefaultLocale
 class BigDecimalConverterJavaTest {
 
     BigDecimalConverter cut = new BigDecimalConverter();

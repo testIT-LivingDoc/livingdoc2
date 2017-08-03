@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import utils.EnglishDefaultLocale;
 
+
+@EnglishDefaultLocale
 class ShortConverterJavaTest {
 
     ShortConverter cut = new ShortConverter();
