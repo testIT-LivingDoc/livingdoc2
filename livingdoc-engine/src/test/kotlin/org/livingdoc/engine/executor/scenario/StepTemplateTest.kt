@@ -43,6 +43,12 @@ class StepTemplateTest {
         }
 
         @Test
+        fun `accepts optional set of quotation characters`() {
+            val cut = StepTemplate.parse("{user} enters the building.", setOf('\''))
+            assertThat(cut.quotationCharacters).containsExactly('\'')
+        }
+
+        @Test
         fun `parses StepTemplates with multiple variables`() {
             val cut = StepTemplate.parse("The user {user} enters a value for {variable}: {value}")
             assertThat(cut.fragments).containsExactly(
@@ -67,7 +73,6 @@ class StepTemplateTest {
                 StepTemplate.parse("Two {consecutive}{variables} cannot be separated by a matcher.")
             }
         }
-
     }
 
     @Test

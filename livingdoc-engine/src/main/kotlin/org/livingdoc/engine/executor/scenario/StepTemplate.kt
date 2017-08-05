@@ -5,8 +5,14 @@ package org.livingdoc.engine.executor.scenario
  * Represents a template specified by a fixture developer for scenario steps. Used for matching scenario
  * steps to methods in a fixture. A valid `StepTemplate` consists of a sequence of fragments (text and variables).
  * The sequence of fragments is never empty and does not contain two consecutive fragments of the same type.
+ *
+ * Variables can be quoted with optional `quotationCharacters` (e.g. single quotation marks). A matching step
+ * *must* contain exactly the same quotation characters. By default, no quotation characters are used.
  */
-internal class StepTemplate(val fragments: List<Fragment>) {
+internal class StepTemplate(
+        val fragments: List<Fragment>,
+        val quotationCharacters: Set<Char>)
+{
 
     init {
         assert(!fragments.isEmpty())
@@ -14,7 +20,7 @@ internal class StepTemplate(val fragments: List<Fragment>) {
     }
 
     private fun assertAlternatingSequenceOfFragments() {
-        var wasTextFragment = !(fragments.first() is Text)
+        var wasTextFragment = fragments.first() !is Text
         fragments.forEach {
             assert(wasTextFragment xor (it is Text))
             wasTextFragment = it is Text
@@ -27,7 +33,7 @@ internal class StepTemplate(val fragments: List<Fragment>) {
     fun alignWith(step: String, maxDistance: Int = 20) = Alignment(this, step, maxDistance)
 
     override fun toString(): String = fragments.joinToString(separator = "") {
-        when(it) {
+        when (it) {
             is Text -> it.content
             is Variable -> "{${it.name}}"
         }
@@ -36,12 +42,14 @@ internal class StepTemplate(val fragments: List<Fragment>) {
     companion object {
 
         /**
-         * Reads a template for a scenario step description from a string.
+         * Reads a template for a scenario step description from a string. Optionally takes a set of quotation
+         * characters for variable separation.
          *
          * @return a valid `StepTemplate`
          * @throws IllegalFormatException if the specified template string is malformed
          */
-        fun parse(templateAsString: String) = StepTemplate(parseString(templateAsString))
+        fun parse(templateAsString: String, quotationCharacters: Set<Char> = emptySet())
+                = StepTemplate(parseString(templateAsString), quotationCharacters)
 
         private fun parseString(templateAsString: String): List<Fragment> {
             if (templateAsString.isEmpty()) {
