@@ -30,7 +30,7 @@ internal class StepTemplate(
     /**
      * Returns an `Alignment` of the template and the specified scenario step.
      */
-    fun alignWith(step: String, maxDistance: Int = 20) = Alignment(this, step, maxDistance)
+    fun alignWith(step: String, maxCostOfAlignment: Int = 20) = Alignment(this, step, maxCostOfAlignment)
 
     override fun toString(): String = fragments.joinToString(separator = "") {
         when (it) {

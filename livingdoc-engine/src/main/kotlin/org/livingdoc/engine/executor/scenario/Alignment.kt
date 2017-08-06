@@ -12,16 +12,15 @@ import java.lang.Math.min
  *         {username} has {action} the {object}.
  *         -----Peter has ----left the building.
  * ```
- * yields an editing distance of `0` (all Text fragments of the `StepTemplate` are matched without modification)
- * and the variables `username = "Peter"`, `action = "left"` and `object = "building"`.
+ * yields the variables `username = "Peter"`, `action = "left"` and `object = "building"`.
  *
  * If a scenario step does not align well, it is an unlikely match. Because alignment calculation is expensive,
- * it will be aborted when the distance between the `StepTemplate` and the scenario step exceeds `maxDistance`.
+ * it will be aborted when the cost of the alignment exceeds `maxCost`.
  */
 internal class Alignment(
         val stepTemplate: StepTemplate,
         val step: String,
-        val maxDistance: Int) {
+        val maxCost: Int) {
 
     /* To calculate an optimal global alignment of the `StepTemplate` and the String `s` representing the scenario step,
      * we use an adapted version of the Needleman-Wunsch algorithm. The algorithm runs in two phases:
@@ -31,21 +30,25 @@ internal class Alignment(
      */
 
     /**
-     * The editing distance between the Text fragments of the `StepTemplate` and the aligned scenario step.
+     * Total cost of alignment is determined by the sum of the costs of the operations needed to turn the template
+     * into the step string. The cost of individual operations is defined below.
      */
-    val distance: Int by lazy {
+    val totalCost: Int by lazy {
         distanceMatrix.last().last()
     }
 
-    fun isMisaligned() = distance >= maxDistance
+    /**
+     * Returns whether the alignment calculation was aborted because the `totalCost` exceeded `maxCost`.
+     */
+    fun isMisaligned() = totalCost >= maxCost
 
+    /**
+     * The variables extracted from the aligned step.
+     */
     val variables: Map<String, String> by lazy {
         if (!isMisaligned()) extractVariables() else emptyMap()
     }
 
-    /**
-     * A pair of strings representing the alignment of the StepTemplate and the scenario steps.
-     */
     val alignedStrings: Pair<String, String> by lazy {
         if (!isMisaligned()) buildAlignedStrings() else Pair(stepTemplate.toString(), step)
     }
@@ -59,7 +62,7 @@ internal class Alignment(
      * each other and judging how well the template fits to the step.
      *
      * The following shows the first part of a distance matrix for the template "User {name} has entered the building."
-     * and the scenario step "User Peter has entered the building."
+     * and the scenario step "User Peter has entered the building.":
      *
      * ```
      *         U  s  e  r     P  e  t  e  r     h  a  s    ... -- s
@@ -80,12 +83,11 @@ internal class Alignment(
      * stepTemplate("User ", name, " has entered the building.")
      * ```
      *
-     * The matrix tracks the editing distance for all pairs of substrings of the `StepTemplate` and `s`. Characters
-     * aligned with a variable do not count towards that distance.
+     * The matrix tracks the alignment cost for all pairs of substrings of the template and step.
      *
-     * Distance grows monotonically from the top-left origin to the bottom-right. No row can contain a distance smaller
-     * than the smallest value of the previous row. Because calculating the entire matrix is O(n²) in time, we can abort
-     * the calculation, once the minimum value in a row exceeds `maxDistance` and it becomes obvious that the template
+     * Cost grows monotonically from the top-left origin to the bottom-right. No row can contain a cost lower
+     * than the lowest value of the previous row. Because calculating the entire matrix is O(n²) in time, we can abort
+     * the calculation, once the minimum value in a row exceeds `maxCost` and it becomes obvious that the template
      * does not match the scenario step.
      */
     private fun constructDistanceMatrix(stepTemplate: StepTemplate, s: String): DistanceMatrix {
@@ -108,7 +110,7 @@ internal class Alignment(
                             d[i][j] = min(d[i][j], d[i - 1][j - 1] + costSubstitution(fragment.content[i - offset], s[j - 1]))
                             currentMinDistance = min(currentMinDistance, d[i][j])
                         }
-                        if (currentMinDistance > maxDistance) {
+                        if (currentMinDistance > maxCost) {
                             d[d.lastIndex][s.length] = currentMinDistance
                             return d
                         }
@@ -130,11 +132,18 @@ internal class Alignment(
     }
 
 
-    /* The following values define how we calculate the editing distance between template and step. */
+    /* The following values define how we calculate the cost for aligning template and step.
+     * Some hints:
+     * - matching identical characters should be cheapest (we want that to happen as much as possible)
+     * - extending a variable should be cheaper than changing a text fragment
+     * - cost for insertion, deletion and substitution has to fulfill the triangle inequality for substitution
+     *   to be considered in an alignment: costSubstitution <= costInsertion + costDeletion
+     * - costs should not be negative (this would screw up the `maxCost` optimization)
+     */
 
-    private val costInsertion = 1
-    private val costSimpleDeletion = 1
-    private val costDeletedQuotationChar = maxDistance
+    private val costInsertion = 2
+    private val costSimpleDeletion = 2
+    private val costDeletedQuotationChar = maxCost
 
     private fun costDeletion(deletedCharInFragment: Char): Int {
         return if (stepTemplate.quotationCharacters.contains(deletedCharInFragment))
@@ -144,8 +153,8 @@ internal class Alignment(
     }
 
     private val costMatchingCharacters = 0
-    private val costSimpleSubstitution = 1
-    private val costSubstitutedQuotationChar = maxDistance
+    private val costSimpleSubstitution = costInsertion + costSimpleDeletion // TODO: remove substitution?
+    private val costSubstitutedQuotationChar = maxCost
 
     private fun costSubstitution(inFragment: Char, inStep: Char): Int {
         return if (inFragment != inStep) {
@@ -157,8 +166,8 @@ internal class Alignment(
             costMatchingCharacters
     }
 
-    private val costVariableSimpleExtension = 0
-    private val costVariableExtensionOverQuotationChar = maxDistance
+    private val costVariableSimpleExtension = 1
+    private val costVariableExtensionOverQuotationChar = maxCost
 
     private fun costVariableExtension(extension: Char): Int {
         return if (stepTemplate.quotationCharacters.contains(extension))
@@ -167,7 +176,7 @@ internal class Alignment(
             costVariableSimpleExtension
     }
 
-    private val costVariableDeletion = 0
+    private val costVariableDeletion = 1
 
     /**
      * Extracts the variables from the scenario step and returns them as a map of variable names to their respective
@@ -232,7 +241,7 @@ internal class Alignment(
 
     /**
      * Performs the second phase of the Needleman-Wunsch algorithm: tracing back a path through the distance
-     * matrix to determine an optimal global alignment. Such a path follows the smallest editing distance
+     * matrix to determine an optimal global alignment. Such a path follows the smallest alignment cost
      * back to the origin:
      *
      * ```

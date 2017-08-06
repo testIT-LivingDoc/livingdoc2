@@ -9,8 +9,8 @@ internal class ScenarioStepMatcher(val stepTemplates: List<StepTemplate>) {
 
     fun match(step: String): MatchingResult {
         val bestAlignment = stepTemplates
-                .map { it.alignWith(step, maxDistance = 15) }
-                .minBy { it.distance }
+                .map { it.alignWith(step, maxCostOfAlignment = 15) }
+                .minBy { it.totalCost }
         if (bestAlignment == null || bestAlignment.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }

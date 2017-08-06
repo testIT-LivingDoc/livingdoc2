@@ -5,29 +5,38 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
+
+private val PRINT_DEBUG_OUTPUT = false
+
 class AlignmentTest {
 
     @Nested inner class `given a StepTemplate without variables` {
 
         @Test fun `aligns perfectly matching step`() {
             val alignment = align("Elvis has left the building.", "Elvis has left the building.")
-            assertThat(alignment).hasNoVariables().hasDistance(0)
+            assertThat(alignment)
+                    .hasNoVariables()
+                    .alignsAs(
+                            "Elvis has left the building.",
+                            "Elvis has left the building.")
         }
 
         @Test fun `aligns similar step`() {
-            val alignment = align("Elvis has left the building.", "Peter has left the building.")
+            val alignment = align("Elvis has entered the building.", "Peter has left the building.")
             assertThat(alignment)
                     .hasNoVariables()
-                    .hasDistance(5)
-                    .alignsAs("Elvis has left the building.", "Peter has left the building.")
+                    .alignsAs(
+                            "Elvis has -entered the building.",
+                            "Peter has left---- the building.")
         }
 
         @Test fun `aligns empty string`() {
             val alignment = align("Elvis likes pizza.", "")
             assertThat(alignment)
                     .hasNoVariables()
-                    .hasDistance(18)
-                    .alignsAs("Elvis likes pizza.", "------------------")
+                    .alignsAs(
+                            "Elvis likes pizza.",
+                            "------------------")
         }
     }
 
@@ -36,45 +45,30 @@ class AlignmentTest {
 
         @Test fun `extracts value from perfectly matching step`() {
             val alignment = align("User {username} has entered the building.", "User Peter has entered the building.")
-            assertThat(alignment)
-                    .hasDistance(0)
-                    .hasVariables("username" to "Peter")
-                    .alignsAs("User XXXXX has entered the building.", "User Peter has entered the building.")
+            assertThat(alignment).hasVariables("username" to "Peter")
         }
 
         @Test fun `extracts value from step with slightly different text fragments`() {
             val alignment = align("User {user} has entered the building.", "A user Peter has left the building.")
-            assertThat(alignment)
-                    .hasDistance(9)
-                    .hasVariables("user" to "Peter")
-                    .alignsAs("--User XXXXX has entered the building.", "A user Peter has --le-ft the building.")
+            assertThat(alignment).hasVariables("user" to "Peter")
         }
 
         @Test fun `extracts value from step when the variable is the first part of the template`() {
             val alignment = align("{username} has entered the building.", "Peter has left the building.")
-            assertThat(alignment)
-                    .hasDistance(6)
-                    .hasVariables("username" to "Peter")
-                    .alignsAs("XXXXX has entered the building.", "Peter has --le-ft the building.")
+            assertThat(alignment).hasVariables("username" to "Peter")
         }
 
         @Test fun `extracts all of the values`() {
             val alignment = align("{username} has {action} the {object}.", "Peter has left the building.")
-            assertThat(alignment)
-                    .hasDistance(0)
-                    .hasVariables(
-                            "username" to "Peter",
-                            "action" to "left",
-                            "object" to "building")
-                    .alignsAs(
-                            "XXXXX has XXXX the XXXXXXXX.",
-                            "Peter has left the building.")
+            assertThat(alignment).hasVariables(
+                    "username" to "Peter",
+                    "action" to "left",
+                    "object" to "building")
         }
 
         @Test fun `extracts empty string as value from perfectly matching step`() {
             val alignment = align("My name is {username}.", "My name is .")
             assertThat(alignment)
-                    .hasDistance(0)
                     .hasVariables("username" to "")
                     .alignsAs(
                             "My name is X.",
@@ -94,64 +88,69 @@ class AlignmentTest {
                         "Elvis left the building and this is a really long sentence that doesn't align with the next one at all.",
                         "Peter likes pizza.")
                 .hasNoVariables()
-        Assertions.assertThat(alignment.maxDistance <= alignment.distance).isTrue()
+        Assertions.assertThat(alignment.maxCost <= alignment.totalCost).isTrue()
     }
 
 
     @Nested inner class `given a StepTemplate with quotation characters` {
 
-        @Test fun `extracts variables from perfectly matching step`() {
-            val alignment = alignWithPunctuation("{user} likes '{stuff}'.", "Peter likes 'Pizza'.")
-            assertThat(alignment)
-                    .alignsAs("XXXXX likes 'XXXXX'.", "Peter likes 'Pizza'.")
-                    .hasVariables("user" to "Peter", "stuff" to "Pizza")
+        @Test fun `extracts variable from perfectly matching step`() {
+            val alignment = alignWithQuotationCharacters("Peter likes '{stuff}'.", "Peter likes 'Pizza'.")
+            assertThat(alignment).hasVariables("stuff" to "Pizza")
         }
 
         @Test fun `extracts variable with adjacent insertion`() {
-            val alignment = alignWithPunctuation("'{user}' likes '{stuff}'.", "'Peter' likes delicious 'Pizza'.")
-            assertThat(alignment)
-                    .hasVariables("user" to "Peter", "stuff" to "Pizza")
-                    .alignsAs("'XXXXX' likes ----------'XXXXX'.", "'Peter' likes delicious 'Pizza'.")
+            val alignment = alignWithQuotationCharacters("'{user}' likes '{stuff}'.", "'Peter' likes delicious 'Pizza'.")
+            assertThat(alignment).hasVariables("user" to "Peter", "stuff" to "Pizza")
         }
 
-        @Test fun `is misaligned, if a quotation character is missed in the step`() {
-            val alignment = alignWithPunctuation(
+        @Test fun `extracts from quoted and unquoted variables in the same template`() {
+            val alignment = alignWithQuotationCharacters("{user} likes '{stuff}'.", "Peter likes delicious 'Pizza'.")
+            assertThat(alignment).hasVariables("user" to "Peter", "stuff" to "Pizza")
+        }
+
+        @Test fun `is misaligned, if a quotation character is missing in the step`() {
+            val alignment = alignWithQuotationCharacters(
                     "Peter does not like '{stuff}'.",
                     "Peter does not like missing punctuation marks'.")
             assertThat(alignment).isMisaligned()
         }
 
         @Test fun `extracted variables do not contain quotation characters`() {
-            val alignment = alignWithPunctuation(
+            val alignment = alignWithQuotationCharacters(
                     "Peter does not like '{stuff}'.",
                     "Peter does not like ''unnecessary quotation marks'.")
             Assertions.assertThat(alignment.variables["stuff"]).doesNotContain("'")
-            assertThat(alignment)
-                    .hasVariables("stuff" to "unnecessary quotation marks")
-                    .hasDistance(1) // due to insertion of the unnecessary single quotation mark
+            assertThat(alignment).hasVariables("stuff" to "unnecessary quotation marks")
         }
 
-        private fun alignWithPunctuation(templateString: String, step: String): Alignment {
-            return Alignment(StepTemplate.parse(templateString, quotationCharacters = setOf('\'')), step, maxDistance = 20)
+        private fun alignWithQuotationCharacters(templateString: String, step: String): Alignment {
+            return Alignment(StepTemplate.parse(templateString, quotationCharacters = setOf('\'')), step, maxCost = MAX_DISTANCE)
         }
     }
 
 
     private fun align(templateString: String, step: String): Alignment {
-        return Alignment(StepTemplate.parse(templateString), step, maxDistance = 20)
+        return Alignment(StepTemplate.parse(templateString), step, maxCost = MAX_DISTANCE)
     }
 
+    private val MAX_DISTANCE = 40 // allow for 20 insertions (a bit much, but useful for the examples in this test)
 }
 
-
-private fun assertThat(actual: Alignment) = AlignmentAssert(actual)
+private fun assertThat(actual: Alignment): AlignmentAssert {
+    if (PRINT_DEBUG_OUTPUT) {
+        printDistanceMatrix(actual)
+        printAlignment(actual)
+    }
+    return AlignmentAssert(actual)
+}
 
 private class AlignmentAssert(actual: Alignment)
     : AbstractAssert<AlignmentAssert, Alignment>(actual, AlignmentAssert::class.java) {
 
-    fun hasDistance(distance: Int): AlignmentAssert {
-        if (actual.distance != distance)
-            failWithMessage("Expected an editing distance of $distance, but was ${actual.distance}")
+    fun hasTotalCost(cost: Int): AlignmentAssert {
+        if (actual.totalCost != cost)
+            failWithMessage("Expected a total cost of $cost, but was ${actual.totalCost}")
         return this
     }
 
@@ -195,16 +194,20 @@ private class AlignmentAssert(actual: Alignment)
         if (missingVariables.isNotEmpty() || unexpectedVariables.isNotEmpty() || wrongValues.isNotEmpty()) {
             val reasons = mutableListOf<String>()
             if (missingVariables.isNotEmpty())
-                reasons.add("is missing " + missingVariables.joinToString { "'$it'" })
+                reasons.add("it is missing " + missingVariables.joinToString { "'$it'" })
             if (unexpectedVariables.isNotEmpty())
-                reasons.add("unexpectedly also yields " + unexpectedVariables.joinToString { "'$it'" })
+                reasons.add("it unexpectedly also yields " + unexpectedVariables.joinToString { "'$it'" })
             if (wrongValues.isNotEmpty())
                 wrongValues.forEach {
                     reasons.add("the value of '$it' was '${actual.variables[it]}', not '${variablesToValues[it]}'")
                 }
 
-            failWithMessage("Expected alignment yielding the variables\n%s\nto yield\n%s\nbut it %s.",
-                    formatVariables(actual.variables),
+            val description = if (actual.variables.isEmpty())
+                "with no variables "
+            else
+                String.format("yielding the variables\n%s\n", formatVariables(actual.variables))
+            failWithMessage("Expected alignment %sto yield\n%s\nbut %s.",
+                    description,
                     formatVariables(variablesToValues),
                     reasons.joinToString(separator = "\n\tand "))
         }
@@ -217,15 +220,23 @@ private class AlignmentAssert(actual: Alignment)
 
 
 /**
- * Prints the distance matrix `d` for the string `s` to the standard output. Useful for debugging.
+ * Prints the distance matrix of the given alignment.
  */
-fun printDistanceMatrix(s: String, d: DistanceMatrix) {
+private fun printDistanceMatrix(alignment: Alignment) {
     print("   ")
-    s.forEach { print(String.format("%3c", it)) }
+    alignment.step.forEach { print(String.format("%3c", it)) }
     println()
-    for (line in d) {
+    for (line in alignment.distanceMatrix) {
         line.forEach { print(String.format("%3d", it)) }
         println()
     }
+}
+
+/**
+ * Prints the aligned strings of template and step for the given alignment.
+ */
+private fun printAlignment(alignment: Alignment) {
+    println("\t(template) ${alignment.alignedStrings.first}" +
+            "\n\t    (step) ${alignment.alignedStrings.second}")
 }
 
