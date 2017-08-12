@@ -1,6 +1,27 @@
 = Glossary
 
-== LivingDoc 2 - Core Domain
+== Context
+
+LivingDoc is a testing tool and framework that supports teams in implementing
+advanced agile testing practices such as Acceptance Test-Driven Development
+(ATDD), Spec-by-Example and Behavior-Driven Development (BDD).
+LivingDoc's primary focus is to facilitate the cooperation of people in the
+roles of _domain expert_, _developer_ and _tester_, the three amigos in BDD.
+
+Domain Expert:: [[domain-expert]]
+Someone supporting a development team with their deep knowledge of the domain
+in which development of the <<system-under-test, SuT>> is taking place.
+
+Developer:: [[developer]]
+As part of an agile development team a developer creates and tests the
+<<system-under-test, SuT>>.
+
+Tester:: [[tester]]
+Someone providing their expertise in agile software testing to a development
+team.
+
+
+== LivingDoc Engine (Core Domain)
 
 Decision Table:: [[decision-table]]
 A table where each row represents a <<test-case,Test Case>>.  A column can
@@ -23,6 +44,18 @@ Fixture:: [[fixture]]
 Coded by a developer, a fixture is used to execute a <<test-case,Test Case>>.
 The fixture maps <<test-input,Test Inputs>> to a series of interactions with the
 <<system-under-test,System under Test>> and evaluates <<expectations,Expectations>>.
+
+Report:: [[report]]
+A meaningful composition of an <<executable-document, Document>> and the
+<<result, Results>> of its execution.
+
+Repository:: [[repository]]
+This is were <<executable-document, Executable Documents>> are stored.
+
+Result:: [[result]]
+Calculated by LivingDoc for each <<test-case, Test Case>> when executing
+a <<executable-document, Document>>. A result is always one of: _Success_,
+_Failure_, _Error_ or _Skipped_.
 
 Scenario:: [[scenario]]
 An <<example, Example>> describing a single <<test-case,Test Case>> as a
@@ -49,3 +82,11 @@ Type Converter:: [[type-converter]]
 Referenced by a <<fixture,Fixture>>, a type converter takes
 <<test-input,Test Inputs>> and maps them to types in the test domain (e.g.
 converts the string `"5 €"` to `Currency(Type.EURO, 5)`).
+
+
+== Confluence Repository (Supporting)
+
+
+== Reporting (Supporting)
+
+
