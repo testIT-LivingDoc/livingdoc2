@@ -1,11 +1,13 @@
-package org.livingdoc.repositories.local
+package org.livingdoc.repositories.file
 
 import org.livingdoc.repositories.Document
+import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.DocumentRepository
 
-class LocalRepository(
+class FileRepository(
         private val name: String,
-        private val config: LocalRepositoryConfig
+        private val format: DocumentFormat,
+        private val config: FileRepositoryConfig
 ) : DocumentRepository {
 
     override fun getDocument(documentIdentifier: String): Document? {

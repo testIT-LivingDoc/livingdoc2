@@ -6,5 +6,5 @@ include 'livingdoc-documentation'
 include 'livingdoc-engine'
 include 'livingdoc-junit-engine'
 include 'livingdoc-repositories'
-include 'livingdoc-repository-local'
+include 'livingdoc-repository-file'
 
