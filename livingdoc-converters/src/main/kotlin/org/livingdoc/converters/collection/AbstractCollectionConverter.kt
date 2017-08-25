@@ -10,7 +10,7 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
     val defaultSeparator = ","
 
     @Throws(ConversionException::class)
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
+    override fun convert(value: String, element: AnnotatedElement, documentClass: Class<*>?): T {
         val tokens: List<String> = tokenize(value)
         val convertedParams = convertToTypedParameters(element, documentClass, tokens)
 
@@ -21,13 +21,16 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
         return value.split(delimiters = defaultSeparator).map { it.trim() }
     }
 
-    private fun convertToTypedParameters(element: AnnotatedElement?, documentClass: Class<*>?, tokenized: List<String>): List<Any> {
-
+    private fun convertToTypedParameters(element: AnnotatedElement, documentClass: Class<*>?, tokenized: List<String>): List<Any> {
         val paramTypeConverter = when (element) {
-            is Field -> { findTypeConverterForTypedParam(element, documentClass) }
-            is Parameter -> { findTypeConverterForTypedParam(element, documentClass) }
-            else -> null
-        } ?: throw IllegalStateException()
+            is Field -> {
+                findTypeConverterForTypedParam(element, documentClass)
+            }
+            is Parameter -> {
+                findTypeConverterForTypedParam(element, documentClass)
+            }
+            else -> error("annotated element is of a not supported type: " + element.toString())
+        } ?: throw NoTypeConverterFoundException(element)
 
         return tokenized.map { paramTypeConverter.convert(it, element, documentClass) }.toList()
     }
@@ -50,4 +53,7 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
     }
 
     abstract fun convertToTarget(collection: List<Any>): T
+
+    internal class NoTypeConverterFoundException(parameter: AnnotatedElement)
+        : RuntimeException("No type converter could be found to convert method parameter: $parameter")
 }

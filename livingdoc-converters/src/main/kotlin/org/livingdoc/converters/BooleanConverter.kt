@@ -8,7 +8,7 @@ import java.lang.reflect.AnnotatedElement
 open class BooleanConverter : TypeConverter<Boolean> {
 
     @Throws(ConversionException::class)
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Boolean? {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Boolean {
         val trimmedLowerCaseValue = value.trim().toLowerCase()
         when (trimmedLowerCaseValue) {
             "true" -> return true

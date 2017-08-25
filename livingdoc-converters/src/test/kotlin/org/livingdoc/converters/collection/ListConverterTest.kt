@@ -7,14 +7,19 @@ internal class ListConverterTest : CollectionConverterContract<List<Any>>(), Def
 
     override val cut = ListConverter()
     override val collectionClass = List::class.java
-    override val fixtureClass = listFake::class
+    override val fixtureClass = ListFake::class
     override val intExpectation = listOf(1, 2, 3, 4)
     override val booleanExpectation = listOf(true, false, false, true)
 
-    internal class listFake {
-        fun integer(@Converter(ListConverter::class) value: List<Int>) {}
+    @Suppress("unused", "UNUSED_PARAMETER")
+    internal class ListFake {
+
+        @Converter(ListConverter::class)
+        val integer: List<Int> = ArrayList()
 
         fun boolean(@Converter(ListConverter::class) value: List<Boolean>) {}
+
+        fun noType(@Converter(ListConverter::class) value: List<ListFake>) {}
     }
 }
 

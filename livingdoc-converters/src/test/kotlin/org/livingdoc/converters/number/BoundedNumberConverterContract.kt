@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.exceptions.NumberRangeException
 import utils.EnglishDefaultLocale
-import utils.convert
 import java.math.BigDecimal
 
 @EnglishDefaultLocale
@@ -22,7 +21,7 @@ internal abstract class BoundedNumberConverterContract<T : Number> : NumberConve
             val lowerBoundPlusOne = BigDecimal(lowerBoundAsString).subtract(BigDecimal.ONE)
             val lowerBoundPlusOneAsString = "$lowerBoundPlusOne"
             assertThrows(NumberRangeException::class.java, {
-                cut.convert(lowerBoundPlusOneAsString)
+                cut.convert(lowerBoundPlusOneAsString, null, null)
             })
         }
 
@@ -34,7 +33,7 @@ internal abstract class BoundedNumberConverterContract<T : Number> : NumberConve
             val upperBoundPlusOne = BigDecimal(upperBoundAsString).add(BigDecimal.ONE)
             val upperBoundPlusOneAsString = "$upperBoundPlusOne"
             assertThrows(NumberRangeException::class.java, {
-                cut.convert(upperBoundPlusOneAsString)
+                cut.convert(upperBoundPlusOneAsString, null, null)
             })
         }
 

@@ -7,7 +7,7 @@ import java.lang.reflect.AnnotatedElement
 
 open class CharacterConverter : TypeConverter<Char> {
 
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Char? {
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Char {
         if (value.length != 1) {
             throw ConversionException("not a char value: '$value'")
         }

@@ -7,14 +7,19 @@ internal class SetConverterTest : CollectionConverterContract<Set<Any>>(), Defau
 
     override val cut = SetConverter()
     override val collectionClass = Set::class.java
-    override val fixtureClass = setFake::class
+    override val fixtureClass = SetFake::class
     override val intExpectation = setOf(1, 2, 3, 4)
     override val booleanExpectation = setOf(true, false, false, true)
 
-    internal class setFake {
-        fun integer(@Converter(SetConverter::class) value: Set<Int>) {}
+    @Suppress("unused", "UNUSED_PARAMETER")
+    internal class SetFake {
+
+        @Converter(SetConverter::class)
+        val integer: Set<Int> = HashSet()
 
         fun boolean(@Converter(SetConverter::class) value: Set<Boolean>) {}
+
+        fun noType(@Converter(SetConverter::class) value: Set<SetFake>) {}
     }
 }
 

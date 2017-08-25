@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.livingdoc.api.conversion.ConversionException
-import utils.convert
 
 
 internal class BooleanConverterTest : DefaultTypeConverterContract {
@@ -21,23 +20,23 @@ internal class BooleanConverterTest : DefaultTypeConverterContract {
             "FALSE, false",
             "FaLsE, false")
     fun `values are converted correctly`(value: String, expected: Boolean) {
-        assertThat(cut.convert(value)).isEqualTo(expected)
+        assertThat(cut.convert(value, null, null)).isEqualTo(expected)
     }
 
     @Test fun `leading whitespaces are removed`() {
-        assertThat(cut.convert(" true")).isTrue()
-        assertThat(cut.convert("\ttrue")).isTrue()
-        assertThat(cut.convert("\ntrue")).isTrue()
+        assertThat(cut.convert(" true", null, null)).isTrue()
+        assertThat(cut.convert("\ttrue", null, null)).isTrue()
+        assertThat(cut.convert("\ntrue", null, null)).isTrue()
     }
 
     @Test fun `trailing whitespaces are removed`() {
-        assertThat(cut.convert("true ")).isTrue()
-        assertThat(cut.convert("true\t")).isTrue()
-        assertThat(cut.convert("true\n")).isTrue()
+        assertThat(cut.convert("true ", null, null)).isTrue()
+        assertThat(cut.convert("true\t", null, null)).isTrue()
+        assertThat(cut.convert("true\n", null, null)).isTrue()
     }
 
     @Test fun `illegal value throws ConversionException`() {
-        assertThrows(ConversionException::class.java) { cut.convert("neither") }
+        assertThrows(ConversionException::class.java) { cut.convert("neither", null, null) }
     }
 
     @Test fun `converter can converted to Kotlin Boolean`() {

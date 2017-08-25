@@ -21,6 +21,7 @@ repositories {
 dependencies {
     compile "org.slf4j:slf4j-api:1.7.25"
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version")
+    compile ("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
     compile(project(':livingdoc-api'))
 
     testCompile 'ch.qos.logback:logback-classic:1.2.3'

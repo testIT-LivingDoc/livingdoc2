@@ -9,7 +9,6 @@ import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.Language
 import org.mockito.BDDMockito.given
 import utils.EnglishDefaultLocale
-import utils.convert
 import java.lang.reflect.AnnotatedElement
 
 @EnglishDefaultLocale
@@ -47,7 +46,7 @@ internal abstract class NumberConverterContract<T : Number> {
     }
 
     private fun assertThatValueCanBeConverted(value: T) {
-        val result = cut.convert("$value")
+        val result = cut.convert("$value", null, null)
         assertThat(result).isEqualTo(value)
     }
 
@@ -64,13 +63,13 @@ internal abstract class NumberConverterContract<T : Number> {
     }
 
     private fun assertThatValueCanBeConverted(value: String, expected: T) {
-        val result = cut.convert(value)
+        val result = cut.convert(value, null, null)
         assertThat(result).isEqualTo(expected)
     }
 
     @Test fun `non number cannot be converted`() {
         assertThrows(ConversionException::class.java) {
-            cut.convert("not a number")
+            cut.convert("not a number", null, null)
         }
     }
 

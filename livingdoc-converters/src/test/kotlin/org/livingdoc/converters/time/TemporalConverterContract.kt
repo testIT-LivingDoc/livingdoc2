@@ -13,7 +13,6 @@ import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
 import org.mockito.BDDMockito.given
-import utils.convert
 import java.lang.reflect.AnnotatedElement
 import java.time.temporal.Temporal
 
@@ -34,7 +33,7 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         return validInputVariations
                 .map { (value, expectedResult) ->
                     dynamicTest("$value is valid input format", {
-                        val result = cut.convert(value)
+                        val result = cut.convert(value, null, null)
                         assertThat(result).isEqualTo(expectedResult)
                     })
                 }
@@ -43,7 +42,7 @@ internal abstract class TemporalConverterContract<T : Temporal> {
 
     @Test fun `non temporal cannot be converted`() {
         assertThrows(ValueFormatException::class.java) {
-            cut.convert("not a temporal value")
+            cut.convert("not a temporal value", null, null)
         }
     }
 

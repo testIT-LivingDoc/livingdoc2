@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.api.conversion.ConversionException
-import utils.convert
 
 
 internal class CharacterConverterTest : DefaultTypeConverterContract {
@@ -16,22 +15,22 @@ internal class CharacterConverterTest : DefaultTypeConverterContract {
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = arrayOf(" ", "\t", "a", "z", "0", "9", "-", "$", "|"))
     fun `any char value can be converted`(value: String) {
-        assertThat(cut.convert(value)).isNotNull()
+        assertThat(cut.convert(value, null, null)).isNotNull()
     }
 
     @Test fun `empty string is not a valid char`() {
         assertThrows(ConversionException::class.java, {
-            cut.convert("")
+            cut.convert("", null, null)
         })
     }
 
     @Test fun `one character string is a valid char`() {
-        assertThat(cut.convert("a")).isEqualTo('a')
+        assertThat(cut.convert("a", null, null)).isEqualTo('a')
     }
 
     @Test fun `two character string is not a valid char`() {
         assertThrows(ConversionException::class.java, {
-            cut.convert("ab")
+            cut.convert("ab", null, null)
         })
     }
 

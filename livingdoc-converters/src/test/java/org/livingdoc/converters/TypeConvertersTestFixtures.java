@@ -13,19 +13,14 @@ public class TypeConvertersTestFixtures {
     public static class AnnotatedMethodParameter {
 
         public void method(@Converter(CustomBooleanConverter.class) Boolean value) {
-
-            System.out.println(value);
         }
-
     }
 
     public static class AnnotatedMethod {
 
         @Converter(CustomBooleanConverter.class)
         public void method(Boolean value) {
-            System.out.println(value);
         }
-
     }
 
     public static class AnnotatedField {
@@ -41,9 +36,7 @@ public class TypeConvertersTestFixtures {
         public Boolean field;
 
         public void method(Boolean value) {
-            System.out.println(value);
         }
-
     }
 
     public static class NoAnnotations {
@@ -51,9 +44,7 @@ public class TypeConvertersTestFixtures {
         public Boolean field;
 
         public void method(Boolean value) {
-            System.out.println(value);
         }
-
     }
 
     @ExecutableDocument("abc-1")

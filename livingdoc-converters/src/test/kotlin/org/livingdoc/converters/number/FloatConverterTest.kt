@@ -3,7 +3,6 @@ package org.livingdoc.converters.number
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.DefaultTypeConverterContract
-import utils.convert
 
 internal class FloatConverterTest : BoundedNumberConverterContract<Float>(), DefaultTypeConverterContract {
 
@@ -19,15 +18,15 @@ internal class FloatConverterTest : BoundedNumberConverterContract<Float>(), Def
     override val germanValue = "42.000,24" to 42000.24f
 
     @Test fun `not a number is handled correctly`() {
-        cut.convert(Float.NaN.toString())
+        cut.convert(Float.NaN.toString(), null, null)
     }
 
     @Test fun `positive infinity is handled correctly`() {
-        cut.convert(Float.POSITIVE_INFINITY.toString())
+        cut.convert(Float.POSITIVE_INFINITY.toString(), null, null)
     }
 
     @Test fun `negative infinity is handled correctly`() {
-        cut.convert(Float.NEGATIVE_INFINITY.toString())
+        cut.convert(Float.NEGATIVE_INFINITY.toString(), null, null)
     }
 
     @Test fun `converter can converted to Kotlin Float`() {
