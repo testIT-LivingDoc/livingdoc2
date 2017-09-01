@@ -30,7 +30,7 @@ internal abstract class CollectionConverterContract<T : Collection<Any>> {
     @Test
     fun `canConvertInt`() {
         val input = "1, 2, 3, 4"
-        val parameterTypeConverter = fixtureClass.memberProperties.first { it.name =="integer"}.javaField
+        val parameterTypeConverter = fixtureClass.memberProperties.first { it.name == "integer" }.javaField
 
         val converted = cut.convert(input, parameterTypeConverter as Field, null)
         assertThat(converted).isEqualTo(intExpectation)
@@ -63,7 +63,7 @@ internal abstract class CollectionConverterContract<T : Collection<Any>> {
     }
 
     private fun getParameterTypeConverter(fixtureClass: KClass<*>, methodName: String): AnnotatedElement {
-        val method = fixtureClass.memberFunctions.first { it.name == methodName}.javaMethod
+        val method = fixtureClass.memberFunctions.first { it.name == methodName }.javaMethod
         return method!!.parameters[0]
     }
 }

@@ -15,7 +15,7 @@ internal class ListConverterTest : CollectionConverterContract<List<Any>>(), Def
     internal class ListFake {
 
         @Converter(ListConverter::class)
-        val integer: List<Int> = ArrayList()
+        lateinit var integer: List<Int>
 
         fun boolean(@Converter(ListConverter::class) value: List<Boolean>) {}
 

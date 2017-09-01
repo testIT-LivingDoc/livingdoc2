@@ -15,7 +15,7 @@ internal class SetConverterTest : CollectionConverterContract<Set<Any>>(), Defau
     internal class SetFake {
 
         @Converter(SetConverter::class)
-        val integer: Set<Int> = HashSet()
+        lateinit var integer: Set<Int>
 
         fun boolean(@Converter(SetConverter::class) value: Set<Boolean>) {}
 

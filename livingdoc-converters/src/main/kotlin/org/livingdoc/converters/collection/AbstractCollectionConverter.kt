@@ -23,12 +23,9 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
 
     private fun convertToTypedParameters(element: AnnotatedElement, documentClass: Class<*>?, tokenized: List<String>): List<Any> {
         val paramTypeConverter = when (element) {
-            is Field -> {
-                findTypeConverterForTypedParam(element, documentClass)
-            }
-            is Parameter -> {
-                findTypeConverterForTypedParam(element, documentClass)
-            }
+            is Field -> findTypeConverterForTypedParam(element, documentClass)
+            is Parameter -> findTypeConverterForTypedParam(element, documentClass)
+
             else -> error("annotated element is of a not supported type: $element")
         } ?: throw NoTypeConverterFoundException(element)
 
