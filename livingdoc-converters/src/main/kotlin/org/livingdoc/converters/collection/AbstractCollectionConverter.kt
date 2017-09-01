@@ -29,7 +29,7 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
             is Parameter -> {
                 findTypeConverterForTypedParam(element, documentClass)
             }
-            else -> error("annotated element is of a not supported type: " + element.toString())
+            else -> error("annotated element is of a not supported type: $element")
         } ?: throw NoTypeConverterFoundException(element)
 
         return tokenized.map { paramTypeConverter.convert(it, element, documentClass) }.toList()
@@ -49,7 +49,7 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
         val parameterizedType = type as ParameterizedType
 
         val actualTypeArguments = parameterizedType.actualTypeArguments
-        return actualTypeArguments!![0]
+        return actualTypeArguments[0]
     }
 
     abstract fun convertToTarget(collection: List<Any>): T
