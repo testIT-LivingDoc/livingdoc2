@@ -25,7 +25,6 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
         val paramTypeConverter = when (element) {
             is Field -> findTypeConverterForTypedParam(element, documentClass)
             is Parameter -> findTypeConverterForTypedParam(element, documentClass)
-
             else -> error("annotated element is of a not supported type: $element")
         } ?: throw NoTypeConverterFoundException(element)
 
@@ -51,6 +50,6 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
 
     abstract fun convertToTarget(collection: List<Any>): T
 
-    internal class NoTypeConverterFoundException(parameter: AnnotatedElement)
-        : RuntimeException("No type converter could be found to convert method parameter: $parameter")
+    internal class NoTypeConverterFoundException(annotatedElement: AnnotatedElement)
+        : ConversionException("No type converter could be found to convert annotated element: $annotatedElement")
 }
