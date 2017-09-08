@@ -3,8 +3,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC2'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:${junitPlatformVersion}")
     }
 }
 
@@ -23,19 +23,20 @@ dependencies {
     compile project(":livingdoc-converters")
     compile project(":livingdoc-repositories")
 
-    compile "org.slf4j:slf4j-api:1.7.25"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile("org.slf4j:slf4j-api:1.7.25")
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version")
 
-    testCompile 'ch.qos.logback:logback-classic:1.2.3'
-    testCompile "org.assertj:assertj-core:3.6.2"
+    testCompile("ch.qos.logback:logback-classic:1.2.3")
+    testCompile("org.assertj:assertj-core:3.6.2")
     testCompile('org.mockito:mockito-core:2.7.22')
     testCompile('com.nhaarman:mockito-kotlin:1.4.0') { transitive = false }
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-RC2"
-    testCompile "org.junit.jupiter:junit-jupiter-params:5.0.0-RC2"
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testCompile("org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}")
 
-    testRuntime("org.junit.platform:junit-platform-launcher:1.0.0-RC2")
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0-RC2"
+    testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+    testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
 }
 
 task javadocJar(type: Jar) {
