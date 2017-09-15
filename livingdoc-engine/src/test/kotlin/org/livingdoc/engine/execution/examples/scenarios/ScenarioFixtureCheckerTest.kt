@@ -37,7 +37,7 @@ class ScenarioFixtureCheckerTest {
 
     @Test fun `step templates and annotated methods must have same number of parameters`() {
         val errors = executeCheck(MalformedFixtures.MismatchingParameterNumber::class)
-        assertThat(errors).containsExactly("Method <${methodPrefix}MismatchingParameterNumber.step()> is annotated with step template with wrong parameter count: 'step with {parameter}'")
+        assertThat(errors).containsExactly("Method <${methodPrefix}MismatchingParameterNumber.step()> is annotated with a step template which has wrong parameter count: 'step with {parameter}'")
     }
 
     @Test fun `after methods must not have parameters`() {

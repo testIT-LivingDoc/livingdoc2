@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 
 import org.livingdoc.api.fixtures.scenarios.After
 import org.livingdoc.api.fixtures.scenarios.Before
+import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureModel
 import java.lang.reflect.Method
@@ -66,12 +67,23 @@ internal object ScenarioFixtureChecker {
     private fun stepMethodsHaveValidSignature(model: ScenarioFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
         errors.addAll(elements = checkThatMethodsAreNonStatic(model.stepMethods, Step::class))
-        model.stepTemplateToMethod.forEach { stepTemplate, method ->
-            if (stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount) {
-                errors.add("Method <${method}> is annotated with step template with wrong parameter count: '${stepTemplate}'")
-            }
-        }
+        errors.addAll(elements = checkThatMethodHaveWrongParameterCount(model.stepTemplateToMethod))
+        errors.addAll(elements = checkThatMethodParametersAreNamed(model.stepMethods))
         return errors
+    }
+
+    private fun checkThatMethodHaveWrongParameterCount(stepTemplateToMethod: Map<StepTemplate, Method>): Collection<String> {
+        return stepTemplateToMethod
+                .filter { (stepTemplate, method) -> stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount }
+                .map { (stepTemplate, method) -> "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'" }
+    }
+
+    private fun checkThatMethodParametersAreNamed(methods: Collection<Method>): Collection<String> {
+        return methods
+                .filter { method ->
+                    method.parameters.filter { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) }.isNotEmpty()
+                }
+                .map { "Method <$it> has a parameter without a name! Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag" }
     }
 
     private fun checkThatMethodsHaveNoParameters(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
