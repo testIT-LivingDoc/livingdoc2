@@ -3,7 +3,6 @@ package org.livingdoc.engine.execution.examples.scenarios
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
-import org.livingdoc.engine.execution.examples.scenarios.matching.ScenarioFixtureChecker
 import org.livingdoc.engine.execution.examples.scenarios.model.Scenario
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult

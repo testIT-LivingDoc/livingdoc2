@@ -1,10 +1,11 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.engine.execution.examples.scenarios
 
 import org.livingdoc.api.fixtures.scenarios.After
 import org.livingdoc.api.fixtures.scenarios.Before
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.Step
-import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureModel
+import org.livingdoc.engine.execution.examples.scenarios.matching.StepTemplate
+import org.livingdoc.engine.execution.examples.scenarios.matching.Variable
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
@@ -67,12 +68,12 @@ internal object ScenarioFixtureChecker {
     private fun stepMethodsHaveValidSignature(model: ScenarioFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
         errors.addAll(elements = checkThatMethodsAreNonStatic(model.stepMethods, Step::class))
-        errors.addAll(elements = checkThatMethodHaveWrongParameterCount(model.stepTemplateToMethod))
+        errors.addAll(elements = checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(model.stepTemplateToMethod))
         errors.addAll(elements = checkThatMethodParametersAreNamed(model.stepMethods))
         return errors
     }
 
-    private fun checkThatMethodHaveWrongParameterCount(stepTemplateToMethod: Map<StepTemplate, Method>): Collection<String> {
+    private fun checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(stepTemplateToMethod: Map<StepTemplate, Method>): Collection<String> {
         return stepTemplateToMethod
                 .filter { (stepTemplate, method) -> stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount }
                 .map { (stepTemplate, method) -> "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'" }
@@ -80,9 +81,7 @@ internal object ScenarioFixtureChecker {
 
     private fun checkThatMethodParametersAreNamed(methods: Collection<Method>): Collection<String> {
         return methods
-                .filter { method ->
-                    method.parameters.filter { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) }.isNotEmpty()
-                }
+                .filter { it.parameters.any { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) } }
                 .map { "Method <$it> has a parameter without a name! Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag" }
     }
 

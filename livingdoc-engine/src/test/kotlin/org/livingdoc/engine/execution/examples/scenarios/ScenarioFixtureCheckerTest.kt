@@ -2,7 +2,6 @@ package org.livingdoc.engine.execution.examples.scenarios
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.examples.scenarios.matching.ScenarioFixtureChecker
 import kotlin.reflect.KClass
 
 class ScenarioFixtureCheckerTest {
