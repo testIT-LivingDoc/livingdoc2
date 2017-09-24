@@ -26,8 +26,8 @@ dependencies {
 
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
     testCompile('org.assertj:assertj-core:3.6.2')
-    testCompile('org.mockito:mockito-core:2.7.22')
-    testCompile('com.nhaarman:mockito-kotlin:1.4.0') { transitive = false }
+    testCompile("org.mockito:mockito-core:$mockitoVersion")
+    testCompile("com.nhaarman:mockito-kotlin:$mockitoKotlinVersion") { transitive = false }
 
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testCompile("org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}")
