@@ -139,8 +139,7 @@ internal class ScenarioExecutorTest {
                 assertThat(result).isInstanceOf(Exception::class.java)
             }
 
-            @Test
-            fun `the following setup commands are not invoked`() {
+            @Test fun `the following setup commands are not invoked`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
 
                 execute(Step("step1"), Step("step2"))
@@ -148,8 +147,7 @@ internal class ScenarioExecutorTest {
                 verify(fixture, never()).before2()
             }
 
-            @Test
-            fun `no scenario steps are executed`() {
+            @Test fun `no scenario steps are executed`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
 
                 execute(Step("step1"), Step("step2"))
@@ -158,8 +156,7 @@ internal class ScenarioExecutorTest {
                 verify(fixture, never()).step2()
             }
 
-            @Test
-            fun `the results of all steps are Skipped`() {
+            @Test fun `the results of all steps are Skipped`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
 
                 val result = execute(Step("step1"), Step("step2"))
@@ -168,8 +165,7 @@ internal class ScenarioExecutorTest {
                 assertThat(result.steps[1].result).isEqualTo(Skipped)
             }
 
-            @Test
-            fun `teardown commands, however, are invoked`() {
+            @Test fun `teardown commands, however, are invoked`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
 
                 execute(Step("step1"), Step("step2"))
@@ -181,8 +177,7 @@ internal class ScenarioExecutorTest {
 
         @Nested inner class `during execution of a step` {
 
-            @Test
-            fun `the result of the scenario is Executed`() {
+            @Test fun `the result of the scenario is Executed`() {
                 given { fixture.step1() } willThrow { IllegalStateException() }
 
                 val result = execute(Step("step1"), Step("step2")).result
@@ -190,8 +185,7 @@ internal class ScenarioExecutorTest {
                 assertThat(result).isInstanceOf(Executed::class.java)
             }
 
-            @Test
-            fun `the result of the step is Exception`() {
+            @Test fun `the result of the step is Exception`() {
                 given { fixture.step1() } willThrow { IllegalStateException() }
 
                 val stepResult = execute(Step("step1"), Step("step2")).steps[0].result
@@ -199,8 +193,7 @@ internal class ScenarioExecutorTest {
                 assertThat(stepResult).isInstanceOf(Exception::class.java)
             }
 
-            @Test
-            fun `the following steps are Skipped`() {
+            @Test fun `the following steps are Skipped`() {
                 given { fixture.step1() } willThrow { IllegalStateException() }
 
                 val stepResult = execute(Step("step1"), Step("step2")).steps[1].result
@@ -208,8 +201,7 @@ internal class ScenarioExecutorTest {
                 assertThat(stepResult).isInstanceOf(Skipped::class.java)
             }
 
-            @Test
-            fun `the teardown commands are executed`() {
+            @Test fun `the teardown commands are executed`() {
                 given { fixture.step1() } willThrow { IllegalStateException() }
 
                 execute()
