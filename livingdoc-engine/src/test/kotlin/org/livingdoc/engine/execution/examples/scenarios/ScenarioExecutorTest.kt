@@ -57,7 +57,6 @@ internal class ScenarioExecutorTest {
         verify(fixture, times(2)).step2()
     }
 
-
     @Nested inner class `when executing steps with parameters` {
 
         val fixture = ExtendedLifeCycleFixture.callback!!
@@ -84,7 +83,6 @@ internal class ScenarioExecutorTest {
             assertThat(result).isInstanceOf(Exception::class.java)
         }
     }
-
 
     @Nested inner class `when an assertion fails during execution of a scenario step` {
 
@@ -130,8 +128,7 @@ internal class ScenarioExecutorTest {
 
         @Nested inner class `during a setup command (@Before)` {
 
-            @Test
-            fun `the result is Exception`() {
+            @Test fun `the result is Exception`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
 
                 val result = execute(Step("step1"), Step("step2")).result
@@ -253,5 +250,4 @@ internal class ScenarioExecutorTest {
         val scenario = Scenario(steps.asList())
         return cut.execute(scenario, ExtendedLifeCycleFixture::class.java, null)
     }
-
 }
