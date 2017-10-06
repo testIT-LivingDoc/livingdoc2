@@ -1,9 +1,8 @@
 package org.livingdoc.converters.collection
 
 import org.livingdoc.api.conversion.Converter
-import org.livingdoc.converters.DefaultTypeConverterContract
 
-internal class ListConverterTest : CollectionConverterContract<List<Any>>(), DefaultTypeConverterContract {
+internal class ListConverterTest : CollectionWithSingleParamContract<List<Any>>() {
 
     override val cut = ListConverter()
     override val collectionClass = List::class.java

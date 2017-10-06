@@ -1,6 +1,6 @@
 package org.livingdoc.converters.collection
 
-open class ListConverter : AbstractCollectionConverter<List<Any>>() {
+open class ListConverter : AbstractCollectionWithSingleParamConverter<List<Any>>() {
 
     override fun convertToTarget(collection: List<Any>): List<Any> {
         return collection
