@@ -37,13 +37,13 @@ open class MapConverter : AbstractCollectionConverter(), TypeConverter<Map<Any, 
         }
         return arrayOf(keys, values)
     }
-    
+
     fun convertToTarget(keys: List<Any>, values: List<Any>): Map<Any, Any> {
         val convertedMap: MutableMap<Any, Any> = HashMap()
         for (i in keys.indices) {
             convertedMap.put(keys[i], values[i])
         }
-        return convertedMap
+        return convertedMap.toMap()
     }
 
     override fun canConvertTo(targetType: Class<*>?): Boolean {
