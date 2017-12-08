@@ -18,7 +18,7 @@ abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<
     }
 
     private fun tokenize(value: String): List<String> {
-        return value.split(delimiters = defaultSeparator).map { it.trim() }
+        return value.split(delimiters = *arrayOf(defaultSeparator)).map { it.trim() }
     }
 
     private fun convertToTypedParameters(element: AnnotatedElement, documentClass: Class<*>?, tokenized: List<String>): List<Any> {

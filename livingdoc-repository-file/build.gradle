@@ -33,7 +33,6 @@ dependencies {
 
     testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
-    testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
 }
 
 task javadocJar(type: Jar) {

@@ -13,7 +13,7 @@ data class Configuration(
          * Loads a [Configuration] instance from the `livingdoc.yml` file on the classpath root.
          */
         fun load(): Configuration {
-            val configFile = javaClass.classLoader.getResource("livingdoc.yml")
+            val configFile = Configuration::class.java.classLoader.getResource("livingdoc.yml")
                     ?: throw FileNotFoundException("File not found: livingdoc.yml")
             val inputStream = configFile.openStream()
             return loadFromStream(inputStream)
