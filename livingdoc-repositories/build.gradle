@@ -22,6 +22,7 @@ dependencies {
     compile("org.slf4j:slf4j-api:1.7.25")
     compile("org.yaml:snakeyaml:1.18")
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version")
+    compile "org.jsoup:jsoup:1.11.2"
 
     testCompile('ch.qos.logback:logback-classic:1.2.3')
     testCompile('org.assertj:assertj-core:3.6.2')

@@ -1,6 +1,6 @@
 package org.livingdoc.repositories
 
-class Document(val content: List<DocumentNode>)
+open class Document(val content: List<DocumentNode>)
 
 sealed class DocumentNode {
     var result: Result = Result.Unknown
@@ -11,27 +11,27 @@ sealed class DocumentNode {
             override val children: List<DocumentNode>
     ) : DocumentNode()
 
-    data class TextList (
+    data class TextList(
             val items: List<Text>,
             override val children: List<DocumentNode>
     ) : DocumentNode()
 
-    data class Table(
-            val rows: List<TableRow>,
+    data class DecisionTable(
+            val headers: List<String>,
+            val rows: List<DecisionTableRow>,
             override val children: List<DocumentNode>
     ) : DocumentNode()
 
-    data class TableRow(
-            val cells: List<TableCell>,
+    data class DecisionTableRow(
+            val cells: Map<String, DecisionTableCell>,
             override val children: List<DocumentNode>
     ) : DocumentNode()
 
-    data class TableCell(
+    data class DecisionTableCell(
             val text: String,
             override val children: List<DocumentNode>
     ) : DocumentNode()
 }
-
 
 sealed class Result {
     /** Nothing is known about the result state. */
