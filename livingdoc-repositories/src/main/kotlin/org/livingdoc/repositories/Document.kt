@@ -1,37 +1,16 @@
 package org.livingdoc.repositories
 
-open class Document(val content: List<DocumentNode>)
+open class Document(val tables: List<DecisionTable>, val lists: List<Scenario>)
 
-sealed class DocumentNode {
-    var result: Result = Result.Unknown
-    abstract val children: List<DocumentNode>
+abstract class ResultItem(val result: Result = Result.Unknown)
 
-    data class Text(
-            val text: String,
-            override val children: List<DocumentNode>
-    ) : DocumentNode()
+data class DecisionTable(val headers: List<String>, val rows: List<DecisionTableRow>) : ResultItem()
 
-    data class TextList(
-            val items: List<Text>,
-            override val children: List<DocumentNode>
-    ) : DocumentNode()
+data class DecisionTableRow(val cells: Map<String, DecisionTableCell>)
 
-    data class DecisionTable(
-            val headers: List<String>,
-            val rows: List<DecisionTableRow>,
-            override val children: List<DocumentNode>
-    ) : DocumentNode()
+data class DecisionTableCell(val text: String) : ResultItem()
 
-    data class DecisionTableRow(
-            val cells: Map<String, DecisionTableCell>,
-            override val children: List<DocumentNode>
-    ) : DocumentNode()
-
-    data class DecisionTableCell(
-            val text: String,
-            override val children: List<DocumentNode>
-    ) : DocumentNode()
-}
+data class Scenario(val steps: List<String>) : ResultItem()
 
 sealed class Result {
     /** Nothing is known about the result state. */

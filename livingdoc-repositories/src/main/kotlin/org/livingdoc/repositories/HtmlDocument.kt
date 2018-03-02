@@ -1,6 +1,7 @@
 package org.livingdoc.repositories
 
 class HtmlDocument(
-        content: List<DocumentNode>,
+        tables: List<DecisionTable>,
+        lists: List<Scenario>,
         val jsoupDoc: org.jsoup.nodes.Document
-) : Document(content)
+) : Document(tables, lists)

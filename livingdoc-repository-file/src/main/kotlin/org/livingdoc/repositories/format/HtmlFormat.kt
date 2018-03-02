@@ -12,15 +12,15 @@ class HtmlFormat : DocumentFormat {
     override fun parse(stream: InputStream): HtmlDocument {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
-        return HtmlDocument(parseDocument(document), document)
+        return HtmlDocument(parseTables(document), emptyList(), document)
     }
 
-    private fun parseDocument(document: org.jsoup.nodes.Document): List<DocumentNode> {
+    private fun parseTables(document: org.jsoup.nodes.Document): List<DecisionTable> {
         val tableElements = document.getElementsByTag("table")
         return parseTableElements(tableElements)
     }
 
-    private fun parseTableElements(tableElements: Elements): List<DocumentNode> {
+    private fun parseTableElements(tableElements: Elements): List<DecisionTable> {
         fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
 
         return tableElements
@@ -28,11 +28,11 @@ class HtmlFormat : DocumentFormat {
                 .map(::parseTableToDecisionTable)
     }
 
-    private fun parseTableToDecisionTable(table: Element): DocumentNode.DecisionTable {
+    private fun parseTableToDecisionTable(table: Element): DecisionTable {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DocumentNode.DecisionTable(headers, dataRows, emptyList())
+        return DecisionTable(headers, dataRows)
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<String> {
@@ -47,19 +47,19 @@ class HtmlFormat : DocumentFormat {
         return headers
     }
 
-    private fun parseDataRow(headers: List<String>, tableRows: Elements): List<DocumentNode.DecisionTableRow> {
-        val dataRows = mutableListOf<DocumentNode.DecisionTableRow>()
-        tableRows.drop(1).forEachIndexed { index, row ->
+    private fun parseDataRow(headers: List<String>, tableRows: Elements): List<DecisionTableRow> {
+        val dataRows = mutableListOf<DecisionTableRow>()
+        tableRows.drop(1).forEachIndexed { rowIndex, row ->
             val dataCells = row.children().filter(::isHeaderOrDataCell)
 
             if (headers.size != dataCells.size) {
-                throw ParseException("Header count must match the data cell count in data row ${index + 1}. Headers: $headers, DataCells: $dataCells")
+                throw ParseException("Header count must match the data cell count in data row ${rowIndex + 1}. Headers: $headers, DataCells: $dataCells")
             }
 
-            val rowData = headers.mapIndexed { index, headerName ->
-                headerName to DocumentNode.DecisionTableCell(dataCells[index].text(), emptyList())
+            val rowData = headers.mapIndexed { headerIndex, headerName ->
+                headerName to DecisionTableCell(dataCells[headerIndex].text())
             }.toMap()
-            dataRows.add(DocumentNode.DecisionTableRow(rowData, emptyList()))
+            dataRows.add(DecisionTableRow(rowData))
         }
         return dataRows
     }

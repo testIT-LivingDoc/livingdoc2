@@ -3,7 +3,7 @@ package org.livingdoc.repositories.format
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import org.livingdoc.repositories.DocumentNode
+import org.livingdoc.repositories.DecisionTable
 import org.livingdoc.repositories.ParseException
 
 
@@ -11,12 +11,14 @@ class HtmlFormatTest {
 
     private val cut = HtmlFormat()
 
-    @Test fun `tables with one row are ignored`() {
+    @Test
+    fun `tables with one row are ignored`() {
         var result = cut.parse(getHtmlTableWithOnlyOneRow())
-        assertThat(result.content).hasSize(0);
+        assertThat(result.tables).hasSize(0);
     }
 
-    @Test fun `exception if headers are not unique`() {
+    @Test
+    fun `exception if headers are not unique`() {
         var exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlTableWithNonUniqueHeaders())
         }
@@ -24,7 +26,8 @@ class HtmlFormatTest {
         assertThat(exception).hasMessageStartingWith("Headers must contains only unique values:")
     }
 
-    @Test fun `exception if header count not equal to data cell count`() {
+    @Test
+    fun `exception if header count not equal to data cell count`() {
         var exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlTableWithWrongCellCount())
         }
@@ -32,13 +35,14 @@ class HtmlFormatTest {
         assertThat(exception).hasMessageStartingWith("Header count must match the data cell count in data row 1. Headers: [Firstname, Lastname, Age], DataCells: [<td>Jill </td>, <td>Thomsen </td>]")
     }
 
-    @Test fun `parse Html into DecisionTable`() {
+    @Test
+    fun `parse Html into DecisionTable`() {
         var htmlDocument = cut.parse(getValidHtml())
 
-        var documentNode = htmlDocument.content[0]
+        var documentNode = htmlDocument.tables[0]
 
-        assertThat(documentNode).isInstanceOf(DocumentNode.DecisionTable::class.java)
-        val decisionTable = documentNode as DocumentNode.DecisionTable
+        assertThat(documentNode).isInstanceOf(DecisionTable::class.java)
+        val decisionTable = documentNode as DecisionTable
         assertThat(decisionTable.headers).containsExactly("Firstname", "Lastname", "Age")
 
         assertThat(decisionTable.rows).hasSize(2);
