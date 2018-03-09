@@ -1,10 +1,9 @@
 package org.livingdoc.converters
 
+import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.Converter
 import org.livingdoc.api.conversion.TypeConverter
-import java.lang.reflect.AnnotatedElement
-import java.lang.reflect.Field
-import java.lang.reflect.Parameter
+import java.lang.reflect.*
 
 /**
  * Utility object providing [TypeConverter] related operations.
@@ -15,6 +14,46 @@ object TypeConverters {
     // - inheritance >> loading converters from annotations down the inheritance stack (class level only)
     // - interfaces >> loading converters from annotations on implemented interfaces (class level only)
     // - nested classes >> loading converters from declaring class?
+
+    /**
+     * Tries to find a [TypeConverter] for the [ParameterizedType]s appropriate for the given generic [AnnotatedElement].
+     *
+     * Type converters are found by either analyzing the given [Field] or [Parameter] for its [ParameterizedType]s,
+     * delegating the search for the appropriate [TypeConverter] of the found [ParameterizedType] to [findTypeConverter].
+     *
+     * 1. check if inferred annotated element is field or parameter
+     * 2. get the target type by extracting the actualTypeArguments 
+     * 3. call the appropriate method
+     *
+     * @param element the annotated or inferred element
+     * @param parameterIndex the index for the parameterized type for which we search the typeconverter
+     * @param documentClass the (optional) document class
+     * @exception error if the element is neither Field nor Parameter
+     * @exception NoTypeConverterFoundException if no appropriate typeconverter could be found
+     * @return the found type converter
+     */
+    fun findTypeConverterForGenericElement(element: AnnotatedElement, parameterIndex: Int, documentClass: Class<*>?): TypeConverter<*> {
+        return when (element) {
+            is Field -> {
+                val targetType = getTargetType(element.genericType , parameterIndex)
+                findTypeConverter(targetType as Class<*>, element, documentClass)
+            }
+            is Parameter -> {
+                val targetType = getTargetType(element.parameterizedType , parameterIndex)
+                findTypeConverter(targetType as Class<*>, element, documentClass)
+            }
+            else -> error("annotated element is of a not supported type: $element")
+        } ?: throw NoTypeConverterFoundException(element)
+    }
+
+    private fun getTargetType(type: Type, parameterIndex: Int): Type {
+        type as ParameterizedType
+        val actualTypeArguments = type.actualTypeArguments
+        return actualTypeArguments[parameterIndex]
+    }
+
+    internal class NoTypeConverterFoundException(annotatedElement: AnnotatedElement)
+        : ConversionException("No type converter could be found to convert annotated element: $annotatedElement")
 
     /**
      * Tries to find a [TypeConverter] for the given [Parameter].

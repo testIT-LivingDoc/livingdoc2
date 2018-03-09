@@ -1,6 +1,6 @@
 package org.livingdoc.converters.collection
 
-open class SetConverter : AbstractCollectionWithSingleParamConverter<Set<Any>>() {
+open class SetConverter : AbstractCollectionConverter<Set<Any>>() {
 
     override fun convertToTarget(collection: List<Any>): Set<Any> {
         return collection.toSet()

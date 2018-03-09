@@ -2,53 +2,21 @@ package org.livingdoc.converters.collection
 
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
-import org.livingdoc.converters.TypeConverters
-import java.lang.reflect.*
+import org.livingdoc.converters.TypeConverters.findTypeConverterForGenericElement
+import org.livingdoc.converters.collection.Tokenizer.tokenizeToList
+import java.lang.reflect.AnnotatedElement
 
-abstract class AbstractCollectionConverter {
+abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<T> {
 
-    val defaultSeparator = ","
-    var documentClass: Class<*>? = null
-    lateinit var element: AnnotatedElement
+    private val PARAM_INDEX = 0
 
-    internal fun tokenize(value: String, delimiter: String): List<String> {
-        return value.split(delimiters = delimiter).map { it.trim() }
+    @Throws(ConversionException::class)
+    override fun convert(value: String, element: AnnotatedElement, documentClass: Class<*>?): T {
+        val converter = findTypeConverterForGenericElement(element, PARAM_INDEX, documentClass)
+        val convertedValues = tokenizeToList(value)
+                .map { converter.convert(it, element, documentClass) }
+        return convertToTarget(convertedValues)
     }
 
-    internal fun convertToTypedParam(converter: TypeConverter<*>, tokenized: List<String>): List<Any> {
-        return tokenized.map { converter.convert(it, element, documentClass) }.toList()
-    }
-
-    internal fun findTypeConverterForElement(parameterIndex: Int): TypeConverter<*> {
-        return when (element) {
-            is Field -> findTypeConverterForTypedParam(element as Field, parameterIndex)
-            is Parameter -> findTypeConverterForTypedParam(element as Parameter, parameterIndex)
-            else -> error("annotated element is of a not supported type: $element")
-        } ?: throw NoTypeConverterFoundException(element)
-    }
-
-    private fun findTypeConverterForTypedParam(parameter: Parameter, parameterIndex: Int): TypeConverter<*>? {
-        val targetType = getTargetType(parameter.parameterizedType, parameterIndex)
-        return TypeConverters.findTypeConverter(targetType as Class<*>, parameter, documentClass)
-    }
-
-    private fun findTypeConverterForTypedParam(field: Field, parameterIndex: Int): TypeConverter<*>? {
-        val targetType = getTargetType(field.genericType, parameterIndex)
-        return TypeConverters.findTypeConverter(targetType as Class<*>, field, documentClass)
-    }
-
-    private fun getTargetType(type: Type, parameterIndex: Int): Type {
-        val parametrizedType = type as ParameterizedType
-        val actualTypeArguments = parametrizedType.actualTypeArguments
-        return actualTypeArguments[parameterIndex]
-    }
-
-    internal fun setElementAndDocument(documentClass: Class<*>?, element: AnnotatedElement) {
-        this.documentClass = documentClass
-        this.element = element
-    }
-
-
-    internal class NoTypeConverterFoundException(annotatedElement: AnnotatedElement)
-        : ConversionException("No type converter could be found to convert annotated element: $annotatedElement")
+    abstract fun convertToTarget(collection: List<Any>): T
 }

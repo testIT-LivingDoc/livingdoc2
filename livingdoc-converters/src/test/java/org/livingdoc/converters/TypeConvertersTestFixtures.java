@@ -1,6 +1,9 @@
 package org.livingdoc.converters;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.livingdoc.api.conversion.ConversionException;
 import org.livingdoc.api.conversion.Converter;
@@ -42,6 +45,9 @@ public class TypeConvertersTestFixtures {
     public static class NoAnnotations {
 
         public Boolean field;
+        public List<Boolean> listField;
+        public Set<Boolean> setField;
+        public Map<String, Boolean> mapField;
 
         public void method(Boolean value) {
         }
