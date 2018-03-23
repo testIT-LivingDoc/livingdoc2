@@ -1,6 +1,7 @@
 package org.livingdoc.repositories.format
 
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.livingdoc.repositories.*
@@ -12,10 +13,10 @@ class HtmlFormat : DocumentFormat {
     override fun parse(stream: InputStream): HtmlDocument {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
-        return HtmlDocument(parseTables(document), emptyList(), document)
+        return HtmlDocument(parseTables(document), parseLists(document), document)
     }
 
-    private fun parseTables(document: org.jsoup.nodes.Document): List<DecisionTable> {
+    private fun parseTables(document: Document): List<DecisionTable> {
         val tableElements = document.getElementsByTag("table")
         return parseTableElements(tableElements)
     }
@@ -65,4 +66,37 @@ class HtmlFormat : DocumentFormat {
     }
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
+
+    private fun parseLists(document: Document): List<Scenario> {
+        val unorderedListElements = document.getElementsByTag("ul")
+        val orderedListElements = document.getElementsByTag("ol")
+
+        return parseListElements(unorderedListElements) + parseListElements(orderedListElements)
+    }
+
+    private fun parseListElements(htmlListElements: Elements): List<Scenario> {
+        fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
+
+        return htmlListElements
+                .filter(::listHasAtLeastTwoItems)
+                .map(::parseListIntoScenario)
+    }
+
+    private fun parseListIntoScenario(htmlList: Element): Scenario {
+        verifyZeroNestedLists(htmlList)
+
+        var listItemElements = htmlList.getElementsByTag("li")
+        return Scenario(parseListItems(listItemElements))
+    }
+
+    private fun parseListItems(listItemElements: Elements): List<String> {
+        return listItemElements.map { it.text() }.toList()
+    }
+
+    private fun verifyZeroNestedLists(htmlList: Element) {
+        var innerHtml = htmlList.html()
+        if (innerHtml.contains("<ul") || innerHtml.contains("<ol")) {
+            throw ParseException("Nested lists within unordered or ordered lists are not supported: ${htmlList.html()}")
+        }
+    }
 }

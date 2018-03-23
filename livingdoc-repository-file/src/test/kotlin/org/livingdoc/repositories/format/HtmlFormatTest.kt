@@ -5,6 +5,19 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.DecisionTable
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedOrderedList
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedUnorderedList
+
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithNonUniqueHeaders
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithOnlyOneRow
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithWrongCellCount
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlUnorderedListWithNestedOrderedList
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedList
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedListContainsOnlyOneItem
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedList
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedListContainsOnlyOneItem
+import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlUnorderedListWithNestedUnorderedList
 
 
 class HtmlFormatTest {
@@ -56,131 +69,84 @@ class HtmlFormatTest {
         assertThat(decisionTable.rows[1].cells.map { it.value.text }).containsExactly("Eve", "Jackson", "94")
     }
 
-    private fun getHtmlTableWithOnlyOneRow() =
-            """
-    <!DOCTYPE html>
-    <html lang="en">
-    <body>
-        <table style="width:100%">
-            <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-            </tr>
-        </table>
-    </body>
-    </html>
-            """.byteInputStream()
+    @Test
+    fun `parse unorderedList into Scenario`() {
+        var htmlDocument = cut.parse(getHtmlWithUnorderedList())
 
-    private fun getHtmlTableWithNonUniqueHeaders() =
-            """
-    <!DOCTYPE html>
-    <html lang="en">
-    <body>
-        <table>
-            <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Lastname</th>
-            </tr>
-            <tr>
-                <td>Jill</th>
-                <td>Thomsen</th>
-                <td>35</th>
-            </tr>
-        </table>
-    </body>
-    </html>
-            """.byteInputStream()
+        var scenario = htmlDocument.lists[0]
 
-    private fun getHtmlTableWithWrongCellCount() =
-            """
-    <!DOCTYPE html>
-    <html lang="en">
-    <body>
-        <table>
-            <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-            </tr>
-            <tr>
-                <td>Jill</th>
-                <td>Thomsen</th>
-            </tr>
-        </table>
-    </body>
-    </html>
-            """.byteInputStream()
+        assertThat(scenario.steps).isNotNull
+        assertThat(scenario.steps).hasSize(5)
+        assertThat(scenario.steps[0]).isEqualTo("First list item")
+        assertThat(scenario.steps[1]).isEqualTo("Second list item")
+        assertThat(scenario.steps[2]).isEqualTo("Third list item")
+        assertThat(scenario.steps[3]).isEqualTo("Fourth list item")
+        assertThat(scenario.steps[4]).isEqualTo("Fifth list item")
+    }
 
-    private fun getValidHtml() =
-            """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>LivingDoc-HTML Parser</title>
-    </head>
-    <body>
-    <h1>Headline First Order</h1>
+    @Test
+    fun `parse orderedList into Scenario`() {
+        var htmlDocument = cut.parse(getHtmlWithOrderedList())
+        var scenario = htmlDocument.lists[0]
 
-    SIMPLE TEXT
+        assertThat(scenario.steps).isNotNull
+        assertThat(scenario.steps).hasSize(5)
+        assertThat(scenario.steps[0]).isEqualTo("First list item")
+        assertThat(scenario.steps[1]).isEqualTo("Second list item")
+        assertThat(scenario.steps[2]).isEqualTo("Third list item")
+        assertThat(scenario.steps[3]).isEqualTo("Fourth list item")
+        assertThat(scenario.steps[4]).isEqualTo("Fifth list item")
+    }
 
-    <p>
-        PARAGRAPH CONTENT
-    </p>
-    <div>CONTENT OF THE DIV</div>
+    @Test
+    fun `unordered list with only one item is ignored`() {
+        var htmlDocument = cut.parse(getHtmlWithUnorderedListContainsOnlyOneItem())
 
-    <ul>
-        <li>
-            text1
-            <p>
-                List Paragraph
-            </p>
-            <table style="width:100%">
-                <tr>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Age</th>
-                </tr>
-                <tr>
-                    <td>Jill</td>
-                    <td>Smith</td>
-                    <td>50</td>
-                </tr>
-                <tr>
-                    <td>Eve</td>
-                    <td>Jackson</td>
-                    <td>94</td>
-                </tr>
-            </table>
-            text111
-        </li>
-        <li>text2</li>
-        <li>text3</li>
-    </ul>
+        assertThat(htmlDocument.lists).isNotNull
+        assertThat(htmlDocument.lists).isEmpty()
+    }
 
-    <ol>
-        <li>text4</li>
-        <li>text5</li>
-        <li>text6</li>
-    </ol>
+    @Test
+    fun `ordered list with only one item is ignored`() {
+        var htmlDocument = cut.parse(getHtmlWithOrderedListContainsOnlyOneItem())
 
-    <ol type = "">
-        <li>text7</li>
-        <li>text8</li>
-        <li>text9</li>
-    </ol>
+        assertThat(htmlDocument.lists).isNotNull
+        assertThat(htmlDocument.lists).isEmpty()
+    }
 
-    <ol type = "A">
-        <li>textX</li>
-        <li>textY</li>
-        <li>textZ</li>
-    </ol>
+    @Test
+    fun `exception if unordered list contains nested unordered list`() {
+        var exception = assertThrows(ParseException::class.java) {
+            cut.parse(getHtmlUnorderedListWithNestedUnorderedList())
+        }
 
-    </body>
-    </html>
-    """.byteInputStream()
+        assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
+    }
 
+    @Test
+    fun `exception if unordered list contains nested ordered list`() {
+        var exception = assertThrows(ParseException::class.java) {
+            cut.parse(getHtmlUnorderedListWithNestedOrderedList())
+        }
+
+        assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
+    }
+
+    @Test
+    fun `exception if ordered list contains nested unordered list`() {
+        var exception = assertThrows(ParseException::class.java) {
+            cut.parse(getHtmlOrderedListWithNestedUnorderedList())
+        }
+
+        assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
+    }
+
+    @Test
+    fun `exception if ordered list contains nested ordered list`() {
+        var exception = assertThrows(ParseException::class.java) {
+            cut.parse(getHtmlOrderedListWithNestedOrderedList())
+        }
+
+        assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
+    }
 }
-
