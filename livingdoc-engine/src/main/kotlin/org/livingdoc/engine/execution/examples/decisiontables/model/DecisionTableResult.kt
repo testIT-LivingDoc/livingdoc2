@@ -1,6 +1,8 @@
 package org.livingdoc.engine.execution.examples.decisiontables.model
 
 import org.livingdoc.engine.execution.Result
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Header
 
 data class DecisionTableResult(
         val headers: List<Header>,

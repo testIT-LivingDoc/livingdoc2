@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.decisiontables.model
+package org.livingdoc.repositories.model.decisiontable
 
 data class DecisionTable(
         val headers: List<Header>,

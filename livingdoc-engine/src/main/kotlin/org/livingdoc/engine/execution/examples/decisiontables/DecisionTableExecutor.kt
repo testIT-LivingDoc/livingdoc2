@@ -1,7 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTable
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 /**
  * This class handles the execution of [DecisionTable] examples.

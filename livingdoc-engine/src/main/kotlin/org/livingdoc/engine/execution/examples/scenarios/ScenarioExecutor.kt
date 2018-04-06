@@ -1,7 +1,7 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
-import org.livingdoc.engine.execution.examples.scenarios.model.Scenario
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
+import org.livingdoc.repositories.model.scenario.Scenario
 
 /**
  * This class handles the execution of [Scenario] examples.

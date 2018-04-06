@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.Result.*
-import org.livingdoc.engine.execution.examples.scenarios.model.Scenario
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
-import org.livingdoc.engine.execution.examples.scenarios.model.Step
+import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.repositories.model.scenario.Step
 
 internal class ScenarioExecutorTest {
 

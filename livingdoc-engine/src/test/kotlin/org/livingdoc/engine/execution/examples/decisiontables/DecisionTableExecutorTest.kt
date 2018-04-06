@@ -6,8 +6,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.Result.*
-import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.*
-import org.livingdoc.engine.execution.examples.decisiontables.model.*
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.MalformedDecisionTableFixtureException
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.UnmappedHeaderException
+import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Field
+import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
 import org.mockito.ArgumentMatchers.anyString
 
 

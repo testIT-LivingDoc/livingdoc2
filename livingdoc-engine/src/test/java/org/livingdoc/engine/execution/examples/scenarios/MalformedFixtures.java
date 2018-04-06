@@ -1,7 +1,5 @@
 package org.livingdoc.engine.execution.examples.scenarios;
 
-import kotlin.Unit;
-import org.jetbrains.annotations.NotNull;
 import org.livingdoc.api.fixtures.scenarios.After;
 import org.livingdoc.api.fixtures.scenarios.Before;
 import org.livingdoc.api.fixtures.scenarios.Step;

@@ -1,10 +1,14 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.engine.execution.Result
-import org.livingdoc.engine.execution.examples.decisiontables.model.*
+import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
+import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Header
 
 internal class DecisionTableExecution(
         private val fixtureClass: Class<*>,
