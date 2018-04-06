@@ -22,6 +22,8 @@ dependencies {
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile "org.jsoup:jsoup:1.11.2"
+    compile("com.vladsch.flexmark:flexmark:0.28.32")
+    compile("com.vladsch.flexmark:flexmark-ext-tables:0.28.32")
     compile project(':livingdoc-repositories')
 
     testCompile('ch.qos.logback:logback-classic:1.2.3')
