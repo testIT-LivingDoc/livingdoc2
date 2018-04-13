@@ -4,7 +4,15 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import org.livingdoc.repositories.*
+import org.livingdoc.repositories.DocumentFormat
+import org.livingdoc.repositories.HtmlDocument
+import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Field
+import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
+import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.repositories.model.scenario.Step
 import java.io.InputStream
 import java.nio.charset.Charset
 
@@ -36,31 +44,32 @@ class HtmlFormat : DocumentFormat {
         return DecisionTable(headers, dataRows)
     }
 
-    private fun extractHeadersFromFirstRow(tableRows: Elements): List<String> {
+    private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
         val firstRowContainingHeaders = tableRows[0]
         val headers = firstRowContainingHeaders.children()
                 .filter(::isHeaderOrDataCell)
-                .map(Element::text).toList()
+                .map(Element::text)
+                .map(::Header).toList()
 
         if (headers.size != headers.distinct().size) {
-            throw ParseException("Headers must contains only unique values: " + headers)
+            throw ParseException("Headers must contains only unique values: $headers")
         }
         return headers
     }
 
-    private fun parseDataRow(headers: List<String>, tableRows: Elements): List<DecisionTableRow> {
-        val dataRows = mutableListOf<DecisionTableRow>()
+    private fun parseDataRow(headers: List<Header>, tableRows: Elements): List<Row> {
+        val dataRows = mutableListOf<Row>()
         tableRows.drop(1).forEachIndexed { rowIndex, row ->
             val dataCells = row.children().filter(::isHeaderOrDataCell)
 
             if (headers.size != dataCells.size) {
-                throw ParseException("Header count must match the data cell count in data row ${rowIndex + 1}. Headers: $headers, DataCells: $dataCells")
+                throw ParseException("Header count must match the data cell count in data row ${rowIndex + 1}. Headers: ${headers.map(Header::name)}, DataCells: $dataCells")
             }
 
             val rowData = headers.mapIndexed { headerIndex, headerName ->
-                headerName to DecisionTableCell(dataCells[headerIndex].text())
+                headerName to Field(dataCells[headerIndex].text())
             }.toMap()
-            dataRows.add(DecisionTableRow(rowData))
+            dataRows.add(Row(rowData))
         }
         return dataRows
     }
@@ -85,16 +94,16 @@ class HtmlFormat : DocumentFormat {
     private fun parseListIntoScenario(htmlList: Element): Scenario {
         verifyZeroNestedLists(htmlList)
 
-        var listItemElements = htmlList.getElementsByTag("li")
+        val listItemElements = htmlList.getElementsByTag("li")
         return Scenario(parseListItems(listItemElements))
     }
 
-    private fun parseListItems(listItemElements: Elements): List<String> {
-        return listItemElements.map { it.text() }.toList()
+    private fun parseListItems(listItemElements: Elements): List<Step> {
+        return listItemElements.map { Step(it.text()) }.toList()
     }
 
     private fun verifyZeroNestedLists(htmlList: Element) {
-        var innerHtml = htmlList.html()
+        val innerHtml = htmlList.html()
         if (innerHtml.contains("<ul") || innerHtml.contains("<ol")) {
             throw ParseException("Nested lists within unordered or ordered lists are not supported: ${htmlList.html()}")
         }
