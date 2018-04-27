@@ -23,9 +23,5 @@ open class MapConverter : TypeConverter<Map<Any, Any>> {
         }.toMap()
     }
 
-    override fun canConvertTo(targetType: Class<*>?): Boolean {
-        val isJavaObjectType = Map::class.java == targetType
-        val isKotlinType = Map::class == targetType
-        return isJavaObjectType || isKotlinType
-    }
+    override fun canConvertTo(targetType: Class<*>?) = Map::class.java == targetType
 }

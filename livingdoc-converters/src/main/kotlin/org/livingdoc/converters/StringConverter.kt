@@ -8,10 +8,5 @@ open class StringConverter : TypeConverter<String> {
 
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): String = value
 
-    override fun canConvertTo(targetType: Class<*>): Boolean {
-        val isJavaObjectType = String::class.javaObjectType == targetType
-        val isKotlinType = String::class.java == targetType
-        return isJavaObjectType || isKotlinType
-    }
-
+    override fun canConvertTo(targetType: Class<*>) = String::class.java == targetType
 }

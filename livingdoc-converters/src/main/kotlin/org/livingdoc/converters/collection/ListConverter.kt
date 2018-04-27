@@ -6,9 +6,5 @@ open class ListConverter : AbstractCollectionConverter<List<Any>>() {
         return collection
     }
 
-    override fun canConvertTo(targetType: Class<*>?): Boolean {
-        val isJavaObjectType = List::class.java == targetType
-        val isKotlinType = List::class == targetType
-        return isJavaObjectType || isKotlinType
-    }
+    override fun canConvertTo(targetType: Class<*>?) = List::class.java == targetType
 }
