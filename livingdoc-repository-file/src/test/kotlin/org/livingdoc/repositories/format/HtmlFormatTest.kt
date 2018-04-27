@@ -1,25 +1,22 @@
 package org.livingdoc.repositories.format
 
-import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.ParseException
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedOrderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedUnorderedList
-
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithNonUniqueHeaders
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithOnlyOneRow
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithWrongCellCount
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlUnorderedListWithNestedOrderedList
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlUnorderedListWithNestedUnorderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedListContainsOnlyOneItem
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedListContainsOnlyOneItem
 import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
-import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlUnorderedListWithNestedUnorderedList
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
-import org.livingdoc.repositories.model.decisiontable.Header
 
 
 class HtmlFormatTest {
@@ -57,7 +54,7 @@ class HtmlFormatTest {
         var documentNode = htmlDocument.tables[0]
 
         assertThat(documentNode).isInstanceOf(DecisionTable::class.java)
-        val decisionTable = documentNode as DecisionTable
+        val decisionTable = documentNode
         assertThat(decisionTable.headers).extracting("name").containsExactly("Firstname", "Lastname", "Age")
 
         assertThat(decisionTable.rows).hasSize(2);
