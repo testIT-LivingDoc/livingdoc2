@@ -14,44 +14,37 @@ internal class TypeConvertersTest {
 
     val booleanClass = java.lang.Boolean::class.java
 
-    @Nested
-    inner class `parameters` {
+    @Nested inner class `parameters` {
 
-        @Test
-        fun `annotated parameter`() {
+        @Test fun `annotated parameter`() {
             val typeConverter = getParameterTypeConverter(AnnotatedMethodParameter::class)
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test
-        fun `annotated method`() {
+        @Test fun `annotated method`() {
             val typeConverter = getParameterTypeConverter(AnnotatedMethod::class)
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test
-        fun `annotated class`() {
+        @Test fun `annotated class`() {
             val typeConverter = getParameterTypeConverter(AnnotatedClass::class)
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test
-        fun `default fallback without document`() {
+        @Test fun `default fallback without document`() {
             val typeConverter = getParameterTypeConverter(NoAnnotations::class)
             assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
         }
 
-        @Nested
-        inner class `with document` {
 
-            @Test
-            fun `annotated document class`() {
+        @Nested inner class `with document` {
+
+            @Test fun `annotated document class`() {
                 val typeConverter = getParameterTypeConverter(NoAnnotations::class, DocumentWithAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
             }
 
-            @Test
-            fun `default fallback when no document annotation`() {
+            @Test fun `default fallback when no document annotation`() {
                 val typeConverter = getParameterTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
@@ -66,38 +59,31 @@ internal class TypeConvertersTest {
 
     }
 
-    @Nested
-    inner class `fields` {
+    @Nested inner class `fields` {
 
-        @Test
-        fun `annotated field`() {
+        @Test fun `annotated field`() {
             val typeConverter = getFieldTypeConverter(AnnotatedField::class)
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test
-        fun `annotated class`() {
+        @Test fun `annotated class`() {
             val typeConverter = getFieldTypeConverter(AnnotatedClass::class)
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test
-        fun `default fallback without document`() {
+        @Test fun `default fallback without document`() {
             val typeConverter = getFieldTypeConverter(NoAnnotations::class)
             assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
         }
 
-        @Nested
-        inner class `with document` {
+        @Nested inner class `with document` {
 
-            @Test
-            fun `annotated document class`() {
+            @Test fun `annotated document class`() {
                 val typeConverter = getFieldTypeConverter(NoAnnotations::class, DocumentWithAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
             }
 
-            @Test
-            fun `default fallback when no document annotation`() {
+            @Test fun `default fallback when no document annotation`() {
                 val typeConverter = getFieldTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
