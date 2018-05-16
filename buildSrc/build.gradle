@@ -1,2 +1,4 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
+plugins {
+    id 'java'
+    id 'groovy'
+}
