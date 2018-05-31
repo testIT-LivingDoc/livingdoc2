@@ -8,11 +8,11 @@ import java.lang.reflect.AnnotatedElement
 
 abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<T> {
 
-    private val PARAM_INDEX = 0
+    private val firstParameter = 0
 
     @Throws(ConversionException::class)
     override fun convert(value: String, element: AnnotatedElement, documentClass: Class<*>?): T {
-        val converter = findTypeConverterForGenericElement(element, PARAM_INDEX, documentClass)
+        val converter = findTypeConverterForGenericElement(element, firstParameter, documentClass)
         val convertedValues = tokenizeToStringList(value)
             .map { converter.convert(it, element, documentClass) }
         return convertToTarget(convertedValues)

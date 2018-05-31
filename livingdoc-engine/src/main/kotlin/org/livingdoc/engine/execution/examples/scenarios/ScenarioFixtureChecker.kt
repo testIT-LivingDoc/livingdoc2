@@ -29,7 +29,7 @@ internal object ScenarioFixtureChecker {
     private fun fixtureClassHasDefaultConstructor(model: ScenarioFixtureModel): Collection<String> {
         val fixtureClass = model.fixtureClass
         val defaultConstructors = fixtureClass.constructors
-                .filter { it.parameterCount == 0 }
+            .filter { it.parameterCount == 0 }
         if (defaultConstructors.isEmpty()) {
             return listOf("The fixture class <${fixtureClass.canonicalName}> has no default constructor!")
         }
@@ -41,12 +41,12 @@ internal object ScenarioFixtureChecker {
         val knownAliases = mutableSetOf<String>()
         model.stepMethods.forEach { step ->
             step.getAnnotationsByType(Step::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        if (knownAliases.contains(alias))
-                            errors.add("Alias <$alias> is used multiple times!")
-                        else knownAliases.add(alias)
-                    }
+                .flatMap { it.value.asIterable() }
+                .forEach { alias ->
+                    if (knownAliases.contains(alias))
+                        errors.add("Alias <$alias> is used multiple times!")
+                    else knownAliases.add(alias)
+                }
         }
         return errors
     }
@@ -75,28 +75,34 @@ internal object ScenarioFixtureChecker {
 
     private fun checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(stepTemplateToMethod: Map<StepTemplate, Method>): Collection<String> {
         return stepTemplateToMethod
-                .filter { (stepTemplate, method) -> stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount }
-                .map { (stepTemplate, method) -> "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'" }
+            .filter { (stepTemplate, method) -> stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount }
+            .map { (stepTemplate, method) -> "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'" }
     }
 
     private fun checkThatMethodParametersAreNamed(methods: Collection<Method>): Collection<String> {
         return methods
-                .filter { it.parameters.any { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) } }
-                .map { "Method <$it> has a parameter without a name! Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag" }
+            .filter { it.parameters.any { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) } }
+            .map { "Method <$it> has a parameter without a name! Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag" }
     }
 
-    private fun checkThatMethodsHaveNoParameters(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
+    private fun checkThatMethodsHaveNoParameters(
+        methods: Collection<Method>,
+        annotationClass: KClass<*>
+    ): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { it.parameterCount > 0 }
-                .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
+            .filter { it.parameterCount > 0 }
+            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
     }
 
-    private fun checkThatMethodsAreNonStatic(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
+    private fun checkThatMethodsAreNonStatic(
+        methods: Collection<Method>,
+        annotationClass: KClass<*>
+    ): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { Modifier.isStatic(it.modifiers) }
-                .map { "@$annotationName method <$it> must not be static!" }
+            .filter { Modifier.isStatic(it.modifiers) }
+            .map { "@$annotationName method <$it> must not be static!" }
     }
 
 }

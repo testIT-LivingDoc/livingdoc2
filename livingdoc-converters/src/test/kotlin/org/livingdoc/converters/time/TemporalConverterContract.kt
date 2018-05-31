@@ -49,8 +49,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
 
     @Nested inner class `custom input format` {
 
-        val format: Format = mock()
-        val element: AnnotatedElement = mock()
+        private val format: Format = mock()
+        private val element: AnnotatedElement = mock()
 
         @Test fun `default format used if no element given`() {
             val (value, expectedResult) = defaultFormatValue

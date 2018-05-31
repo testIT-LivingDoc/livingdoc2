@@ -31,7 +31,7 @@ public interface TypeConverter<T> {
      *
      * @param value the value to convert
      * @param element the element being converted - might be {@code null}!
-     * @param documentClass the documentClasss
+     * @param documentClass the documentClass
      * @return the converted target instance
      * @throws ConversionException in case the conversion failed
      * @since 2.0

@@ -30,7 +30,7 @@ internal object DecisionTableFixtureChecker {
     private fun fixtureClassHasDefaultConstructor(model: DecisionTableFixtureModel): Collection<String> {
         val fixtureClass = model.fixtureClass
         val defaultConstructors = fixtureClass.constructors
-                .filter { it.parameterCount == 0 }
+            .filter { it.parameterCount == 0 }
         if (defaultConstructors.isEmpty()) {
             return listOf("The fixture class <${fixtureClass.canonicalName}> has no default constructor!")
         }
@@ -54,12 +54,14 @@ internal object DecisionTableFixtureChecker {
         return errors
     }
 
-    private fun <T : Annotation> checkAliasesOf(elements: Iterable<AnnotatedElement>, annotation: KClass<T>,
-                                                flatMapper: (T) -> Iterable<String>, handler: (String) -> Unit) {
+    private fun <T : Annotation> checkAliasesOf(
+        elements: Iterable<AnnotatedElement>, annotation: KClass<T>,
+        flatMapper: (T) -> Iterable<String>, handler: (String) -> Unit
+    ) {
         elements.forEach {
             it.getAnnotationsByType(annotation.java)
-                    .flatMap { flatMapper.invoke(it) }
-                    .forEach { handler.invoke(it) }
+                .flatMap { flatMapper.invoke(it) }
+                .forEach { handler.invoke(it) }
         }
     }
 
@@ -93,7 +95,12 @@ internal object DecisionTableFixtureChecker {
 
     private fun beforeFirstCheckMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeFirstCheckMethods, BeforeFirstCheck::class))
+        errors.addAll(
+            elements = checkThatMethodsHaveNoParameters(
+                model.beforeFirstCheckMethods,
+                BeforeFirstCheck::class
+            )
+        )
         errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeFirstCheckMethods, BeforeFirstCheck::class))
         return errors
     }
@@ -112,32 +119,41 @@ internal object DecisionTableFixtureChecker {
         return errors
     }
 
-    private fun checkThatMethodsHaveNoParameters(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
+    private fun checkThatMethodsHaveNoParameters(
+        methods: Collection<Method>,
+        annotationClass: KClass<*>
+    ): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { it.parameterCount > 0 }
-                .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
+            .filter { it.parameterCount > 0 }
+            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
     }
 
-    private fun checkThatMethodsHaveExactlyOneParameter(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
+    private fun checkThatMethodsHaveExactlyOneParameter(
+        methods: Collection<Method>,
+        annotationClass: KClass<*>
+    ): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { it.parameterCount != 1 }
-                .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must have exactly 1!" }
+            .filter { it.parameterCount != 1 }
+            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must have exactly 1!" }
     }
 
     private fun checkThatMethodsAreStatic(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { !Modifier.isStatic(it.modifiers) }
-                .map { "@$annotationName method <$it> must be static!" }
+            .filter { !Modifier.isStatic(it.modifiers) }
+            .map { "@$annotationName method <$it> must be static!" }
     }
 
-    private fun checkThatMethodsAreNonStatic(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
+    private fun checkThatMethodsAreNonStatic(
+        methods: Collection<Method>,
+        annotationClass: KClass<*>
+    ): Collection<String> {
         val annotationName = annotationClass.java.simpleName
         return methods
-                .filter { Modifier.isStatic(it.modifiers) }
-                .map { "@$annotationName method <$it> must not be static!" }
+            .filter { Modifier.isStatic(it.modifiers) }
+            .map { "@$annotationName method <$it> must not be static!" }
     }
 
 }

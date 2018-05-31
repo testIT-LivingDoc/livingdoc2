@@ -21,9 +21,9 @@ abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
     private fun getDateTimeFormatter(element: AnnotatedElement?): DateTimeFormatter {
         try {
             val customFormatter = element
-                    ?.getAnnotation(Format::class.java)
-                    ?.value
-                    ?.let { DateTimeFormatter.ofPattern(it) }
+                ?.getAnnotation(Format::class.java)
+                ?.value
+                ?.let { DateTimeFormatter.ofPattern(it) }
             return customFormatter ?: defaultFormatter()
         } catch (e: IllegalArgumentException) {
             throw MalformedFormatException(e)

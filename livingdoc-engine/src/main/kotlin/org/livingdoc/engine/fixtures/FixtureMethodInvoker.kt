@@ -7,7 +7,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
 class FixtureMethodInvoker(
-        private val document: Any?
+    private val document: Any?
 ) {
 
     /**
@@ -80,7 +80,10 @@ class FixtureMethodInvoker(
         return forceInvocation(method, convertedArguments, fixture)
     }
 
-    private fun assertThatAllArgumentsForMethodAreProvided(arguments: Array<String>, methodParameters: Array<Parameter>) {
+    private fun assertThatAllArgumentsForMethodAreProvided(
+        arguments: Array<String>,
+        methodParameters: Array<Parameter>
+    ) {
         val numberOfArguments = arguments.size
         val numberOfMethodParameters = methodParameters.size
         if (numberOfArguments != numberOfMethodParameters) {
@@ -88,7 +91,10 @@ class FixtureMethodInvoker(
         }
     }
 
-    private fun convert(arguments: Array<String>, methodParameters: Array<Parameter>): Array<Any> { // TODO: Zip function?
+    private fun convert(
+        arguments: Array<String>,
+        methodParameters: Array<Parameter>
+    ): Array<Any> { // TODO: Zip function?
         val convertedArguments = mutableListOf<Any>()
         for (i in arguments.indices) {
             val argument = arguments[i]
@@ -115,16 +121,19 @@ class FixtureMethodInvoker(
         }
     }
 
-    class FixtureMethodInvocationException(method: Method, fixture: Any, e: Exception)
-        : RuntimeException("Could not invoke method '$method' on fixture '$fixture' because of an exception:", e)
+    class FixtureMethodInvocationException(method: Method, fixture: Any, e: Exception) :
+        RuntimeException("Could not invoke method '$method' on fixture '$fixture' because of an exception:", e)
 
-    class StaticFixtureMethodInvocationException(method: Method, fixtureClass: Class<*>, e: Exception)
-        : RuntimeException("Could not invoke method '$method' on fixture class '$fixtureClass' because of an exception:", e)
+    class StaticFixtureMethodInvocationException(method: Method, fixtureClass: Class<*>, e: Exception) :
+        RuntimeException(
+            "Could not invoke method '$method' on fixture class '$fixtureClass' because of an exception:",
+            e
+        )
 
-    internal class MismatchedNumberOfArgumentsException(args: Int, params: Int)
-        : RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")
+    internal class MismatchedNumberOfArgumentsException(args: Int, params: Int) :
+        RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")
 
-    internal class NoTypeConverterFoundException(parameter: Parameter)
-        : RuntimeException("No type converter could be found to convert method parameter: $parameter")
+    internal class NoTypeConverterFoundException(parameter: Parameter) :
+        RuntimeException("No type converter could be found to convert method parameter: $parameter")
 
 }

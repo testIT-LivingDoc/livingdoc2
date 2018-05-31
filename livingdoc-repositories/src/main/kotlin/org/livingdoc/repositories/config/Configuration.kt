@@ -4,7 +4,7 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 
 data class Configuration(
-        var repositories: List<RepositoryDefinition> = emptyList()
+    var repositories: List<RepositoryDefinition> = emptyList()
 ) {
 
     companion object {

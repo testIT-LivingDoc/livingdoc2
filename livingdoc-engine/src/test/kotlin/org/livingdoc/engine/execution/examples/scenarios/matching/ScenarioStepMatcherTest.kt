@@ -26,10 +26,10 @@ class ScenarioStepMatcherTest {
     @Test
     fun `identifies one StepTemplate matching a given scenario step`() {
         val stepTemplates = arrayListOf(
-                "the user '{username}' is logged into the shop",
-                "she adds '{movie}' to her shopping cart",
-                "she removes '{movie}' from her shopping cart",
-                "her shopping cart contains {movies}"
+            "the user '{username}' is logged into the shop",
+            "she adds '{movie}' to her shopping cart",
+            "she removes '{movie}' from her shopping cart",
+            "her shopping cart contains {movies}"
         ).map { StepTemplate.parse(it) }.toList()
         val bestMatch = stepTemplates.first()
         val cut = ScenarioStepMatcher(stepTemplates)

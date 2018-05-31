@@ -25,9 +25,9 @@ class MarkdownFormat : DocumentFormat {
         options.set(Parser.EXTENSIONS, asList(TablesExtension.create()))
         val parser = Parser.builder(options).build()
         val text = stream.reader().use { it.readText() }
-        val (tables,scenarios) = parser.parse(text).mapToNodes()
+        val (tables, scenarios) = parser.parse(text).mapToNodes()
 
-        return Document(tables,scenarios)
+        return Document(tables, scenarios)
     }
 
     private fun com.vladsch.flexmark.ast.Node.mapToNodes(): Pair<List<DecisionTable>, List<Scenario>> {
@@ -71,7 +71,8 @@ class MarkdownFormat : DocumentFormat {
                     when (item) {
                         is Paragraph -> append("\n" + item.chars.toString())
                         is Text -> append("\n" + item.chars.toString())
-                        is SoftLineBreak -> {}
+                        is SoftLineBreak -> {
+                        }
                         else -> throw ParseException("List Item '${item.chars}' is not a plain text.")
                     }
                 }
@@ -86,11 +87,11 @@ class MarkdownFormat : DocumentFormat {
         val textItems = mutableListOf<Step>()
 
         val tableHeadRow = tableChildren[0].children.toList()[0]
-        tableHeadRow.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.")  }
+        tableHeadRow.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
         textItems.add(Step((tableHeadRow.children.first() as TableCell).text.toString()))
 
-         tableChildren[2].children.toList().forEach { row ->
-            row.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.")  }
+        tableChildren[2].children.toList().forEach { row ->
+            row.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
             textItems.add(Step((row.children.first() as TableCell).text.toString()))
         }
 
@@ -103,11 +104,11 @@ class MarkdownFormat : DocumentFormat {
         val tableHeadChildren = children[0].children.toList()
         val bodyChildren = children[2].children.toList()
 
-        tableHeadChildren.verifyElementType<TableRow> { throw ParseException("Element $it is not a TableRow.")  }
+        tableHeadChildren.verifyElementType<TableRow> { throw ParseException("Element $it is not a TableRow.") }
         bodyChildren.verifyElementType<TableRow> { throw ParseException("Element $it is not a TableRow.") }
 
         val headers = tableHeadChildren[0].let {
-            it.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.")  }
+            it.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
             it.children.map { cell -> Header((cell as TableCell).text.toString()) }
         }
 

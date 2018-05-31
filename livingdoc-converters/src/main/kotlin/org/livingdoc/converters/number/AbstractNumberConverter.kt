@@ -32,9 +32,9 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
     private fun getLocale(element: AnnotatedElement?): Locale {
         val customLocale = element
-                ?.getAnnotation(Language::class.java)
-                ?.value
-                ?.let { Locale.forLanguageTag(it) }
+            ?.getAnnotation(Language::class.java)
+            ?.value
+            ?.let { Locale.forLanguageTag(it) }
         return customLocale ?: Locale.getDefault(Locale.Category.FORMAT)
     }
 
@@ -66,6 +66,6 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
     private fun bigDecimalOf(value: T?) = BigDecimal(value!!.toString())
 
-    abstract protected fun convertToTarget(number: BigDecimal): T
+    protected abstract fun convertToTarget(number: BigDecimal): T
 
 }

@@ -11,9 +11,9 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 
 internal class DecisionTableExecution(
-        private val fixtureClass: Class<*>,
-        decisionTable: DecisionTable,
-        document: Any?
+    private val fixtureClass: Class<*>,
+    decisionTable: DecisionTable,
+    document: Any?
 ) {
 
     private val fixtureModel = DecisionTableFixtureModel(fixtureClass)
@@ -56,15 +56,15 @@ internal class DecisionTableExecution(
 
     private fun findUnmappedHeaders(): List<String> {
         return decisionTable.headers
-                .filter { (name) -> !fixtureModel.isInputAlias(name) && !fixtureModel.isCheckAlias(name) }
-                .map { it.name }
+            .filter { (name) -> !fixtureModel.isInputAlias(name) && !fixtureModel.isCheckAlias(name) }
+            .map { it.name }
     }
 
     private fun executeTableWithBeforeAndAfter() {
         executeWithBeforeAndAfter(
-                before = { invokeBeforeTableMethods() },
-                body = { executeTable() },
-                after = { invokeAfterTableMethods() }
+            before = { invokeBeforeTableMethods() },
+            body = { executeTable() },
+            after = { invokeAfterTableMethods() }
         )
     }
 
@@ -86,9 +86,9 @@ internal class DecisionTableExecution(
     private fun executeRowWithBeforeAndAfter(row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
         val fixture = createFixtureInstance()
         executeWithBeforeAndAfter(
-                before = { invokeBeforeRowMethods(fixture) },
-                body = { executeRow(fixture, row, inputHeaders, checkHeaders) },
-                after = { invokeAfterRowMethods(fixture) }
+            before = { invokeBeforeRowMethods(fixture) },
+            body = { executeRow(fixture, row, inputHeaders, checkHeaders) },
+            after = { invokeAfterRowMethods(fixture) }
         )
     }
 
@@ -143,11 +143,11 @@ internal class DecisionTableExecution(
     private fun setSkippedStatusForAllUnknownResults() {
         decisionTable.rows.forEach { row ->
             row.headerToField.values.forEach { field ->
-                if (field.result is Result.Unknown) {
+                if (field.result === Result.Unknown) {
                     field.result = Result.Skipped
                 }
             }
-            if (row.result is Result.Unknown) {
+            if (row.result === Result.Unknown) {
                 row.result = Result.Skipped
             }
         }
@@ -228,10 +228,19 @@ internal class DecisionTableExecution(
         decisionTable.result = Result.Exception(e)
     }
 
-    internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>)
-        : RuntimeException("The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(separator = "\n", prefix = "  - ")}")
+    internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :
+        RuntimeException(
+            "The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(
+                separator = "\n",
+                prefix = "  - "
+            )}"
+        )
 
-    internal class UnmappedHeaderException(fixtureClass: Class<*>, unmappedHeaders: List<String>)
-        : RuntimeException("The fixture class <$fixtureClass> has no methods for the following columns: \n${unmappedHeaders.joinToString(separator = "\n", prefix = "  - ")}")
+    internal class UnmappedHeaderException(fixtureClass: Class<*>, unmappedHeaders: List<String>) : RuntimeException(
+        "The fixture class <$fixtureClass> has no methods for the following columns: \n${unmappedHeaders.joinToString(
+            separator = "\n",
+            prefix = "  - "
+        )}"
+    )
 
 }

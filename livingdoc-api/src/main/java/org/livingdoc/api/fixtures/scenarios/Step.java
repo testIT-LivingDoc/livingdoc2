@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  *     <li><code>Peter puts a banana into the basket.</code></li>
  *     <li><code>Peter puts an apple into his basket.</code></li>
  * </ul>
- * The step template is used to identify parametres in scenario steps. For example, the second of the above templates
+ * The step template is used to identify parameters in scenario steps. For example, the second of the above templates
  * would extract the following parameters:
  * <ul>
  *     <li><code>Peter puts a banana into the basket. (user = "Peter", product = "banana")</code></li>

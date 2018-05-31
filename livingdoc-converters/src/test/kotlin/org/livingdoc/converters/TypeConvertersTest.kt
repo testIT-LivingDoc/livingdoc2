@@ -1,11 +1,9 @@
-package org.livingdoc.engine.fixtures
+package org.livingdoc.converters
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.api.conversion.TypeConverter
-import org.livingdoc.converters.BooleanConverter
-import org.livingdoc.converters.TypeConverters
 import org.livingdoc.converters.TypeConvertersTestFixtures.*
 import kotlin.reflect.KClass
 
@@ -14,7 +12,7 @@ internal class TypeConvertersTest {
 
     val booleanClass = java.lang.Boolean::class.java
 
-    @Nested inner class `parameters` {
+    @Nested inner class parameters {
 
         @Test fun `annotated parameter`() {
             val typeConverter = getParameterTypeConverter(AnnotatedMethodParameter::class)
@@ -51,7 +49,10 @@ internal class TypeConvertersTest {
 
         }
 
-        private fun getParameterTypeConverter(fixtureClass: KClass<*>, documentClass: KClass<*>? = null): TypeConverter<*>? {
+        private fun getParameterTypeConverter(
+            fixtureClass: KClass<*>,
+            documentClass: KClass<*>? = null
+        ): TypeConverter<*>? {
             val method = fixtureClass.java.getMethod("method", booleanClass)
             val parameter = method.parameters[0]
             return TypeConverters.findTypeConverter(parameter, documentClass?.java)
@@ -59,7 +60,7 @@ internal class TypeConvertersTest {
 
     }
 
-    @Nested inner class `fields` {
+    @Nested inner class fields {
 
         @Test fun `annotated field`() {
             val typeConverter = getFieldTypeConverter(AnnotatedField::class)
@@ -90,7 +91,10 @@ internal class TypeConvertersTest {
 
         }
 
-        private fun getFieldTypeConverter(fixtureClass: KClass<*>, documentClass: KClass<*>? = null): TypeConverter<*>? {
+        private fun getFieldTypeConverter(
+            fixtureClass: KClass<*>,
+            documentClass: KClass<*>? = null
+        ): TypeConverter<*>? {
             val field = fixtureClass.java.getField("field")
             return TypeConverters.findTypeConverter(field, documentClass?.java)
         }

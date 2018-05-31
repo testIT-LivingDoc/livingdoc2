@@ -8,13 +8,13 @@ import java.lang.reflect.AnnotatedElement
 
 open class MapConverter : TypeConverter<Map<Any, Any>> {
 
-    private val KEY_INDEX: Int = 0
-    private val VALUE_INDEX: Int = 1
+    private val keyParameter: Int = 0
+    private val valueParameter: Int = 1
 
     @Throws(ConversionException::class)
     override fun convert(value: String, element: AnnotatedElement, documentClass: Class<*>?): Map<Any, Any> {
-        val keyConverter = findTypeConverterForGenericElement(element, KEY_INDEX, documentClass)
-        val valueConverter = findTypeConverterForGenericElement(element, VALUE_INDEX, documentClass)
+        val keyConverter = findTypeConverterForGenericElement(element, keyParameter, documentClass)
+        val valueConverter = findTypeConverterForGenericElement(element, valueParameter, documentClass)
         val pairs = tokenizeToMap(value)
         return pairs.map { (key, value) ->
             val convertedKey = keyConverter.convert(key, element, documentClass)

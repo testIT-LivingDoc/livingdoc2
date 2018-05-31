@@ -13,11 +13,9 @@ class RepositoryManager {
         fun from(config: Configuration): RepositoryManager {
             log.debug("creating new repository manager...")
             val repositoryManager = RepositoryManager()
-            config.repositories.forEach { repositoryConfig ->
+            config.repositories.forEach { (name, factory, configData) ->
 
-                val name = repositoryConfig.name
-                val factory = repositoryConfig.factory ?: throw NoRepositoryFactoryException(name)
-                val configData = repositoryConfig.config
+                val factory = factory ?: throw NoRepositoryFactoryException(name)
 
                 val factoryClass = Class.forName(factory)
                 if (DocumentRepositoryFactory::class.java.isAssignableFrom(factoryClass)) {
@@ -43,18 +41,18 @@ class RepositoryManager {
             log.error("duplicate repository definition: '{}'", name)
             throw RepositoryAlreadyRegisteredException(name, repository)
         }
-        repositoryMap.put(name, repository)
+        repositoryMap[name] = repository
     }
 
     fun getRepository(name: String): DocumentRepository? = repositoryMap[name]
 
-    class RepositoryAlreadyRegisteredException(name: String, repository: DocumentRepository)
-        : RuntimeException("Document repository with name '$name' already registered! Cant register instance of ${repository.javaClass.canonicalName}")
+    class RepositoryAlreadyRegisteredException(name: String, repository: DocumentRepository) :
+        RuntimeException("Document repository with name '$name' already registered! Cant register instance of ${repository.javaClass.canonicalName}")
 
-    class NoRepositoryFactoryException(name: String)
-        : RuntimeException("Repository declaration '$name' does not specify a 'factory' property.")
+    class NoRepositoryFactoryException(name: String) :
+        RuntimeException("Repository declaration '$name' does not specify a 'factory' property.")
 
-    class NotARepositoryFactoryException(name: String)
-        : RuntimeException("Repository declaration '$name' does not specify a 'factory' property with a class of type '${DocumentRepositoryFactory::class.java.simpleName}'.")
+    class NotARepositoryFactoryException(name: String) :
+        RuntimeException("Repository declaration '$name' does not specify a 'factory' property with a class of type '${DocumentRepositoryFactory::class.java.simpleName}'.")
 
 }

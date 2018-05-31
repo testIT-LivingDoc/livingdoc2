@@ -12,9 +12,9 @@ internal class LocalDateTimeConverterTest : TemporalConverterContract<LocalDateT
     override val cut = LocalDateTimeConverter()
 
     override val validInputVariations = mapOf(
-            "2017-05-12T12:34" to parse("2017-05-12T12:34"),
-            "2017-05-12T12:34:56" to parse("2017-05-12T12:34:56"),
-            "2017-05-12T12:34:56.123" to parse("2017-05-12T12:34:56.123")
+        "2017-05-12T12:34" to parse("2017-05-12T12:34"),
+        "2017-05-12T12:34:56" to parse("2017-05-12T12:34:56"),
+        "2017-05-12T12:34:56.123" to parse("2017-05-12T12:34:56.123")
     )
 
     override val defaultFormatValue = "2017-05-12T12:34" to parse("2017-05-12T12:34")

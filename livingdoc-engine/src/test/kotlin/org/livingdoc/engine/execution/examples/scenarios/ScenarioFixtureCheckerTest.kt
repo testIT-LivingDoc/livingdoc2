@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 class ScenarioFixtureCheckerTest {
 
     val classPrefix = "org.livingdoc.engine.execution.examples.scenarios.MalformedFixtures"
-    val methodPrefix = "void ${classPrefix}\$"
+    val methodPrefix = "void $classPrefix\$"
 
     @Test fun `fixture must have default constructor`() {
         val errors = executeCheck(MalformedFixtures.NoDefaultConstructor::class)

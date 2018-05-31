@@ -12,7 +12,7 @@ internal class LocalDateConverterTest : TemporalConverterContract<LocalDate>(), 
     override val cut = LocalDateConverter()
 
     override val validInputVariations = mapOf(
-            "2017-05-12" to parse("2017-05-12")
+        "2017-05-12" to parse("2017-05-12")
     )
 
     override val defaultFormatValue = "2017-05-12" to parse("2017-05-12")

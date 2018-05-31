@@ -8,10 +8,10 @@ import org.junit.jupiter.params.provider.ValueSource
 
 class DamerauLevenshteinTest {
 
-    val cut = DamerauLevenshtein()
+    private val cut = DamerauLevenshtein()
 
     @ParameterizedTest
-    @ValueSource(strings = arrayOf("", "a", "LivingDoc"))
+    @ValueSource(strings = ["", "a", "LivingDoc"])
     fun identicalStringsHaveDistanceOfZero(a: String) {
         assertThat(cut.distance(a, a)).isEqualTo(0)
     }
@@ -38,13 +38,19 @@ class DamerauLevenshteinTest {
 
     @Test
     fun returnsCutoffDistanceWhenDistanceIsTooLarge() {
-        assertThat(cut.distance(
+        assertThat(
+            cut.distance(
                 "he adds '{}' to his shopping cart",
-                "the user '{}' is logged into the shop")).isEqualTo(25)
+                "the user '{}' is logged into the shop"
+            )
+        ).isEqualTo(25)
         val withCutoffDistance = DamerauLevenshtein(cutoffDistance = 12)
-        assertThat(withCutoffDistance.distance(
+        assertThat(
+            withCutoffDistance.distance(
                 "he adds '{}' to his shopping cart",
-                "the user '{}' is logged into the shop")).isEqualTo(12)
+                "the user '{}' is logged into the shop"
+            )
+        ).isEqualTo(12)
     }
 
     @Test
@@ -58,9 +64,10 @@ class DamerauLevenshteinTest {
     fun canConfigureWeightOfSubstitutions() {
         assertThat(cut.distance("Living", "Loving")).isEqualTo(1)
         val withExpensiveSubstitutions = DamerauLevenshtein(
-                weightDeletion = 3,
-                weightInsertion = 3,
-                weightSubstitution = 2)
+            weightDeletion = 3,
+            weightInsertion = 3,
+            weightSubstitution = 2
+        )
         assertThat(withExpensiveSubstitutions.distance("Living", "Loving")).isEqualTo(2)
     }
 
@@ -68,10 +75,11 @@ class DamerauLevenshteinTest {
     fun canConfigureWeightOfTranspositions() {
         assertThat(cut.distance("Living", "Livign")).isEqualTo(1)
         val withExpensiveTranspositions = DamerauLevenshtein(
-                weightDeletion = 3,
-                weightInsertion = 3,
-                weightSubstitution = 3,
-                weightTransposition = 2)
+            weightDeletion = 3,
+            weightInsertion = 3,
+            weightSubstitution = 3,
+            weightTransposition = 2
+        )
         assertThat(withExpensiveTranspositions.distance("Living", "Livign")).isEqualTo(2)
     }
 

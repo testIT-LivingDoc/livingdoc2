@@ -7,9 +7,10 @@ import org.livingdoc.repositories.model.decisiontable.Header
 internal class MarkdownFormatTest {
 
     @Test
-    fun `Table is read successfully` () {
+    fun `Table is read successfully`() {
         val mdFormat = MarkdownFormat()
-        val document = mdFormat.parse("""
+        val document = mdFormat.parse(
+            """
             # Irrelevant Headline
 
             ```
@@ -24,7 +25,8 @@ internal class MarkdownFormatTest {
             |---------|---------|---------|
             | Cell11  | Cell12  | Cell13  |
             | Cell21  | Cell22  | Cell23  |
-        """.trimIndent().byteInputStream())
+        """.trimIndent().byteInputStream()
+        )
 
         val (tables, scenarios) = document
 
@@ -42,9 +44,10 @@ internal class MarkdownFormatTest {
     }
 
     @Test
-    fun `Bullet list is read successfully` () {
+    fun `Bullet list is read successfully`() {
         val mdFormat = MarkdownFormat()
-        val document = mdFormat.parse("""
+        val document = mdFormat.parse(
+            """
             # Irrelevant Headline
 
             ```
@@ -73,7 +76,8 @@ internal class MarkdownFormatTest {
                A final sentence in the third item, separated by many newlines.
              * Listitem4
                  Sentence in fourth list item.
-        """.trimIndent().byteInputStream())
+        """.trimIndent().byteInputStream()
+        )
 
         val (tables, scenarios) = document
 
@@ -103,9 +107,10 @@ internal class MarkdownFormatTest {
     }
 
     @Test
-    fun `Numbered list is read successfully` () {
+    fun `Numbered list is read successfully`() {
         val mdFormat = MarkdownFormat()
-        val document = mdFormat.parse("""
+        val document = mdFormat.parse(
+            """
             # Irrelevant Headline
 
             ```
@@ -134,7 +139,8 @@ internal class MarkdownFormatTest {
                 A final sentence in the third item, separated by many newlines.
              4. Listitem4
                 Sentence in fourth list item.
-        """.trimIndent().byteInputStream())
+        """.trimIndent().byteInputStream()
+        )
 
         val (tables, scenarios) = document
 
@@ -162,9 +168,10 @@ internal class MarkdownFormatTest {
     }
 
     @Test
-    fun `Column table is read as scenario` () {
+    fun `Column table is read as scenario`() {
         val mdFormat = MarkdownFormat()
-        val document = mdFormat.parse("""
+        val document = mdFormat.parse(
+            """
             # Irrelevant Headline
 
             ```
@@ -179,7 +186,8 @@ internal class MarkdownFormatTest {
             |---------|
             | Cell11  |
             | Cell21  |
-        """.trimIndent().byteInputStream())
+        """.trimIndent().byteInputStream()
+        )
 
         val (tables, scenarios) = document
 

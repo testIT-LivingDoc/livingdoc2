@@ -1,16 +1,18 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
-class NoMatchingStepTemplate(msg: String) : RuntimeException(msg) {}
+class NoMatchingStepTemplate(msg: String) : RuntimeException(msg)
 
-internal class ScenarioStepMatcher(val stepTemplates: List<StepTemplate>) {
+internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>) {
 
-    data class MatchingResult(val template: StepTemplate,
-                              val variables: Map<String, String>)
+    data class MatchingResult(
+        val template: StepTemplate,
+        val variables: Map<String, String>
+    )
 
     fun match(step: String): MatchingResult {
         val bestAlignment = stepTemplates
-                .map { it.alignWith(step, maxCostOfAlignment = 15) }
-                .minBy { it.totalCost }
+            .map { it.alignWith(step, maxCostOfAlignment = 15) }
+            .minBy { it.totalCost }
         if (bestAlignment == null || bestAlignment.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }

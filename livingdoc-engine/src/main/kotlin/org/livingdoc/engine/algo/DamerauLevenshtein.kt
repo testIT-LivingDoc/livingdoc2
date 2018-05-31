@@ -25,11 +25,13 @@ import java.lang.Math.min
  * @param weightSubstitution weight of a substitution operation (default: 1)
  * @param weightTransposition weight of a transposition operation (default: 1)
  */
-class DamerauLevenshtein(val cutoffDistance: Int = 0,
-                         val weightInsertion: Int = 1,
-                         val weightDeletion: Int = 1,
-                         val weightSubstitution: Int = 1,
-                         val weightTransposition: Int = 1) {
+class DamerauLevenshtein(
+    val cutoffDistance: Int = 0,
+    val weightInsertion: Int = 1,
+    val weightDeletion: Int = 1,
+    val weightSubstitution: Int = 1,
+    val weightTransposition: Int = 1
+) {
 
     /*
      * This dynamic programming algorithm calculates a m*n matrix of distance values. The
@@ -82,7 +84,7 @@ class DamerauLevenshtein(val cutoffDistance: Int = 0,
                 currentDistance = min(currentDistance, currentRow[j + 1])
             }
             // check cutoff
-            if (cutoffDistance > 0 && currentDistance >= cutoffDistance) {
+            if (cutoffDistance in 1..currentDistance) {
                 return currentDistance
             }
 

@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 internal class DecisionTableFixtureCheckerTest {
 
     val classPrefix = "org.livingdoc.engine.execution.examples.decisiontables.MalformedFixtures"
-    val methodPrefix = "void ${classPrefix}\$"
+    val methodPrefix = "void $classPrefix\$"
 
     @Test fun `fixture must have default constructor`() {
         val errors = executeCheck(MalformedFixtures.NoDefaultConstructor::class)

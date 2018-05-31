@@ -26,7 +26,7 @@ class HtmlFormatTest {
     @Test
     fun `tables with one row are ignored`() {
         val result = cut.parse(getHtmlTableWithOnlyOneRow())
-        assertThat(result.tables).hasSize(0);
+        assertThat(result.tables).hasSize(0)
     }
 
     @Test
@@ -49,30 +49,37 @@ class HtmlFormatTest {
 
     @Test
     fun `parse Html into DecisionTable`() {
-        var htmlDocument = cut.parse(getValidHtml())
+        val htmlDocument = cut.parse(getValidHtml())
 
-        var documentNode = htmlDocument.tables[0]
+        val documentNode = htmlDocument.tables[0]
 
         assertThat(documentNode).isInstanceOf(DecisionTable::class.java)
-        val decisionTable = documentNode
-        assertThat(decisionTable.headers).extracting("name").containsExactly("Firstname", "Lastname", "Age")
+        assertThat(documentNode.headers).extracting("name").containsExactly("Firstname", "Lastname", "Age")
 
-        assertThat(decisionTable.rows).hasSize(2);
-        assertThat(decisionTable.rows[0].headerToField).hasSize(3)
-        assertThat(decisionTable.rows[1].headerToField).hasSize(3)
+        assertThat(documentNode.rows).hasSize(2)
+        assertThat(documentNode.rows[0].headerToField).hasSize(3)
+        assertThat(documentNode.rows[1].headerToField).hasSize(3)
 
-        assertThat(decisionTable.rows[0].headerToField.map { it.key.name }).containsExactly("Firstname", "Lastname", "Age")
-        assertThat(decisionTable.rows[0].headerToField.map { it.value.value }).containsExactly("Jill", "Smith", "50")
+        assertThat(documentNode.rows[0].headerToField.map { it.key.name }).containsExactly(
+            "Firstname",
+            "Lastname",
+            "Age"
+        )
+        assertThat(documentNode.rows[0].headerToField.map { it.value.value }).containsExactly("Jill", "Smith", "50")
 
-        assertThat(decisionTable.rows[1].headerToField.map { it.key.name }).containsExactly("Firstname", "Lastname", "Age")
-        assertThat(decisionTable.rows[1].headerToField.map { it.value.value }).containsExactly("Eve", "Jackson", "94")
+        assertThat(documentNode.rows[1].headerToField.map { it.key.name }).containsExactly(
+            "Firstname",
+            "Lastname",
+            "Age"
+        )
+        assertThat(documentNode.rows[1].headerToField.map { it.value.value }).containsExactly("Eve", "Jackson", "94")
     }
 
     @Test
     fun `parse unorderedList into Scenario`() {
-        var htmlDocument = cut.parse(getHtmlWithUnorderedList())
+        val htmlDocument = cut.parse(getHtmlWithUnorderedList())
 
-        var scenario = htmlDocument.lists[0]
+        val scenario = htmlDocument.lists[0]
 
         assertThat(scenario.steps).isNotNull
         assertThat(scenario.steps).hasSize(5)
@@ -85,8 +92,8 @@ class HtmlFormatTest {
 
     @Test
     fun `parse orderedList into Scenario`() {
-        var htmlDocument = cut.parse(getHtmlWithOrderedList())
-        var scenario = htmlDocument.lists[0]
+        val htmlDocument = cut.parse(getHtmlWithOrderedList())
+        val scenario = htmlDocument.lists[0]
 
         assertThat(scenario.steps).isNotNull
         assertThat(scenario.steps).hasSize(5)
@@ -99,7 +106,7 @@ class HtmlFormatTest {
 
     @Test
     fun `unordered list with only one item is ignored`() {
-        var htmlDocument = cut.parse(getHtmlWithUnorderedListContainsOnlyOneItem())
+        val htmlDocument = cut.parse(getHtmlWithUnorderedListContainsOnlyOneItem())
 
         assertThat(htmlDocument.lists).isNotNull
         assertThat(htmlDocument.lists).isEmpty()
@@ -107,7 +114,7 @@ class HtmlFormatTest {
 
     @Test
     fun `ordered list with only one item is ignored`() {
-        var htmlDocument = cut.parse(getHtmlWithOrderedListContainsOnlyOneItem())
+        val htmlDocument = cut.parse(getHtmlWithOrderedListContainsOnlyOneItem())
 
         assertThat(htmlDocument.lists).isNotNull
         assertThat(htmlDocument.lists).isEmpty()
@@ -115,7 +122,7 @@ class HtmlFormatTest {
 
     @Test
     fun `exception if unordered list contains nested unordered list`() {
-        var exception = assertThrows(ParseException::class.java) {
+        val exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlUnorderedListWithNestedUnorderedList())
         }
 
@@ -124,7 +131,7 @@ class HtmlFormatTest {
 
     @Test
     fun `exception if unordered list contains nested ordered list`() {
-        var exception = assertThrows(ParseException::class.java) {
+        val exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlUnorderedListWithNestedOrderedList())
         }
 
@@ -133,7 +140,7 @@ class HtmlFormatTest {
 
     @Test
     fun `exception if ordered list contains nested unordered list`() {
-        var exception = assertThrows(ParseException::class.java) {
+        val exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlOrderedListWithNestedUnorderedList())
         }
 
@@ -142,7 +149,7 @@ class HtmlFormatTest {
 
     @Test
     fun `exception if ordered list contains nested ordered list`() {
-        var exception = assertThrows(ParseException::class.java) {
+        val exception = assertThrows(ParseException::class.java) {
             cut.parse(getHtmlOrderedListWithNestedOrderedList())
         }
 

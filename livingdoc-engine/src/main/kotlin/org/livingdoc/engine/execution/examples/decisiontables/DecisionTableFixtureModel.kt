@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 internal class DecisionTableFixtureModel(
-        val fixtureClass: Class<*>
+    val fixtureClass: Class<*>
 ) {
 
     val beforeTableMethods: List<Method>
@@ -72,21 +72,21 @@ internal class DecisionTableFixtureModel(
         val inputAliasToField = mutableMapOf<String, Field>()
         inputFields.forEach { field ->
             field.getAnnotationsByType(Input::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        inputAliases.add(alias)
-                        inputAliasToField.put(alias, field)
-                    }
+                .flatMap { it.value.asIterable() }
+                .forEach { alias ->
+                    inputAliases.add(alias)
+                    inputAliasToField[alias] = field
+                }
         }
 
         val inputAliasToMethod = mutableMapOf<String, Method>()
         inputMethods.forEach { method ->
             method.getAnnotationsByType(Input::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        inputAliases.add(alias)
-                        inputAliasToMethod.put(alias, method)
-                    }
+                .flatMap { it.value.asIterable() }
+                .forEach { alias ->
+                    inputAliases.add(alias)
+                    inputAliasToMethod[alias] = method
+                }
         }
 
         this.inputAliases = inputAliases
@@ -100,11 +100,11 @@ internal class DecisionTableFixtureModel(
         val checkAliasToMethod = mutableMapOf<String, Method>()
         checkMethods.forEach { method ->
             method.getAnnotationsByType(Check::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        checkAliases.add(alias)
-                        checkAliasToMethod.put(alias, method)
-                    }
+                .flatMap { it.value.asIterable() }
+                .forEach { alias ->
+                    checkAliases.add(alias)
+                    checkAliasToMethod[alias] = method
+                }
         }
 
         this.checkAliases = checkAliases

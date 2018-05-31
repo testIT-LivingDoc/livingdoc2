@@ -12,8 +12,8 @@ internal class LocalTimeConverterTest : TemporalConverterContract<LocalTime>(), 
     override val cut = LocalTimeConverter()
 
     override val validInputVariations = mapOf(
-            "12:34" to parse("12:34"),
-            "12:34:56" to parse("12:34:56")
+        "12:34" to parse("12:34"),
+        "12:34:56" to parse("12:34:56")
     )
 
     override val defaultFormatValue = "12:34" to parse("12:34")

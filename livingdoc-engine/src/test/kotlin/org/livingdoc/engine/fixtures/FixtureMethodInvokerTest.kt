@@ -77,7 +77,7 @@ internal class FixtureMethodInvokerTest {
 
     }
 
-    @ValueSource(strings = arrayOf("privateMethod", "protectedMethod", "publicMethod"))
+    @ValueSource(strings = ["privateMethod", "protectedMethod", "publicMethod"])
     @ParameterizedTest fun `method visibility is ignored`(methodName: String) {
         assertThat(cut.invoke(getMethod(methodName), fixture)).isEqualTo("worked")
     }
@@ -87,7 +87,7 @@ internal class FixtureMethodInvokerTest {
         return TestFixture::class.java.getDeclaredMethod(name, *javaParameterTypes)
     }
 
-    class TestFixture {
+    open class TestFixture {
 
         fun withoutParameters(): String {
             return "no params"
@@ -106,7 +106,7 @@ internal class FixtureMethodInvokerTest {
 
         private fun privateMethod() = "worked"
         protected fun protectedMethod() = "worked"
-        public fun publicMethod() = "worked"
+        fun publicMethod() = "worked"
 
         fun typeConverterNotFound(param: CustomType) = "$param"
 

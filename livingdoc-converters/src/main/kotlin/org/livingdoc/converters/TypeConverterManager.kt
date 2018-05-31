@@ -25,7 +25,7 @@ object TypeConverterManager {
         defaultConverters = ServiceLoader.load(TypeConverter::class.java).toList()
         defaultConverters.forEach {
             log.debug("loaded default type converter: {}", it.javaClass.canonicalName)
-            cache.put(it.javaClass, it)
+            cache[it.javaClass] = it
         }
     }
 
@@ -47,7 +47,7 @@ object TypeConverterManager {
      * @param converterType the class of the type converter
      * @return the type converter instance for the given type
      */
-    fun getInstance(converterType: Class<out TypeConverter<out Any>>): TypeConverter<*> {
+    private fun getInstance(converterType: Class<out TypeConverter<out Any>>): TypeConverter<*> {
         return cache.computeIfAbsent(converterType, {
             log.debug("creating new cached instance of {}", it.canonicalName)
             it.newInstance()

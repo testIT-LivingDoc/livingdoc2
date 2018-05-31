@@ -547,46 +547,55 @@ internal class DecisionTableExecutorTest {
         val headers = arrayListOf(valueAColumn, valueBColumn, sumColumn, diffColumn, multiplyColumn, divideColumn)
 
         val rows = arrayListOf(
-                Row(mapOf(
-                        valueAColumn to Field("0"),
-                        valueBColumn to Field("0"),
-                        sumColumn to Field("0"),
-                        diffColumn to Field("0"),
-                        multiplyColumn to Field("0"),
-                        divideColumn to Field("NaN")
-                )),
-                Row(mapOf(
-                        valueAColumn to Field("1"),
-                        valueBColumn to Field("0"),
-                        sumColumn to Field("1"),
-                        diffColumn to Field("1"),
-                        multiplyColumn to Field("0"),
-                        divideColumn to Field("Infinity")
-                )),
-                Row(mapOf(
-                        valueAColumn to Field("0"),
-                        valueBColumn to Field("1"),
-                        sumColumn to Field("1"),
-                        diffColumn to Field("-1"),
-                        multiplyColumn to Field("0"),
-                        divideColumn to Field("0")
-                )),
-                Row(mapOf(
-                        valueAColumn to Field("1"),
-                        valueBColumn to Field("1"),
-                        sumColumn to Field("2"),
-                        diffColumn to Field("0"),
-                        multiplyColumn to Field("1"),
-                        divideColumn to Field("1")
-                )))
+            Row(
+                mapOf(
+                    valueAColumn to Field("0"),
+                    valueBColumn to Field("0"),
+                    sumColumn to Field("0"),
+                    diffColumn to Field("0"),
+                    multiplyColumn to Field("0"),
+                    divideColumn to Field("NaN")
+                )
+            ),
+            Row(
+                mapOf(
+                    valueAColumn to Field("1"),
+                    valueBColumn to Field("0"),
+                    sumColumn to Field("1"),
+                    diffColumn to Field("1"),
+                    multiplyColumn to Field("0"),
+                    divideColumn to Field("Infinity")
+                )
+            ),
+            Row(
+                mapOf(
+                    valueAColumn to Field("0"),
+                    valueBColumn to Field("1"),
+                    sumColumn to Field("1"),
+                    diffColumn to Field("-1"),
+                    multiplyColumn to Field("0"),
+                    divideColumn to Field("0")
+                )
+            ),
+            Row(
+                mapOf(
+                    valueAColumn to Field("1"),
+                    valueBColumn to Field("1"),
+                    sumColumn to Field("2"),
+                    diffColumn to Field("0"),
+                    multiplyColumn to Field("1"),
+                    divideColumn to Field("1")
+                )
+            )
+        )
 
         val resultTable = cut.execute(DecisionTable(headers, rows), CalculatorDecisionTableFixture::class.java, null)
 
         assertThat(resultTable.result).isEqualTo(Executed)
         assertThat(resultTable.rows).hasSize(4)
-        resultTable.rows.forEach { row ->
-            assertThat(row.result).isEqualTo(Executed)
-            row.headerToField.values.forEach { field ->
+        resultTable.rows.forEach { (headerToField, result) ->
+            assertThat(result).isEqualTo(Executed)
+            headerToField.values.forEach { field ->
                 assertThat(field.result).isEqualTo(Executed)
             }
         }

@@ -5,9 +5,9 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 
 data class DecisionTableResult(
-        val headers: List<Header>,
-        val rows: List<RowResult>,
-        var result: Result = Result.Unknown
+    val headers: List<Header>,
+    val rows: List<RowResult>,
+    var result: Result = Result.Unknown
 ) {
 
     companion object {
@@ -20,7 +20,7 @@ data class DecisionTableResult(
             decisionTable.rows.forEach { (columnToField) ->
                 val columnToFieldCopy = mutableMapOf<Header, FieldResult>()
                 columnToField.forEach { (name), (value) ->
-                    columnToFieldCopy.put(Header(name), FieldResult(value))
+                    columnToFieldCopy[Header(name)] = FieldResult(value)
                 }
                 rowCopies.add(RowResult(columnToFieldCopy))
             }

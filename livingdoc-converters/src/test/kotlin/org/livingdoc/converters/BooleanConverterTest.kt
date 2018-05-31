@@ -13,12 +13,14 @@ internal class BooleanConverterTest : DefaultTypeConverterContract {
     override val cut = BooleanConverter()
 
     @ParameterizedTest(name = "\"{0}\" is converted to: {1}")
-    @CsvSource("true, true",
-            "TRUE, true",
-            "TrUe, true",
-            "false, false",
-            "FALSE, false",
-            "FaLsE, false")
+    @CsvSource(
+        "true, true",
+        "TRUE, true",
+        "TrUe, true",
+        "false, false",
+        "FALSE, false",
+        "FaLsE, false"
+    )
     fun `values are converted correctly`(value: String, expected: Boolean) {
         assertThat(cut.convert(value, null, null)).isEqualTo(expected)
     }

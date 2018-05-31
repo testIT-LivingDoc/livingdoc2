@@ -38,8 +38,9 @@ class StepTemplateTest {
         fun `parses StepTemplates with one variable`() {
             val cut = StepTemplate.parse("{user} enters the building.")
             assertThat(cut.fragments).containsExactly(
-                    Variable("user"),
-                    Text(" enters the building."))
+                Variable("user"),
+                Text(" enters the building.")
+            )
         }
 
         @Test
@@ -52,19 +53,21 @@ class StepTemplateTest {
         fun `parses StepTemplates with multiple variables`() {
             val cut = StepTemplate.parse("The user {user} enters a value for {variable}: {value}")
             assertThat(cut.fragments).containsExactly(
-                    Text("The user "),
-                    Variable("user"),
-                    Text(" enters a value for "),
-                    Variable("variable"),
-                    Text(": "),
-                    Variable("value"))
+                Text("The user "),
+                Variable("user"),
+                Text(" enters a value for "),
+                Variable("variable"),
+                Text(": "),
+                Variable("value")
+            )
         }
 
         @Test
         fun `parses StepTemplates with escaped curly braces`() {
             val cut = StepTemplate.parse("Literal \\{curly braces\\} have to be escaped with backslashes.")
             assertThat(cut.fragments).containsExactly(
-                    Text("Literal \\{curly braces\\} have to be escaped with backslashes."))
+                Text("Literal \\{curly braces\\} have to be escaped with backslashes.")
+            )
         }
 
         @Test

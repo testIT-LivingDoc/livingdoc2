@@ -10,7 +10,7 @@ import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 internal class ScenarioFixtureModel(
-        val fixtureClass: Class<*>
+    val fixtureClass: Class<*>
 ) {
 
     val beforeMethods: List<Method>
@@ -47,11 +47,11 @@ internal class ScenarioFixtureModel(
         val stepTemplateToMethod = mutableMapOf<StepTemplate, Method>()
         stepMethods.forEach { method ->
             method.getAnnotationsByType(Step::class.java)
-                    .flatMap { it.value.asIterable() }
-                    .forEach { alias ->
-                        stepAliases.add(alias)
-                        stepTemplateToMethod.put(StepTemplate.parse(alias), method)
-                    }
+                .flatMap { it.value.asIterable() }
+                .forEach { alias ->
+                    stepAliases.add(alias)
+                    stepTemplateToMethod[StepTemplate.parse(alias)] = method
+                }
         }
 
         this.stepTemplateToMethod = stepTemplateToMethod

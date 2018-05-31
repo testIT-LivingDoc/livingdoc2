@@ -10,8 +10,7 @@ interface DefaultTypeConverterContract {
 
     @Test fun `converter is automatically loaded into manager`() {
         val converterOfType = TypeConverterManager.getDefaultConverters()
-                .filter { it.javaClass == cut.javaClass }
-                .first()
+            .first { it.javaClass == cut.javaClass }
         assertThat(converterOfType).isNotNull()
     }
 

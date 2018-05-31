@@ -156,8 +156,8 @@ internal class RepositoryManagerTest {
     }
 
     data class TestRepositoryConfiguration(
-            var foo: String? = null,
-            var bar: Float = 1.0f
+        var foo: String? = null,
+        var bar: Float = 1.0f
     )
 
     class TestRepositoryFactory : DocumentRepositoryFactory<TestRepository> {

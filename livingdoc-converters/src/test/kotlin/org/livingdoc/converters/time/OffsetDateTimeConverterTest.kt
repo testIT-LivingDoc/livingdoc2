@@ -12,9 +12,9 @@ internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDat
     override val cut = OffsetDateTimeConverter()
 
     override val validInputVariations = mapOf(
-            "2017-05-12T12:34+01:00" to parse("2017-05-12T12:34+01:00"),
-            "2017-05-12T12:34:56+01:00" to parse("2017-05-12T12:34:56+01:00"),
-            "2017-05-12T12:34:56.123+01:00" to parse("2017-05-12T12:34:56.123+01:00")
+        "2017-05-12T12:34+01:00" to parse("2017-05-12T12:34+01:00"),
+        "2017-05-12T12:34:56+01:00" to parse("2017-05-12T12:34:56+01:00"),
+        "2017-05-12T12:34:56.123+01:00" to parse("2017-05-12T12:34:56.123+01:00")
     )
 
     override val defaultFormatValue = "2017-05-12T12:34+01:00" to parse("2017-05-12T12:34+01:00")

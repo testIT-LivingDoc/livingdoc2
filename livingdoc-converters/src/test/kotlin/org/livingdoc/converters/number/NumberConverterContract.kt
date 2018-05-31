@@ -77,8 +77,8 @@ internal abstract class NumberConverterContract<T : Number> {
 
     @Nested inner class localization {
 
-        val language: Language = mock()
-        val element: AnnotatedElement = mock()
+        private val language: Language = mock()
+        private val element: AnnotatedElement = mock()
 
         @Test fun `default locale used if no element given`() {
             val (stringValue, value) = englishValue

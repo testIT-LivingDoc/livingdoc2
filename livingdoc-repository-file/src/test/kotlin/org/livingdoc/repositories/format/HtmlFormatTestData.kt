@@ -3,7 +3,7 @@ package org.livingdoc.repositories.format
 object HtmlFormatTestData {
 
     fun getHtmlTableWithOnlyOneRow() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -20,7 +20,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlTableWithNonUniqueHeaders() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -42,7 +42,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlTableWithWrongCellCount() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -63,7 +63,7 @@ object HtmlFormatTestData {
 
 
     fun getValidHtml() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -133,7 +133,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlWithUnorderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -150,7 +150,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlWithOrderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -167,7 +167,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlWithUnorderedListContainsOnlyOneItem() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -180,7 +180,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlWithOrderedListContainsOnlyOneItem() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -193,7 +193,7 @@ object HtmlFormatTestData {
 
 
     fun getHtmlUnorderedListWithNestedUnorderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -210,7 +210,7 @@ object HtmlFormatTestData {
     """.byteInputStream()
 
     fun getHtmlUnorderedListWithNestedOrderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -227,7 +227,7 @@ object HtmlFormatTestData {
     """.byteInputStream()
 
     fun getHtmlOrderedListWithNestedUnorderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>
@@ -244,7 +244,7 @@ object HtmlFormatTestData {
     """.byteInputStream()
 
     fun getHtmlOrderedListWithNestedOrderedList() =
-            """
+        """
     <!DOCTYPE html>
     <html lang="en">
     <body>

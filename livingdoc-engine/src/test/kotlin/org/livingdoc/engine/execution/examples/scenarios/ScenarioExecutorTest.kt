@@ -48,8 +48,9 @@ internal class ScenarioExecutorTest {
 
     @Test fun `multiple steps matching different templates can be mapped to the same method`() {
         val steps = listOf(
-                Step("step2"),
-                Step("Alternate template for step2"))
+            Step("step2"),
+            Step("Alternate template for step2")
+        )
 
         cut.execute(Scenario(steps), LifeCycleFixture::class.java, null)
 
@@ -78,7 +79,7 @@ internal class ScenarioExecutorTest {
         }
 
         @Test fun `a mismatching parameter results in "Exception"`() {
-            val result = execute(Step("Step with mismatching parameter: Ohnoes!")).result
+            val result = execute(Step("Step with mismatching parameter: Oh noes!")).result
 
             assertThat(result).isInstanceOf(Exception::class.java)
         }
@@ -226,7 +227,7 @@ internal class ScenarioExecutorTest {
 
                 val result = execute().result as Result.Exception
 
-                assertThat(result.exception).isInstanceOf(ScenarioExecution.AfterMethodExecutionExeption::class.java)
+                assertThat(result.exception).isInstanceOf(ScenarioExecution.AfterMethodExecutionException::class.java)
                 assertThat(result.exception.suppressed).containsExactlyInAnyOrder(exception1, exception2)
             }
 

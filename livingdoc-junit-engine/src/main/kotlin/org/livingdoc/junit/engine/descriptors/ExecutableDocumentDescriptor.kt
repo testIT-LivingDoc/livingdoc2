@@ -8,8 +8,8 @@ import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.livingdoc.junit.engine.EngineExecutionContext
 
 class ExecutableDocumentDescriptor(
-        uniqueId: UniqueId,
-        private val documentClass: Class<*>
+    uniqueId: UniqueId,
+    private val documentClass: Class<*>
 ) : AbstractTestDescriptor(uniqueId, documentClass.name), Node<EngineExecutionContext> {
 
     override fun getType(): Type {
@@ -27,8 +27,8 @@ class ExecutableDocumentDescriptor(
     }
 
     override fun execute(
-            context: EngineExecutionContext,
-            dynamicTestExecutor: DynamicTestExecutor
+        context: EngineExecutionContext,
+        dynamicTestExecutor: DynamicTestExecutor
     ): EngineExecutionContext {
         println("ExecutableDocumentTestDescriptor: execute with context=[$context] and dynamicTestExecutor=[$dynamicTestExecutor]")
         // TODO: are examples within a document dynamic tests?

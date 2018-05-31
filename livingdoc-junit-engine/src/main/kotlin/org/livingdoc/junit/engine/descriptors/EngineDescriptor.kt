@@ -6,7 +6,7 @@ import org.junit.platform.engine.support.hierarchical.Node
 import org.livingdoc.junit.engine.EngineExecutionContext
 
 class EngineDescriptor(
-        uniqueId: UniqueId
+    uniqueId: UniqueId
 ) : EngineDescriptor(uniqueId, "LivingDoc"), Node<EngineExecutionContext> {
 
     override fun prepare(context: EngineExecutionContext): EngineExecutionContext {

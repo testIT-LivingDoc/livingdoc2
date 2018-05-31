@@ -21,7 +21,7 @@ internal class MapConverterTest : CollectionConverterContract() {
         val annotatedElement = fakeIntegerField()
 
         Assertions.assertThrows(ConversionException::class.java) {
-             cut.convert(input, annotatedElement, null)
+            cut.convert(input, annotatedElement, null)
         }
     }
 

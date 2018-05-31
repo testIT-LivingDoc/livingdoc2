@@ -18,9 +18,10 @@ import java.lang.Math.min
  * it will be aborted when the cost of the alignment exceeds `maxCost`.
  */
 internal class Alignment(
-        val stepTemplate: StepTemplate,
-        val step: String,
-        val maxCost: Int) {
+    val stepTemplate: StepTemplate,
+    val step: String,
+    val maxCost: Int
+) {
 
     /* To calculate an optimal global alignment of the `StepTemplate` and the String `s` representing the scenario step,
      * we use an adapted version of the Needleman-Wunsch algorithm. The algorithm runs in two phases:
@@ -99,7 +100,7 @@ internal class Alignment(
 
         var offset = 1
         for (fragment in stepTemplate.fragments) {
-            for (i in offset..offset + length(fragment) - 1) {
+            for (i in offset until (offset + length(fragment))) {
                 when (fragment) {
                     is Text -> {
                         d[i][0] = d[i - 1][0] + costDeletion(fragment.content[i - offset])
@@ -107,7 +108,10 @@ internal class Alignment(
                         for (j in 1..s.length) {
                             d[i][j] = d[i][j - 1] + costInsertion
                             d[i][j] = min(d[i][j], d[i - 1][j] + costDeletion(fragment.content[i - offset]))
-                            d[i][j] = min(d[i][j], d[i - 1][j - 1] + costSubstitution(fragment.content[i - offset], s[j - 1]))
+                            d[i][j] = min(
+                                d[i][j],
+                                d[i - 1][j - 1] + costSubstitution(fragment.content[i - offset], s[j - 1])
+                            )
                             currentMinDistance = min(currentMinDistance, d[i][j])
                         }
                         if (currentMinDistance > maxCost) {
@@ -187,26 +191,26 @@ internal class Alignment(
         var currentValue = ""
 
         backtrace(
-                onMatchOrSubstitution = { fragment, _, stepIndex ->
-                    if (fragment is Variable) {
-                        currentValue = step[stepIndex] + currentValue
-                        variables[fragment.name] = currentValue
-                    } else {
-                        currentValue = ""
-                    }
-                },
-                onInsertion = { fragment, _, stepIndex ->
-                    if (fragment is Variable) {
-                        currentValue = step[stepIndex] + currentValue
-                    }
-                },
-                onDeletion = { fragment, _, _ ->
-                    if (fragment is Variable) {
-                        variables[fragment.name] = currentValue
-                    } else {
-                        currentValue = ""
-                    }
-                })
+            onMatchOrSubstitution = { fragment, _, stepIndex ->
+                if (fragment is Variable) {
+                    currentValue = step[stepIndex] + currentValue
+                    variables[fragment.name] = currentValue
+                } else {
+                    currentValue = ""
+                }
+            },
+            onInsertion = { fragment, _, stepIndex ->
+                if (fragment is Variable) {
+                    currentValue = step[stepIndex] + currentValue
+                }
+            },
+            onDeletion = { fragment, _, _ ->
+                if (fragment is Variable) {
+                    variables[fragment.name] = currentValue
+                } else {
+                    currentValue = ""
+                }
+            })
 
         return variables
     }
@@ -220,21 +224,21 @@ internal class Alignment(
         var alignedString = ""
 
         backtrace(
-                onMatchOrSubstitution = { fragment, fragmentIndex, stepIndex ->
-                    val fragmentChar = if (fragment is Text) fragment.content[fragmentIndex] else 'X'
-                    alignedTemplate = fragmentChar + alignedTemplate
-                    alignedString = step[stepIndex] + alignedString
-                },
-                onInsertion = { fragment, _, stepIndex ->
-                    val gap = if (fragment is Text) '-' else 'X'
-                    alignedTemplate = gap + alignedTemplate
-                    alignedString = step[stepIndex] + alignedString
-                },
-                onDeletion = { fragment, fragmentIndex, _ ->
-                    val fragmentChar = if (fragment is Text) fragment.content[fragmentIndex] else 'X'
-                    alignedTemplate = fragmentChar + alignedTemplate
-                    alignedString = "-" + alignedString
-                })
+            onMatchOrSubstitution = { fragment, fragmentIndex, stepIndex ->
+                val fragmentChar = if (fragment is Text) fragment.content[fragmentIndex] else 'X'
+                alignedTemplate = fragmentChar + alignedTemplate
+                alignedString = step[stepIndex] + alignedString
+            },
+            onInsertion = { fragment, _, stepIndex ->
+                val gap = if (fragment is Text) '-' else 'X'
+                alignedTemplate = gap + alignedTemplate
+                alignedString = step[stepIndex] + alignedString
+            },
+            onDeletion = { fragment, fragmentIndex, _ ->
+                val fragmentChar = if (fragment is Text) fragment.content[fragmentIndex] else 'X'
+                alignedTemplate = fragmentChar + alignedTemplate
+                alignedString = "-$alignedString"
+            })
 
         return Pair(alignedTemplate, alignedString)
     }
@@ -266,7 +270,11 @@ internal class Alignment(
      * Each step along that path corresponds to an editing action (match or substitution, insertion, deletion). It falls
      * to the supplied handler to decide how each operation is processed.
      */
-    private fun backtrace(onMatchOrSubstitution: BacktraceHandler, onInsertion: BacktraceHandler, onDeletion: BacktraceHandler) {
+    private fun backtrace(
+        onMatchOrSubstitution: BacktraceHandler,
+        onInsertion: BacktraceHandler,
+        onDeletion: BacktraceHandler
+    ) {
         var offset = stepTemplate.length()
         var i = offset
         var j = step.length
@@ -274,8 +282,9 @@ internal class Alignment(
             offset -= length(fragment)
             while (i > offset || (i == 0 && j > 0)) {
                 if (i > offset && j > 0
-                        && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j]
-                        && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]) {
+                    && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j]
+                    && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]
+                ) {
                     --i; --j
                     onMatchOrSubstitution(fragment, i - offset, j)
                 } else if (i > offset && (j == 0 || distanceMatrix[i - 1][j] <= distanceMatrix[i][j - 1])) {

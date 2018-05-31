@@ -10,9 +10,9 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * *must* contain exactly the same quotation characters. By default, no quotation characters are used.
  */
 internal class StepTemplate(
-        val fragments: List<Fragment>,
-        val quotationCharacters: Set<Char>)
-{
+    val fragments: List<Fragment>,
+    val quotationCharacters: Set<Char>
+) {
 
     init {
         assert(!fragments.isEmpty())
@@ -48,8 +48,8 @@ internal class StepTemplate(
          * @return a valid `StepTemplate`
          * @throws IllegalFormatException if the specified template string is malformed
          */
-        fun parse(templateAsString: String, quotationCharacters: Set<Char> = emptySet())
-                = StepTemplate(parseString(templateAsString), quotationCharacters)
+        fun parse(templateAsString: String, quotationCharacters: Set<Char> = emptySet()) =
+            StepTemplate(parseString(templateAsString), quotationCharacters)
 
         private fun parseString(templateAsString: String): List<Fragment> {
             if (templateAsString.isEmpty()) {
@@ -110,7 +110,7 @@ internal class StepTemplate(
 }
 
 
-internal class IllegalFormatException(val msg: String) : IllegalArgumentException(msg)
+internal class IllegalFormatException(msg: String) : IllegalArgumentException(msg)
 
 internal sealed class Fragment
 internal data class Text(val content: String) : Fragment()

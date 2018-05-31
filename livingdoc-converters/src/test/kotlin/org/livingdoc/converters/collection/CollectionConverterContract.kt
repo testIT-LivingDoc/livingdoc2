@@ -62,7 +62,7 @@ internal abstract class CollectionConverterContract : DefaultTypeConverterContra
         }
     }
 
-    internal fun fakeBooleanMethodParam(): Parameter {
+    private fun fakeBooleanMethodParam(): Parameter {
         return fakeMethodParam("boolean")
     }
 

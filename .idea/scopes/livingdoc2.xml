@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="livingdoc2" pattern="(test:*..*||src:*..*)&amp;&amp;!src[group:livingdoc-documentation]:*..*" />
+</component>

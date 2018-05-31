@@ -22,7 +22,7 @@ object TypeConverters {
      * delegating the search for the appropriate [TypeConverter] of the found [ParameterizedType] to [findTypeConverter].
      *
      * 1. check if inferred annotated element is field or parameter
-     * 2. get the target type by extracting the actualTypeArguments 
+     * 2. get the target type by extracting the actualTypeArguments
      * 3. call the appropriate method
      *
      * @param element the annotated or inferred element
@@ -32,14 +32,18 @@ object TypeConverters {
      * @exception NoTypeConverterFoundException if no appropriate typeconverter could be found
      * @return the found type converter
      */
-    fun findTypeConverterForGenericElement(element: AnnotatedElement, parameterIndex: Int, documentClass: Class<*>?): TypeConverter<*> {
+    fun findTypeConverterForGenericElement(
+        element: AnnotatedElement,
+        parameterIndex: Int,
+        documentClass: Class<*>?
+    ): TypeConverter<*> {
         return when (element) {
             is Field -> {
-                val targetType = getTargetType(element.genericType , parameterIndex)
+                val targetType = getTargetType(element.genericType, parameterIndex)
                 findTypeConverter(targetType as Class<*>, element, documentClass)
             }
             is Parameter -> {
-                val targetType = getTargetType(element.parameterizedType , parameterIndex)
+                val targetType = getTargetType(element.parameterizedType, parameterIndex)
                 findTypeConverter(targetType as Class<*>, element, documentClass)
             }
             else -> error("annotated element is of a not supported type: $element")
@@ -52,8 +56,8 @@ object TypeConverters {
         return actualTypeArguments[parameterIndex]
     }
 
-    internal class NoTypeConverterFoundException(annotatedElement: AnnotatedElement)
-        : ConversionException("No type converter could be found to convert annotated element: $annotatedElement")
+    internal class NoTypeConverterFoundException(annotatedElement: AnnotatedElement) :
+        ConversionException("No type converter could be found to convert annotated element: $annotatedElement")
 
     /**
      * Tries to find a [TypeConverter] for the given [Parameter].
@@ -77,7 +81,7 @@ object TypeConverters {
         return findTypeConverter(type, parameter, documentClass)
     }
 
-    fun findTypeConverter(type: Class<*>, parameter: Parameter, documentClass: Class<*>?): TypeConverter<*>? {
+    private fun findTypeConverter(type: Class<*>, parameter: Parameter, documentClass: Class<*>?): TypeConverter<*>? {
         val executable = parameter.declaringExecutable
         val clazz = executable.declaringClass
         return findConverterFor(converting = type, from = parameter)
@@ -107,7 +111,7 @@ object TypeConverters {
         return findTypeConverter(type, field, documentClass)
     }
 
-    fun findTypeConverter(type: Class<*>, field: Field, documentClass: Class<*>?): TypeConverter<*>? {
+    private fun findTypeConverter(type: Class<*>, field: Field, documentClass: Class<*>?): TypeConverter<*>? {
         val clazz = field.declaringClass
         return findConverterFor(converting = type, from = field)
                 ?: findConverterFor(converting = type, from = clazz)
@@ -118,15 +122,13 @@ object TypeConverters {
     private fun findConverterFor(converting: Class<*>, from: AnnotatedElement): TypeConverter<*>? {
         val annotations = from.getAnnotationsByType(Converter::class.java)
         return annotations.toList()
-                .flatMap { it.value.toList() }
-                .map { TypeConverterManager.getInstance(it) }
-                .filter { it.canConvertTo(converting) }
-                .firstOrNull()
+            .flatMap { it.value.toList() }
+            .map { TypeConverterManager.getInstance(it) }
+            .firstOrNull { it.canConvertTo(converting) }
     }
 
     private fun findDefaultConverterFor(type: Class<*>?): TypeConverter<out Any>? {
         return TypeConverterManager.getDefaultConverters()
-                .filter { it.canConvertTo(type) }
-                .firstOrNull()
+            .firstOrNull { it.canConvertTo(type) }
     }
 }

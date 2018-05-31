@@ -32,7 +32,7 @@ internal class FixtureFieldInjectorTest {
         assertThat(exception).hasCauseExactlyInstanceOf(NoTypeConverterFoundException::class.java)
     }
 
-    @ValueSource(strings = arrayOf("privateField", "protectedField", "publicField"))
+    @ValueSource(strings = ["privateField", "protectedField", "publicField"])
     @ParameterizedTest fun `method visibility is ignored`(fieldName: String) {
         val field = getField(fieldName)
         cut.inject(field, fixture, "true")
@@ -46,13 +46,13 @@ internal class FixtureFieldInjectorTest {
 
     fun getFieldValue(field: Field) = field.get(fixture)
 
-    class TestFixture {
+    open class TestFixture {
 
         var testField: Boolean? = null
 
         private var privateField: Boolean? = null
         protected var protectedField: Boolean? = null
-        public var publicField: Boolean? = null
+        var publicField: Boolean? = null
 
         var typeConverterNotFound: CustomType? = null
 

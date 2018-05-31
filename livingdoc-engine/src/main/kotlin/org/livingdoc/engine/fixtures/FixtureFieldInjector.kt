@@ -5,7 +5,7 @@ import org.livingdoc.converters.TypeConverters
 import java.lang.reflect.Field
 
 class FixtureFieldInjector(
-        private val document: Any?
+    private val document: Any?
 ) {
 
     /**
@@ -50,10 +50,10 @@ class FixtureFieldInjector(
         return typeConverter.convert(value, field, documentClass)
     }
 
-    class FixtureFieldInjectionException(field: Field, fixture: Any, e: Exception)
-        : RuntimeException("Could not inject field '$field' into fixture '$fixture' because of an exception:", e)
+    class FixtureFieldInjectionException(field: Field, fixture: Any, e: Exception) :
+        RuntimeException("Could not inject field '$field' into fixture '$fixture' because of an exception:", e)
 
-    internal class NoTypeConverterFoundException(field: Field)
-        : RuntimeException("No type converter could be found to convert field: $field")
+    internal class NoTypeConverterFoundException(field: Field) :
+        RuntimeException("No type converter could be found to convert field: $field")
 
 }

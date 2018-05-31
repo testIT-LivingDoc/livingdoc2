@@ -13,7 +13,7 @@ internal class CharacterConverterTest : DefaultTypeConverterContract {
     override val cut = CharacterConverter()
 
     @ParameterizedTest(name = "\"{0}\"")
-    @ValueSource(strings = arrayOf(" ", "\t", "a", "z", "0", "9", "-", "$", "|"))
+    @ValueSource(strings = [" ", "\t", "a", "z", "0", "9", "-", "$", "|"])
     fun `any char value can be converted`(value: String) {
         assertThat(cut.convert(value, null, null)).isNotNull()
     }

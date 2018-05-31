@@ -5,6 +5,6 @@ import org.livingdoc.repositories.model.decisiontable.Header
 
 
 data class RowResult(
-        val headerToField: Map<Header, FieldResult>,
-        var result: Result = Result.Unknown
+    val headerToField: Map<Header, FieldResult>,
+    var result: Result = Result.Unknown
 )

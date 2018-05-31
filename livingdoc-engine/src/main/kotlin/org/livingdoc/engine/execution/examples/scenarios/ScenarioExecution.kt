@@ -11,9 +11,9 @@ import org.livingdoc.repositories.model.scenario.Scenario
 import java.lang.reflect.Parameter
 
 internal class ScenarioExecution(
-        private val fixtureClass: Class<*>,
-        scenario: Scenario,
-        document: Any?
+    private val fixtureClass: Class<*>,
+    scenario: Scenario,
+    document: Any?
 ) {
 
     private val fixtureModel = ScenarioFixtureModel(fixtureClass)
@@ -50,9 +50,9 @@ internal class ScenarioExecution(
     private fun executeScenario() {
         val fixture = createFixtureInstance()
         executeWithBeforeAndAfter(
-                before = { invokeBeforeMethods(fixture) },
-                body = { executeSteps(fixture) },
-                after = { invokeAfterMethods(fixture) }
+            before = { invokeBeforeMethods(fixture) },
+            body = { executeSteps(fixture) },
+            after = { invokeAfterMethods(fixture) }
         )
     }
 
@@ -72,12 +72,12 @@ internal class ScenarioExecution(
         val result = fixtureModel.getMatchingStepTemplate(step.value)
         val method = fixtureModel.getStepMethod(result.template)
         val parameterList = method.parameters
-                .map {
-                    result.variables.getOrElse(
-                            getParameterName(it),
-                            { error("Missing parameter value: ${getParameterName(it)}") })
-                }
-                .toTypedArray()
+            .map {
+                result.variables.getOrElse(
+                    getParameterName(it),
+                    { error("Missing parameter value: ${getParameterName(it)}") })
+            }
+            .toTypedArray()
         step.result = invokeExpectingException {
             methodInvoker.invoke(method, fixture, parameterList)
         }
@@ -89,13 +89,13 @@ internal class ScenarioExecution(
     }
 
     private fun invokeExpectingException(function: () -> Unit): Result {
-        try {
+        return try {
             function.invoke()
-            return Result.Executed
+            Result.Executed
         } catch (e: AssertionError) {
-            return Result.Failed(e)
+            Result.Failed(e)
         } catch (e: Exception) {
-            return Result.Exception(e)
+            Result.Exception(e)
         }
     }
 
@@ -118,7 +118,7 @@ internal class ScenarioExecution(
                 exceptions.add(e.cause!!)
             }
         }
-        if (exceptions.isNotEmpty()) throw AfterMethodExecutionExeption(exceptions)
+        if (exceptions.isNotEmpty()) throw AfterMethodExecutionException(exceptions)
     }
 
     private fun markScenarioAsSuccessfullyExecuted() {
@@ -131,17 +131,21 @@ internal class ScenarioExecution(
 
     private fun setSkippedStatusForAllUnknownResults() {
         for (step in scenario.steps) {
-            if (step.result is Result.Unknown) {
+            if (step.result === Result.Unknown) {
                 step.result = Result.Skipped
             }
         }
     }
 
-    internal class MalformedScenarioFixtureException(fixtureClass: Class<*>, errors: List<String>)
-        : RuntimeException("The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(separator = "\n", prefix = "  - ")}")
+    internal class MalformedScenarioFixtureException(fixtureClass: Class<*>, errors: List<String>) : RuntimeException(
+        "The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(
+            separator = "\n",
+            prefix = "  - "
+        )}"
+    )
 
-    internal class AfterMethodExecutionExeption(exceptions: List<Throwable>)
-        : RuntimeException("One or more exceptions were thrown during execution of @After methods") {
+    internal class AfterMethodExecutionException(exceptions: List<Throwable>) :
+        RuntimeException("One or more exceptions were thrown during execution of @After methods") {
 
         init {
             exceptions.forEach { addSuppressed(it) }

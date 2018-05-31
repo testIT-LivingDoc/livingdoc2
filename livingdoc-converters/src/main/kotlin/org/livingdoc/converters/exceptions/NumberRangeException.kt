@@ -4,7 +4,7 @@ import org.livingdoc.api.conversion.ConversionException
 
 
 class NumberRangeException(
-        value: Number,
-        min: Number?,
-        max: Number?
+    value: Number,
+    min: Number?,
+    max: Number?
 ) : ConversionException("The number '$value' is not between '${min ?: "-Infinity"}' and '${max ?: "Infinity"}'!")
