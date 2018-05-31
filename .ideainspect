@@ -11,7 +11,7 @@ levels: WARNING,ERROR
 # 2) Share the .idea/scopes/scopename.xml with the project
 # 3) Use the _name_ of the scope (not the file).
 # 4) Stick to a single word for best compability
-scope: livingdoc2
+scope: livingdoc
 
 # Inspection result files to skip. For example "TodoComment" or "TodoComment.xml".
 #
