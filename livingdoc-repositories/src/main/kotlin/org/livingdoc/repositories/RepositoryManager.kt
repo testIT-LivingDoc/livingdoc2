@@ -15,7 +15,7 @@ class RepositoryManager {
             val repositoryManager = RepositoryManager()
             config.repositories.forEach { (name, factory, configData) ->
 
-                val factory = factory ?: throw NoRepositoryFactoryException(name)
+                factory ?: throw NoRepositoryFactoryException(name)
 
                 val factoryClass = Class.forName(factory)
                 if (DocumentRepositoryFactory::class.java.isAssignableFrom(factoryClass)) {
