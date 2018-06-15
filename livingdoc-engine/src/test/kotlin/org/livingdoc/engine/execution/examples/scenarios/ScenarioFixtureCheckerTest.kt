@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 
-class ScenarioFixtureCheckerTest {
+internal class ScenarioFixtureCheckerTest {
 
     val classPrefix = "org.livingdoc.engine.execution.examples.scenarios.MalformedFixtures"
     val methodPrefix = "void $classPrefix\$"
@@ -24,7 +24,7 @@ class ScenarioFixtureCheckerTest {
         assertThat(errors).containsExactly("@Before method <static ${methodPrefix}StaticBeforeMethod.before()> must not be static!")
     }
 
-    @Test fun `step methods cant share an alias`() {
+    @Test fun `step methods cannot share an alias`() {
         val errors = executeCheck(MalformedFixtures.StepMethodsWithSameAlias::class)
         assertThat(errors).containsExactly("Alias <step> is used multiple times!")
     }
