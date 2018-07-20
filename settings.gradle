@@ -17,4 +17,5 @@ include 'livingdoc-engine'
 include 'livingdoc-junit-engine'
 include 'livingdoc-repositories'
 include 'livingdoc-repository-file'
+include 'livingdoc-sample'
 

@@ -1,0 +1,7 @@
+dependencies {
+    testRuntime project(":livingdoc-junit-engine")
+
+    testCompile project(":livingdoc-api")
+    testCompile("ch.qos.logback:logback-classic:1.2.3")
+    testCompile("org.assertj:assertj-core:3.6.2")
+}
