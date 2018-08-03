@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.DefaultTypeConverterContract
 
-
 internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), DefaultTypeConverterContract {
 
     override val cut = DoubleConverter()
@@ -32,6 +31,10 @@ internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), D
 
     @Test fun `converter can converted to Kotlin Double`() {
         assertThat(cut.canConvertTo(Double::class.java)).isTrue()
+    }
+
+    @Test fun `converter can handle double specific -0 case`() {
+        assertThat(cut.convert("-0", null, null)).isEqualTo(-0.0)
     }
 
 }

@@ -3,13 +3,13 @@ package org.livingdoc.converters.number
 import java.lang.reflect.AnnotatedElement
 import java.math.BigDecimal
 
-
 open class DoubleConverter : AbstractNumberConverter<Double>() {
 
     companion object {
         const val NOT_A_NUMBER = "NaN"
         const val POSITIVE_INFINITY = "Infinity"
         const val NEGATIVE_INFINITY = "-Infinity"
+        const val NEGATIVE_ZERO = "-0"
     }
 
     override val lowerBound: Double = -Double.MAX_VALUE
@@ -20,6 +20,7 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
             NOT_A_NUMBER -> Double.NaN
             POSITIVE_INFINITY -> Double.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Double.NEGATIVE_INFINITY
+            NEGATIVE_ZERO -> -0.0
             else -> super.convert(value, element, documentClass)
         }
     }

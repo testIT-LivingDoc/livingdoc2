@@ -9,6 +9,7 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
         const val NOT_A_NUMBER = "NaN"
         const val POSITIVE_INFINITY = "Infinity"
         const val NEGATIVE_INFINITY = "-Infinity"
+        const val NEGATIVE_ZERO = "-0"
     }
 
     override val lowerBound: Float = -Float.MAX_VALUE
@@ -19,6 +20,7 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
             NOT_A_NUMBER -> Float.NaN
             POSITIVE_INFINITY -> Float.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Float.NEGATIVE_INFINITY
+            NEGATIVE_ZERO -> -0.0f
             else -> super.convert(value, element, documentClass)
         }
     }
