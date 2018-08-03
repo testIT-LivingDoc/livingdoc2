@@ -2,6 +2,10 @@ package org.livingdoc.repositories
 
 interface DocumentRepository {
 
-    fun getDocument(documentIdentifier: String): Document?
+    /**
+     *
+     * @throws DocumentNotFoundException
+     */
+    fun getDocument(documentIdentifier: String): Document
 
 }

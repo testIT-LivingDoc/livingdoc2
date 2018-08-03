@@ -20,6 +20,10 @@ import java.util.Arrays.asList
 
 class MarkdownFormat : DocumentFormat {
 
+    override fun canHandle(fileExtension: String): Boolean {
+        return fileExtension.toLowerCase() == "md"
+    }
+
     override fun parse(stream: InputStream): Document {
         val options = MutableDataSet()
         options.set(Parser.EXTENSIONS, asList(TablesExtension.create()))

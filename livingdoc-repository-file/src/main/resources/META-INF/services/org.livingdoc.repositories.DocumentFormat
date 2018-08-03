@@ -1,0 +1,2 @@
+org.livingdoc.repositories.format.HtmlFormat
+org.livingdoc.repositories.format.MarkdownFormat

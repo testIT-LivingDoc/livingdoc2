@@ -18,6 +18,12 @@ import java.nio.charset.Charset
 
 class HtmlFormat : DocumentFormat {
 
+    private val supportedFileExtensions = setOf("html", "htm")
+
+    override fun canHandle(fileExtension: String): Boolean {
+        return supportedFileExtensions.contains(fileExtension.toLowerCase())
+    }
+
     override fun parse(stream: InputStream): HtmlDocument {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
@@ -33,8 +39,8 @@ class HtmlFormat : DocumentFormat {
         fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
 
         return tableElements
-            .filter(::tableHasAtLeastTwoRows)
-            .map(::parseTableToDecisionTable)
+                .filter(::tableHasAtLeastTwoRows)
+                .map(::parseTableToDecisionTable)
     }
 
     private fun parseTableToDecisionTable(table: Element): DecisionTable {
@@ -47,9 +53,9 @@ class HtmlFormat : DocumentFormat {
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
         val firstRowContainingHeaders = tableRows[0]
         val headers = firstRowContainingHeaders.children()
-            .filter(::isHeaderOrDataCell)
-            .map(Element::text)
-            .map(::Header).toList()
+                .filter(::isHeaderOrDataCell)
+                .map(Element::text)
+                .map(::Header).toList()
 
         if (headers.size != headers.distinct().size) {
             throw ParseException("Headers must contains only unique values: $headers")
@@ -64,9 +70,9 @@ class HtmlFormat : DocumentFormat {
 
             if (headers.size != dataCells.size) {
                 throw ParseException(
-                    "Header count must match the data cell count in data row ${rowIndex + 1}. Headers: ${headers.map(
-                        Header::name
-                    )}, DataCells: $dataCells"
+                        "Header count must match the data cell count in data row ${rowIndex + 1}. Headers: ${headers.map(
+                                Header::name
+                        )}, DataCells: $dataCells"
                 )
             }
 
@@ -91,8 +97,8 @@ class HtmlFormat : DocumentFormat {
         fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
 
         return htmlListElements
-            .filter(::listHasAtLeastTwoItems)
-            .map(::parseListIntoScenario)
+                .filter(::listHasAtLeastTwoItems)
+                .map(::parseListIntoScenario)
     }
 
     private fun parseListIntoScenario(htmlList: Element): Scenario {

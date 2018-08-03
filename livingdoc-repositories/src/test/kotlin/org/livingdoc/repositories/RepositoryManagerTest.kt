@@ -93,9 +93,9 @@ internal class RepositoryManagerTest {
         """.trimIndent()
 
         val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
-        assertThrows(RepositoryAlreadyRegisteredException::class.java, {
+        assertThrows(RepositoryAlreadyRegisteredException::class.java) {
             RepositoryManager.from(configuration)
-        })
+        }
 
     }
 
@@ -109,9 +109,9 @@ internal class RepositoryManagerTest {
         """.trimIndent()
 
         val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
-        assertThrows(NoRepositoryFactoryException::class.java, {
+        assertThrows(NoRepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
-        })
+        }
 
     }
 
@@ -126,9 +126,9 @@ internal class RepositoryManagerTest {
         """.trimIndent()
 
         val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
-        assertThrows(NotARepositoryFactoryException::class.java, {
+        assertThrows(NotARepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
-        })
+        }
 
     }
 
@@ -145,19 +145,41 @@ internal class RepositoryManagerTest {
         """.trimIndent()
 
         val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
-        assertThrows(RuntimeException::class.java, {
+        assertThrows(RuntimeException::class.java) {
             RepositoryManager.from(configuration)
-        })
+        }
+
+    }
+
+    @Test fun `exception is thrown if repository with given name doesn't exist`() {
+
+        val configYaml = """
+
+            repositories:
+              - name: "foo"
+                factory: "$repositoryFactory"
+              - name: "bar"
+                factory: "$repositoryFactory"
+
+        """.trimIndent()
+
+        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val repositoryManager = RepositoryManager.from(configuration)
+        val exception = assertThrows(RepositoryNotFoundException::class.java) {
+            repositoryManager.getRepository("xur")
+        }
+        assertThat(exception)
+                .hasMessageContaining("Repository 'xur' not found in manager. Known repositories are: [foo, bar]")
 
     }
 
     class TestRepository(val config: TestRepositoryConfiguration) : DocumentRepository {
-        override fun getDocument(documentIdentifier: String): Document? = null
+        override fun getDocument(documentIdentifier: String): Document = Document(emptyList(), emptyList())
     }
 
     data class TestRepositoryConfiguration(
-        var foo: String? = null,
-        var bar: Float = 1.0f
+            var foo: String? = null,
+            var bar: Float = 1.0f
     )
 
     class TestRepositoryFactory : DocumentRepositoryFactory<TestRepository> {
