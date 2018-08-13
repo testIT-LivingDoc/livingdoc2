@@ -6,13 +6,9 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import org.livingdoc.api.fixtures.scenarios.Before
-import org.livingdoc.api.fixtures.scenarios.Binding
-import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
-import org.livingdoc.api.fixtures.scenarios.Step
 
-@ExecutableDocument("local://Calculator.md")
-class CalculatorDocument {
+@ExecutableDocument("local://Calculator.html")
+class CalculatorDocumentHtml {
 
     @DecisionTableFixture
     class CalculatorDecisionTableFixture {
@@ -59,56 +55,47 @@ class CalculatorDocument {
 
     }
 
-    @ScenarioFixture
-    class CalculatorScenarioFixture {
+    @DecisionTableFixture
+    class CalculatorDecisionTableFixture2 {
 
         private lateinit var sut: Calculator
 
-        @Before
-        fun before() {
+        @Input("x")
+        private var valueA: Float = 0f
+        private var valueB: Float = 0f
+
+        @BeforeRow
+        fun beforeRow() {
             sut = Calculator()
         }
 
-        @Step("adding {a} and {b} equals {c}")
-        fun add(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
-        ) {
-            val result = sut.sum(a, b)
-            assertThat(result).isEqualTo(c)
+        @Input("y")
+        fun setValueB(valueB: Float) {
+            this.valueB = valueB
         }
 
-        @Step("subtraction {b} form {a} equals {c}")
-        fun subtract(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
-        ) {
-            val result = sut.diff(a, b)
-            assertThat(result).isEqualTo(c)
+        @Check("a + b = ?")
+        fun checkSum(expectedValue: Float) {
+            val result = sut.sum(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
         }
 
-        @Step("multiplying {a} and {b} equals {c}")
-        fun multiply(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
-        ) {
-            val result = sut.multiply(a, b)
-            assertThat(result).isEqualTo(c)
+        @Check("a - b = ?")
+        fun checkDiff(expectedValue: Float) {
+            val result = sut.diff(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
         }
 
-        @Step("dividing {a} by {b} equals {c}")
-        fun divide(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
-        ) {
-            val result = sut.divide(a, b)
-            assertThat(result).isEqualTo(c)
+        @Check("a * b = ?")
+        fun checkMultiply(expectedValue: Float) {
+            val result = sut.multiply(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
         }
 
+        @Check("a / b = ?")
+        fun checkDivide(expectedValue: Float) {
+            val result = sut.divide(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
+        }
     }
-
 }
