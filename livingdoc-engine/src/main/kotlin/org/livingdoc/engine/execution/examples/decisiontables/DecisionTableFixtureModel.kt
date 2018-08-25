@@ -5,8 +5,8 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
-internal class DecisionTableFixtureModel(
-    val fixtureClass: Class<*>
+class DecisionTableFixtureModel(
+        val fixtureClass: Class<*>
 ) {
 
     val beforeTableMethods: List<Method>
@@ -17,7 +17,7 @@ internal class DecisionTableFixtureModel(
 
     val inputFields: List<Field>
     val inputMethods: List<Method>
-    private val inputAliases: MutableSet<String>
+    val inputAliases: MutableSet<String>
     private val inputAliasToField: MutableMap<String, Field>
     private val inputAliasToMethod: MutableMap<String, Method>
 
@@ -72,21 +72,21 @@ internal class DecisionTableFixtureModel(
         val inputAliasToField = mutableMapOf<String, Field>()
         inputFields.forEach { field ->
             field.getAnnotationsByType(Input::class.java)
-                .flatMap { it.value.asIterable() }
-                .forEach { alias ->
-                    inputAliases.add(alias)
-                    inputAliasToField[alias] = field
-                }
+                    .flatMap { it.value.asIterable() }
+                    .forEach { alias ->
+                        inputAliases.add(alias)
+                        inputAliasToField[alias] = field
+                    }
         }
 
         val inputAliasToMethod = mutableMapOf<String, Method>()
         inputMethods.forEach { method ->
             method.getAnnotationsByType(Input::class.java)
-                .flatMap { it.value.asIterable() }
-                .forEach { alias ->
-                    inputAliases.add(alias)
-                    inputAliasToMethod[alias] = method
-                }
+                    .flatMap { it.value.asIterable() }
+                    .forEach { alias ->
+                        inputAliases.add(alias)
+                        inputAliasToMethod[alias] = method
+                    }
         }
 
         this.inputAliases = inputAliases
@@ -100,11 +100,11 @@ internal class DecisionTableFixtureModel(
         val checkAliasToMethod = mutableMapOf<String, Method>()
         checkMethods.forEach { method ->
             method.getAnnotationsByType(Check::class.java)
-                .flatMap { it.value.asIterable() }
-                .forEach { alias ->
-                    checkAliases.add(alias)
-                    checkAliasToMethod[alias] = method
-                }
+                    .flatMap { it.value.asIterable() }
+                    .forEach { alias ->
+                        checkAliases.add(alias)
+                        checkAliasToMethod[alias] = method
+                    }
         }
 
         this.checkAliases = checkAliases

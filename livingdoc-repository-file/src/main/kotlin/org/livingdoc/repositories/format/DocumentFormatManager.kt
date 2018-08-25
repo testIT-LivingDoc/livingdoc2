@@ -1,6 +1,7 @@
 package org.livingdoc.repositories.format
 
 import org.livingdoc.repositories.DocumentFormat
+import org.livingdoc.repositories.file.DocumentFile
 import java.io.File
 import java.util.*
 
@@ -12,8 +13,8 @@ internal object DocumentFormatManager {
      *
      * @throws DocumentFormatNotFoundException
      */
-    fun getFormat(file: File): DocumentFormat {
-        val extension = file.extension
+    fun getFormat(file: DocumentFile): DocumentFormat {
+        val extension = file.extension()
         return documentFormats
                 .firstOrNull { it.canHandle(extension) }
                 ?: throw DocumentFormatNotFoundException(extension)

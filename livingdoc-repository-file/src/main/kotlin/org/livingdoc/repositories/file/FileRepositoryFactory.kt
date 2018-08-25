@@ -1,6 +1,5 @@
 package org.livingdoc.repositories.file
 
-import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.DocumentRepositoryFactory
 import org.livingdoc.repositories.config.YamlUtils
 
