@@ -27,7 +27,9 @@ class HtmlFormat : DocumentFormat {
     override fun parse(stream: InputStream): HtmlDocument {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
-        return HtmlDocument(parseTables(document), parseLists(document), document)
+        val elements = parseTables(document) + parseLists(document)
+        // TODO: provide elements in order they occur inside the original source document
+        return HtmlDocument(elements, document)
     }
 
     private fun parseTables(document: Document): List<DecisionTable> {

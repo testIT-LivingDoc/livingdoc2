@@ -2,7 +2,9 @@ package org.livingdoc.repositories.format
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class MarkdownFormatTest {
 
@@ -10,7 +12,7 @@ internal class MarkdownFormatTest {
     fun `Table is read successfully`() {
         val mdFormat = MarkdownFormat()
         val document = mdFormat.parse(
-            """
+                """
             # Irrelevant Headline
 
             ```
@@ -28,18 +30,18 @@ internal class MarkdownFormatTest {
         """.trimIndent().byteInputStream()
         )
 
-        val (tables, scenarios) = document
+        val elements = document.elements
 
-        assertThat(tables).hasSize(1)
-        assertThat(scenarios).isEmpty()
+        assertThat(elements).hasSize(1)
 
-        assertThat(tables[0].headers.map(Header::name)).containsExactly("Column1", "Column2", "Column3")
-        tables[0].rows.also {
-            assertThat(it[0].headerToField.map { it.key.name }).containsExactly("Column1", "Column2", "Column3")
-            assertThat(it[0].headerToField.map { it.value.value }).containsExactly("Cell11", "Cell12", "Cell13")
+        val firstElement = elements[0] as DecisionTable
+        assertThat(firstElement.headers.map(Header::name)).containsExactly("Column1", "Column2", "Column3")
+        firstElement.rows.also { rows ->
+            assertThat(rows[0].headerToField.map { it.key.name }).containsExactly("Column1", "Column2", "Column3")
+            assertThat(rows[0].headerToField.map { it.value.value }).containsExactly("Cell11", "Cell12", "Cell13")
 
-            assertThat(it[1].headerToField.map { it.key.name }).containsExactly("Column1", "Column2", "Column3")
-            assertThat(it[1].headerToField.map { it.value.value }).containsExactly("Cell21", "Cell22", "Cell23")
+            assertThat(rows[1].headerToField.map { it.key.name }).containsExactly("Column1", "Column2", "Column3")
+            assertThat(rows[1].headerToField.map { it.value.value }).containsExactly("Cell21", "Cell22", "Cell23")
         }
     }
 
@@ -47,7 +49,7 @@ internal class MarkdownFormatTest {
     fun `Bullet list is read successfully`() {
         val mdFormat = MarkdownFormat()
         val document = mdFormat.parse(
-            """
+                """
             # Irrelevant Headline
 
             ```
@@ -79,10 +81,9 @@ internal class MarkdownFormatTest {
         """.trimIndent().byteInputStream()
         )
 
-        val (tables, scenarios) = document
+        val elements = document.elements
 
-        assertThat(tables).isEmpty()
-        assertThat(scenarios).hasSize(1)
+        assertThat(elements).hasSize(1)
 
         val thirdSentence = """
             Listitem3
@@ -96,7 +97,7 @@ internal class MarkdownFormatTest {
 
             """.trimIndent()
 
-        val scenario = scenarios[0]
+        val scenario = elements[0] as Scenario
         scenario.steps.also {
             assertThat(it).hasSize(4)
             assertThat(it[0].value).isEqualTo("Listitem1\nSentence in first list item.")
@@ -110,7 +111,7 @@ internal class MarkdownFormatTest {
     fun `Numbered list is read successfully`() {
         val mdFormat = MarkdownFormat()
         val document = mdFormat.parse(
-            """
+                """
             # Irrelevant Headline
 
             ```
@@ -142,10 +143,9 @@ internal class MarkdownFormatTest {
         """.trimIndent().byteInputStream()
         )
 
-        val (tables, scenarios) = document
+        val elements = document.elements
 
-        assertThat(tables).isEmpty()
-        assertThat(scenarios).hasSize(1)
+        assertThat(elements).hasSize(1)
 
         val thirdSentence = """
             Listitem3
@@ -159,7 +159,7 @@ internal class MarkdownFormatTest {
 
             """.trimIndent()
 
-        val scenario = scenarios[0]
+        val scenario = elements[0] as Scenario
         assertThat(scenario.steps).hasSize(4)
         assertThat(scenario.steps[0].value).isEqualTo("Listitem1\nSentence in first list item.")
         assertThat(scenario.steps[1].value).isEqualTo("Listitem2\nSentence in second list item.")
@@ -171,7 +171,7 @@ internal class MarkdownFormatTest {
     fun `Column table is read as scenario`() {
         val mdFormat = MarkdownFormat()
         val document = mdFormat.parse(
-            """
+                """
             # Irrelevant Headline
 
             ```
@@ -189,12 +189,11 @@ internal class MarkdownFormatTest {
         """.trimIndent().byteInputStream()
         )
 
-        val (tables, scenarios) = document
+        val elements = document.elements
 
-        assertThat(tables).isEmpty()
-        assertThat(scenarios).hasSize(1)
+        assertThat(elements).hasSize(1)
 
-        val scenario = scenarios[0]
+        val scenario = elements[0] as Scenario
         scenario.steps.also {
             assertThat(it).hasSize(3)
             assertThat(it[0].value).isEqualTo("Column1")

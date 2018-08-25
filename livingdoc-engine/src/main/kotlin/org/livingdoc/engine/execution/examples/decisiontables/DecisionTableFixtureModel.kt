@@ -17,13 +17,16 @@ class DecisionTableFixtureModel(
 
     val inputFields: List<Field>
     val inputMethods: List<Method>
-    val inputAliases: MutableSet<String>
+    private val inputAliases: MutableSet<String>
     private val inputAliasToField: MutableMap<String, Field>
     private val inputAliasToMethod: MutableMap<String, Method>
 
     val checkMethods: List<Method>
     private val checkAliases: Set<String>
     private val checkAliasToMethod: Map<String, Method>
+
+    val aliases: Set<String>
+        get() = inputAliases + checkAliases
 
     init {
 

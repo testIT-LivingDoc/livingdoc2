@@ -6,8 +6,8 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
+import org.livingdoc.engine.ExecutableDecisionTable
 import org.livingdoc.engine.execution.Result
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.junit.engine.LivingDocContext
@@ -16,13 +16,13 @@ import org.livingdoc.repositories.model.decisiontable.Header
 class DecisionTableTestDescriptor(
         uniqueId: UniqueId,
         displayName: String,
-        private val tableResult: DecisionTableResult
+        private val decisionTable: ExecutableDecisionTable
 ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
-        tableResult.rows.forEachIndexed { index, rowResult ->
+        decisionTable.execute().rows.forEachIndexed { index, rowResult ->
             val descriptor = RowTestDescriptor(rowUniqueId(index), rowDisplayName(index), rowResult)
                     .also { it.setParent(this) }
             dynamicTestExecutor.execute(descriptor)
@@ -32,15 +32,6 @@ class DecisionTableTestDescriptor(
 
     private fun rowUniqueId(index: Int) = uniqueId.append("row", "$index")
     private fun rowDisplayName(index: Int) = "Row #${index + 1}"
-
-    override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        val result = tableResult.result
-        return when (result) {
-            Result.Unknown -> skip("unknown")
-            Result.Skipped -> skip("skipped")
-            else -> doNotSkip()
-        }
-    }
 
     class RowTestDescriptor(
             uniqueId: UniqueId,

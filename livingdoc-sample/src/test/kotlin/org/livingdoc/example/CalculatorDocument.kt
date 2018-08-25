@@ -11,13 +11,7 @@ import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 
-@ExecutableDocument(
-        value = "local://Calculator.md",
-        fixtureClasses = [
-            CalculatorDocument.CalculatorDecisionTableFixture::class,
-            CalculatorDocument.CalculatorScenarioFixture::class
-        ]
-)
+@ExecutableDocument("local://Calculator.md")
 class CalculatorDocument {
 
     @DecisionTableFixture

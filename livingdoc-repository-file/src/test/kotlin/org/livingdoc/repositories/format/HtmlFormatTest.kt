@@ -17,6 +17,7 @@ import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnordered
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedListContainsOnlyOneItem
 import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.scenario.Scenario
 
 
 class HtmlFormatTest {
@@ -26,7 +27,7 @@ class HtmlFormatTest {
     @Test
     fun `tables with one row are ignored`() {
         val result = cut.parse(getHtmlTableWithOnlyOneRow())
-        assertThat(result.tables).hasSize(0)
+        assertThat(result.elements).hasSize(0)
     }
 
     @Test
@@ -51,7 +52,7 @@ class HtmlFormatTest {
     fun `parse Html into DecisionTable`() {
         val htmlDocument = cut.parse(getValidHtml())
 
-        val documentNode = htmlDocument.tables[0]
+        val documentNode = htmlDocument.elements[0] as DecisionTable
 
         assertThat(documentNode).isInstanceOf(DecisionTable::class.java)
         assertThat(documentNode.headers).extracting("name").containsExactly("Firstname", "Lastname", "Age")
@@ -61,16 +62,16 @@ class HtmlFormatTest {
         assertThat(documentNode.rows[1].headerToField).hasSize(3)
 
         assertThat(documentNode.rows[0].headerToField.map { it.key.name }).containsExactly(
-            "Firstname",
-            "Lastname",
-            "Age"
+                "Firstname",
+                "Lastname",
+                "Age"
         )
         assertThat(documentNode.rows[0].headerToField.map { it.value.value }).containsExactly("Jill", "Smith", "50")
 
         assertThat(documentNode.rows[1].headerToField.map { it.key.name }).containsExactly(
-            "Firstname",
-            "Lastname",
-            "Age"
+                "Firstname",
+                "Lastname",
+                "Age"
         )
         assertThat(documentNode.rows[1].headerToField.map { it.value.value }).containsExactly("Eve", "Jackson", "94")
     }
@@ -79,7 +80,7 @@ class HtmlFormatTest {
     fun `parse unorderedList into Scenario`() {
         val htmlDocument = cut.parse(getHtmlWithUnorderedList())
 
-        val scenario = htmlDocument.lists[0]
+        val scenario = htmlDocument.elements[0] as Scenario
 
         assertThat(scenario.steps).isNotNull
         assertThat(scenario.steps).hasSize(5)
@@ -93,7 +94,7 @@ class HtmlFormatTest {
     @Test
     fun `parse orderedList into Scenario`() {
         val htmlDocument = cut.parse(getHtmlWithOrderedList())
-        val scenario = htmlDocument.lists[0]
+        val scenario = htmlDocument.elements[0] as Scenario
 
         assertThat(scenario.steps).isNotNull
         assertThat(scenario.steps).hasSize(5)
@@ -108,16 +109,16 @@ class HtmlFormatTest {
     fun `unordered list with only one item is ignored`() {
         val htmlDocument = cut.parse(getHtmlWithUnorderedListContainsOnlyOneItem())
 
-        assertThat(htmlDocument.lists).isNotNull
-        assertThat(htmlDocument.lists).isEmpty()
+        assertThat(htmlDocument.elements).isNotNull
+        assertThat(htmlDocument.elements).isEmpty()
     }
 
     @Test
     fun `ordered list with only one item is ignored`() {
         val htmlDocument = cut.parse(getHtmlWithOrderedListContainsOnlyOneItem())
 
-        assertThat(htmlDocument.lists).isNotNull
-        assertThat(htmlDocument.lists).isEmpty()
+        assertThat(htmlDocument.elements).isNotNull
+        assertThat(htmlDocument.elements).isEmpty()
     }
 
     @Test

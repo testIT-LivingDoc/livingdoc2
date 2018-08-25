@@ -7,8 +7,9 @@ import com.vladsch.flexmark.ext.tables.TableRow
 import com.vladsch.flexmark.ext.tables.TablesExtension
 import com.vladsch.flexmark.parser.Parser
 import com.vladsch.flexmark.util.options.MutableDataSet
-import org.livingdoc.repositories.*
 import org.livingdoc.repositories.Document
+import org.livingdoc.repositories.DocumentFormat
+import org.livingdoc.repositories.ParseException
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -30,8 +31,9 @@ class MarkdownFormat : DocumentFormat {
         val parser = Parser.builder(options).build()
         val text = stream.reader().use { it.readText() }
         val (tables, scenarios) = parser.parse(text).mapToNodes()
-
-        return Document(tables, scenarios)
+        val elements = tables + scenarios
+        // TODO: provide elements in order they occur inside the original source document
+        return Document(elements)
     }
 
     private fun com.vladsch.flexmark.ast.Node.mapToNodes(): Pair<List<DecisionTable>, List<Scenario>> {

@@ -174,7 +174,7 @@ internal class RepositoryManagerTest {
     }
 
     class TestRepository(val config: TestRepositoryConfiguration) : DocumentRepository {
-        override fun getDocument(documentIdentifier: String): Document = Document(emptyList(), emptyList())
+        override fun getDocument(documentIdentifier: String): Document = Document(emptyList())
     }
 
     data class TestRepositoryConfiguration(

@@ -6,21 +6,21 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
+import org.livingdoc.engine.ExecutableScenario
 import org.livingdoc.engine.execution.Result
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.junit.engine.LivingDocContext
 
 class ScenarioTestDescriptor(
         uniqueId: UniqueId,
         displayName: String,
-        private val scenarioResult: ScenarioResult
+        private val scenario: ExecutableScenario
 ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
-        scenarioResult.steps.forEachIndexed { index, stepResult ->
+        scenario.execute().steps.forEachIndexed { index, stepResult ->
             val descriptor = StepTestDescriptor(stepUniqueId(index), stepDisplayName(stepResult), stepResult)
                     .also { it.setParent(this) }
             dynamicTestExecutor.execute(descriptor)
@@ -30,15 +30,6 @@ class ScenarioTestDescriptor(
 
     private fun stepUniqueId(index: Int) = uniqueId.append("step", "$index")
     private fun stepDisplayName(stepResult: StepResult) = stepResult.value
-
-    override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        val result = scenarioResult.result
-        return when (result) {
-            Result.Unknown -> skip("unknown")
-            Result.Skipped -> skip("skipped")
-            else -> doNotSkip()
-        }
-    }
 
     class StepTestDescriptor(
             uniqueId: UniqueId,
