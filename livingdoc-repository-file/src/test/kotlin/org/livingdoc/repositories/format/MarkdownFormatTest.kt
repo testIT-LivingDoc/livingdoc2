@@ -202,4 +202,61 @@ internal class MarkdownFormatTest {
         }
     }
 
+    @Test
+    fun `Tables and Scenarios are read in the order they appear in`() {
+        val mdFormat = MarkdownFormat()
+        val document = mdFormat.parse(
+                """
+            # Irrelevant Headline
+
+            Irrelevant Text
+
+            | Column1 |
+            |---------|
+            | Cell11  |
+            | Cell21  |
+
+            1. Listitem1
+               Sentence in first list item.
+            2. Listitem2
+               Sentence in second list item.
+
+            | ColumnA | ColumnB |
+            |---------|---------|
+            | CellA1  | CellB1  |
+            | CellA2  | CellB2  |
+        """.trimIndent().byteInputStream()
+        )
+
+        val elements = document.elements
+
+        assertThat(elements).hasSize(3)
+
+        val scenario1 = elements[0] as Scenario
+        scenario1.steps.also {
+            assertThat(it).hasSize(3)
+            assertThat(it[0].value).isEqualTo("Column1")
+            assertThat(it[1].value).isEqualTo("Cell11")
+            assertThat(it[2].value).isEqualTo("Cell21")
+        }
+
+        val scenario2 = elements[1] as Scenario
+        scenario2.steps.also {
+            assertThat(it).hasSize(2)
+            assertThat(it[0].value).isEqualTo("Listitem1\nSentence in first list item.")
+            assertThat(it[1].value).isEqualTo("Listitem2\nSentence in second list item.")
+        }
+
+        val table = elements[2] as DecisionTable
+        assertThat(table.headers.map(Header::name)).containsExactly("ColumnA", "ColumnB")
+        table.rows.also { rows ->
+            assertThat(rows[0].headerToField.map { it.key.name }).containsExactly("ColumnA", "ColumnB")
+            assertThat(rows[0].headerToField.map { it.value.value }).containsExactly("CellA1", "CellB1")
+
+            assertThat(rows[1].headerToField.map { it.key.name }).containsExactly("ColumnA", "ColumnB")
+            assertThat(rows[1].headerToField.map { it.value.value }).containsExactly("CellA2", "CellB2")
+        }
+
+    }
+
 }

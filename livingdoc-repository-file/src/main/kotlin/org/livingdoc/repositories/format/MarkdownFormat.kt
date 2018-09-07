@@ -10,6 +10,7 @@ import com.vladsch.flexmark.util.options.MutableDataSet
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.model.Example
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -19,6 +20,10 @@ import org.livingdoc.repositories.model.scenario.Step
 import java.io.InputStream
 import java.util.Arrays.asList
 
+/**
+ * [DocumentFormat] implementation specializing in markdown.
+ * Based on the flexmark parser: [https://github.com/vsch/flexmark-java].
+ */
 class MarkdownFormat : DocumentFormat {
 
     override fun canHandle(fileExtension: String): Boolean {
@@ -30,31 +35,28 @@ class MarkdownFormat : DocumentFormat {
         options.set(Parser.EXTENSIONS, asList(TablesExtension.create()))
         val parser = Parser.builder(options).build()
         val text = stream.reader().use { it.readText() }
-        val (tables, scenarios) = parser.parse(text).mapToNodes()
-        val elements = tables + scenarios
-        // TODO: provide elements in order they occur inside the original source document
-        return Document(elements)
+        val examples = parser.parse(text).mapToNodes()
+        return Document(examples)
     }
 
-    private fun com.vladsch.flexmark.ast.Node.mapToNodes(): Pair<List<DecisionTable>, List<Scenario>> {
-        val tables = mutableListOf<DecisionTable>()
-        val scenarios = mutableListOf<Scenario>()
+    private fun com.vladsch.flexmark.ast.Node.mapToNodes(): List<Example> {
+        val examples = mutableListOf<Example>()
 
         this.children.toList().forEach { node ->
             when (node) {
-                is ListBlock -> scenarios.add(node.toScenario())
+                is ListBlock -> examples.add(node.toScenario())
                 is TableBlock -> {
                     val firstRow = node.firstChild.children.toList()[0]
                     val numberOfColumns = firstRow.children.toList().size
                     when (numberOfColumns > 1) {
-                        true -> tables.add(node.toDecisionTable())
-                        else -> scenarios.add(node.toScenario())
+                        true -> examples.add(node.toDecisionTable())
+                        else -> examples.add(node.toScenario())
                     }
                 }
             }
         }
 
-        return Pair(tables, scenarios)
+        return examples
     }
 
     private fun Node.getAllChildrenOfListItem(): List<Node> {
