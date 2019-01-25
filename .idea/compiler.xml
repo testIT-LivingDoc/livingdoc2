@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <wildcardResourcePatterns>
-      <entry name="!?*.java" />
-      <entry name="!?*.form" />
-      <entry name="!?*.class" />
-      <entry name="!?*.groovy" />
-      <entry name="!?*.scala" />
-      <entry name="!?*.flex" />
-      <entry name="!?*.kt" />
-      <entry name="!?*.clj" />
-    </wildcardResourcePatterns>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+    <bytecodeTargetLevel>
+      <module name="org.livingdoc.buildSrc.main" target="1.9" />
+      <module name="org.livingdoc.buildSrc.test" target="1.9" />
+      <module name="org.livingdoc.livingdoc-api.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-api.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-converters.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-converters.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-documentation.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-documentation.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-engine.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-engine.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-junit-engine.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-junit-engine.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-repositories.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-repositories.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-repository-file.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-repository-file.test" target="1.8" />
+      <module name="org.livingdoc.livingdoc-sample.main" target="1.8" />
+      <module name="org.livingdoc.livingdoc-sample.test" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

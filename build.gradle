@@ -1,6 +1,12 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
 plugins {
-    id 'java'
-    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.jvm" apply false
+    id "io.gitlab.arturbosch.detekt" apply false
 }
 
 allprojects {

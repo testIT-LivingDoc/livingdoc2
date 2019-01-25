@@ -1,5 +1,9 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
+repositories {
+    jcenter()
+}
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
@@ -9,4 +13,18 @@ compileTestKotlin {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+}
+
+detekt {
+    config = files(
+            "${rootProject.projectDir}/default-detekt-config.yml"
+    )
+    parallel = false
+    filters = ".*/resources/.*,.*/build/.*"
+
+    reports {
+        xml.enabled = false
+        html.enabled = false
+    }
 }

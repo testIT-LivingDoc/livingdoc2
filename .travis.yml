@@ -16,20 +16,6 @@ jobs:
       script: ./gradlew check
     - jdk: oraclejdk8
       script: ./gradlew check
-#    - jdk: oraclejdk8
-#      env: validate
-#      before_install:
-#      - sudo add-apt-repository ppa:mmk2410/intellij-idea -y
-#      - sudo apt-get update -q
-#      - sudo apt-get install --only-upgrade dpkg
-#      - sudo apt-get install intellij-idea-community -y
-#      - sudo apt-get install groovy -y
-#      install:
-#      - sudo chmod -R aog+w /opt/intellij-idea-community/bin
-#      script:
-#      # Copy idea configuration template (mostly .IntelliJIdea2018.1/config/options/jdk.table.xml)
-#      - cp -r ./dev/idea-cli-inspector/root/.IntelliJIdea2018.1 /home/travis/
-#       # Duplicate for community config dir
-#      - cp -r ./dev/idea-cli-inspector/root/.IntelliJIdea2018.1 /home/travis/.IdeaIC2018.1
-#      #- ./idea-cli-inspector-master/ideainspect.groovy -i  /opt/intellij-idea-community
-#      - ./dev/idea-cli-inspector/ideainspect.groovy -i /opt/intellij-idea-community
+    - jdk: oraclejdk8
+      env: validate
+      script: ./gradlew detekt
