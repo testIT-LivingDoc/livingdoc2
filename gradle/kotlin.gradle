@@ -27,7 +27,7 @@ detekt {
     reports {
         xml.enabled = false
         html {
-            enabled = true                                
+            enabled = false                                
             destination = file("${rootProject.projectDir}/build/reports/detekt/${project.name}.html")
         }
     }
