@@ -2,7 +2,6 @@ package org.livingdoc.converters.number
 
 import java.math.BigDecimal
 
-
 open class ByteConverter : AbstractNumberConverter<Byte>() {
 
     override val lowerBound: Byte = Byte.MIN_VALUE
@@ -15,5 +14,4 @@ open class ByteConverter : AbstractNumberConverter<Byte>() {
         val isKotlinType = Byte::class.java == targetType
         return isJavaObjectType || isKotlinType
     }
-
 }

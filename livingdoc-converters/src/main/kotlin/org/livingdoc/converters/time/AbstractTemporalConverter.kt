@@ -1,14 +1,13 @@
 package org.livingdoc.converters.time
 
-import org.livingdoc.api.conversion.Format
-import org.livingdoc.api.conversion.TypeConverter
-import org.livingdoc.converters.exceptions.MalformedFormatException
-import org.livingdoc.converters.exceptions.ValueFormatException
 import java.lang.reflect.AnnotatedElement
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.Temporal
-
+import org.livingdoc.api.conversion.Format
+import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.converters.exceptions.MalformedFormatException
+import org.livingdoc.converters.exceptions.ValueFormatException
 
 abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
 
@@ -42,5 +41,4 @@ abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
 
     @Throws(DateTimeParseException::class)
     protected abstract fun doParse(value: String, formatter: DateTimeFormatter): T
-
 }

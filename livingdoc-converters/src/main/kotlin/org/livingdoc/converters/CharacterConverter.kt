@@ -1,9 +1,8 @@
 package org.livingdoc.converters
 
+import java.lang.reflect.AnnotatedElement
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
-import java.lang.reflect.AnnotatedElement
-
 
 open class CharacterConverter : TypeConverter<Char> {
 
@@ -19,5 +18,4 @@ open class CharacterConverter : TypeConverter<Char> {
         val isKotlinType = Char::class.java == targetType
         return isJavaObjectType || isKotlinType
     }
-
 }

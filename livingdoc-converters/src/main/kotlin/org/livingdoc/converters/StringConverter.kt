@@ -1,8 +1,7 @@
 package org.livingdoc.converters
 
-import org.livingdoc.api.conversion.TypeConverter
 import java.lang.reflect.AnnotatedElement
-
+import org.livingdoc.api.conversion.TypeConverter
 
 open class StringConverter : TypeConverter<String> {
 

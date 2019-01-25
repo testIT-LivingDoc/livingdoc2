@@ -18,7 +18,8 @@ dependencies {
 
 detekt {
     config = files(
-            "${rootProject.projectDir}/default-detekt-config.yml"
+            file("${rootProject.projectDir}/default-detekt-config.yml"),
+            file("${rootProject.projectDir}/testit-detekt-config.yml")
     )
     parallel = false
     filters = ".*/resources/.*,.*/build/.*"

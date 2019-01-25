@@ -1,14 +1,14 @@
 package org.livingdoc.converters.number
 
-import org.livingdoc.api.conversion.ConversionException
-import org.livingdoc.api.conversion.Language
-import org.livingdoc.api.conversion.TypeConverter
-import org.livingdoc.converters.exceptions.NumberRangeException
 import java.lang.reflect.AnnotatedElement
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.util.*
+import org.livingdoc.api.conversion.ConversionException
+import org.livingdoc.api.conversion.Language
+import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.converters.exceptions.NumberRangeException
 
 abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
@@ -67,5 +67,4 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
     private fun bigDecimalOf(value: T?) = BigDecimal(value!!.toString())
 
     protected abstract fun convertToTarget(number: BigDecimal): T
-
 }

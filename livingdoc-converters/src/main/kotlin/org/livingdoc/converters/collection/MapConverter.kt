@@ -1,10 +1,10 @@
 package org.livingdoc.converters.collection
 
+import java.lang.reflect.AnnotatedElement
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.TypeConverters.findTypeConverterForGenericElement
 import org.livingdoc.converters.collection.Tokenizer.tokenizeToMap
-import java.lang.reflect.AnnotatedElement
 
 open class MapConverter : TypeConverter<Map<Any, Any>> {
 

@@ -2,7 +2,6 @@ package org.livingdoc.converters.number
 
 import java.math.BigDecimal
 
-
 open class BigDecimalConverter : AbstractNumberConverter<BigDecimal>() {
 
     override val lowerBound: BigDecimal? = null
@@ -11,5 +10,4 @@ open class BigDecimalConverter : AbstractNumberConverter<BigDecimal>() {
     override fun convertToTarget(number: BigDecimal): BigDecimal = number
 
     override fun canConvertTo(targetType: Class<*>) = BigDecimal::class.java == targetType
-
 }

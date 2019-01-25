@@ -42,3 +42,5 @@ out/
 \.idea/checkstyle-idea\.xml
 
 \.idea/modules\.xml
+
+\.idea/eclipseCodeFormatter\.xml

@@ -1,10 +1,10 @@
 package org.livingdoc.converters.collection
 
+import java.lang.reflect.AnnotatedElement
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.TypeConverters.findTypeConverterForGenericElement
 import org.livingdoc.converters.collection.Tokenizer.tokenizeToStringList
-import java.lang.reflect.AnnotatedElement
 
 abstract class AbstractCollectionConverter<T : Collection<Any>> : TypeConverter<T> {
 

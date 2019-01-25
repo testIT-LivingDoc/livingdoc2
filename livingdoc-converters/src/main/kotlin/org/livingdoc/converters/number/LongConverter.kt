@@ -2,7 +2,6 @@ package org.livingdoc.converters.number
 
 import java.math.BigDecimal
 
-
 open class LongConverter : AbstractNumberConverter<Long>() {
 
     override val lowerBound: Long = Long.MIN_VALUE
@@ -15,5 +14,4 @@ open class LongConverter : AbstractNumberConverter<Long>() {
         val isKotlinType = Long::class.java == targetType
         return isJavaObjectType || isKotlinType
     }
-
 }

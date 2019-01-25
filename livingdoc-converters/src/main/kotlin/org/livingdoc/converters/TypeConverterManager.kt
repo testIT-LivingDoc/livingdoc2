@@ -1,11 +1,10 @@
 package org.livingdoc.converters
 
+import java.util.*
+import kotlin.reflect.KClass
 import org.livingdoc.api.conversion.TypeConverter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
-import kotlin.reflect.KClass
-
 
 /**
  * This object manages [TypeConverter] instances. It has two responsibilities:
@@ -23,9 +22,9 @@ object TypeConverterManager {
     init {
         log.info("loading default type converters...")
         defaultConverters = ServiceLoader.load(TypeConverter::class.java).toList()
-        defaultConverters.forEach {
-            log.debug("loaded default type converter: {}", it.javaClass.canonicalName)
-            cache[it.javaClass] = it
+        defaultConverters.forEach { converter ->
+            log.debug("loaded default type converter: {}", converter.javaClass.canonicalName)
+            cache[converter.javaClass] = converter
         }
     }
 
@@ -48,10 +47,10 @@ object TypeConverterManager {
      * @return the type converter instance for the given type
      */
     private fun getInstance(converterType: Class<out TypeConverter<out Any>>): TypeConverter<*> {
-        return cache.computeIfAbsent(converterType, {
-            log.debug("creating new cached instance of {}", it.canonicalName)
-            it.newInstance()
-        })
+        return cache.computeIfAbsent(converterType) { clazz ->
+            log.debug("creating new cached instance of {}", clazz.canonicalName)
+            clazz.newInstance()
+        }
     }
 
     /**
@@ -60,5 +59,4 @@ object TypeConverterManager {
     fun getDefaultConverters(): List<TypeConverter<*>> {
         return defaultConverters
     }
-
 }

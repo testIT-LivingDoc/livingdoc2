@@ -1,9 +1,8 @@
 package org.livingdoc.converters
 
+import java.lang.reflect.AnnotatedElement
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
-import java.lang.reflect.AnnotatedElement
-
 
 open class BooleanConverter : TypeConverter<Boolean> {
 
@@ -22,5 +21,4 @@ open class BooleanConverter : TypeConverter<Boolean> {
         val isKotlinType = Boolean::class.java == targetType
         return isJavaObjectType || isKotlinType
     }
-
 }

@@ -3,7 +3,11 @@ package org.livingdoc.converters
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.Converter
 import org.livingdoc.api.conversion.TypeConverter
-import java.lang.reflect.*
+import java.lang.reflect.AnnotatedElement
+import java.lang.reflect.Field
+import java.lang.reflect.Parameter
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 
 /**
  * Utility object providing [TypeConverter] related operations.
@@ -16,10 +20,12 @@ object TypeConverters {
     // - nested classes >> loading converters from declaring class?
 
     /**
-     * Tries to find a [TypeConverter] for the [ParameterizedType]s appropriate for the given generic [AnnotatedElement].
+     * Tries to find a [TypeConverter] for the [ParameterizedType]s appropriate for
+     * the given generic [AnnotatedElement].
      *
-     * Type converters are found by either analyzing the given [Field] or [Parameter] for its [ParameterizedType]s,
-     * delegating the search for the appropriate [TypeConverter] of the found [ParameterizedType] to [findTypeConverter].
+     * Type converters are found by either analyzing the given [Field] or [Parameter] for
+     * its [ParameterizedType]s, delegating the search for the appropriate [TypeConverter]
+     * of the found [ParameterizedType] to [findTypeConverter].
      *
      * 1. check if inferred annotated element is field or parameter
      * 2. get the target type by extracting the actualTypeArguments
@@ -62,9 +68,9 @@ object TypeConverters {
     /**
      * Tries to find a [TypeConverter] for the given [Parameter].
      *
-     * Type converters can be configured by annotating either the parameter, the parameter's method, the fixture class
-     * or the document binding class with [Converter]. This is also the order in which this method searches for a matching
-     * type converter:
+     * Type converters can be configured by annotating either the parameter, the parameter's method,
+     * the fixture class or the document binding class with [Converter]. This is also the order in
+     * which this method searches for a matching type converter:
      *
      * 1. check for parameter annotations
      * 2. check for method annotations
@@ -85,10 +91,10 @@ object TypeConverters {
         val executable = parameter.declaringExecutable
         val clazz = executable.declaringClass
         return findConverterFor(converting = type, from = parameter)
-                ?: findConverterFor(converting = type, from = executable)
-                ?: findConverterFor(converting = type, from = clazz)
-                ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
-                ?: findDefaultConverterFor(type)
+            ?: findConverterFor(converting = type, from = executable)
+            ?: findConverterFor(converting = type, from = clazz)
+            ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
+            ?: findDefaultConverterFor(type)
     }
 
     /**
@@ -114,9 +120,9 @@ object TypeConverters {
     private fun findTypeConverter(type: Class<*>, field: Field, documentClass: Class<*>?): TypeConverter<*>? {
         val clazz = field.declaringClass
         return findConverterFor(converting = type, from = field)
-                ?: findConverterFor(converting = type, from = clazz)
-                ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
-                ?: findDefaultConverterFor(type)
+            ?: findConverterFor(converting = type, from = clazz)
+            ?: documentClass?.let { findConverterFor(converting = type, from = documentClass) }
+            ?: findDefaultConverterFor(type)
     }
 
     private fun findConverterFor(converting: Class<*>, from: AnnotatedElement): TypeConverter<*>? {

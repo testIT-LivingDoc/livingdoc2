@@ -9,7 +9,8 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
         const val NOT_A_NUMBER = "NaN"
         const val POSITIVE_INFINITY = "Infinity"
         const val NEGATIVE_INFINITY = "-Infinity"
-        const val NEGATIVE_ZERO = "-0"
+        const val NEGATIVE_ZERO_STRING = "-0"
+        const val NEGATIVE_ZERO_NUMBER = -0.0
     }
 
     override val lowerBound: Double = -Double.MAX_VALUE
@@ -20,7 +21,7 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
             NOT_A_NUMBER -> Double.NaN
             POSITIVE_INFINITY -> Double.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Double.NEGATIVE_INFINITY
-            NEGATIVE_ZERO -> -0.0
+            NEGATIVE_ZERO_STRING -> NEGATIVE_ZERO_NUMBER
             else -> super.convert(value, element, documentClass)
         }
     }
@@ -32,5 +33,4 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
         val isKotlinType = Double::class.java == targetType
         return isJavaObjectType || isKotlinType
     }
-
 }

@@ -6,4 +6,3 @@ open class SetConverter : AbstractCollectionConverter<Set<Any>>() {
 
     override fun canConvertTo(targetType: Class<*>?) = Set::class.java == targetType
 }
-
