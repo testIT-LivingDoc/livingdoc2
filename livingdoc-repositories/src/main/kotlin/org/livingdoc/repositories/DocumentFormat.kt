@@ -7,5 +7,4 @@ interface DocumentFormat {
     fun canHandle(fileExtension: String): Boolean
 
     fun parse(stream: InputStream): Document
-
 }

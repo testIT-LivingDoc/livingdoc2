@@ -21,11 +21,14 @@ detekt {
             file("${rootProject.projectDir}/default-detekt-config.yml"),
             file("${rootProject.projectDir}/testit-detekt-config.yml")
     )
-    parallel = false
+    parallel = true
     filters = ".*/resources/.*,.*/build/.*"
 
     reports {
         xml.enabled = false
-        html.enabled = false
+        html {
+            enabled = true                                
+            destination = file("${rootProject.projectDir}/build/reports/detekt/${project.name}.html")
+        }
     }
 }

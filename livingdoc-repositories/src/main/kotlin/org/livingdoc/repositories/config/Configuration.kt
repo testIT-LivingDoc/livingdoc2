@@ -25,7 +25,5 @@ data class Configuration(
         fun loadFromStream(inputStream: InputStream): Configuration {
             return YamlUtils.loadFromStreamAs(inputStream, Configuration::class)
         }
-
     }
-
 }

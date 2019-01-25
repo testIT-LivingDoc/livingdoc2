@@ -24,6 +24,10 @@ subprojects { subproject ->
     apply plugin: 'java'
     sourceCompatibility = 1.8
 
+    clean {
+        delete "$rootProject.projectDir/build"
+    }
+    
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc

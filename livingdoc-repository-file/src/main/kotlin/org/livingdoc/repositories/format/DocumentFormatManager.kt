@@ -2,7 +2,6 @@ package org.livingdoc.repositories.format
 
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.file.DocumentFile
-import java.io.File
 import java.util.*
 
 internal object DocumentFormatManager {
@@ -19,5 +18,4 @@ internal object DocumentFormatManager {
                 .firstOrNull { it.canHandle(extension) }
                 ?: throw DocumentFormatNotFoundException(extension)
     }
-
 }

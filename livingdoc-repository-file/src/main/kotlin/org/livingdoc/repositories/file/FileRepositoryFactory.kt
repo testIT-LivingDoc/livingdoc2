@@ -9,5 +9,4 @@ class FileRepositoryFactory : DocumentRepositoryFactory<FileRepository> {
         val config = YamlUtils.toObject(configData, FileRepositoryConfig::class)
         return FileRepository(name, config)
     }
-
 }

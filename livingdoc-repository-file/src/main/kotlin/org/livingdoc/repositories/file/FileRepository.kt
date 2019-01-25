@@ -4,9 +4,9 @@ import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
 
 class FileRepository(
-        private val name: String,
-        private val config: FileRepositoryConfig,
-        private val fileResolver: FileResolver = FileResolver()
+    private val name: String,
+    private val config: FileRepositoryConfig,
+    private val fileResolver: FileResolver = FileResolver()
 ) : DocumentRepository {
 
     override fun getDocument(documentIdentifier: String): Document {

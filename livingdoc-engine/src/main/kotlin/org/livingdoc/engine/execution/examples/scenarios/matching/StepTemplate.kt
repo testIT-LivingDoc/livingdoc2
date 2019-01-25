@@ -20,9 +20,9 @@ internal class StepTemplate(
 
     private fun assertAlternatingSequenceOfFragments() {
         var wasTextFragment = fragments.first() !is Text
-        fragments.forEach {
-            assert(wasTextFragment xor (it is Text))
-            wasTextFragment = it is Text
+        fragments.forEach { fragment ->
+            assert(wasTextFragment xor (fragment is Text))
+            wasTextFragment = fragment is Text
         }
     }
 
@@ -31,10 +31,10 @@ internal class StepTemplate(
      */
     fun alignWith(step: String, maxCostOfAlignment: Int = 20) = Alignment(this, step, maxCostOfAlignment)
 
-    override fun toString(): String = fragments.joinToString(separator = "") {
-        when (it) {
-            is Text -> it.content
-            is Variable -> "{${it.name}}"
+    override fun toString(): String = fragments.joinToString(separator = "") { fragment ->
+        when (fragment) {
+            is Text -> fragment.content
+            is Variable -> "{${fragment.name}}"
         }
     }
 

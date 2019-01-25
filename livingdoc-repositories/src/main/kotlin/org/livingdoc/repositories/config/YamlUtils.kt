@@ -53,5 +53,4 @@ object YamlUtils {
         val yamlString = yaml.dump(configData)
         return yaml.loadAs(yamlString, type.java)
     }
-
 }

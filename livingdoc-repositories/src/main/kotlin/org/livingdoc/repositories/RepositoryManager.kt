@@ -25,12 +25,10 @@ class RepositoryManager {
                 } else {
                     throw NotARepositoryFactoryException(name)
                 }
-
             }
             log.debug("...repository manager successfully created!")
             return repositoryManager
         }
-
     }
 
     private val repositoryMap: MutableMap<String, DocumentRepository> = mutableMapOf()
@@ -63,5 +61,4 @@ class RepositoryManager {
 
     class RepositoryNotFoundException(name: String, knownRepositories: Collection<String>) :
             RuntimeException("Repository '$name' not found in manager. Known repositories are: $knownRepositories")
-
 }

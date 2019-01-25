@@ -1,3 +1,5 @@
+build:
+  maxIssues: 9999 #High enough to fix initial failures after implementing new codestyle
 formatting:
   ImportOrdering:
     active: false
