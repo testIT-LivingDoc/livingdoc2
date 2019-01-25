@@ -23,7 +23,6 @@ internal object DecisionTableFixtureChecker {
 
             addAll(elements = inputMethodsHaveValidSignature(model))
             addAll(elements = checkMethodsHaveValidSignature(model))
-
         }
     }
 
@@ -55,8 +54,10 @@ internal object DecisionTableFixtureChecker {
     }
 
     private fun <T : Annotation> checkAliasesOf(
-        elements: Iterable<AnnotatedElement>, annotation: KClass<T>,
-        flatMapper: (T) -> Iterable<String>, handler: (String) -> Unit
+        elements: Iterable<AnnotatedElement>,
+        annotation: KClass<T>,
+        flatMapper: (T) -> Iterable<String>,
+        handler: (String) -> Unit
     ) {
         elements.forEach {
             it.getAnnotationsByType(annotation.java)
@@ -155,5 +156,4 @@ internal object DecisionTableFixtureChecker {
             .filter { Modifier.isStatic(it.modifiers) }
             .map { "@$annotationName method <$it> must not be static!" }
     }
-
 }

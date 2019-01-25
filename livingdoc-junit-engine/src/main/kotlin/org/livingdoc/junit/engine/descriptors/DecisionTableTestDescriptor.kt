@@ -14,9 +14,9 @@ import org.livingdoc.junit.engine.LivingDocContext
 import org.livingdoc.repositories.model.decisiontable.Header
 
 class DecisionTableTestDescriptor(
-        uniqueId: UniqueId,
-        displayName: String,
-        private val tableResult: DecisionTableResult
+    uniqueId: UniqueId,
+    displayName: String,
+    private val tableResult: DecisionTableResult
 ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
@@ -24,7 +24,7 @@ class DecisionTableTestDescriptor(
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
         tableResult.rows.forEachIndexed { index, rowResult ->
             val descriptor = RowTestDescriptor(rowUniqueId(index), rowDisplayName(index), rowResult)
-                    .also { it.setParent(this) }
+                .also { it.setParent(this) }
             dynamicTestExecutor.execute(descriptor)
         }
         return context
@@ -43,16 +43,20 @@ class DecisionTableTestDescriptor(
     }
 
     class RowTestDescriptor(
-            uniqueId: UniqueId,
-            displayName: String,
-            private val rowResult: RowResult
+        uniqueId: UniqueId,
+        displayName: String,
+        private val rowResult: RowResult
     ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
         override fun getType() = TestDescriptor.Type.CONTAINER
 
-        override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
+        override fun execute(
+            context: LivingDocContext,
+            dynamicTestExecutor: Node.DynamicTestExecutor
+        ): LivingDocContext {
             rowResult.headerToField.forEach { header, fieldResult ->
-                val descriptor = FieldTestDescriptor(fieldUniqueId(header), fieldDisplayName(header, fieldResult), fieldResult)
+                val descriptor =
+                    FieldTestDescriptor(fieldUniqueId(header), fieldDisplayName(header, fieldResult), fieldResult)
                         .also { it.setParent(this) }
                 dynamicTestExecutor.execute(descriptor)
             }
@@ -60,7 +64,8 @@ class DecisionTableTestDescriptor(
         }
 
         private fun fieldUniqueId(header: Header) = uniqueId.append("field", header.name)
-        private fun fieldDisplayName(header: Header, fieldResult: FieldResult) = "[${header.name}] = ${fieldResult.value}"
+        private fun fieldDisplayName(header: Header, fieldResult: FieldResult) =
+            "[${header.name}] = ${fieldResult.value}"
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
             val result = rowResult.result
@@ -72,14 +77,17 @@ class DecisionTableTestDescriptor(
         }
 
         class FieldTestDescriptor(
-                uniqueId: UniqueId,
-                displayName: String,
-                private val fieldResult: FieldResult
+            uniqueId: UniqueId,
+            displayName: String,
+            private val fieldResult: FieldResult
         ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
             override fun getType() = TestDescriptor.Type.TEST
 
-            override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
+            override fun execute(
+                context: LivingDocContext,
+                dynamicTestExecutor: Node.DynamicTestExecutor
+            ): LivingDocContext {
                 val result = fieldResult.result
                 when (result) {
                     is Result.Failed -> throw result.reason
@@ -96,9 +104,6 @@ class DecisionTableTestDescriptor(
                     else -> doNotSkip()
                 }
             }
-
         }
-
     }
-
 }

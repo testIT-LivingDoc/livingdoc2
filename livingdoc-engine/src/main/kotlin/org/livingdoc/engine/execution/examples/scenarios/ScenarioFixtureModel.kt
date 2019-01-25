@@ -64,5 +64,4 @@ internal class ScenarioFixtureModel(
     private fun Method.isAnnotatedWith(annotationClass: KClass<out Annotation>): Boolean {
         return this.isAnnotationPresent(annotationClass.java)
     }
-
 }

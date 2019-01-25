@@ -24,11 +24,11 @@ import kotlin.reflect.KClass
  * @since 2.0
  */
 class LivingDoc(
-        val repositoryManager: RepositoryManager = RepositoryManager.from(Configuration.load()),
-        val decisionTableExecutor: DecisionTableExecutor = DecisionTableExecutor(),
-        val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
-        val scenarioExecutor: ScenarioExecutor = ScenarioExecutor(),
-        val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
+    val repositoryManager: RepositoryManager = RepositoryManager.from(Configuration.load()),
+    val decisionTableExecutor: DecisionTableExecutor = DecisionTableExecutor(),
+    val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
+    val scenarioExecutor: ScenarioExecutor = ScenarioExecutor(),
+    val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
 
     @Throws(ExecutionException::class)
@@ -59,18 +59,17 @@ class LivingDoc(
             repositoryManager.getRepository(repository).getDocument(id)
         }
     }
-
 }
 
 private data class DocumentIdentifier(
-        val repository: String,
-        val id: String
+    val repository: String,
+    val id: String
 )
 
 private data class ExecutableDocumentModel(
-        val documentIdentifier: DocumentIdentifier,
-        val decisionTableFixtures: List<Class<*>>,
-        val scenarioFixtures: List<Class<*>>
+    val documentIdentifier: DocumentIdentifier,
+    val decisionTableFixtures: List<Class<*>>,
+    val scenarioFixtures: List<Class<*>>
 ) {
 
     companion object {
@@ -111,7 +110,5 @@ private data class ExecutableDocumentModel(
 
         private val Class<*>.executableDocumentAnnotation: ExecutableDocument?
             get() = getAnnotation(ExecutableDocument::class.java)
-
     }
-
 }

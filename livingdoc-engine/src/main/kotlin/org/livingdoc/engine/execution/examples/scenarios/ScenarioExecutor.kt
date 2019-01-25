@@ -11,5 +11,4 @@ class ScenarioExecutor {
     fun execute(scenario: Scenario, fixtureClass: Class<*>, document: Any? = null): ScenarioResult {
         return ScenarioExecution(fixtureClass, scenario, document).execute()
     }
-
 }

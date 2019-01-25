@@ -55,5 +55,4 @@ class FixtureFieldInjector(
 
     internal class NoTypeConverterFoundException(field: Field) :
         RuntimeException("No type converter could be found to convert field: $field")
-
 }

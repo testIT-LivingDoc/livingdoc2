@@ -18,5 +18,4 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
         }
         return MatchingResult(bestAlignment.stepTemplate, bestAlignment.variables)
     }
-
 }

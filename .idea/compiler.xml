@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="org.livingdoc.buildSrc.main" target="1.9" />
-      <module name="org.livingdoc.buildSrc.test" target="1.9" />
+      <module name="org.livingdoc.buildSrc.main" target="1.8" />
+      <module name="org.livingdoc.buildSrc.test" target="1.8" />
       <module name="org.livingdoc.livingdoc-api.main" target="1.8" />
       <module name="org.livingdoc.livingdoc-api.test" target="1.8" />
       <module name="org.livingdoc.livingdoc-converters.main" target="1.8" />

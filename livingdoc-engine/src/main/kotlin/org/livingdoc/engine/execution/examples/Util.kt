@@ -1,6 +1,5 @@
 package org.livingdoc.engine.execution.examples
 
-
 fun executeWithBeforeAndAfter(before: () -> Unit, body: () -> Unit, after: () -> Unit) {
     var exception: Throwable? = null
     try {

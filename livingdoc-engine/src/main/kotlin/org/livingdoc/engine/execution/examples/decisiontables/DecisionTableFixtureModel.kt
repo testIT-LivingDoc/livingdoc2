@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 class DecisionTableFixtureModel(
-        val fixtureClass: Class<*>
+    val fixtureClass: Class<*>
 ) {
 
     val beforeTableMethods: List<Method>
@@ -112,7 +112,6 @@ class DecisionTableFixtureModel(
 
         this.checkAliases = checkAliases
         this.checkAliasToMethod = checkAliasToMethod
-
     }
 
     fun isInputAlias(alias: String): Boolean = inputAliases.contains(alias)
@@ -132,5 +131,4 @@ class DecisionTableFixtureModel(
     private fun Field.isAnnotatedWith(annotationClass: KClass<out Annotation>): Boolean {
         return this.isAnnotationPresent(annotationClass.java)
     }
-
 }

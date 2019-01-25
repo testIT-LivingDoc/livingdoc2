@@ -10,7 +10,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
-
 internal object ScenarioFixtureChecker {
 
     fun check(model: ScenarioFixtureModel): List<String> {
@@ -73,7 +72,9 @@ internal object ScenarioFixtureChecker {
         return errors
     }
 
-    private fun checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(stepTemplateToMethod: Map<StepTemplate, Method>): Collection<String> {
+    private fun checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(
+        stepTemplateToMethod: Map<StepTemplate, Method>
+    ): Collection<String> {
         return stepTemplateToMethod
             .filter { (stepTemplate, method) -> stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount }
             .map { (stepTemplate, method) -> "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'" }
@@ -104,5 +105,4 @@ internal object ScenarioFixtureChecker {
             .filter { Modifier.isStatic(it.modifiers) }
             .map { "@$annotationName method <$it> must not be static!" }
     }
-
 }

@@ -10,5 +10,4 @@ class PackageSelectorHandler : SelectorHandler<PackageSelector>() {
     override fun selectDocumentClasses(selector: PackageSelector, classFilter: (Class<*>) -> Boolean): List<Class<*>> {
         return findAllClassesInPackage(selector.packageName, classFilter, everyNameIsOk)
     }
-
 }

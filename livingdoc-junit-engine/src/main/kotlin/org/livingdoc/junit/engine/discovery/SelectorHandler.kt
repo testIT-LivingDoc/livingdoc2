@@ -14,5 +14,4 @@ abstract class SelectorHandler<in T : DiscoverySelector> {
     }
 
     protected abstract fun selectDocumentClasses(selector: T, classFilter: (Class<*>) -> Boolean): List<Class<*>>
-
 }

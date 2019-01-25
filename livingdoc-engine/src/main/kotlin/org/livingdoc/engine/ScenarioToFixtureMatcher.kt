@@ -2,7 +2,6 @@ package org.livingdoc.engine
 
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureModel
 import org.livingdoc.engine.execution.examples.scenarios.matching.NoMatchingStepTemplate
-import org.livingdoc.engine.execution.examples.scenarios.matching.StepTemplate
 import org.livingdoc.repositories.model.scenario.Scenario
 
 /**
@@ -23,5 +22,4 @@ class ScenarioToFixtureMatcher {
             }
         }
     }
-
 }

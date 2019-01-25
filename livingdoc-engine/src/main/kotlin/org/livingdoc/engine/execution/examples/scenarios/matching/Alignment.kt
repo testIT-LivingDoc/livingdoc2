@@ -2,7 +2,6 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 
 import java.lang.Math.min
 
-
 /**
  * An alignment of a scenario step with a `StepTemplate`. Aligning a scenario step with a template allows us to check
  * if the template matches the step and to extract any variables.
@@ -134,7 +133,6 @@ internal class Alignment(
 
         return d
     }
-
 
     /* The following values define how we calculate the cost for aligning template and step.
      * Some hints:
@@ -281,9 +279,9 @@ internal class Alignment(
         for (fragment in stepTemplate.fragments.reversed()) {
             offset -= length(fragment)
             while (i > offset || (i == 0 && j > 0)) {
-                if (i > offset && j > 0
-                    && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j]
-                    && distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]
+                if (i > offset && j > 0 &&
+                    distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j] &&
+                    distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]
                 ) {
                     --i; --j
                     onMatchOrSubstitution(fragment, i - offset, j)
@@ -310,4 +308,3 @@ private fun length(fragment: Fragment): Int = when (fragment) {
     is Text -> fragment.content.length
     else -> 1
 }
-

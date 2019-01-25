@@ -11,5 +11,4 @@ class ClasspathRootSelectorHandler : SelectorHandler<ClasspathRootSelector>() {
             List<Class<*>> {
         return findAllClassesInClasspathRoot(selector.classpathRoot, classFilter, everyNameIsOk)
     }
-
 }

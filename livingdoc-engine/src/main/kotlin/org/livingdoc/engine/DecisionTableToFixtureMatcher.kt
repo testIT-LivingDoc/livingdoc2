@@ -30,5 +30,4 @@ class DecisionTableToFixtureMatcher {
     class MultipleMatchingFixturesException(headerNames: List<String>, matchingFixtures: List<Class<*>>)
         : RuntimeException("Could not identify a unique fixture matching the Decision Table's headers " +
             "${headerNames.map { "'$it'" }}. Matching fixtures found: $matchingFixtures")
-
 }

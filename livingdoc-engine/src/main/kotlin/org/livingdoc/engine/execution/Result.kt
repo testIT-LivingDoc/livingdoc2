@@ -16,5 +16,4 @@ sealed class Result {
 
     /** An unexpected exception occurred. */
     data class Exception(val exception: Throwable) : Result()
-
 }

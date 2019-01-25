@@ -6,9 +6,9 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 
 data class DecisionTableResult(
-        val headers: List<Header>,
-        val rows: List<RowResult>,
-        var result: Result = Result.Unknown
+    val headers: List<Header>,
+    val rows: List<RowResult>,
+    var result: Result = Result.Unknown
 ) : ExampleResult {
 
     companion object {
@@ -28,5 +28,4 @@ data class DecisionTableResult(
             return DecisionTableResult(headerCopies, rowCopies)
         }
     }
-
 }

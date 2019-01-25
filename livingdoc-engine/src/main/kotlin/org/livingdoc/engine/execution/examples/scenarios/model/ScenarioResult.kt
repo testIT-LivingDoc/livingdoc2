@@ -5,8 +5,8 @@ import org.livingdoc.engine.execution.examples.ExampleResult
 import org.livingdoc.repositories.model.scenario.Scenario
 
 data class ScenarioResult(
-        val steps: List<StepResult>,
-        var result: Result = Result.Unknown
+    val steps: List<StepResult>,
+    var result: Result = Result.Unknown
 ) : ExampleResult {
 
     companion object {
@@ -15,5 +15,4 @@ data class ScenarioResult(
             return ScenarioResult(stepResults)
         }
     }
-
 }

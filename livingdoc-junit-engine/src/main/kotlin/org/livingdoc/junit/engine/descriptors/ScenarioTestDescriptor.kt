@@ -12,9 +12,9 @@ import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.junit.engine.LivingDocContext
 
 class ScenarioTestDescriptor(
-        uniqueId: UniqueId,
-        displayName: String,
-        private val scenarioResult: ScenarioResult
+    uniqueId: UniqueId,
+    displayName: String,
+    private val scenarioResult: ScenarioResult
 ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
@@ -22,7 +22,7 @@ class ScenarioTestDescriptor(
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
         scenarioResult.steps.forEachIndexed { index, stepResult ->
             val descriptor = StepTestDescriptor(stepUniqueId(index), stepDisplayName(stepResult), stepResult)
-                    .also { it.setParent(this) }
+                .also { it.setParent(this) }
             dynamicTestExecutor.execute(descriptor)
         }
         return context
@@ -41,14 +41,17 @@ class ScenarioTestDescriptor(
     }
 
     class StepTestDescriptor(
-            uniqueId: UniqueId,
-            displayName: String,
-            private val stepResult: StepResult
+        uniqueId: UniqueId,
+        displayName: String,
+        private val stepResult: StepResult
     ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
         override fun getType() = TestDescriptor.Type.TEST
 
-        override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
+        override fun execute(
+            context: LivingDocContext,
+            dynamicTestExecutor: Node.DynamicTestExecutor
+        ): LivingDocContext {
             val result = stepResult.result
             when (result) {
                 is Result.Failed -> throw result.reason
@@ -65,7 +68,5 @@ class ScenarioTestDescriptor(
                 else -> doNotSkip()
             }
         }
-
     }
-
 }

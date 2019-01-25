@@ -21,8 +21,8 @@ import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
 
 class ExecutableDocumentDescriptor(
-        uniqueId: UniqueId,
-        private val documentClass: Class<*>
+    uniqueId: UniqueId,
+    private val documentClass: Class<*>
 ) : AbstractTestDescriptor(uniqueId, documentClass.name), Node<LivingDocContext> {
 
     override fun getType() = Type.CONTAINER_AND_TEST
@@ -34,12 +34,14 @@ class ExecutableDocumentDescriptor(
         result.results.forEachIndexed { index, exampleResult ->
             when (exampleResult) {
                 is DecisionTableResult -> {
-                    val descriptor = DecisionTableTestDescriptor(tableUniqueId(index), tableDisplayName(index), exampleResult)
+                    val descriptor =
+                        DecisionTableTestDescriptor(tableUniqueId(index), tableDisplayName(index), exampleResult)
                             .also { it.setParent(this) }
                     dynamicTestExecutor.execute(descriptor)
                 }
                 is ScenarioResult -> {
-                    val descriptor = ScenarioTestDescriptor(scenarioUniqueId(index), scenarioDisplayName(index), exampleResult)
+                    val descriptor =
+                        ScenarioTestDescriptor(scenarioUniqueId(index), scenarioDisplayName(index), exampleResult)
                             .also { it.setParent(this) }
                     dynamicTestExecutor.execute(descriptor)
                 }
@@ -65,44 +67,48 @@ class ExecutableDocumentDescriptor(
         val headerAtimesB = Header("a * b = ?")
         val headerAdividedByB = Header("a / b = ?")
         val decisionTable = DecisionTable(
-                listOf(headerA, headerB, headerAplusB, headerAminusB, headerAtimesB, headerAdividedByB),
-                listOf(
-                        Row(mapOf(
-                                headerA to Field("10"),
-                                headerB to Field("5"),
-                                headerAplusB to Field("15"),
-                                headerAminusB to Field("5"),
-                                headerAtimesB to Field("50"),
-                                headerAdividedByB to Field("2")
-                        )),
-                        Row(mapOf(
-                                headerA to Field("-3"),
-                                headerB to Field("2"),
-                                headerAplusB to Field("-1"),
-                                headerAminusB to Field("-5"),
-                                headerAtimesB to Field("-6"),
-                                headerAdividedByB to Field("-1.5")
-                        ))
+            listOf(headerA, headerB, headerAplusB, headerAminusB, headerAtimesB, headerAdividedByB),
+            listOf(
+                Row(
+                    mapOf(
+                        headerA to Field("10"),
+                        headerB to Field("5"),
+                        headerAplusB to Field("15"),
+                        headerAminusB to Field("5"),
+                        headerAtimesB to Field("50"),
+                        headerAdividedByB to Field("2")
+                    )
+                ),
+                Row(
+                    mapOf(
+                        headerA to Field("-3"),
+                        headerB to Field("2"),
+                        headerAplusB to Field("-1"),
+                        headerAminusB to Field("-5"),
+                        headerAtimesB to Field("-6"),
+                        headerAdividedByB to Field("-1.5")
+                    )
                 )
+            )
         )
         val decisionTableFixture = documentClass.declaredClasses
-                .single { it.isAnnotationPresent(DecisionTableFixture::class.java) }
+            .single { it.isAnnotationPresent(DecisionTableFixture::class.java) }
         val decisionTableResult = DecisionTableExecutor()
-                .execute(decisionTable, decisionTableFixture, documentClass)
+            .execute(decisionTable, decisionTableFixture, documentClass)
 
-        val scenario = Scenario(listOf(
+        val scenario = Scenario(
+            listOf(
                 Step("adding 1 and 2 equals 3"),
                 Step("subtraction 5 form 15 equals 10"),
                 Step("multiplying 3 and 6 equals 18"),
                 Step("dividing 20 by 5 equals 4")
-        ))
+            )
+        )
         val scenarioFixture = documentClass.declaredClasses
-                .single { it.isAnnotationPresent(ScenarioFixture::class.java) }
+            .single { it.isAnnotationPresent(ScenarioFixture::class.java) }
         val scenarioResult = ScenarioExecutor()
-                .execute(scenario, scenarioFixture, documentClass)
+            .execute(scenario, scenarioFixture, documentClass)
 
         return DocumentResult(listOf(decisionTableResult) + listOf(scenarioResult))
-
     }
-
 }

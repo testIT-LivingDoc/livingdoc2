@@ -242,5 +242,4 @@ internal class DecisionTableExecution(
             prefix = "  - "
         )}"
     )
-
 }

@@ -12,5 +12,4 @@ class ClassSelectorHandler : SelectorHandler<ClassSelector>() {
         // TODO: not qualified == error?
         return listOf()
     }
-
 }

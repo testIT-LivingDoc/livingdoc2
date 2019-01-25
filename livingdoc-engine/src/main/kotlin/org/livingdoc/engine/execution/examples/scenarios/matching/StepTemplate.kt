@@ -1,6 +1,5 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
-
 /**
  * Represents a template specified by a fixture developer for scenario steps. Used for matching scenario
  * steps to methods in a fixture. A valid `StepTemplate` consists of a sequence of fragments (text and variables).
@@ -105,14 +104,11 @@ internal class StepTemplate(
             else
                 Text(fragmentAsString)
         }
-
     }
 }
-
 
 internal class IllegalFormatException(msg: String) : IllegalArgumentException(msg)
 
 internal sealed class Fragment
 internal data class Text(val content: String) : Fragment()
 internal data class Variable(val name: String) : Fragment()
-

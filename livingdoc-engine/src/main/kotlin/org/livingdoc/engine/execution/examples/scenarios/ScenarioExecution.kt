@@ -150,7 +150,5 @@ internal class ScenarioExecution(
         init {
             exceptions.forEach { addSuppressed(it) }
         }
-
     }
-
 }
