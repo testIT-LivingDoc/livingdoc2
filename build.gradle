@@ -33,11 +33,18 @@ subprojects { subproject ->
         archives(sourcesJar)
     }
 
-    test {
-        useJUnitPlatform()
-    }
-
     if(!subproject.name.endsWith("api") && !subproject.name.endsWith("documentation")){
         apply from: "${gradleScriptDir}/kotlin.gradle"
+    }
+
+    dependencies {
+        testImplementation ("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+        testImplementation ("org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}")
+
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+    }
+
+    test {
+        testLogging { events "skipped", "failed" }
     }
 }

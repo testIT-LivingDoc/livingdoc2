@@ -11,6 +11,7 @@
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
+.idea/misc.xml
 .idea/**/dictionaries
 .idea/**/shelf
 # Sensitive or high-churn files
@@ -28,9 +29,15 @@
 *.iws
 # IntelliJ
 out/
+*.iml
 # Editor-based Rest Client
 .idea/httpRequests
 
 # gradle
 **/build/
 .gradle
+
+
+
+
+
