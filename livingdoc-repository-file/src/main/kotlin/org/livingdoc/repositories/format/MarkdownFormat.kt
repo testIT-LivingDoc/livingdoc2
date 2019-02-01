@@ -1,6 +1,10 @@
 package org.livingdoc.repositories.format
 
-import com.vladsch.flexmark.ast.*
+import com.vladsch.flexmark.ast.ListBlock
+import com.vladsch.flexmark.ast.Node
+import com.vladsch.flexmark.ast.Paragraph
+import com.vladsch.flexmark.ast.SoftLineBreak
+import com.vladsch.flexmark.ast.Text
 import com.vladsch.flexmark.ext.tables.TableBlock
 import com.vladsch.flexmark.ext.tables.TableCell
 import com.vladsch.flexmark.ext.tables.TableRow
@@ -115,16 +119,16 @@ class MarkdownFormat : DocumentFormat {
         tableHeadChildren.verifyElementType<TableRow> { throw ParseException("Element $it is not a TableRow.") }
         bodyChildren.verifyElementType<TableRow> { throw ParseException("Element $it is not a TableRow.") }
 
-        val headers = tableHeadChildren[0].let {
-            it.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
-            it.children.map { cell -> Header((cell as TableCell).text.toString()) }
+        val headers = tableHeadChildren[0].let { node ->
+            node.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
+            node.children.map { cell -> Header((cell as TableCell).text.toString()) }
         }
 
-        val rows = bodyChildren.map {
-            val row = it as TableRow
+        val rows = bodyChildren.map { node ->
+            val row = node as TableRow
             row.children.verifyElementType<TableCell> { throw ParseException("Element $it is not a TableCell.") }
-            val map = row.children.mapIndexed { index, node ->
-                val cell = node as TableCell
+            val map = row.children.mapIndexed { index, childNode ->
+                val cell = childNode as TableCell
                 headers[index] to Field(cell.text.toString())
             }.toMap()
             Row(map)
@@ -135,9 +139,7 @@ class MarkdownFormat : DocumentFormat {
 
     private inline fun <reified U> Iterable<*>.verifyElementType(errorCallBack: (Any) -> Unit) {
         this.forEach {
-            if (it !is U) {
-                errorCallBack(it!!)
-            }
+            if (it !is U) errorCallBack(it!!)
         }
     }
 }

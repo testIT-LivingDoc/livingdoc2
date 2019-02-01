@@ -6,10 +6,12 @@ import java.time.format.DateTimeFormatter
 
 class ReportWriter {
 
-    private val REPORT_OUTPUT_PATH = "build/livingdoc/reports/"
-    private val REPORT_OUTPUT_FILENAME = "result"
-    private val REPORT_OUTPUT_EXTENSION = ".html"
-    private val REPORT_OUTPUT_DATE_FORMAT = "yyyy_MM_dd_HH_mm_ss"
+    private companion object {
+        const val REPORT_OUTPUT_PATH = "build/livingdoc/reports/"
+        const val REPORT_OUTPUT_FILENAME = "result"
+        const val REPORT_OUTPUT_EXTENSION = ".html"
+        const val REPORT_OUTPUT_DATE_FORMAT = "yyyy_MM_dd_HH_mm_ss"
+    }
 
     fun writeToFile(textToWrite: String) {
         File(REPORT_OUTPUT_PATH).mkdirs()

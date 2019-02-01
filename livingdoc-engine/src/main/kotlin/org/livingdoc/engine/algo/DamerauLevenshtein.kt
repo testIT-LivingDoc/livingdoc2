@@ -60,6 +60,7 @@ class DamerauLevenshtein(
     /**
      * Calculates the editing distance between the given strings.
      */
+    @Suppress("ComplexCondition")
     fun distance(a: String, b: String): Int {
         var secondToLastRow = IntArray(b.length + 1)
         var lastRow = IntArray(b.length + 1)

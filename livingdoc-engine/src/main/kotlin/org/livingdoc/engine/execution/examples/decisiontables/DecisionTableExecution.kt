@@ -9,7 +9,6 @@ import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
-
 internal class DecisionTableExecution(
     private val fixtureClass: Class<*>,
     decisionTable: DecisionTable,
@@ -25,7 +24,8 @@ internal class DecisionTableExecution(
     /**
      * Executes the configured [DecisionTableResult].
      *
-     * Does not throw any kind of exception. Exceptional state of the execution is packages inside the [DecisionTableResult] in
+     * Does not throw any kind of exception.
+     * Exceptional state of the execution is packages inside the [DecisionTableResult] in
      * the form of different result objects.
      */
     fun execute(): DecisionTableResult {

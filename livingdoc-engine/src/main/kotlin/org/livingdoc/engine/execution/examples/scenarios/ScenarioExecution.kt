@@ -25,7 +25,8 @@ internal class ScenarioExecution(
     /**
      * Executes the configured [Scenario].
      *
-     * Does not throw any kind of exception. Exceptional state of the execution is packaged inside the [ScenarioResult] in
+     * Does not throw any kind of exception.
+     * Exceptional state of the execution is packaged inside the [ScenarioResult] in
      * the form of different result objects.
      */
     fun execute(): ScenarioResult {
@@ -33,7 +34,9 @@ internal class ScenarioExecution(
             assertFixtureIsDefinedCorrectly()
             executeScenario()
             markScenarioAsSuccessfullyExecuted()
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
+            markScenarioAsExecutedWithException(e)
+        } catch (e: AssertionError) {
             markScenarioAsExecutedWithException(e)
         }
         setSkippedStatusForAllUnknownResults()
@@ -72,10 +75,10 @@ internal class ScenarioExecution(
         val result = fixtureModel.getMatchingStepTemplate(step.value)
         val method = fixtureModel.getStepMethod(result.template)
         val parameterList = method.parameters
-            .map {
+            .map { parameter ->
                 result.variables.getOrElse(
-                    getParameterName(it),
-                    { error("Missing parameter value: ${getParameterName(it)}") })
+                    getParameterName(parameter),
+                    { error("Missing parameter value: ${getParameterName(parameter)}") })
             }
             .toTypedArray()
         step.result = invokeExpectingException {
@@ -85,7 +88,7 @@ internal class ScenarioExecution(
 
     private fun getParameterName(parameter: Parameter): String {
         return parameter.getAnnotationsByType(Binding::class.java).firstOrNull()?.value
-                ?: parameter.name
+            ?: parameter.name
     }
 
     private fun invokeExpectingException(function: () -> Unit): Result {

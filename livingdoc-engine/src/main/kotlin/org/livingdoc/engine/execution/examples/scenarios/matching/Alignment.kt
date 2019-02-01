@@ -16,6 +16,7 @@ import java.lang.Math.min
  * If a scenario step does not align well, it is an unlikely match. Because alignment calculation is expensive,
  * it will be aborted when the cost of the alignment exceeds `maxCost`.
  */
+@Suppress("NestedBlockDepth")
 internal class Alignment(
     val stepTemplate: StepTemplate,
     val step: String,
@@ -279,10 +280,7 @@ internal class Alignment(
         for (fragment in stepTemplate.fragments.reversed()) {
             offset -= length(fragment)
             while (i > offset || (i == 0 && j > 0)) {
-                if (i > offset && j > 0 &&
-                    distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j] &&
-                    distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]
-                ) {
+                if (evaluateMatrixAndOffset(i, offset, j)) {
                     --i; --j
                     onMatchOrSubstitution(fragment, i - offset, j)
                 } else if (i > offset && (j == 0 || distanceMatrix[i - 1][j] <= distanceMatrix[i][j - 1])) {
@@ -295,6 +293,12 @@ internal class Alignment(
                 }
             }
         }
+    }
+
+    private fun evaluateMatrixAndOffset(i: Int, offset: Int, j: Int): Boolean {
+        return i > offset && j > 0 &&
+                distanceMatrix[i - 1][j - 1] <= distanceMatrix[i - 1][j] &&
+                distanceMatrix[i - 1][j - 1] <= distanceMatrix[i][j - 1]
     }
 }
 

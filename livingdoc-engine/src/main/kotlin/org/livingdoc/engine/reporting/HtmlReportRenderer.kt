@@ -4,7 +4,6 @@ import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
-import java.lang.RuntimeException
 
 class HtmlReportRenderer {
 
@@ -13,11 +12,11 @@ class HtmlReportRenderer {
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
 
-        val htmlResults = exampleResult.map {
-            when (it) {
-                is DecisionTableResult -> handleDecisionTableResult(it)
-                is ScenarioResult -> handleScenarioResult(it)
-                else -> throw RuntimeException("Unknown ExampleResult type.")
+        val htmlResults = exampleResult.map { result ->
+            when (result) {
+                is DecisionTableResult -> handleDecisionTableResult(result)
+                is ScenarioResult -> handleScenarioResult(result)
+                else -> throw IllegalArgumentException("Unknown ExampleResult type.")
             }
         }
 
@@ -39,10 +38,11 @@ class HtmlReportRenderer {
     }
 
     private fun table(
-            renderContext: HtmlRenderContext,
-            tableResult: Result,
-            columnCount: Int,
-            block: HtmlTable.() -> Unit): HtmlTable {
+        renderContext: HtmlRenderContext,
+        tableResult: Result,
+        columnCount: Int,
+        block: HtmlTable.() -> Unit
+    ): HtmlTable {
         val table = HtmlTable(renderContext, tableResult, columnCount)
         table.block()
         return table

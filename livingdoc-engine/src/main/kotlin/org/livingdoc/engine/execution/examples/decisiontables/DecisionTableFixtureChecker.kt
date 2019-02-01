@@ -1,6 +1,12 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
-import org.livingdoc.api.fixtures.decisiontables.*
+import org.livingdoc.api.fixtures.decisiontables.AfterRow
+import org.livingdoc.api.fixtures.decisiontables.AfterTable
+import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
+import org.livingdoc.api.fixtures.decisiontables.BeforeRow
+import org.livingdoc.api.fixtures.decisiontables.BeforeTable
+import org.livingdoc.api.fixtures.decisiontables.Check
+import org.livingdoc.api.fixtures.decisiontables.Input
 import java.lang.reflect.AnnotatedElement
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -40,10 +46,10 @@ internal object DecisionTableFixtureChecker {
         val errors = mutableListOf<String>()
         val knownAliases = mutableSetOf<String>()
 
-        val handleAlias: (String) -> Unit = {
-            if (knownAliases.contains(it))
-                errors.add("Alias <$it> is used multiple times!")
-            else knownAliases.add(it)
+        val handleAlias: (String) -> Unit = { string ->
+            if (knownAliases.contains(string))
+                errors.add("Alias <$string> is used multiple times!")
+            else knownAliases.add(string)
         }
 
         checkAliasesOf(model.inputFields, Input::class, { it.value.asIterable() }, handleAlias)
@@ -59,8 +65,8 @@ internal object DecisionTableFixtureChecker {
         flatMapper: (T) -> Iterable<String>,
         handler: (String) -> Unit
     ) {
-        elements.forEach {
-            it.getAnnotationsByType(annotation.java)
+        elements.forEach { annotatedElement ->
+            annotatedElement.getAnnotationsByType(annotation.java)
                 .flatMap { flatMapper.invoke(it) }
                 .forEach { handler.invoke(it) }
         }

@@ -65,12 +65,7 @@ internal class StepTemplate(
             var isPreceededByVariable = false
             for ((i, c) in templateAsString.withIndex()) {
                 if (c == '{' && !isEscaped(templateAsString, i)) {
-                    if (isVariable) {
-                        throw IllegalFormatException("Illegal opening curly brace at position $i!\nOffending string was: $templateAsString")
-                    }
-                    if (isPreceededByVariable) {
-                        throw IllegalFormatException("Consecutive variables at position $i! StepTemplate must contain an intervening text fragment to keep them apart.\nOffending string was: $templateAsString")
-                    }
+                    validateVariables(isVariable, i, templateAsString, isPreceededByVariable)
                     isVariable = true
                     if (lastIndex < i) {
                         tokens.add(templateAsString.substring(lastIndex, i))
@@ -78,7 +73,10 @@ internal class StepTemplate(
                     lastIndex = i
                 } else if (c == '}' && !isEscaped(templateAsString, i)) {
                     if (!isVariable) {
-                        throw IllegalFormatException("Illegal closing curly brace at position $i!\nOffending string was: $templateAsString")
+                        throw IllegalFormatException(
+                            "Illegal closing curly brace at position $i!\n" +
+                                    "Offending string was: $templateAsString"
+                        )
                     }
                     isPreceededByVariable = true
                     isVariable = false
@@ -94,6 +92,27 @@ internal class StepTemplate(
             }
 
             return tokens
+        }
+
+        private fun validateVariables(
+            isVariable: Boolean,
+            i: Int,
+            templateAsString: String,
+            isPreceededByVariable: Boolean
+        ) {
+            if (isVariable) {
+                throw IllegalFormatException(
+                    "Illegal opening curly brace at position $i!\n" +
+                            "Offending string was: $templateAsString"
+                )
+            }
+            if (isPreceededByVariable) {
+                throw IllegalFormatException(
+                    "Consecutive variables at position $i! " +
+                            "StepTemplate must contain an intervening text fragment to keep them apart.\n" +
+                            "Offending string was: $templateAsString"
+                )
+            }
         }
 
         private fun isEscaped(s: String, i: Int) = (i > 0 && s[i - 1] == '\\')

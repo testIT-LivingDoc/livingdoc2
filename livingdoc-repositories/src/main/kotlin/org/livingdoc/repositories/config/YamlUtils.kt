@@ -15,11 +15,9 @@ object YamlUtils {
      * @param inputStream the stream to read
      * @return the read configuration data as a [Map]
      */
+    @Suppress("UNCHECKED_CAST")
     fun loadFromStream(inputStream: InputStream): Map<String, Any> {
-        return inputStream.use {
-            @Suppress("UNCHECKED_CAST")
-            yaml.loadAs(it, Map::class.java) as Map<String, Any>
-        }
+        return inputStream.use { yaml.loadAs(it, Map::class.java) as Map<String, Any> }
     }
 
     /**
@@ -31,10 +29,7 @@ object YamlUtils {
      * @return the read configuration data as a [Map]
      */
     fun <T : Any> loadFromStreamAs(inputStream: InputStream, type: KClass<T>): T {
-        return inputStream.use {
-            @Suppress("UNCHECKED_CAST")
-            yaml.loadAs(it, type.java)
-        }
+        return inputStream.use { yaml.loadAs(it, type.java) }
     }
 
     /**

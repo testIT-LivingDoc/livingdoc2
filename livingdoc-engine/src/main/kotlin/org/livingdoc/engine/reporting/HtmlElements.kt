@@ -8,7 +8,6 @@ import org.livingdoc.repositories.model.decisiontable.Header
 import java.io.PrintWriter
 import java.io.StringWriter
 
-
 class HtmlRenderContext {
     private var popupErrorNumber = 0
     val popupErrors = ArrayList<HtmlError>()
@@ -18,7 +17,6 @@ class HtmlRenderContext {
 }
 
 class HtmlError(val number: Int, val message: String, val stacktrace: String)
-
 
 interface HtmlResult
 
@@ -33,11 +31,14 @@ class HtmlTable(val renderContext: HtmlRenderContext, val tableResult: Result, v
         if (tableResult is Result.Failed || tableResult is Result.Exception) {
             val tableFailedRow = Element("tr")
             tableFailedRow.appendChild(
-                    Element("td").apply {
-                        setStyleClasses(HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX, determineCssClassForBackgroundColor(tableResult))
-                        attr("colspan", columnCount.toString())
-                        appendChild(createFailedPopupLink(renderContext, tableResult))
-                    })
+                Element("td").apply {
+                    setStyleClasses(
+                        HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
+                        determineCssClassForBackgroundColor(tableResult)
+                    )
+                    attr("colspan", columnCount.toString())
+                    appendChild(createFailedPopupLink(renderContext, tableResult))
+                })
             table.appendChild(tableFailedRow)
         }
     }
@@ -65,10 +66,13 @@ fun HtmlTable.rows(rows: List<RowResult>) {
     fun appendCellToDisplayFailedRowIfNecessary(newRow: Element, rowResult: Result) {
         if (rowResult is Result.Failed || rowResult is Result.Exception) {
             newRow.appendChild(
-                    Element("td").apply {
-                        setStyleClasses(HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX, determineCssClassForBackgroundColor(rowResult))
-                        appendChild(createFailedPopupLink(htmlTable.renderContext, rowResult))
-                    })
+                Element("td").apply {
+                    setStyleClasses(
+                        HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
+                        determineCssClassForBackgroundColor(rowResult)
+                    )
+                    appendChild(createFailedPopupLink(htmlTable.renderContext, rowResult))
+                })
         }
     }
 
@@ -77,21 +81,22 @@ fun HtmlTable.rows(rows: List<RowResult>) {
         val newRow = Element("tr")
         headerToField.values.forEach { (value, cellResult) ->
             newRow.appendChild(
-                    Element("td").apply {
-                        setStyleClasses(
-                                HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
-                                determineCssClassForBackgroundColor(cellResult))
+                Element("td").apply {
+                    setStyleClasses(
+                        HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
+                        determineCssClassForBackgroundColor(cellResult)
+                    )
 
-                        appendChild(
-                                Element("span").apply {
-                                    setStyleClasses(HtmlReportTemplate.CSS_CLASS_RESULT_VALUE)
-                                    html(value)
-                                })
+                    appendChild(
+                        Element("span").apply {
+                            setStyleClasses(HtmlReportTemplate.CSS_CLASS_RESULT_VALUE)
+                            html(value)
+                        })
 
-                        if (cellResult is Result.Failed || cellResult is Result.Exception) {
-                            appendChild(createFailedPopupLink(htmlTable.renderContext, cellResult))
-                        }
-                    })
+                    if (cellResult is Result.Failed || cellResult is Result.Exception) {
+                        appendChild(createFailedPopupLink(htmlTable.renderContext, cellResult))
+                    }
+                })
         }
         appendCellToDisplayFailedRowIfNecessary(newRow, rowResult)
         table.appendChild(newRow)
@@ -100,9 +105,9 @@ fun HtmlTable.rows(rows: List<RowResult>) {
 
 private fun createFailedPopupLink(renderContext: HtmlRenderContext, result: Result): Element {
     fun createStacktrace(e: Throwable): String {
-        return StringWriter().use {
-            e.printStackTrace(PrintWriter(it))
-            it.toString()
+        return StringWriter().use { stringWriter ->
+            e.printStackTrace(PrintWriter(stringWriter))
+            stringWriter.toString()
         }
     }
 
@@ -115,17 +120,18 @@ private fun createFailedPopupLink(renderContext: HtmlRenderContext, result: Resu
         is Result.Failed -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_FAILED)
             renderContext.addPopupError(
-                    HtmlError(nextErrorNumber, result.reason.message ?: "", createStacktrace(result.reason)))
+                HtmlError(nextErrorNumber, result.reason.message ?: "", createStacktrace(result.reason))
+            )
         }
         is Result.Exception -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_EXCEPTION)
             renderContext.addPopupError(
-                    HtmlError(nextErrorNumber, result.exception.message ?: "", createStacktrace(result.exception)))
+                HtmlError(nextErrorNumber, result.exception.message ?: "", createStacktrace(result.exception))
+            )
         }
     }
     return failedPopupLink
 }
-
 
 class HtmlList : HtmlResult {
     val list = Element("ul")
@@ -138,10 +144,10 @@ class HtmlList : HtmlResult {
 fun HtmlList.steps(stepResults: List<StepResult>) {
     stepResults.forEach { (value, result) ->
         this.list.appendChild(
-                Element("li").apply {
-                    setStyleClasses(determineCssClassForBackgroundColor(result))
-                    html(value)
-                })
+            Element("li").apply {
+                setStyleClasses(determineCssClassForBackgroundColor(result))
+                html(value)
+            })
     }
 }
 

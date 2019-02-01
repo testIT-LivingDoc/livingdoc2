@@ -16,19 +16,23 @@ dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
 }
 
-detekt {
-    config = files(
-            file("${rootProject.projectDir}/default-detekt-config.yml"),
-            file("${rootProject.projectDir}/testit-detekt-config.yml")
-    )
-    parallel = true
-    filters = ".*/resources/.*,.*/build/.*"
+if(!project.name.endsWith("sample")) {
+    detekt {
+        def moduleConfig = file("${projectDir}/detekt-config.yml")
 
-    reports {
-        xml.enabled = false
-        html {
-            enabled = false                                
-            destination = file("${rootProject.projectDir}/build/reports/detekt/${project.name}.html")
+        config = files(
+                file("${rootProject.projectDir}/default-detekt-config.yml"),
+                file("${rootProject.projectDir}/detekt-config.yml")
+        )
+        parallel = true
+        filters = ".*/resources/.*,.*/build/.*"
+
+        reports {
+            xml.enabled = false
+            html {
+                enabled = true
+                destination = file("${rootProject.projectDir}/build/reports/detekt/${project.name}.html")
+            }
         }
     }
 }

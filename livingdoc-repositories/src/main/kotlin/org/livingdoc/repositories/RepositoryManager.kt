@@ -51,14 +51,20 @@ class RepositoryManager {
     }
 
     class RepositoryAlreadyRegisteredException(name: String, repository: DocumentRepository) :
-            RuntimeException("Document repository with name '$name' already registered! Cant register instance of ${repository.javaClass.canonicalName}")
+        RuntimeException(
+            "Document repository with name '$name' already registered! " +
+                    "Cant register instance of ${repository.javaClass.canonicalName}"
+        )
 
     class NoRepositoryFactoryException(name: String) :
-            RuntimeException("Repository declaration '$name' does not specify a 'factory' property.")
+        RuntimeException("Repository declaration '$name' does not specify a 'factory' property.")
 
     class NotARepositoryFactoryException(name: String) :
-            RuntimeException("Repository declaration '$name' does not specify a 'factory' property with a class of type '${DocumentRepositoryFactory::class.java.simpleName}'.")
+        RuntimeException(
+            "Repository declaration '$name' does not specify a 'factory' property with a class " +
+                    "of type '${DocumentRepositoryFactory::class.java.simpleName}'."
+        )
 
     class RepositoryNotFoundException(name: String, knownRepositories: Collection<String>) :
-            RuntimeException("Repository '$name' not found in manager. Known repositories are: $knownRepositories")
+        RuntimeException("Repository '$name' not found in manager. Known repositories are: $knownRepositories")
 }

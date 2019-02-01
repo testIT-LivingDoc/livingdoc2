@@ -1,0 +1,31 @@
+build:
+  maxIssues: 0
+
+complexity:
+  TooManyFunctions:
+    ignorePrivate: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: true
+    exceptionNames:
+      - ArrayIndexOutOfBoundsException
+      - Error
+      - IllegalMonitorStateException
+      - NullPointerException
+      - IndexOutOfBoundsException
+      - Throwable
+
+formatting:
+  autoCorrect: false
+  ImportOrdering:
+    active: false
+  NoWildcardImports:
+    active: false
+
+style:
+  ForbiddenComment:
+    active: false
+  ThrowsCount:
+    active: false
+

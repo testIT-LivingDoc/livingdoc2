@@ -1,5 +1,5 @@
+@file:Suppress("MaxLineLength")
 package org.livingdoc.engine.reporting
-
 
 class HtmlReportTemplate {
 
@@ -107,8 +107,8 @@ class HtmlReportTemplate {
     }
 
     fun renderTemplate(
-            htmlResults: List<HtmlResult>,
-            renderContext: HtmlRenderContext
+        htmlResults: List<HtmlResult>,
+        renderContext: HtmlRenderContext
     ): String {
         return """
             <!DOCTYPE html>
@@ -125,16 +125,16 @@ class HtmlReportTemplate {
     }
 
     private fun createErrorPopups(renderContext: HtmlRenderContext): String {
-        return renderContext.popupErrors.joinToString(separator = "") {
+        return renderContext.popupErrors.joinToString(separator = "") { htmlError ->
             """
 
-            <div id="popup${it.number}" class="overlay">
+            <div id="popup${htmlError.number}" class="overlay">
                 <div class="popup">
-                    <h2>${it.message}</h2>
+                    <h2>${htmlError.message}</h2>
                     <a class="close" href="#">&times;</a>
                     <div class="content">
                         <pre>
-                            ${it.stacktrace}
+                            ${htmlError.stacktrace}
                         </pre>
                     </div>
                 </div>

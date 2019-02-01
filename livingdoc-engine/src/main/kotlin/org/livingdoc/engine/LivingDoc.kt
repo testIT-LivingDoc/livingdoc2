@@ -40,12 +40,13 @@ class LivingDoc(
         val results: List<ExampleResult> = document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
-                    decisionTableToFixtureMatcher.findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                            ?.let { decisionTableExecutor.execute(element, it) }
+                    decisionTableToFixtureMatcher
+                        .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
+                        ?.let { decisionTableExecutor.execute(element, it) }
                 }
                 is Scenario -> {
                     scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                            ?.let { scenarioExecutor.execute(element, it) }
+                        ?.let { scenarioExecutor.execute(element, it) }
                 }
                 else -> null
             }
@@ -77,34 +78,40 @@ private data class ExecutableDocumentModel(
         fun of(documentClass: Class<*>): ExecutableDocumentModel {
             validate(documentClass)
             return ExecutableDocumentModel(
-                    documentIdentifier = getDocumentIdentifier(documentClass),
-                    decisionTableFixtures = getDecisionTableFixtures(documentClass),
-                    scenarioFixtures = getScenarioFixtures(documentClass)
+                documentIdentifier = getDocumentIdentifier(documentClass),
+                decisionTableFixtures = getDecisionTableFixtures(documentClass),
+                scenarioFixtures = getScenarioFixtures(documentClass)
             )
         }
 
         private fun getDocumentIdentifier(document: Class<*>): DocumentIdentifier {
             val annotation = document.executableDocumentAnnotation!!
             val values = annotation.value.split("://")
-                    .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
+                .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
             return DocumentIdentifier(values[0], values[1])
         }
 
         private fun validate(document: Class<*>) {
             if (document.executableDocumentAnnotation == null) {
-                throw IllegalArgumentException("ExecutableDocument annotation is not present on class ${document.canonicalName}.")
+                throw IllegalArgumentException(
+                    "ExecutableDocument annotation is not present on class " +
+                            "${document.canonicalName}."
+                )
             }
         }
 
-        private fun getDecisionTableFixtures(document: Class<*>) = getFixtures(document, DecisionTableFixture::class)
-        private fun getScenarioFixtures(document: Class<*>) = getFixtures(document, ScenarioFixture::class)
+        private fun getDecisionTableFixtures(document: Class<*>) =
+            getFixtures(document, DecisionTableFixture::class)
+
+        private fun getScenarioFixtures(document: Class<*>) =
+            getFixtures(document, ScenarioFixture::class)
 
         private fun getFixtures(document: Class<*>, annotationClass: KClass<out Annotation>): List<Class<*>> {
             val declaredInside = document.declaredClasses
-                    .filter { it.isAnnotationPresent(annotationClass.java) }
+                .filter { it.isAnnotationPresent(annotationClass.java) }
             val fromAnnotation = document.executableDocumentAnnotation!!.fixtureClasses
-                    .map { it.java }
-                    .filter { it.isAnnotationPresent(annotationClass.java) }
+                .map { it.java }
+                .filter { it.isAnnotationPresent(annotationClass.java) }
             return declaredInside + fromAnnotation
         }
 

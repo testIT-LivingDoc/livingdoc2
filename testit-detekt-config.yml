@@ -1,5 +1,0 @@
-formatting:
-  ImportOrdering:
-    active: false
-  NoWildcardImports:
-    active: false

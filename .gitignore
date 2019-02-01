@@ -13,6 +13,9 @@
 .idea/**/tasks.xml
 .idea/misc.xml
 .idea/**/dictionaries
+.idea/checkstyle-idea\.xml
+.idea/modules\.xml
+.idea/eclipseCodeFormatter\.xml
 .idea/**/shelf
 # Sensitive or high-churn files
 .idea/**/dataSources/
@@ -36,11 +39,3 @@ out/
 # gradle
 **/build/
 .gradle
-
-
-
-\.idea/checkstyle-idea\.xml
-
-\.idea/modules\.xml
-
-\.idea/eclipseCodeFormatter\.xml
