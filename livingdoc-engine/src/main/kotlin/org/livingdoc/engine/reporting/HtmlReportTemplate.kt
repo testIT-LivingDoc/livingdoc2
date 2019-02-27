@@ -125,16 +125,16 @@ class HtmlReportTemplate {
     }
 
     private fun createErrorPopups(renderContext: HtmlRenderContext): String {
-        return renderContext.popupErrors.joinToString(separator = "") { htmlError ->
+        return renderContext.popupErrors.joinToString(separator = "") { error ->
             """
 
-            <div id="popup${htmlError.number}" class="overlay">
+            <div id="popup${error.number}" class="overlay">
                 <div class="popup">
-                    <h2>${htmlError.message}</h2>
+                    <h2>${error.message}</h2>
                     <a class="close" href="#">&times;</a>
                     <div class="content">
                         <pre>
-                            ${htmlError.stacktrace}
+                            ${error.stacktrace}
                         </pre>
                     </div>
                 </div>

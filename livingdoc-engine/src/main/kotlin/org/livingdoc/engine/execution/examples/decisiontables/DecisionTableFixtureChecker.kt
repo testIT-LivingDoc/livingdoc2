@@ -46,10 +46,10 @@ internal object DecisionTableFixtureChecker {
         val errors = mutableListOf<String>()
         val knownAliases = mutableSetOf<String>()
 
-        val handleAlias: (String) -> Unit = { string ->
-            if (knownAliases.contains(string))
-                errors.add("Alias <$string> is used multiple times!")
-            else knownAliases.add(string)
+        val handleAlias: (String) -> Unit = { alias ->
+            if (knownAliases.contains(alias))
+                errors.add("Alias <$alias> is used multiple times!")
+            else knownAliases.add(alias)
         }
 
         checkAliasesOf(model.inputFields, Input::class, { it.value.asIterable() }, handleAlias)

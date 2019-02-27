@@ -74,8 +74,7 @@ internal class StepTemplate(
                 } else if (c == '}' && !isEscaped(templateAsString, i)) {
                     if (!isVariable) {
                         throw IllegalFormatException(
-                            "Illegal closing curly brace at position $i!\n" +
-                                    "Offending string was: $templateAsString"
+                            "Illegal closing curly brace at position $i!\nOffending string was: $templateAsString"
                         )
                     }
                     isPreceededByVariable = true
@@ -102,8 +101,7 @@ internal class StepTemplate(
         ) {
             if (isVariable) {
                 throw IllegalFormatException(
-                    "Illegal opening curly brace at position $i!\n" +
-                            "Offending string was: $templateAsString"
+                    "Illegal opening curly brace at position $i!\nOffending string was: $templateAsString"
                 )
             }
             if (isPreceededByVariable) {

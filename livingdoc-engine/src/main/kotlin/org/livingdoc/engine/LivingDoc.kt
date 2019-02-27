@@ -94,8 +94,7 @@ private data class ExecutableDocumentModel(
         private fun validate(document: Class<*>) {
             if (document.executableDocumentAnnotation == null) {
                 throw IllegalArgumentException(
-                    "ExecutableDocument annotation is not present on class " +
-                            "${document.canonicalName}."
+                    "ExecutableDocument annotation is not present on class ${document.canonicalName}."
                 )
             }
         }
