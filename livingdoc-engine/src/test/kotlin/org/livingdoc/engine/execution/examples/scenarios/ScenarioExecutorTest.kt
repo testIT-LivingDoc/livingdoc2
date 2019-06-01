@@ -1,6 +1,13 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.willThrow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -127,7 +134,7 @@ internal class ScenarioExecutorTest {
 
         val fixture = ExtendedLifeCycleFixture.callback!!
 
-        @Nested inner class `during a setup command (@Before)` {
+        @Nested inner class duringasetupcommandBefore {
 
             @Test fun `the result is Exception`() {
                 given { fixture.before1() } willThrow { IllegalStateException() }
@@ -209,7 +216,7 @@ internal class ScenarioExecutorTest {
             }
         }
 
-        @Nested inner class `during a teardown command (@After)` {
+        @Nested inner class duringateardowncommandAfter {
 
             @Test fun `the result of the scenario is Exception`() {
                 given { fixture.after1() } willThrow { IllegalStateException() }
