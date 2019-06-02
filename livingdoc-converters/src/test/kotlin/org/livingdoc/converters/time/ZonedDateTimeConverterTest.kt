@@ -6,7 +6,6 @@ import org.livingdoc.converters.DefaultTypeConverterContract
 import java.time.ZonedDateTime
 import java.time.ZonedDateTime.parse
 
-
 internal class ZonedDateTimeConverterTest : TemporalConverterContract<ZonedDateTime>(), DefaultTypeConverterContract {
 
     override val cut = ZonedDateTimeConverter()
@@ -28,5 +27,4 @@ internal class ZonedDateTimeConverterTest : TemporalConverterContract<ZonedDateT
     @Test fun `converter can converted to ZonedDateTime`() {
         assertThat(cut.canConvertTo(ZonedDateTime::class.java)).isTrue()
     }
-
 }

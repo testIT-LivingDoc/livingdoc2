@@ -1,4 +1,3 @@
 = LivingDoc 2 Developer Documentation
 
 This folder contains LD2 documentation relevant for developers.
-

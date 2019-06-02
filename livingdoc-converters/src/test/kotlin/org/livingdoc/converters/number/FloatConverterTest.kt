@@ -36,5 +36,4 @@ internal class FloatConverterTest : BoundedNumberConverterContract<Float>(), Def
     @Test fun `converter can handle float specific -0 case`() {
         assertThat(cut.convert("-0", null, null)).isEqualTo(-0.0f)
     }
-
 }

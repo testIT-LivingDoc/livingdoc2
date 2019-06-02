@@ -112,6 +112,7 @@ class FixtureMethodInvoker(
         return typeConverter.convert(argument, methodParameter, documentClass)
     }
 
+    @Suppress("SpreadOperator")
     private fun forceInvocation(method: Method, arguments: Array<Any>, instance: Any? = null): Any? {
         method.isAccessible = true
         try {

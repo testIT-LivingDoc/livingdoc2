@@ -1,6 +1,5 @@
 package org.livingdoc.engine
 
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 internal class DecisionTableToFixtureMatcherTest {
@@ -10,5 +9,4 @@ internal class DecisionTableToFixtureMatcherTest {
     @Test
     fun `exception is thrown if document could not be found`() {
     }
-
 }

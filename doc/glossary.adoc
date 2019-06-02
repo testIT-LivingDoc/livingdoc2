@@ -88,5 +88,3 @@ converts the string `"5 €"` to `Currency(Type.EURO, 5)`).
 
 
 == Reporting (Supporting)
-
-

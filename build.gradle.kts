@@ -9,14 +9,14 @@ buildScan {
 	termsOfServiceAgree = "yes"
 }
 
-val pureJavaProjects by extra(
+val livingdocJavaProjects by extra(
 	listOf(
 		project(":livingdoc-api"),
 		project(":livingdoc-documentation")
 	)
 )
 
-val livingdocProjects by extra(
+val livingdocKotlinProjects by extra(
 	listOf(
 		project(":livingdoc-converters"),
 		project(":livingdoc-engine"),
@@ -26,13 +26,13 @@ val livingdocProjects by extra(
 	)
 )
 
-val sampleProjects by extra(
+val livingdocSampleProjects by extra(
 	listOf(
 		project(":livingdoc-sample")
 	)
 )
 
-val kotlinProjects by extra(livingdocProjects + sampleProjects)
+val kotlinProjects by extra(livingdocKotlinProjects + livingdocSampleProjects)
 
 allprojects {
 	apply(plugin = "idea")
@@ -68,7 +68,7 @@ subprojects {
 		}
 	}
 
-	if(project in livingdocProjects) {
+	if(project in livingdocKotlinProjects) {
 		apply(plugin = "io.gitlab.arturbosch.detekt")
 
 		detekt {

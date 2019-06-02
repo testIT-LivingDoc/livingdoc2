@@ -13,5 +13,4 @@ interface DefaultTypeConverterContract {
             .first { it.javaClass == cut.javaClass }
         assertThat(converterOfType).isNotNull()
     }
-
 }

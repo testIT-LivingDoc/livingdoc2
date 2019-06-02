@@ -7,7 +7,6 @@ import org.livingdoc.repositories.RepositoryManager.*
 import org.livingdoc.repositories.config.Configuration
 import org.livingdoc.repositories.config.YamlUtils
 
-
 internal class RepositoryManagerTest {
 
     val repositoryFactory = TestRepositoryFactory::class.java.name
@@ -59,7 +58,6 @@ internal class RepositoryManagerTest {
 
         assertThat(repository.config.foo).isNull()
         assertThat(repository.config.bar).isEqualTo(1.0f)
-
     }
 
     @Test fun `single repository can omit its name`() {
@@ -77,7 +75,6 @@ internal class RepositoryManagerTest {
 
         assertThat(repository.config.foo).isNull()
         assertThat(repository.config.bar).isEqualTo(1.0f)
-
     }
 
     @Test fun `repositories must have unique names`() {
@@ -96,7 +93,6 @@ internal class RepositoryManagerTest {
         assertThrows(RepositoryAlreadyRegisteredException::class.java) {
             RepositoryManager.from(configuration)
         }
-
     }
 
     @Test fun `repositories must declare a factory class`() {
@@ -112,7 +108,6 @@ internal class RepositoryManagerTest {
         assertThrows(NoRepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
         }
-
     }
 
     @Test fun `repositories must declare valid factory class`() {
@@ -129,7 +124,6 @@ internal class RepositoryManagerTest {
         assertThrows(NotARepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
         }
-
     }
 
     @Test fun `exception is thrown for unknown configuration properties`() {
@@ -148,7 +142,6 @@ internal class RepositoryManagerTest {
         assertThrows(RuntimeException::class.java) {
             RepositoryManager.from(configuration)
         }
-
     }
 
     @Test fun `exception is thrown if repository with given name doesn't exist`() {
@@ -170,7 +163,6 @@ internal class RepositoryManagerTest {
         }
         assertThat(exception)
                 .hasMessageContaining("Repository 'xur' not found in manager. Known repositories are: [foo, bar]")
-
     }
 
     class TestRepository(val config: TestRepositoryConfiguration) : DocumentRepository {
@@ -178,8 +170,8 @@ internal class RepositoryManagerTest {
     }
 
     data class TestRepositoryConfiguration(
-            var foo: String? = null,
-            var bar: Float = 1.0f
+        var foo: String? = null,
+        var bar: Float = 1.0f
     )
 
     class TestRepositoryFactory : DocumentRepositoryFactory<TestRepository> {
@@ -188,9 +180,7 @@ internal class RepositoryManagerTest {
             val config = YamlUtils.toObject(configData, TestRepositoryConfiguration::class)
             return TestRepository(config)
         }
-
     }
 
     class NotARepositoryFactory
-
 }

@@ -22,7 +22,7 @@ object Versions {
 
     //Plugins
     val buildScanPlugin = "2.2.1"
-    val spotlessPlugin = "3.18.0"
+    val spotlessPlugin = "3.23.0"
 
     //AsciiDoctor
     val asciidoctorPlugin = "1.5.3"
@@ -30,9 +30,5 @@ object Versions {
 
     //Tools
     val detektVersion = "1.0.0-RC14"
-    val ktlint = "0.24.0"
-
-
-
-
+    val ktlint = "0.33.0"
 }

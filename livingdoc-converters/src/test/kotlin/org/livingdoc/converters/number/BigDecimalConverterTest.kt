@@ -21,5 +21,4 @@ internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>(), 
     @Test fun `converter can converted to BigDecimal`() {
         assertThat(cut.canConvertTo(BigDecimal::class.java)).isTrue()
     }
-
 }

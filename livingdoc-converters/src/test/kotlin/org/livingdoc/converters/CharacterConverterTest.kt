@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.api.conversion.ConversionException
 
-
 internal class CharacterConverterTest : DefaultTypeConverterContract {
 
     override val cut = CharacterConverter()
@@ -37,5 +36,4 @@ internal class CharacterConverterTest : DefaultTypeConverterContract {
     @Test fun `converter can converted to Kotlin Char`() {
         assertThat(cut.canConvertTo(Char::class.java)).isTrue()
     }
-
 }

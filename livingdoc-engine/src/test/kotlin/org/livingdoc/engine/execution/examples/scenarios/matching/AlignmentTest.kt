@@ -41,7 +41,6 @@ class AlignmentTest {
         }
     }
 
-
     @Nested inner class `given a StepTemplate with variables` {
 
         @Test fun `extracts value from perfectly matching step`() {
@@ -79,7 +78,6 @@ class AlignmentTest {
         }
     }
 
-
     @Test fun `given no matching StepTemplate, it is misaligned`() {
         val alignment = align(
             "Elvis left the building and this is a really long sentence that doesn't align with the next one at all.",
@@ -95,7 +93,6 @@ class AlignmentTest {
             .hasNoVariables()
         Assertions.assertThat(alignment.maxCost <= alignment.totalCost).isTrue()
     }
-
 
     @Nested inner class `given a StepTemplate with quotation characters` {
 
@@ -140,7 +137,6 @@ class AlignmentTest {
             )
         }
     }
-
 
     private fun align(templateString: String, step: String): Alignment {
         return Alignment(StepTemplate.parse(templateString), step, maxCost = maxDistance)
@@ -237,7 +233,6 @@ private class AlignmentAssert(actual: Alignment) :
         variables.asIterable().joinToString(separator = "\n\t", prefix = "\t") { "${it.key} = ${it.value}" }
 }
 
-
 /**
  * Prints the distance matrix of the given alignment.
  */
@@ -260,4 +255,3 @@ private fun printAlignment(alignment: Alignment) {
                 "\n\t    (step) ${alignment.alignedStrings.second}"
     )
 }
-

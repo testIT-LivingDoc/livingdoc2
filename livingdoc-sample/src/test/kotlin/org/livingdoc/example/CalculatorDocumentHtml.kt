@@ -52,7 +52,6 @@ class CalculatorDocumentHtml {
             val result = sut.divide(valueA, valueB)
             assertThat(result).isEqualTo(expectedValue)
         }
-
     }
 
     @DecisionTableFixture

@@ -12,5 +12,4 @@ internal class FileRepositoryTest {
             cut.getDocument("foo-bar.md")
         }
     }
-
 }

@@ -10,7 +10,6 @@ import org.livingdoc.engine.fixtures.FixtureMethodInvoker.*
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
-
 internal class FixtureMethodInvokerTest {
 
     val cut = FixtureMethodInvoker(null)
@@ -42,7 +41,6 @@ internal class FixtureMethodInvokerTest {
             val result = cut.invoke(method, fixture)
             assertThat(result).isNull()
         }
-
     }
 
     @Nested inner class `exception handling` {
@@ -72,9 +70,7 @@ internal class FixtureMethodInvokerTest {
                 })
                 assertThat(exception).hasCauseExactlyInstanceOf(MismatchedNumberOfArgumentsException::class.java)
             }
-
         }
-
     }
 
     @ValueSource(strings = ["privateMethod", "protectedMethod", "publicMethod"])
@@ -109,9 +105,7 @@ internal class FixtureMethodInvokerTest {
         fun publicMethod() = "worked"
 
         fun typeConverterNotFound(param: CustomType) = "$param"
-
     }
 
     class CustomType
-
 }

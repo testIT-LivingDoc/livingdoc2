@@ -12,7 +12,6 @@ import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
 
-
 internal class HtmlReportRendererTest {
 
     val cut = HtmlReportRenderer()

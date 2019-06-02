@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.DefaultTypeConverterContract
 
-
 internal class LongConverterTest : BoundedNumberConverterContract<Long>(), DefaultTypeConverterContract {
 
     override val cut = LongConverter()
@@ -21,5 +20,4 @@ internal class LongConverterTest : BoundedNumberConverterContract<Long>(), Defau
     @Test fun `converter can converted to Kotlin Long`() {
         assertThat(cut.canConvertTo(Long::class.java)).isTrue()
     }
-
 }

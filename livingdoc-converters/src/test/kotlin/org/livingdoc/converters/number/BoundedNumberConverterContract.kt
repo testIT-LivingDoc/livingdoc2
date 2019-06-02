@@ -36,7 +36,5 @@ internal abstract class BoundedNumberConverterContract<T : Number> : NumberConve
                 cut.convert(upperBoundPlusOneAsString, null, null)
             })
         }
-
     }
-
 }

@@ -7,7 +7,6 @@ import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.TypeConvertersTestFixtures.*
 import kotlin.reflect.KClass
 
-
 internal class TypeConvertersTest {
 
     val booleanClass = java.lang.Boolean::class.java
@@ -34,7 +33,6 @@ internal class TypeConvertersTest {
             assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
         }
 
-
         @Nested inner class `with document` {
 
             @Test fun `annotated document class`() {
@@ -46,7 +44,6 @@ internal class TypeConvertersTest {
                 val typeConverter = getParameterTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
-
         }
 
         private fun getParameterTypeConverter(
@@ -57,7 +54,6 @@ internal class TypeConvertersTest {
             val parameter = method.parameters[0]
             return TypeConverters.findTypeConverter(parameter, documentClass?.java)
         }
-
     }
 
     @Nested inner class fields {
@@ -88,7 +84,6 @@ internal class TypeConvertersTest {
                 val typeConverter = getFieldTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
-
         }
 
         private fun getFieldTypeConverter(
@@ -98,7 +93,5 @@ internal class TypeConvertersTest {
             val field = fixtureClass.java.getField("field")
             return TypeConverters.findTypeConverter(field, documentClass?.java)
         }
-
     }
-
 }

@@ -56,7 +56,6 @@ class CalculatorDocumentMd {
             val result = sut.divide(valueA, valueB)
             assertThat(result).isEqualTo(expectedValue)
         }
-
     }
 
     @ScenarioFixture
@@ -71,9 +70,9 @@ class CalculatorDocumentMd {
 
         @Step("adding {a} and {b} equals {c}")
         fun add(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
+            @Binding("a") a: Float,
+            @Binding("b") b: Float,
+            @Binding("c") c: Float
         ) {
             val result = sut.sum(a, b)
             assertThat(result).isEqualTo(c)
@@ -81,9 +80,9 @@ class CalculatorDocumentMd {
 
         @Step("subtraction {b} form {a} equals {c}")
         fun subtract(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
+            @Binding("a") a: Float,
+            @Binding("b") b: Float,
+            @Binding("c") c: Float
         ) {
             val result = sut.diff(a, b)
             assertThat(result).isEqualTo(c)
@@ -91,9 +90,9 @@ class CalculatorDocumentMd {
 
         @Step("multiplying {a} and {b} equals {c}")
         fun multiply(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
+            @Binding("a") a: Float,
+            @Binding("b") b: Float,
+            @Binding("c") c: Float
         ) {
             val result = sut.multiply(a, b)
             assertThat(result).isEqualTo(c)
@@ -101,14 +100,12 @@ class CalculatorDocumentMd {
 
         @Step("dividing {a} by {b} equals {c}")
         fun divide(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float
+            @Binding("a") a: Float,
+            @Binding("b") b: Float,
+            @Binding("c") c: Float
         ) {
             val result = sut.divide(a, b)
             assertThat(result).isEqualTo(c)
         }
-
     }
-
 }

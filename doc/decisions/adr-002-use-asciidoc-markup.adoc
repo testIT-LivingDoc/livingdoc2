@@ -36,4 +36,3 @@ Accepted.
 * We have support for _includes_ and _tables_.
 * Documentation is readable, with and without a renderer.
 * It is easier to update documentation alongside with the code.
-

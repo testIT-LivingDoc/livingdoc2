@@ -15,7 +15,6 @@ import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.mockito.ArgumentMatchers.anyString
 
-
 internal class DecisionTableExecutorTest {
 
     val cut = DecisionTableExecutor()
@@ -131,7 +130,6 @@ internal class DecisionTableExecutorTest {
             val decisionTable = DecisionTable(headers, listOf(row))
             return cut.execute(decisionTable, ExtendedLifeCycleFixture::class.java, null)
         }
-
     }
 
     @Nested inner class `exceptional behaviour` {
@@ -230,7 +228,6 @@ internal class DecisionTableExecutorTest {
                 verify(callback).afterRow()
                 verify(callback).afterTable()
             }
-
         }
 
         @Nested inner class `check methods` {
@@ -272,7 +269,6 @@ internal class DecisionTableExecutorTest {
                 verify(callback).afterRow()
                 verify(callback).afterTable()
             }
-
         }
 
         @Nested inner class `before row methods` {
@@ -340,7 +336,6 @@ internal class DecisionTableExecutorTest {
                 verify(callback).afterRow()
                 verify(callback).afterTable()
             }
-
         }
 
         @Nested inner class `before first check methods` {
@@ -402,7 +397,6 @@ internal class DecisionTableExecutorTest {
                 verify(callback).afterRow()
                 verify(callback).afterTable()
             }
-
         }
 
         @Nested inner class `after row methods` {
@@ -442,7 +436,6 @@ internal class DecisionTableExecutorTest {
 
                 verify(callback).afterTable()
             }
-
         }
 
         @Nested inner class `before table methods` {
@@ -504,7 +497,6 @@ internal class DecisionTableExecutorTest {
 
                 verify(callback, never()).beforeRow()
             }
-
         }
 
         @Nested inner class `after table methods` {
@@ -526,14 +518,12 @@ internal class DecisionTableExecutorTest {
 
                 assertThat(table.result).isInstanceOf(Exception::class.java)
             }
-
         }
 
         private fun execute(vararg rows: Row): DecisionTableResult {
             val decisionTable = DecisionTable(headers, rows.asList())
             return cut.execute(decisionTable, LifeCycleFixture::class.java, null)
         }
-
     }
 
     @Test fun `smoke test of good case fixture`() {
@@ -599,7 +589,5 @@ internal class DecisionTableExecutorTest {
                 assertThat(field.result).isEqualTo(Executed)
             }
         }
-
     }
-
 }

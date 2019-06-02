@@ -20,5 +20,4 @@ internal class ByteConverterTest : BoundedNumberConverterContract<Byte>(), Defau
     @Test fun `converter can converted to Kotlin Byte`() {
         assertThat(cut.canConvertTo(Byte::class.java)).isTrue()
     }
-
 }

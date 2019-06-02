@@ -37,4 +37,3 @@ Accepted.
   process.
 * Developers have to be familiar with Gradle and, for customizing the build,
   with Groovy.
-

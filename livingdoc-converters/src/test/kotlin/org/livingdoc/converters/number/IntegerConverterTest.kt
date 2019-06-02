@@ -20,5 +20,4 @@ internal class IntegerConverterTest : BoundedNumberConverterContract<Int>(), Def
     @Test fun `converter can converted to Kotlin Int`() {
         assertThat(cut.canConvertTo(Int::class.java)).isTrue()
     }
-
 }

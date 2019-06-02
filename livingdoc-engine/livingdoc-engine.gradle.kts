@@ -1,5 +1,5 @@
 plugins {
-    `kotlin-project-config`
+	`kotlin-project-config`
 }
 
 dependencies {

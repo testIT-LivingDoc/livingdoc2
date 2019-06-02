@@ -22,6 +22,3 @@ internal class SetConverterTest : CollectionConverterContract() {
         fun noType(@Converter(SetConverter::class) value: Set<SetFake>) {}
     }
 }
-
-
-

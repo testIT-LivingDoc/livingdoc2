@@ -36,4 +36,3 @@ Proposed.
 * We'll have to maintain only one integration module.
 * We don't need to handle the integration into IDEs or build tools
 * We won't provide UIs for the IDEs like we did in LivingDoc Legacy
-

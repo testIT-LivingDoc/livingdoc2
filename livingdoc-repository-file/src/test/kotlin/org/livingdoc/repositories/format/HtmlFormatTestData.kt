@@ -18,7 +18,6 @@ object HtmlFormatTestData {
     </html>
             """.byteInputStream()
 
-
     fun getHtmlTableWithNonUniqueHeaders() =
         """
     <!DOCTYPE html>
@@ -40,7 +39,6 @@ object HtmlFormatTestData {
     </html>
             """.byteInputStream()
 
-
     fun getHtmlTableWithWrongCellCount() =
         """
     <!DOCTYPE html>
@@ -60,7 +58,6 @@ object HtmlFormatTestData {
     </body>
     </html>
             """.byteInputStream()
-
 
     fun getValidHtml() =
         """
@@ -131,7 +128,6 @@ object HtmlFormatTestData {
     </html>
     """.byteInputStream()
 
-
     fun getHtmlWithUnorderedList() =
         """
     <!DOCTYPE html>
@@ -147,7 +143,6 @@ object HtmlFormatTestData {
     </body>
     </html>
             """.byteInputStream()
-
 
     fun getHtmlWithOrderedList() =
         """
@@ -165,7 +160,6 @@ object HtmlFormatTestData {
     </html>
             """.byteInputStream()
 
-
     fun getHtmlWithUnorderedListContainsOnlyOneItem() =
         """
     <!DOCTYPE html>
@@ -178,7 +172,6 @@ object HtmlFormatTestData {
     </html>
             """.byteInputStream()
 
-
     fun getHtmlWithOrderedListContainsOnlyOneItem() =
         """
     <!DOCTYPE html>
@@ -190,7 +183,6 @@ object HtmlFormatTestData {
     </body>
     </html>
     """.byteInputStream()
-
 
     fun getHtmlUnorderedListWithNestedUnorderedList() =
         """

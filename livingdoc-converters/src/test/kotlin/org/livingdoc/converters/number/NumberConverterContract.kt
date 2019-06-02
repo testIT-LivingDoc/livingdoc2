@@ -29,11 +29,9 @@ internal abstract class NumberConverterContract<T : Number> {
         assertThatValueCanBeConverted(minValue)
     }
 
-
     @Test fun `negative value can be converted`() {
         assertThatValueCanBeConverted(negativeValue)
     }
-
 
     @Test fun `zero value can be converted`() {
         assertThatValueCanBeConverted(zeroValue)
@@ -102,9 +100,5 @@ internal abstract class NumberConverterContract<T : Number> {
             val result = cut.convert(stringValue, element, null)
             assertThat(result).isEqualTo(value)
         }
-
-
     }
-
-
 }

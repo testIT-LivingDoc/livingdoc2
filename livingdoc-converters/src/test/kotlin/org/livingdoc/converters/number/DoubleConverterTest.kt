@@ -36,5 +36,4 @@ internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), D
     @Test fun `converter can handle double specific -0 case`() {
         assertThat(cut.convert("-0", null, null)).isEqualTo(-0.0)
     }
-
 }

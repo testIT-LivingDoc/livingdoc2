@@ -25,7 +25,6 @@ internal class MapConverterTest : CollectionConverterContract() {
         }
     }
 
-
     @Suppress("unused", "UNUSED_PARAMETER")
     internal class MapFake {
 

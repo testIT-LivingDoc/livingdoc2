@@ -256,7 +256,5 @@ internal class MarkdownFormatTest {
             assertThat(rows[1].headerToField.map { it.key.name }).containsExactly("ColumnA", "ColumnB")
             assertThat(rows[1].headerToField.map { it.value.value }).containsExactly("CellA2", "CellB2")
         }
-
     }
-
 }

@@ -13,9 +13,9 @@ jobs:
  include:
     - stage: test
       jdk: openjdk8
-      script: ./gradlew check
+      script: ./gradlew check -x detekt
     - jdk: oraclejdk8
-      script: ./gradlew check
+      script: ./gradlew check -x detekt
     - jdk: oraclejdk8
       env: validate
       script: ./gradlew detekt
