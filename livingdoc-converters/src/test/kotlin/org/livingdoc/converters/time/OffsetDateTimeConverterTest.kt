@@ -6,7 +6,6 @@ import org.livingdoc.converters.DefaultTypeConverterContract
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.parse
 
-
 internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDateTime>(), DefaultTypeConverterContract {
 
     override val cut = OffsetDateTimeConverter()
@@ -26,5 +25,4 @@ internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDat
     @Test fun `converter can converted to OffsetDateTime`() {
         assertThat(cut.canConvertTo(OffsetDateTime::class.java)).isTrue()
     }
-
 }

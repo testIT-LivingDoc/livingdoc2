@@ -4,4 +4,3 @@ image:https://travis-ci.org/LivingDoc/livingdoc.svg?branch=master["Build Status"
 
 The next version of LivingDoc, the acceptance testing tool with integrated
 support for Atlassian Confluence.
-

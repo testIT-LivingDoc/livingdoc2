@@ -56,4 +56,3 @@ Accepted.
 * We can review and discuss design decisions in the same way we review code.
 * The record of decisions is readily available alongside with the code for
   every developer.
-

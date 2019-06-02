@@ -21,5 +21,4 @@ internal class DocumentFormatManagerTest {
             getFormat(DocumentFile(File("foo.xml")))
         }
     }
-
 }

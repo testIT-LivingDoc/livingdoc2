@@ -21,5 +21,4 @@ internal class BigIntegerConverterTest : NumberConverterContract<BigInteger>(), 
     @Test fun `converter can converted to BigInteger`() {
         assertThat(cut.canConvertTo(BigInteger::class.java)).isTrue()
     }
-
 }

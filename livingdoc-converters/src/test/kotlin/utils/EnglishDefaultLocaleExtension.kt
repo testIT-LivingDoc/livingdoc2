@@ -32,5 +32,4 @@ class EnglishDefaultLocaleExtension : BeforeEachCallback, AfterEachCallback {
 
     private val ExtensionContext.globalStore: ExtensionContext.Store
         get() = this.getStore(ExtensionContext.Namespace.GLOBAL)
-
 }

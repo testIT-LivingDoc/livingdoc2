@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 
-
 internal class DecisionTableFixtureCheckerTest {
 
     val classPrefix = "org.livingdoc.engine.execution.examples.decisiontables.MalformedFixtures"
@@ -119,5 +118,4 @@ internal class DecisionTableFixtureCheckerTest {
         val model = DecisionTableFixtureModel(fixtureClass.java)
         return DecisionTableFixtureChecker.check(model)
     }
-
 }

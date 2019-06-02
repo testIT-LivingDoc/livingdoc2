@@ -53,5 +53,4 @@ internal class ScenarioFixtureCheckerTest {
         val model = ScenarioFixtureModel(fixtureClass.java)
         return ScenarioFixtureChecker.check(model)
     }
-
 }

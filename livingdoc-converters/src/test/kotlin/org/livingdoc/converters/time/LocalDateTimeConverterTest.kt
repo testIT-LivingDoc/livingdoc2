@@ -6,7 +6,6 @@ import org.livingdoc.converters.DefaultTypeConverterContract
 import java.time.LocalDateTime
 import java.time.LocalDateTime.parse
 
-
 internal class LocalDateTimeConverterTest : TemporalConverterContract<LocalDateTime>(), DefaultTypeConverterContract {
 
     override val cut = LocalDateTimeConverter()
@@ -26,5 +25,4 @@ internal class LocalDateTimeConverterTest : TemporalConverterContract<LocalDateT
     @Test fun `converter can converted to LocalDateTime`() {
         assertThat(cut.canConvertTo(LocalDateTime::class.java)).isTrue()
     }
-
 }

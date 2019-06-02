@@ -16,7 +16,6 @@ import org.mockito.BDDMockito.given
 import java.lang.reflect.AnnotatedElement
 import java.time.temporal.Temporal
 
-
 internal abstract class TemporalConverterContract<T : Temporal> {
 
     abstract val cut: TypeConverter<T>
@@ -39,7 +38,6 @@ internal abstract class TemporalConverterContract<T : Temporal> {
                 })
             }
     }
-
 
     @Test fun `non temporal cannot be converted`() {
         assertThrows(ValueFormatException::class.java) {

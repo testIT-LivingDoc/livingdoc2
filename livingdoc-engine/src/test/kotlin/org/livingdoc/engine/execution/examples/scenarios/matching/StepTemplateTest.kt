@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-
 class StepTemplateTest {
 
     @Nested
@@ -90,6 +89,4 @@ class StepTemplateTest {
         val cut = StepTemplate.parse("My name is {username}.")
         assertThat(cut.toString()).isEqualTo("My name is {username}.")
     }
-
 }
-

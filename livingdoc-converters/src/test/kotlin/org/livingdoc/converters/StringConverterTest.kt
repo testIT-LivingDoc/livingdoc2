@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-
 internal class StringConverterTest : DefaultTypeConverterContract {
 
     override val cut = StringConverter()
@@ -19,5 +18,4 @@ internal class StringConverterTest : DefaultTypeConverterContract {
     @Test fun `converter can converted to Kotlin String`() {
         assertThat(cut.canConvertTo(String::class.java)).isTrue()
     }
-
 }

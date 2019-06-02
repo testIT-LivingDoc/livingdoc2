@@ -23,5 +23,3 @@ internal class ListConverterTest : CollectionConverterContract() {
         fun noType(@Converter(ListConverter::class) value: List<ListFake>) {}
     }
 }
-
-

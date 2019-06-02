@@ -38,6 +38,4 @@ class ScenarioStepMatcherTest {
 
         assertThat(result).isEqualTo(ScenarioStepMatcher.MatchingResult(bestMatch, mapOf("username" to "Paul")))
     }
-
 }
-

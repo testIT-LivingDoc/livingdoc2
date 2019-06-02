@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.livingdoc.api.conversion.ConversionException
 
-
 internal class BooleanConverterTest : DefaultTypeConverterContract {
 
     override val cut = BooleanConverter()

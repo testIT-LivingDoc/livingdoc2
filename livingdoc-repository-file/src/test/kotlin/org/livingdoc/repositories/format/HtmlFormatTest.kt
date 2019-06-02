@@ -19,7 +19,6 @@ import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
-
 class HtmlFormatTest {
 
     private val cut = HtmlFormat()

@@ -9,7 +9,6 @@ import org.livingdoc.engine.fixtures.FixtureFieldInjector.FixtureFieldInjectionE
 import org.livingdoc.engine.fixtures.FixtureFieldInjector.NoTypeConverterFoundException
 import java.lang.reflect.Field
 
-
 internal class FixtureFieldInjectorTest {
 
     val cut = FixtureFieldInjector(null)
@@ -55,9 +54,7 @@ internal class FixtureFieldInjectorTest {
         var publicField: Boolean? = null
 
         var typeConverterNotFound: CustomType? = null
-
     }
 
     class CustomType
-
 }

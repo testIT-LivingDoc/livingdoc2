@@ -20,5 +20,4 @@ internal class ShortConverterTest : BoundedNumberConverterContract<Short>(), Def
     @Test fun `converter can converted to Kotlin Short`() {
         assertThat(cut.canConvertTo(Short::class.java)).isTrue()
     }
-
 }
