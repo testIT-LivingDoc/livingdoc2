@@ -115,7 +115,7 @@ class FixtureMethodInvoker(
     private fun forceInvocation(method: Method, arguments: Array<Any>, instance: Any? = null): Any? {
         method.isAccessible = true
         try {
-            return method.invoke(instance, arguments)
+            return method.invoke(instance, *arguments)
         } catch (e: InvocationTargetException) {
             throw e.cause ?: e
         }
