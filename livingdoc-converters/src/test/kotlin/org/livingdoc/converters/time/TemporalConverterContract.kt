@@ -1,6 +1,7 @@
 package org.livingdoc.converters.time
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.every
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DynamicTest
@@ -12,7 +13,6 @@ import org.livingdoc.api.conversion.Format
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
-import org.mockito.BDDMockito.given
 import java.lang.reflect.AnnotatedElement
 import java.time.temporal.Temporal
 
@@ -47,8 +47,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
 
     @Nested inner class `custom input format` {
 
-        private val format: Format = mock()
-        private val element: AnnotatedElement = mock()
+        private val format: Format = mockk()
+        private val element: AnnotatedElement = mockk()
 
         @Test fun `default format used if no element given`() {
             val (value, expectedResult) = defaultFormatValue
@@ -57,7 +57,7 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `default format used if no annotation present`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(null)
+            every { element.getAnnotation(Format::class.java) } returns  null
 
             val (value, expectedResult) = defaultFormatValue
             val date = cut.convert(value, element, null)
@@ -65,8 +65,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `format can be overridden via annotation`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn(customFormat)
+            every { element.getAnnotation(Format::class.java) } returns  format
+            every { format.value } returns  customFormat
 
             val (value, expectedResult) = customFormatValue
             val date = cut.convert(value, element, null)
@@ -74,8 +74,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `malformed custom pattern throws exception`() {
-            given(element.getAnnotation(Format::class.java)).willReturn(format)
-            given(format.value).willReturn(malformedCustomFormat)
+            every { element.getAnnotation(Format::class.java) } returns  format
+            every { format.value } returns  malformedCustomFormat
 
             val (value) = customFormatValue
             assertThrows(MalformedFormatException::class.java) {
