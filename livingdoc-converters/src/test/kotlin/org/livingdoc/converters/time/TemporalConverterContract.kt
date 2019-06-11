@@ -57,7 +57,7 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `default format used if no annotation present`() {
-            every { element.getAnnotation(Format::class.java) } returns  null
+            every { element.getAnnotation(Format::class.java) } returns null
 
             val (value, expectedResult) = defaultFormatValue
             val date = cut.convert(value, element, null)
@@ -65,8 +65,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `format can be overridden via annotation`() {
-            every { element.getAnnotation(Format::class.java) } returns  format
-            every { format.value } returns  customFormat
+            every { element.getAnnotation(Format::class.java) } returns format
+            every { format.value } returns customFormat
 
             val (value, expectedResult) = customFormatValue
             val date = cut.convert(value, element, null)
@@ -74,8 +74,8 @@ internal abstract class TemporalConverterContract<T : Temporal> {
         }
 
         @Test fun `malformed custom pattern throws exception`() {
-            every { element.getAnnotation(Format::class.java) } returns  format
-            every { format.value } returns  malformedCustomFormat
+            every { element.getAnnotation(Format::class.java) } returns format
+            every { format.value } returns malformedCustomFormat
 
             val (value) = customFormatValue
             assertThrows(MalformedFormatException::class.java) {
