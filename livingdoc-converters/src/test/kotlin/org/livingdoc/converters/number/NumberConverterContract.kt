@@ -1,13 +1,13 @@
 package org.livingdoc.converters.number
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.every
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.Language
-import org.mockito.BDDMockito.given
 import utils.EnglishDefaultLocale
 import java.lang.reflect.AnnotatedElement
 
@@ -75,8 +75,8 @@ internal abstract class NumberConverterContract<T : Number> {
 
     @Nested inner class localization {
 
-        private val language: Language = mock()
-        private val element: AnnotatedElement = mock()
+        private val language: Language = mockk()
+        private val element: AnnotatedElement = mockk()
 
         @Test fun `default locale used if no element given`() {
             val (stringValue, value) = englishValue
@@ -85,7 +85,7 @@ internal abstract class NumberConverterContract<T : Number> {
         }
 
         @Test fun `default locale used if no annotation present`() {
-            given(element.getAnnotation(Language::class.java)).willReturn(null)
+            every { element.getAnnotation(Language::class.java) } returns null
 
             val (stringValue, value) = englishValue
             val result = cut.convert(stringValue, element, null)
@@ -93,8 +93,8 @@ internal abstract class NumberConverterContract<T : Number> {
         }
 
         @Test fun `locale can be overridden via annotation`() {
-            given(element.getAnnotation(Language::class.java)).willReturn(language)
-            given(language.value).willReturn("de")
+            every { element.getAnnotation(Language::class.java) } returns language
+            every { language.value } returns "de"
 
             val (stringValue, value) = germanValue
             val result = cut.convert(stringValue, element, null)

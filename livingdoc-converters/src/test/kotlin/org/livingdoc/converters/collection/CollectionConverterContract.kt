@@ -1,6 +1,6 @@
 package org.livingdoc.converters.collection
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -55,7 +55,7 @@ internal abstract class CollectionConverterContract : DefaultTypeConverterContra
 
     @Test
     fun `no viable typeConverter found`() {
-        val element: AnnotatedElement = mock()
+        val element: AnnotatedElement = mockk()
 
         assertThrows(IllegalStateException::class.java) {
             cut.convert("not a viable annotated element", element, null)
