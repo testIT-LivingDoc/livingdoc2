@@ -1,16 +1,16 @@
 package org.livingdoc.engine.execution.examples.scenarios;
 
-import static org.mockito.Mockito.mock;
-
 import org.livingdoc.api.fixtures.scenarios.After;
 import org.livingdoc.api.fixtures.scenarios.Before;
 import org.livingdoc.api.fixtures.scenarios.Step;
-import org.mockito.Mockito;
+
+import static org.livingdoc.engine.MockkExtKt.clearJMockk;
+import static org.livingdoc.engine.MockkExtKt.mockkJClass;
 
 
 public class LifeCycleFixture {
 
-    public static Callback callback = mock(Callback.class);
+    public static Callback callback = mockkJClass(Callback.class);
 
     @Before
     void before() {
@@ -34,7 +34,7 @@ public class LifeCycleFixture {
     }
 
     public static void reset() {
-        Mockito.reset(callback);
+        clearJMockk(callback);
     }
 
     public interface Callback {

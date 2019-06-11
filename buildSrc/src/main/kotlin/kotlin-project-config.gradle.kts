@@ -21,6 +21,7 @@ dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	testImplementation ("org.junit.jupiter:junit-jupiter-api:${Versions.junitJupiter}")
 	testImplementation ("org.junit.jupiter:junit-jupiter-params:${Versions.junitJupiter}")
+	testImplementation("io.mockk:mockk:${Versions.mockk}")
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junitJupiter}")
 }

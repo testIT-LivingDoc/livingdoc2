@@ -1,6 +1,8 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
-import com.nhaarman.mockitokotlin2.*
+import io.mockk.every
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -13,18 +15,19 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import org.mockito.ArgumentMatchers.anyString
 
 internal class DecisionTableExecutorTest {
 
     val cut = DecisionTableExecutor()
 
-    @BeforeEach fun reset() {
+    @BeforeEach
+    fun reset() {
         LifeCycleFixture.reset()
         ExtendedLifeCycleFixture.reset()
     }
 
-    @Test fun `life cycle of simple fixture`() {
+    @Test
+    fun `life cycle of simple fixture`() {
         val input = Header("input")
         val check = Header("check")
         val headers = arrayListOf(input, check)
@@ -37,24 +40,24 @@ internal class DecisionTableExecutorTest {
         assertThat(resultTable.result).isInstanceOf(Executed::class.java)
 
         val fixture = LifeCycleFixture.callback
-        with(inOrder(fixture)) {
-            verify(fixture).beforeTable()
-            verify(fixture).beforeRow()
-            verify(fixture).input("r1i")
-            verify(fixture).beforeFirstCheck()
-            verify(fixture).check("r1c")
-            verify(fixture).afterRow()
-            verify(fixture).beforeRow()
-            verify(fixture).input("r2i")
-            verify(fixture).beforeFirstCheck()
-            verify(fixture).check("r2c")
-            verify(fixture).afterRow()
-            verify(fixture).afterTable()
-            verifyNoMoreInteractions()
+        verifySequence {
+            fixture.beforeTable()
+            fixture.beforeRow()
+            fixture.input("r1i")
+            fixture.beforeFirstCheck()
+            fixture.check("r1c")
+            fixture.afterRow()
+            fixture.beforeRow()
+            fixture.input("r2i")
+            fixture.beforeFirstCheck()
+            fixture.check("r2c")
+            fixture.afterRow()
+            fixture.afterTable()
         }
     }
 
-    @Test fun `malformed fixtures throw a special exception class`() {
+    @Test
+    fun `malformed fixtures throw a special exception class`() {
         val headers = emptyList<Header>()
         val rows = arrayListOf(Row(emptyMap()))
         val decisionTable = DecisionTable(headers, rows)
@@ -67,7 +70,8 @@ internal class DecisionTableExecutorTest {
         assertThat(exception).isInstanceOf(MalformedDecisionTableFixtureException::class.java)
     }
 
-    @Test fun `unmapped headers throw special exception class`() {
+    @Test
+    fun `unmapped headers throw special exception class`() {
         val input = Header("input")
         val check = Header("check")
         val unknown = Header("unknown")
@@ -85,41 +89,58 @@ internal class DecisionTableExecutorTest {
         assertThat(exception).hasMessageContaining("- unknown")
 
         val fixture = LifeCycleFixture.callback
-        verify(fixture, never()).beforeTable()
+
+        verify(exactly = 0) { fixture.beforeTable() }
     }
 
-    @Nested inner class `life cycle methods can exist multiple times` {
+    @Nested
+    inner class `life cycle methods can exist multiple times` {
 
         val callback = ExtendedLifeCycleFixture.callback!!
 
-        @Test fun `before table`() {
+        @Test
+        fun `before table`() {
             execute()
-            verify(callback).beforeTable1()
-            verify(callback).beforeTable2()
+            verify {
+                callback.beforeTable1()
+                callback.beforeTable2()
+            }
         }
 
-        @Test fun `before row`() {
+        @Test
+        fun `before row`() {
             execute()
-            verify(callback).beforeRow1()
-            verify(callback).beforeRow2()
+            verify {
+                callback.beforeRow1()
+                callback.beforeRow2()
+            }
         }
 
-        @Test fun `before first check`() {
+        @Test
+        fun `before first check`() {
             execute()
-            verify(callback).beforeFirstCheck1()
-            verify(callback).beforeFirstCheck2()
+            verify {
+                callback.beforeFirstCheck1()
+                callback.beforeFirstCheck2()
+            }
         }
 
-        @Test fun `after row`() {
+        @Test
+        fun `after row`() {
             execute()
-            verify(callback).afterRow1()
-            verify(callback).afterRow2()
+            verify {
+                callback.afterRow1()
+                callback.afterRow2()
+            }
         }
 
-        @Test fun `after table`() {
+        @Test
+        fun `after table`() {
             execute()
-            verify(callback).afterTable1()
-            verify(callback).afterTable2()
+            verify {
+                callback.afterTable1()
+                callback.afterTable2()
+            }
         }
 
         private fun execute(): DecisionTableResult {
@@ -132,7 +153,8 @@ internal class DecisionTableExecutorTest {
         }
     }
 
-    @Nested inner class `exceptional behaviour` {
+    @Nested
+    inner class `exceptional behaviour` {
 
         val input = Header("input")
         val check = Header("check")
@@ -143,148 +165,173 @@ internal class DecisionTableExecutorTest {
 
         val callback = LifeCycleFixture.callback!!
 
-        @Test fun `exception in one row does not effect execution of another`() {
+        @Test
+        fun `exception in one row does not effect execution of another`() {
             val exception = IllegalStateException()
-            given { callback.input("r1i") } willThrow { exception }
+            every { callback.input("r1i") } throws exception
 
             execute(row, anotherRow)
 
-            with(inOrder(callback)) {
-                verify(callback).beforeTable()
-                verify(callback).beforeRow()
-                verify(callback).input("r1i")
-                verify(callback).afterRow()
-                verify(callback).beforeRow()
-                verify(callback).input("r2i")
-                verify(callback).beforeFirstCheck()
-                verify(callback).check("r2c")
-                verify(callback).afterRow()
-                verify(callback).afterTable()
-                verifyNoMoreInteractions()
+            verifySequence {
+                callback.beforeTable()
+                callback.beforeRow()
+                callback.input("r1i")
+                callback.afterRow()
+                callback.beforeRow()
+                callback.input("r2i")
+                callback.beforeFirstCheck()
+                callback.check("r2c")
+                callback.afterRow()
+                callback.afterTable()
             }
         }
 
-        @Test fun `assertion error in one row does not effect execution of another`() {
+        @Test
+        fun `assertion error in one row does not effect execution of another`() {
             val exception = AssertionError()
-            given { callback.input("r1i") } willThrow { exception }
+            every { callback.input("r1i") } throws exception
 
             execute(row, anotherRow)
 
-            with(inOrder(callback)) {
-                verify(callback).beforeTable()
-                verify(callback).beforeRow()
-                verify(callback).input("r1i")
-                verify(callback).afterRow()
-                verify(callback).beforeRow()
-                verify(callback).input("r2i")
-                verify(callback).beforeFirstCheck()
-                verify(callback).check("r2c")
-                verify(callback).afterRow()
-                verify(callback).afterTable()
-                verifyNoMoreInteractions()
+            verifySequence {
+                callback.beforeTable()
+                callback.beforeRow()
+                callback.input("r1i")
+                callback.afterRow()
+                callback.beforeRow()
+                callback.input("r2i")
+                callback.beforeFirstCheck()
+                callback.check("r2c")
+                callback.afterRow()
+                callback.afterTable()
             }
         }
 
-        @Nested inner class `input methods` {
+        @Nested
+        inner class `input methods` {
 
-            @Test fun `exception will set exception result for input`() {
+            @Test
+            fun `exception will set exception result for input`() {
                 val exception = IllegalStateException()
-                given { callback.input(anyString()) } willThrow { exception }
+                every { callback.input(ofType(String::class)) } throws exception
 
                 val inputField = execute(row).rows[0].headerToField[input]!!
 
                 assertThat(inputField.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will prevent checks from being executed`() {
+            @Test
+            fun `exception will prevent checks from being executed`() {
                 val exception = IllegalStateException()
-                given { callback.input(anyString()) } willThrow { exception }
+                every { callback.input(ofType(String::class)) } throws exception
 
                 execute(row)
 
-                verify(callback, never()).beforeFirstCheck()
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) {
+                    callback.beforeFirstCheck()
+                    callback.check(ofType(String::class))
+                }
             }
 
-            @Test fun `assertion error will set failed result for input`() {
+            @Test
+            fun `assertion error will set failed result for input`() {
                 val exception = AssertionError()
-                given { callback.input(anyString()) } willThrow { exception }
+                every { callback.input(ofType(String::class)) } throws exception
 
                 val inputField = execute(row).rows[0].headerToField[input]!!
 
                 assertThat(inputField.result).isInstanceOf(Failed::class.java)
             }
 
-            @Test fun `assertion error will prevent checks from being executed`() {
+            @Test
+            fun `assertion error will prevent checks from being executed`() {
                 val exception = AssertionError()
-                given { callback.input(anyString()) } willThrow { exception }
+                every { callback.input(ofType(String::class)) } throws exception
 
                 execute(row)
 
-                verify(callback, never()).beforeFirstCheck()
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) {
+                    callback.beforeFirstCheck()
+                    callback.check(ofType(String::class))
+                }
             }
         }
 
-        @Nested inner class `check methods` {
+        @Nested
+        inner class `check methods` {
 
-            @Test fun `exception will set exception result for check`() {
+            @Test
+            fun `exception will set exception result for check`() {
                 val exception = IllegalStateException()
-                given { callback.check(anyString()) } willThrow { exception }
+                every { callback.check(ofType(String::class)) } throws exception
 
                 val checkField = execute(row).rows[0].headerToField[check]!!
 
                 assertThat(checkField.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will still execute after row methods`() {
+            @Test
+            fun `exception will still execute after row methods`() {
                 val exception = IllegalStateException()
-                given { callback.check(anyString()) } willThrow { exception }
+                every { callback.check(ofType(String::class)) } throws exception
 
                 execute(row)
 
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
             }
 
-            @Test fun `assertion error will set failed result for check`() {
+            @Test
+            fun `assertion error will set failed result for check`() {
                 val exception = AssertionError()
-                given { callback.check(anyString()) } willThrow { exception }
+                every { callback.check(ofType(String::class)) } throws exception
 
                 val checkField = execute(row).rows[0].headerToField[check]!!
 
                 assertThat(checkField.result).isInstanceOf(Failed::class.java)
             }
 
-            @Test fun `assertion error will still execute after row methods`() {
+            @Test
+            fun `assertion error will still execute after row methods`() {
                 val exception = AssertionError()
-                given { callback.check(anyString()) } willThrow { exception }
+                every { callback.check(ofType(String::class)) } throws exception
 
                 execute(row)
 
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
             }
         }
 
-        @Nested inner class `before row methods` {
+        @Nested
+        inner class `before row methods` {
 
-            @Test fun `exception will set exception result on row`() {
+            @Test
+            fun `exception will set exception result on row`() {
                 val exception = IllegalStateException()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will set skipped result for remaining fields of row`() {
+            @Test
+            fun `exception will set skipped result for remaining fields of row`() {
                 val exception = IllegalStateException()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 val rowResult = execute(row).rows[0]
 
@@ -292,31 +339,38 @@ internal class DecisionTableExecutorTest {
                 assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `exception will prevent any further row actions from being executed`() {
+            @Test
+            fun `exception will prevent any further row actions from being executed`() {
                 val exception = IllegalStateException()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 execute(row)
 
-                verify(callback, never()).input(anyString())
-                verify(callback, never()).beforeFirstCheck()
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) {
+                    callback.input(ofType(String::class))
+                    callback.beforeFirstCheck()
+                    callback.check(ofType(String::class))
+                }
             }
 
-            @Test fun `assertion error will set exception result on row`() {
+            @Test
+            fun `assertion error will set exception result on row`() {
                 val exception = AssertionError()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `assertion error will set skipped result for remaining fields of row`() {
+            @Test
+            fun `assertion error will set skipped result for remaining fields of row`() {
                 val exception = AssertionError()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 val rowResult = execute(row).rows[0]
 
@@ -324,134 +378,160 @@ internal class DecisionTableExecutorTest {
                 assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `assertion error will prevent any further row actions from being executed`() {
+            @Test
+            fun `assertion error will prevent any further row actions from being executed`() {
                 val exception = AssertionError()
-                given { callback.beforeRow() } willThrow { exception }
+                every { callback.beforeRow() } throws exception
 
                 execute(row)
 
-                verify(callback, never()).input(anyString())
-                verify(callback, never()).beforeFirstCheck()
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) {
+                    callback.input(ofType(String::class))
+                    callback.beforeFirstCheck()
+                    callback.check(ofType(String::class))
+                }
             }
         }
 
-        @Nested inner class `before first check methods` {
+        @Nested
+        inner class `before first check methods` {
 
-            @Test fun `exception will set exception result on row`() {
+            @Test
+            fun `exception will set exception result on row`() {
                 val exception = IllegalStateException()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will set skipped result for remaining fields of row`() {
+            @Test
+            fun `exception will set skipped result for remaining fields of row`() {
                 val exception = IllegalStateException()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 val rowResult = execute(row).rows[0]
 
                 assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `exception will prevent any further row actions from being executed`() {
+            @Test
+            fun `exception will prevent any further row actions from being executed`() {
                 val exception = IllegalStateException()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 execute(row)
 
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) { callback.check(ofType(String::class)) }
             }
 
-            @Test fun `assertion error will set exception result on row`() {
+            @Test
+            fun `assertion error will set exception result on row`() {
                 val exception = AssertionError()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `assertion error will set skipped result for remaining fields of row`() {
+            @Test
+            fun `assertion error will set skipped result for remaining fields of row`() {
                 val exception = AssertionError()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 val rowResult = execute(row).rows[0]
 
                 assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `assertion error will prevent any further row actions from being executed`() {
+            @Test
+            fun `assertion error will prevent any further row actions from being executed`() {
                 val exception = AssertionError()
-                given { callback.beforeFirstCheck() } willThrow { exception }
+                every { callback.beforeFirstCheck() } throws exception
 
                 execute(row)
 
-                verify(callback, never()).check(anyString())
-                verify(callback).afterRow()
-                verify(callback).afterTable()
+                verify {
+                    callback.afterRow()
+                    callback.afterTable()
+                }
+                verify(exactly = 0) {
+                    callback.check(ofType(String::class))
+                }
             }
         }
 
-        @Nested inner class `after row methods` {
+        @Nested
+        inner class `after row methods` {
 
-            @Test fun `exception will set exception result on row`() {
+            @Test
+            fun `exception will set exception result on row`() {
                 val exception = IllegalStateException()
-                given { callback.afterRow() } willThrow { exception }
+                every { callback.afterRow() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will prevent any further row actions from being executed`() {
+            @Test
+            fun `exception will prevent any further row actions from being executed`() {
                 val exception = IllegalStateException()
-                given { callback.afterRow() } willThrow { exception }
+                every { callback.afterRow() } throws exception
 
                 execute(row)
 
-                verify(callback).afterTable()
+                verify { callback.afterTable() }
             }
 
-            @Test fun `assertion error will set exception result on row`() {
+            @Test
+            fun `assertion error will set exception result on row`() {
                 val exception = AssertionError()
-                given { callback.afterRow() } willThrow { exception }
+                every { callback.afterRow() } throws exception
 
                 val row = execute(row).rows[0]
 
                 assertThat(row.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `assertion error will prevent any further row actions from being executed`() {
+            @Test
+            fun `assertion error will prevent any further row actions from being executed`() {
                 val exception = AssertionError()
-                given { callback.afterRow() } willThrow { exception }
+                every { callback.afterRow() } throws exception
 
                 execute(row)
 
-                verify(callback).afterTable()
+                verify { callback.afterTable() }
             }
         }
 
-        @Nested inner class `before table methods` {
+        @Nested
+        inner class `before table methods` {
 
-            @Test fun `exception will set exception result on table`() {
+            @Test
+            fun `exception will set exception result on table`() {
                 val exception = IllegalStateException()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 val table = execute(row)
 
                 assertThat(table.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `exception will set skipped result for all rows`() {
+            @Test
+            fun `exception will set skipped result for all rows`() {
                 val exception = IllegalStateException()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 val table = execute(row, anotherRow)
 
@@ -460,27 +540,30 @@ internal class DecisionTableExecutorTest {
                 assertThat(rows[1].result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `exception will prevent any row being executed`() {
+            @Test
+            fun `exception will prevent any row being executed`() {
                 val exception = IllegalStateException()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 execute(row, anotherRow)
 
-                verify(callback, never()).beforeRow()
+                verify(exactly = 0) { callback.beforeRow() }
             }
 
-            @Test fun `assertion error will set exception result on row`() {
+            @Test
+            fun `assertion error will set exception result on row`() {
                 val exception = AssertionError()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 val table = execute(row)
 
                 assertThat(table.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `assertion error will set skipped result for all rows`() {
+            @Test
+            fun `assertion error will set skipped result for all rows`() {
                 val exception = AssertionError()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 val table = execute(row, anotherRow)
 
@@ -489,30 +572,34 @@ internal class DecisionTableExecutorTest {
                 assertThat(rows[1].result).isInstanceOf(Skipped::class.java)
             }
 
-            @Test fun `assertion error will prevent any row being executed`() {
+            @Test
+            fun `assertion error will prevent any row being executed`() {
                 val exception = AssertionError()
-                given { callback.beforeTable() } willThrow { exception }
+                every { callback.beforeTable() } throws exception
 
                 execute(row, anotherRow)
 
-                verify(callback, never()).beforeRow()
+                verify(exactly = 0) { callback.beforeRow() }
             }
         }
 
-        @Nested inner class `after table methods` {
+        @Nested
+        inner class `after table methods` {
 
-            @Test fun `exception will set exception result on table`() {
+            @Test
+            fun `exception will set exception result on table`() {
                 val exception = IllegalStateException()
-                given { callback.afterTable() } willThrow { exception }
+                every { callback.afterTable() } throws exception
 
                 val table = execute(row)
 
                 assertThat(table.result).isInstanceOf(Exception::class.java)
             }
 
-            @Test fun `assertion error will set exception result on row`() {
+            @Test
+            fun `assertion error will set exception result on row`() {
                 val exception = AssertionError()
-                given { callback.afterTable() } willThrow { exception }
+                every { callback.afterTable() } throws exception
 
                 val table = execute(row)
 
@@ -526,7 +613,8 @@ internal class DecisionTableExecutorTest {
         }
     }
 
-    @Test fun `smoke test of good case fixture`() {
+    @Test
+    fun `smoke test of good case fixture`() {
 
         val valueAColumn = Header("a")
         val valueBColumn = Header("b")
