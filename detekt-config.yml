@@ -16,13 +16,6 @@ exceptions:
       - IndexOutOfBoundsException
       - Throwable
 
-formatting:
-  autoCorrect: false
-  ImportOrdering:
-    active: false
-  NoWildcardImports:
-    active: false
-
 style:
   ForbiddenComment:
     active: false

@@ -1,5 +1,6 @@
 package org.livingdoc.engine.fixtures
 
+import io.mockk.mockkClass
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

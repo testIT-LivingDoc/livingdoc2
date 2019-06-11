@@ -1,20 +1,14 @@
 package org.livingdoc.engine.execution.examples.decisiontables;
 
-import static org.mockito.Mockito.mock;
+import org.livingdoc.api.fixtures.decisiontables.*;
 
-import org.livingdoc.api.fixtures.decisiontables.AfterRow;
-import org.livingdoc.api.fixtures.decisiontables.AfterTable;
-import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck;
-import org.livingdoc.api.fixtures.decisiontables.BeforeRow;
-import org.livingdoc.api.fixtures.decisiontables.BeforeTable;
-import org.livingdoc.api.fixtures.decisiontables.Check;
-import org.livingdoc.api.fixtures.decisiontables.Input;
-import org.mockito.Mockito;
+import static org.livingdoc.engine.MockkExtKt.clearJMockk;
+import static org.livingdoc.engine.MockkExtKt.mockkJClass;
 
 
 public class LifeCycleFixture {
 
-    public static Callback callback = mock(Callback.class);
+    public static Callback callback = mockkJClass(Callback.class);
 
     @BeforeTable
     static void beforeTable() {
@@ -52,7 +46,7 @@ public class LifeCycleFixture {
     }
 
     public static void reset() {
-        Mockito.reset(callback);
+        clearJMockk(callback);
     }
 
     public interface Callback {

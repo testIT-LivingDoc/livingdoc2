@@ -1,6 +1,6 @@
 package org.livingdoc.engine.reporting
 
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.DocumentResult
@@ -29,12 +29,12 @@ internal class HtmlReportRendererTest {
                                 RowResult(mapOf(
                                         headerA to FieldResult("2", Result.Executed),
                                         headerB to FieldResult("3", Result.Executed),
-                                        headerAPlusB to FieldResult("6", Result.Failed(mock()))
+                                        headerAPlusB to FieldResult("6", Result.Failed(mockk(relaxed = true)))
                                 ), Result.Executed),
                                 RowResult(mapOf(
                                         headerA to FieldResult("5", Result.Skipped),
                                         headerB to FieldResult("6", Result.Unknown),
-                                        headerAPlusB to FieldResult("11", Result.Exception(mock()))
+                                        headerAPlusB to FieldResult("11", Result.Exception(mockk(relaxed = true)))
                                 ), Result.Executed)
                         ),
                         Result.Executed
@@ -99,8 +99,8 @@ internal class HtmlReportRendererTest {
         val stepResultA = StepResult("A", Result.Executed)
         val stepResultB = StepResult("B", Result.Unknown)
         val stepResultC = StepResult("C", Result.Skipped)
-        val stepResultD = StepResult("D", Result.Failed(mock()))
-        val stepResultE = StepResult("E", Result.Exception(mock()))
+        val stepResultD = StepResult("D", Result.Failed(mockk()))
+        val stepResultE = StepResult("E", Result.Exception(mockk()))
 
         val documentResult = DocumentResult(
                 mutableListOf(ScenarioResult(
