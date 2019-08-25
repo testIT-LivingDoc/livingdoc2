@@ -4,7 +4,8 @@ object Versions {
 
     //Language
     val jvmTarget = JavaVersion.VERSION_1_8
-    val kotlinVersion = "1.3.21"
+    val kotlinVersion = "1.3.50"
+    val kotlinApi = "1.3"
 
     //Dependencies
     val slf4j = "1.7.25"
@@ -13,11 +14,11 @@ object Versions {
     val flexmark = "0.28.32"
 
     //Test
-    val junitPlatform = "1.3.2"
-    val junitJupiter = "5.4.2"
+    val junitPlatform = "1.5.1"
+    val junitJupiter = "5.5.1"
     val mockk = "1.9.3"
     val logback = "1.2.3"
-    val assertJ = "3.6.2"
+    val assertJ = "3.11.1"
 
     //Plugins
     val buildScanPlugin = "2.2.1"
@@ -28,6 +29,6 @@ object Versions {
 
 
     //Tools
-    val detektVersion = "1.0.0-RC14"
+    val detektVersion = "1.0.1"
     val ktlint = "0.33.0"
 }
