@@ -12,10 +12,15 @@ before_cache:
 jobs:
  include:
     - stage: test
+      name: Run default tests and code quality checks
       jdk: openjdk8
       script: ./gradlew check -x detekt
-    - jdk: oraclejdk8
-      script: ./gradlew check -x detekt
-    - jdk: oraclejdk8
+    - jdk: openjdk8
       env: validate
       script: ./gradlew detekt
+    - stage: test
+      dist: trusty
+      name: Test on OracleJdk
+      jdk: oraclejdk8
+      script: ./gradlew check -x detekt
+
