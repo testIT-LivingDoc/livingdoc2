@@ -20,6 +20,12 @@ test project:
   stage: test
   script:
     - ./gradlew check -x detekt
+  artifacts:
+    name: test-artifacts
+    expire_in: 1d
+    reports:
+      junit:
+        - livingdoc-*/build/test-results/test/TEST-*.xml
 
 lint project:
   stage: test
