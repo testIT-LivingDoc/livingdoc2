@@ -1,7 +1,13 @@
 image: openjdk:8-jdk
 
 stages:
+  - build
   - test
+
+build project:
+  stage: build
+  script:
+    - ./gradlew assemble
 
 test project:
   stage: test
