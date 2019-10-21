@@ -1,0 +1,14 @@
+image: openjdk:8-jdk
+
+stages:
+  - test
+
+test project:
+  stage: test
+  script:
+    - ./gradlew check -x detekt
+
+lint project:
+  stage: test
+  script:
+    - ./gradlew detekt
