@@ -1,4 +1,5 @@
-image: openjdk:8-jdk
+default:
+  image: openjdk:8-jdk
 
 stages:
   - build
@@ -8,6 +9,12 @@ build project:
   stage: build
   script:
     - ./gradlew assemble
+  artifacts:
+    name: build-artifacts
+    expire_in: 1d
+    paths:
+      - build
+      - livingdoc-*/build
 
 test project:
   stage: test
