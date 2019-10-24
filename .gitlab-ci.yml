@@ -21,6 +21,7 @@ test project:
   before_script:
     - cd livingdoc-sample/src/test/docs
     - python -m SimpleHTTPServer 80 > /dev/null &
+    - cd -
   script:
     - ./gradlew check -x detekt
     - ./gradlew codeCoverageReport
