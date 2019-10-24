@@ -7,7 +7,8 @@ internal class RESTRepositoryTest {
 
     val cut = RESTRepository("test", RESTRepositoryConfig())
 
-    @Test fun `exception is thrown if document could not be found`() {
+    @Test
+    fun `exception is thrown if document could not be found`() {
         assertThrows<RESTDocumentNotFoundException> {
             cut.getDocument("foo-bar.html")
         }

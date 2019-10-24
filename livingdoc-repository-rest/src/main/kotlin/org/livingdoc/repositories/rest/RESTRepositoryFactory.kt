@@ -4,8 +4,8 @@ import org.livingdoc.repositories.DocumentRepositoryFactory
 import org.livingdoc.repositories.config.YamlUtils
 
 /**
- * This Factory is used to create a RESTRepository. This Factory must be specified in the livingdoc.yml to use the REST Repository.
- * For more details about the {@see RESTRepository} see it's documentation.
+ * This Factory is used to create a RESTRepository. This Factory must be specified in the livingdoc.yml to use the REST
+ * Repository. For more details about the {@see RESTRepository} see it's documentation.
  */
 class RESTRepositoryFactory : DocumentRepositoryFactory<RESTRepository> {
 

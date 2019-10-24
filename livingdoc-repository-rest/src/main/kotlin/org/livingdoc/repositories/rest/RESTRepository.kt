@@ -10,6 +10,7 @@ import org.livingdoc.repositories.DocumentRepository
 import org.livingdoc.repositories.format.DocumentFormatManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.IOException
 import java.io.InputStream
 
 /**
@@ -32,7 +33,7 @@ class RESTRepository(
                 try {
                     log.debug("Get Document from url {}", config.baseURL + documentIdentifier)
                     client.get<HttpResponse>(config.baseURL + documentIdentifier).receive<InputStream>()
-                } catch (e: Throwable) {
+                } catch (e: IOException) {
                     throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
                 }
             }
