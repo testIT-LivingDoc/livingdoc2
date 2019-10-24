@@ -2,6 +2,7 @@ package org.livingdoc.repositories.rest
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.receive
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.request.get
 import io.ktor.client.response.HttpResponse
 import kotlinx.coroutines.runBlocking
@@ -34,6 +35,8 @@ class RESTRepository(
                     log.debug("Get Document from url {}", config.baseURL + documentIdentifier)
                     client.get<HttpResponse>(config.baseURL + documentIdentifier).receive<InputStream>()
                 } catch (e: IOException) {
+                    throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+                } catch (e: ClientRequestException) {
                     throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
                 }
             }
