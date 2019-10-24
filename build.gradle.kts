@@ -22,7 +22,8 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-engine"),
 		project(":livingdoc-junit-engine"),
 		project(":livingdoc-repositories"),
-		project(":livingdoc-repository-file")
+		project(":livingdoc-repository-file"),
+		project(":livingdoc-repository-rest")
 	)
 )
 

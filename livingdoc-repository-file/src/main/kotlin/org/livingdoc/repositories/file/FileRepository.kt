@@ -2,6 +2,7 @@ package org.livingdoc.repositories.file
 
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
+import org.livingdoc.repositories.format.DocumentFormatManager
 
 class FileRepository(
     private val name: String,
@@ -11,6 +12,6 @@ class FileRepository(
 
     override fun getDocument(documentIdentifier: String): Document {
         val file = fileResolver.resolveFile(config.documentRoot, documentIdentifier)
-        return file.format().parse(file.stream())
+        return DocumentFormatManager.getFormat(file.extension()).parse(file.stream())
     }
 }
