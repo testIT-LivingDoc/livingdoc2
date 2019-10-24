@@ -19,7 +19,7 @@ build project:
 test project:
   stage: test
   before_script:
-    - python3 -m http.server 80 --bind 127.0.0.1 --directory livingdoc-sample/src/test/docs
+    - python -m BaseHTTPServer 80 --bind 127.0.0.1 --directory livingdoc-sample/src/test/docs
   script:
     - ./gradlew check -x detekt
     - ./gradlew codeCoverageReport
