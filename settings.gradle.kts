@@ -25,6 +25,7 @@ include( "livingdoc-api",
 "livingdoc-junit-engine",
 "livingdoc-repositories",
 "livingdoc-repository-file",
+"livingdoc-repository-rest",
 "livingdoc-sample")
 
 rootProject.children.forEach { project ->

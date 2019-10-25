@@ -5,20 +5,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.livingdoc.repositories.file.DocumentFile
 import org.livingdoc.repositories.format.DocumentFormatManager.getFormat
-import java.io.File
 
 internal class DocumentFormatManagerTest {
 
-    @ValueSource(strings = ["md", "html", "htm"])
+    @ValueSource(strings = ["df", "dfm"])
     @ParameterizedTest fun `following file types are supported`(fileExtension: String) {
-        assertThat(getFormat(DocumentFile(File("foo.$fileExtension")))).isNotNull()
+        assertThat(getFormat(fileExtension)).isNotNull()
     }
 
     @Test fun `exception is thrown on getting unknown format`() {
         assertThrows<DocumentFormatNotFoundException> {
-            getFormat(DocumentFile(File("foo.xml")))
+            getFormat("xml")
         }
     }
 }
