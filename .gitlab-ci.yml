@@ -20,9 +20,12 @@ test project:
   stage: test
   script:
     - ./gradlew check -x detekt
+    - ./gradlew codeCoverageReport
   artifacts:
     name: test-artifacts
     expire_in: 1d
+    paths:
+      - build/reports/jacoco
     reports:
       junit:
         - livingdoc-*/build/test-results/test/TEST-*.xml

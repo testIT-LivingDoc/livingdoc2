@@ -37,6 +37,7 @@ val kotlinProjects by extra(livingdocKotlinProjects + livingdocSampleProjects)
 allprojects {
 	apply(plugin = "idea")
 	apply(plugin = "com.diffplug.gradle.spotless")
+	apply(plugin = "jacoco")
 
 	group = "org.livingdoc"
 	version = "2.0-SNAPSHOT"
@@ -117,4 +118,28 @@ rootProject.apply {
 			endWithNewline()
 		}
 	}
+}
+
+tasks.create<JacocoReport>("codeCoverageReport") {
+	executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+	subprojects.onEach {
+		it.pluginManager.withPlugin("java") {
+			sourceSets(it.the<SourceSetContainer>()["main"])
+		}
+
+		it.pluginManager.withPlugin("kotlin") {
+			sourceSets(it.the<SourceSetContainer>()["main"])
+		}
+
+	}
+
+	reports {
+		csv.isEnabled = false
+		xml.isEnabled = false
+		html.isEnabled = true
+		html.destination = file("${buildDir}/reports/jacoco")
+	}
+
+	dependsOn(project.getTasksByName("test", true))
 }
