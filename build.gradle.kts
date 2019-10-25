@@ -140,4 +140,6 @@ tasks.create<JacocoReport>("codeCoverageReport") {
 		html.isEnabled = true
 		html.destination = file("${buildDir}/reports/jacoco")
 	}
+
+	dependsOn(project.getTasksByName("test", true))
 }
