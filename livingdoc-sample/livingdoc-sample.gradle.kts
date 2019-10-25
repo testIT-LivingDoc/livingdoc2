@@ -5,7 +5,6 @@ plugins {
 dependencies {
 	testRuntime(project(":livingdoc-junit-engine"))
 	testRuntime(project(":livingdoc-repository-file"))
-	testRuntime(project(":livingdoc-repository-rest"))
 
 	testImplementation(project(":livingdoc-api"))
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
