@@ -107,5 +107,24 @@ class CalculatorDocumentMd {
             val result = sut.divide(a, b)
             assertThat(result).isEqualTo(c)
         }
+
+        @ScenarioFixture
+        class CalculatorExtendedScenarioFixture {
+            private lateinit var sut: Calculator
+
+            @Step.Steps(Step("add {a} to itself and you get {b}"), Step("divide it by {c} and you get {d}"))
+            fun extended(
+                @Binding("a") a: Float,
+                @Binding("b") b: Float,
+                @Binding("c") c: Float,
+                @Binding("d") d: Float
+            ) {
+                val step1 = sut.sum(a, a)
+                assertThat(step1).isEqualTo(b)
+
+                val step2 = sut.divide(b, c)
+                assertThat(step2).isEqualTo(d)
+            }
+        }
     }
 }
