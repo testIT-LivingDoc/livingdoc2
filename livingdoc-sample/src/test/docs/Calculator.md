@@ -17,8 +17,18 @@ Examples
 # Scenario
 
 - adding 1 and 2 equals 3
+- adding 1 and 4 equals 5
 - multiplying 3 and 2 equals 6
 
-# Extended Scenario
+# Scenario 2
+
+- add 9 to itself and you get 18
+
+# Scenario 3
+
 - add 5 to itself and you get 10
-- divide it by 2 and you get 5
+
+# Scenario 4
+## this test tests the maximum typo a sentence can have
+
+ - add 9 to itselt ans you get 18
