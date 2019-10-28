@@ -19,7 +19,7 @@ build project:
 test project:
   stage: test
   script:
-    - ./gradlew check -x detekt
+    - ./gradlew check -x detekt -x spotlessCheck
     - ./gradlew codeCoverageReport
   artifacts:
     name: test-artifacts
@@ -33,4 +33,5 @@ test project:
 lint project:
   stage: test
   script:
+    - ./gradlew spotlessCheck
     - ./gradlew detekt
