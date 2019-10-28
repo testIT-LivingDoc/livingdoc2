@@ -18,3 +18,7 @@ Examples
 
 - adding 1 and 2 equals 3
 - multiplying 3 and 2 equals 6
+
+# Extended Scenario
+- add 5 to itself and you get 10
+- divide it by 2 and you get 5
