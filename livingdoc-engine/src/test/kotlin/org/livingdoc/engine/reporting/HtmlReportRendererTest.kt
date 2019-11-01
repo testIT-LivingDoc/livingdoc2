@@ -74,6 +74,7 @@ internal class HtmlReportRendererTest {
                                 <a class="close" href="#">&times;</a>
                                 <div class="content">
                                     <pre>
+                                    java.lang.AssertionError
                                     </pre>
                                 </div>
                             </div>
@@ -85,6 +86,7 @@ internal class HtmlReportRendererTest {
                                 <a class="close" href="#">&times;</a>
                                 <div class="content">
                                     <pre>
+                                    java.lang.Throwable
                                     </pre>
                                 </div>
                             </div>

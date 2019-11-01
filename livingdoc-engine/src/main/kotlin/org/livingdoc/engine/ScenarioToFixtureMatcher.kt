@@ -9,7 +9,7 @@ import org.livingdoc.repositories.model.scenario.Scenario
  */
 class ScenarioToFixtureMatcher {
 
-    fun findMatchingFixture(scenario: Scenario, fixtures: List<Class<*>>): Class<*>? {
+    fun findMatchingFixture(scenario: Scenario, fixtures: List<Class<*>>): Class<*> {
         return fixtures.firstOrNull { fixture ->
             val model = ScenarioFixtureModel(fixture)
             try {
@@ -20,6 +20,9 @@ class ScenarioToFixtureMatcher {
             } catch (e: NoMatchingStepTemplate) {
                 false
             }
-        }
+        } ?: throw ScenarioFixtureNotFoundException(scenario, fixtures)
     }
+
+    class ScenarioFixtureNotFoundException(scenario: Scenario, fixtures: List<Class<*>>) :
+        RuntimeException("Could not find Fixture for Scenario [$scenario]! Available fixtures: [$fixtures]")
 }

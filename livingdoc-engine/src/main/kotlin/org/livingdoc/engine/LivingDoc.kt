@@ -42,11 +42,11 @@ class LivingDoc(
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
                         .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                        ?.let { decisionTableExecutor.execute(element, it) }
+                        .let { decisionTableExecutor.execute(element, it) }
                 }
                 is Scenario -> {
                     scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                        ?.let { scenarioExecutor.execute(element, it) }
+                        .let { scenarioExecutor.execute(element, it) }
                 }
                 else -> null
             }
