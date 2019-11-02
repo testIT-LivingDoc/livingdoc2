@@ -9,11 +9,10 @@ import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 
 @ExecutableDocument("local://Calculator.md")
-class CalculatorDocumentDisabledScenarioFixtures {
+class CalculatorDocumentDisabledExtendedScenarioFixtures {
 
-    @Disabled("Disabled ScenarioFixture")
     @ScenarioFixture
-    class DisabledCalculatorScenarioFixture {
+    class CalculatorScenarioFixture {
 
         private lateinit var sut: Calculator
 
@@ -32,7 +31,7 @@ class CalculatorDocumentDisabledScenarioFixtures {
             assertThat(result).isEqualTo(c)
         }
 
-        @Step("subtraction {b} form {a} equals {c}")
+        @Step("subtraction {b} from {a} equals {c}")
         fun subtract(
             @Binding("a") a: Float,
             @Binding("b") b: Float,
@@ -62,7 +61,7 @@ class CalculatorDocumentDisabledScenarioFixtures {
             assertThat(result).isEqualTo(c)
         }
 
-        // Should not be executed
+        @Disabled("Extended Disabled Scenario Fixture")
         @ScenarioFixture
         class DisabledCalculatorExtendedScenarioFixture {
             private lateinit var sut: Calculator
