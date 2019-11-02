@@ -62,12 +62,12 @@ class LivingDoc(
     }
 }
 
-private data class DocumentIdentifier(
+data class DocumentIdentifier(
     val repository: String,
     val id: String
 )
 
-private data class ExecutableDocumentModel(
+data class ExecutableDocumentModel(
     val documentIdentifier: DocumentIdentifier,
     val decisionTableFixtures: List<Class<*>>,
     val scenarioFixtures: List<Class<*>>

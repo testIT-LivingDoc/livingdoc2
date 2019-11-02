@@ -9,6 +9,7 @@ import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
+import org.livingdoc.engine.ExecutableDocumentModel
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.junit.engine.LivingDocContext
@@ -24,18 +25,24 @@ class ExecutableDocumentDescriptor(
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: DynamicTestExecutor): LivingDocContext {
         val result = context.livingDoc.execute(documentClass)
+        val documentModel = ExecutableDocumentModel.of(documentClass)
 
-        result.results.forEachIndexed { index, executionResult ->
-            when (executionResult) {
+        result.results.forEachIndexed { index, exampleResult ->
+            when (exampleResult) {
                 is DecisionTableResult -> {
                     val descriptor =
-                        DecisionTableTestDescriptor(tableUniqueId(index), tableDisplayName(index), executionResult)
+                        DecisionTableTestDescriptor(tableUniqueId(index), tableDisplayName(index), exampleResult)
                             .also { it.setParent(this) }
                     dynamicTestExecutor.execute(descriptor)
                 }
                 is ScenarioResult -> {
                     val descriptor =
-                        ScenarioTestDescriptor(scenarioUniqueId(index), scenarioDisplayName(index), executionResult)
+                        ScenarioTestDescriptor(
+                            scenarioUniqueId(index),
+                            scenarioDisplayName(index),
+                            exampleResult,
+                            documentModel.scenarioFixtures.get(index)
+                        )
                             .also { it.setParent(this) }
                     dynamicTestExecutor.execute(descriptor)
                 }

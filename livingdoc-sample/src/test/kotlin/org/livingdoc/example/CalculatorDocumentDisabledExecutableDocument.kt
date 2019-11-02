@@ -10,7 +10,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 
 @Disabled("Skip this document")
 @ExecutableDocument("local://Calculator.html")
-class CalculatorDocumentDisabled {
+class CalculatorDocumentDisabledExecutableDocument {
 
     @DecisionTableFixture
     class CalculatorDecisionTableFixture {

@@ -1,12 +1,15 @@
 package org.livingdoc.example
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
 
+// TODO
+@Disabled
 @ExecutableDocument("local://Calculator.html")
 class CalculatorDocumentHtml {
 
