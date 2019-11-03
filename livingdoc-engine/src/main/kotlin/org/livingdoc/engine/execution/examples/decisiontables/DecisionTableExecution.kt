@@ -31,7 +31,8 @@ internal class DecisionTableExecution(
      */
     fun execute(): DecisionTableResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            return DecisionTableResult(emptyList(), emptyList(), Result.Disabled)
+            markTableAsDisabled(fixtureClass.getAnnotation(Disabled::class.java).value)
+            return decisionTableResult
         }
 
         try {
@@ -223,6 +224,10 @@ internal class DecisionTableExecution(
 
     private fun markRowAsExecutedWithException(row: RowResult, e: Throwable) {
         row.result = Result.Exception(e)
+    }
+
+    private fun markTableAsDisabled(reason: String) {
+        decisionTableResult.result = Result.Disabled(reason)
     }
 
     private fun markTableAsSuccessfullyExecuted() {

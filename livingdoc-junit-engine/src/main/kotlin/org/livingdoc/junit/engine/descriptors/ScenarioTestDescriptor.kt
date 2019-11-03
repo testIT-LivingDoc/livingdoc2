@@ -32,9 +32,9 @@ class ScenarioTestDescriptor(
     private fun stepDisplayName(stepResult: StepResult) = stepResult.value
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        return when (scenarioResult.result) {
+        return when (val result = scenarioResult.result) {
             Result.Unknown -> skip("unknown")
-            Result.Disabled -> skip("disabled")
+            is Result.Disabled -> skip(result.reason)
             Result.Skipped -> skip("skipped")
             else -> doNotSkip()
         }
@@ -61,9 +61,9 @@ class ScenarioTestDescriptor(
         }
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-            return when (stepResult.result) {
+            return when (val result = stepResult.result) {
                 Result.Unknown -> skip("unknown")
-                Result.Disabled -> skip("disabled")
+                is Result.Disabled -> skip(result.reason)
                 Result.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }

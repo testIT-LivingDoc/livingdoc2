@@ -35,12 +35,12 @@ class LivingDoc(
 
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
+        if (documentClass.isAnnotationPresent(Disabled::class.java)) {
+            return DocumentResult(Result.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
+        }
+
         val documentClassModel = ExecutableDocumentModel.of(documentClass)
         val document = loadDocument(documentClassModel)
-
-        if (documentClass.isAnnotationPresent(Disabled::class.java)) {
-            return DocumentResult(Result.Disabled)
-        }
 
         val results: List<ExampleResult> = document.elements.mapNotNull { element ->
             when (element) {

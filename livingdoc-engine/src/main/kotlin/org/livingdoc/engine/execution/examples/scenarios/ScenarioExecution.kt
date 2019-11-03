@@ -30,7 +30,8 @@ internal class ScenarioExecution(
      */
     fun execute(): ScenarioResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            return ScenarioResult(emptyList(), Result.Disabled)
+            markScenarioAsDisabled(fixtureClass.getAnnotation(Disabled::class.java).value)
+            return scenarioResult
         }
 
         try {
@@ -129,6 +130,10 @@ internal class ScenarioExecution(
 
     private fun markScenarioAsSuccessfullyExecuted() {
         scenarioResult.result = Result.Executed
+    }
+
+    private fun markScenarioAsDisabled(reason: String) {
+        scenarioResult.result = Result.Disabled(reason)
     }
 
     private fun markScenarioAsExecutedWithException(e: Throwable) {
