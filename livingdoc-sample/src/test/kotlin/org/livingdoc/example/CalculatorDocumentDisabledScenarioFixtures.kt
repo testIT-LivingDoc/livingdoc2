@@ -62,24 +62,13 @@ class CalculatorDocumentDisabledScenarioFixtures {
             assertThat(result).isEqualTo(c)
         }
 
-        // Should not be executed
-        @ScenarioFixture
-        class DisabledCalculatorExtendedScenarioFixture {
-            private lateinit var sut: Calculator
-
-            @Step.Steps(Step("add {a} to itself and you get {b}"), Step("divide it by {c} and you get {d}"))
-            fun extended(
-                @Binding("a") a: Float,
-                @Binding("b") b: Float,
-                @Binding("c") c: Float,
-                @Binding("d") d: Float
-            ) {
-                val step1 = sut.sum(a, a)
-                assertThat(step1).isEqualTo(b)
-
-                val step2 = sut.divide(b, c)
-                assertThat(step2).isEqualTo(d)
-            }
+        @Step("add {a} to itself and you get {b}")
+        fun selfadd(
+            @Binding("a") a: Float,
+            @Binding("b") b: Float
+        ) {
+            val result = sut.sum(a, a)
+            assertThat(result).isEqualTo(b)
         }
     }
 }

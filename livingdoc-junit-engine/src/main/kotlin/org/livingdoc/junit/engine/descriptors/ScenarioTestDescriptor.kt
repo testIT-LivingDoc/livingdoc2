@@ -61,9 +61,9 @@ class ScenarioTestDescriptor(
         }
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-            val result = stepResult.result
-            return when (result) {
+            return when (stepResult.result) {
                 Result.Unknown -> skip("unknown")
+                Result.Disabled -> skip("disabled")
                 Result.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }

@@ -71,6 +71,7 @@ class DecisionTableTestDescriptor(
             val result = rowResult.result
             return when (result) {
                 Result.Unknown -> skip("unknown")
+                Result.Unknown -> skip("unknown")
                 Result.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }
@@ -100,6 +101,7 @@ class DecisionTableTestDescriptor(
                 val result = fieldResult.result
                 return when (result) {
                     Result.Unknown -> skip("unknown")
+                    Result.Disabled -> skip("unknown")
                     Result.Skipped -> skip("skipped")
                     else -> doNotSkip()
                 }

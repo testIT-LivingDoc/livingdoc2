@@ -1,5 +1,6 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
+import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
@@ -17,9 +18,7 @@ internal class ScenarioExecution(
 ) {
 
     private val fixtureModel = ScenarioFixtureModel(fixtureClass)
-
-    private val scenario = ScenarioResult.from(scenario)
-
+    private val scenarioResult = ScenarioResult.from(scenario)
     private val methodInvoker = FixtureMethodInvoker(document)
 
     /**
@@ -30,6 +29,10 @@ internal class ScenarioExecution(
      * the form of different result objects.
      */
     fun execute(): ScenarioResult {
+        if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
+            return ScenarioResult(emptyList(), Result.Disabled)
+        }
+
         try {
             assertFixtureIsDefinedCorrectly()
             executeScenario()
@@ -40,7 +43,7 @@ internal class ScenarioExecution(
             markScenarioAsExecutedWithException(e)
         }
         setSkippedStatusForAllUnknownResults()
-        return scenario
+        return scenarioResult
     }
 
     private fun assertFixtureIsDefinedCorrectly() {
@@ -61,7 +64,7 @@ internal class ScenarioExecution(
 
     private fun executeSteps(fixture: Any) {
         var previousResult: Result = Result.Executed
-        for (step in scenario.steps) {
+        for (step in scenarioResult.steps) {
             if (previousResult == Result.Executed) {
                 executeStep(fixture, step)
                 previousResult = step.result
@@ -125,15 +128,15 @@ internal class ScenarioExecution(
     }
 
     private fun markScenarioAsSuccessfullyExecuted() {
-        scenario.result = Result.Executed
+        scenarioResult.result = Result.Executed
     }
 
     private fun markScenarioAsExecutedWithException(e: Throwable) {
-        scenario.result = Result.Exception(e)
+        scenarioResult.result = Result.Exception(e)
     }
 
     private fun setSkippedStatusForAllUnknownResults() {
-        for (step in scenario.steps) {
+        for (step in scenarioResult.steps) {
             if (step.result === Result.Unknown) {
                 step.result = Result.Skipped
             }
