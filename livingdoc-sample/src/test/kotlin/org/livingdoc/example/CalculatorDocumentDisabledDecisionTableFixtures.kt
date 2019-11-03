@@ -36,5 +36,23 @@ class CalculatorDocumentDisabledDecisionTableFixtures {
             val result = sut.sum(valueA, valueB)
             assertThat(result).isEqualTo(expectedValue)
         }
+
+        @Check("a - b = ?")
+        fun checkDiff(expectedValue: Float) {
+            val result = sut.diff(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
+        }
+
+        @Check("a * b = ?")
+        fun checkMultiply(expectedValue: Float) {
+            val result = sut.multiply(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
+        }
+
+        @Check("a / b = ?")
+        fun checkDivide(expectedValue: Float) {
+            val result = sut.divide(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
+        }
     }
 }
