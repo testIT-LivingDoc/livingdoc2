@@ -154,6 +154,7 @@ fun HtmlList.steps(stepResults: List<StepResult>) {
 private fun determineCssClassForBackgroundColor(result: Result): String {
     return when (result) {
         Result.Executed -> "background-executed"
+        Result.Disabled -> "background-disabled"
         Result.Skipped -> "background-skipped"
         Result.Unknown -> "background-unknown"
         is Result.Failed -> "background-failed"

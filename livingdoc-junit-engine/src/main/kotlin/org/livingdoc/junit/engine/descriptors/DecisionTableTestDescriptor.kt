@@ -34,9 +34,9 @@ class DecisionTableTestDescriptor(
     private fun rowDisplayName(index: Int) = "Row #${index + 1}"
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        val result = tableResult.result
-        return when (result) {
+        return when (tableResult.result) {
             Result.Unknown -> skip("unknown")
+            Result.Disabled -> skip("disabled")
             Result.Skipped -> skip("skipped")
             else -> doNotSkip()
         }

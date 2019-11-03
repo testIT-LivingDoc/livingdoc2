@@ -1,6 +1,5 @@
 package org.livingdoc.junit.engine.descriptors
 
-import org.junit.jupiter.api.Disabled
 import org.junit.platform.engine.TestDescriptor
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
@@ -15,8 +14,7 @@ import org.livingdoc.junit.engine.LivingDocContext
 class ScenarioTestDescriptor(
     uniqueId: UniqueId,
     displayName: String,
-    private val scenarioResult: ScenarioResult,
-    private val scenarioClass: Class<*>
+    private val scenarioResult: ScenarioResult
 ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
@@ -34,12 +32,9 @@ class ScenarioTestDescriptor(
     private fun stepDisplayName(stepResult: StepResult) = stepResult.value
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        if (this.scenarioClass.isAnnotationPresent(Disabled::class.java)) {
-            return skip(this.scenarioClass.getAnnotation(Disabled::class.java).value)
-        }
-
         return when (scenarioResult.result) {
             Result.Unknown -> skip("unknown")
+            Result.Disabled -> skip("disabled")
             Result.Skipped -> skip("skipped")
             else -> doNotSkip()
         }
