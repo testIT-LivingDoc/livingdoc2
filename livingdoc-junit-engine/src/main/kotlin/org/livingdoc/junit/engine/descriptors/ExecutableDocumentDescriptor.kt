@@ -3,6 +3,7 @@ package org.livingdoc.junit.engine.descriptors
 import org.junit.platform.engine.TestDescriptor.Type
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
+import org.junit.platform.engine.support.descriptor.ClassSource
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
@@ -23,9 +24,11 @@ import org.livingdoc.repositories.model.scenario.Step
 class ExecutableDocumentDescriptor(
     uniqueId: UniqueId,
     private val documentClass: Class<*>
-) : AbstractTestDescriptor(uniqueId, documentClass.name), Node<LivingDocContext> {
+) : AbstractTestDescriptor(uniqueId, documentClass.name, ClassSource.from(documentClass)), Node<LivingDocContext> {
 
-    override fun getType() = Type.CONTAINER_AND_TEST
+    override fun getType() = Type.CONTAINER
+
+    override fun mayRegisterTests() = true
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: DynamicTestExecutor): LivingDocContext {
         val result = context.livingDoc.execute(documentClass)
