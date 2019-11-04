@@ -23,12 +23,13 @@ internal class JsonReportRendererTest {
         val headerAPlusB = Header("a + b = ?")
 
         val documentResult = DocumentResult(
+                Result.Executed,
                 mutableListOf(DecisionTableResult(
                         listOf(headerA, headerB, headerAPlusB),
                         listOf(
                                 RowResult(mapOf(
                                         headerA to FieldResult("2", Result.Executed),
-                                        headerB to FieldResult("3", Result.Executed),
+                                        headerB to FieldResult("3", Result.Disabled("Disabled test")),
                                         headerAPlusB to FieldResult("6", Result.Failed(mockk(relaxed = true)))
                                 ), Result.Executed),
                                 RowResult(mapOf(
@@ -54,7 +55,7 @@ internal class JsonReportRendererTest {
                                 },
                                 "b": {
                                     "value": "3",
-                                    "result": "executed"
+                                    "result": "disabled"
                                 },
                                 "a + b = ?": {
                                     "value": "6",
@@ -88,14 +89,16 @@ internal class JsonReportRendererTest {
     @Test
     fun `scenarioResult is rendered correctly`() {
         val stepResultA = StepResult("A", Result.Executed)
-        val stepResultB = StepResult("B", Result.Unknown)
-        val stepResultC = StepResult("C", Result.Skipped)
-        val stepResultD = StepResult("D", Result.Failed(mockk()))
-        val stepResultE = StepResult("E", Result.Exception(mockk()))
+        val stepResultB = StepResult("B", Result.Disabled("Disabled test"))
+        val stepResultC = StepResult("C", Result.Unknown)
+        val stepResultD = StepResult("D", Result.Skipped)
+        val stepResultE = StepResult("E", Result.Failed(mockk()))
+        val stepResultF = StepResult("F", Result.Exception(mockk()))
 
         val documentResult = DocumentResult(
+                Result.Executed,
                 mutableListOf(ScenarioResult(
-                        listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
+                        listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE, stepResultF),
                         Result.Executed
                 )))
 
@@ -108,13 +111,15 @@ internal class JsonReportRendererTest {
                         "steps": [{
                             "A": "executed"
                         }, {
-                            "B": "unknown"
+                            "B": "disabled"
                         }, {
-                            "C": "skipped"
+                            "C": "unknown"
                         }, {
-                            "D": "failed"
+                            "D": "skipped"
                         }, {
-                            "E": "exception"
+                            "E": "failed"
+                        }, {
+                            "F": "exception"
                         }],
                         "result": "executed"
                     }]
