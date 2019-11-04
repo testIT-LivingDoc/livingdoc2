@@ -6,6 +6,7 @@ import org.livingdoc.engine.execution.DocumentResult
 import com.beust.klaxon.json
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 
 class JsonReportRenderer {
     fun render(documentResult: DocumentResult): String {
@@ -13,6 +14,7 @@ class JsonReportRenderer {
             obj("results" to array(documentResult.results.map {
                 when (it) {
                     is DecisionTableResult -> handleDecisionTableResult(it)
+                    is ScenarioResult -> handleScenarioResult(it)
                     else -> throw IllegalArgumentException("Unknown ExampleResult type.")
                 }
             }))
@@ -36,6 +38,19 @@ class JsonReportRenderer {
                         )
                     }),
                     "result" to handleResult(decisionTableResult.result)
+            )
+        }
+    }
+
+    private fun handleScenarioResult(scenarioResult: ScenarioResult): JsonObject {
+        return json {
+            obj(
+                    "steps" to array(scenarioResult.steps.map {
+                        obj(
+                                it.value to handleResult(it.result)
+                        )
+                    }),
+                    "result" to handleResult(scenarioResult.result)
             )
         }
     }

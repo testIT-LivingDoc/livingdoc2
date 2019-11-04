@@ -8,6 +8,8 @@ import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
+import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
+import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
 
 internal class JsonReportRendererTest {
@@ -76,6 +78,43 @@ internal class JsonReportRendererTest {
                                 }
                             },
                             "result": "executed"
+                        }],
+                        "result": "executed"
+                    }]
+                }
+                """)
+    }
+
+    @Test
+    fun `scenarioResult is rendered correctly`() {
+        val stepResultA = StepResult("A", Result.Executed)
+        val stepResultB = StepResult("B", Result.Unknown)
+        val stepResultC = StepResult("C", Result.Skipped)
+        val stepResultD = StepResult("D", Result.Failed(mockk()))
+        val stepResultE = StepResult("E", Result.Exception(mockk()))
+
+        val documentResult = DocumentResult(
+                mutableListOf(ScenarioResult(
+                        listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
+                        Result.Executed
+                )))
+
+        val renderResult = cut.render(documentResult)
+
+        assertThat(renderResult).isEqualToIgnoringWhitespace(
+                """
+                {
+                    "results": [{
+                        "steps": [{
+                            "A": "executed"
+                        }, {
+                            "B": "unknown"
+                        }, {
+                            "C": "skipped"
+                        }, {
+                            "D": "failed"
+                        }, {
+                            "E": "exception"
                         }],
                         "result": "executed"
                     }]
