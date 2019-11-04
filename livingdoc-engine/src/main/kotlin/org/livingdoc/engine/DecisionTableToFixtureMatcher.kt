@@ -8,7 +8,7 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableToFixtureMatcher {
 
-    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<Class<*>>): Class<*>? {
+    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<Class<*>>): Class<*> {
         val headerNames = decisionTable.headers.map { it.name }
         val numberOfHeaders = headerNames.size
 
@@ -24,10 +24,14 @@ class DecisionTableToFixtureMatcher {
         if (matchingFixtures.size > 1) {
             throw MultipleMatchingFixturesException(headerNames, matchingFixtures)
         }
-        return matchingFixtures.firstOrNull()
+        return matchingFixtures.firstOrNull() ?: throw NoMatchingFixturesException(headerNames, fixtures)
     }
 
     class MultipleMatchingFixturesException(headerNames: List<String>, matchingFixtures: List<Class<*>>) :
         RuntimeException("Could not identify a unique fixture matching the Decision Table's headers " +
             "${headerNames.map { "'$it'" }}. Matching fixtures found: $matchingFixtures")
+
+    class NoMatchingFixturesException(headerNames: List<String>, fixtures: List<Class<*>>) :
+        RuntimeException("Could not find any fixture matching the Decision Table's headers " +
+                "${headerNames.map { "'$it'" }}. Available fixtures: $fixtures")
 }

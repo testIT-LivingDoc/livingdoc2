@@ -9,12 +9,12 @@
 
 - concatenate () and () will result in ()()
 
-# failed test
-
-this test will not run as the signs are not recognized
-
-- concatenate random and 〈〉 will result in random〈〉
-
 # Test C
+
+this test will also run with strange characters
+
+- concatenate bla and 〈〉 will result in bla〈〉
+
+# Test D
 
 - nullifying cdf and rising will give us 0.0F as output
