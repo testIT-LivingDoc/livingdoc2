@@ -58,6 +58,7 @@ class JsonReportRenderer {
     private fun handleResult(result: Result): String {
         return when (result) {
             Result.Executed -> "executed"
+            is Result.Disabled -> "disabled"
             Result.Skipped -> "skipped"
             Result.Unknown -> "unknown"
             is Result.Failed -> "failed"
