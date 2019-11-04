@@ -23,7 +23,7 @@ class CalculatorDocumentDisabledFixtures {
             @Binding("b") b: Float,
             @Binding("c") c: Float
         ) {
-            assert(false)
+            fail("Test should be ignored")
         }
 
         @Step("subtraction {b} form {a} equals {c}")
