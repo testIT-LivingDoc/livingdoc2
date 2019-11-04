@@ -12,6 +12,7 @@ object Versions {
     val snakeyaml= "1.18"
     val jsoup = "1.11.2"
     val flexmark = "0.28.32"
+    val klaxon = "5.0.1"
 
     //Test
     val junitPlatform = "1.5.1"
