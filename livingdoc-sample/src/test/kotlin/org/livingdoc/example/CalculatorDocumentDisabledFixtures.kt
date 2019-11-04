@@ -1,13 +1,11 @@
 package org.livingdoc.example
 
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.fail
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
-import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import org.livingdoc.api.fixtures.scenarios.Before
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
@@ -19,21 +17,13 @@ class CalculatorDocumentDisabledFixtures {
     @ScenarioFixture
     class DisabledCalculatorScenarioFixture {
 
-        private lateinit var sut: Calculator
-
-        @Before
-        fun before() {
-            sut = Calculator()
-        }
-
         @Step("adding {a} and {b} equals {c}")
         fun add(
             @Binding("a") a: Float,
             @Binding("b") b: Float,
             @Binding("c") c: Float
         ) {
-            val result = sut.sum(a, b)
-            assertThat(result).isEqualTo(c)
+            assert(false)
         }
 
         @Step("subtraction {b} form {a} equals {c}")
@@ -42,8 +32,7 @@ class CalculatorDocumentDisabledFixtures {
             @Binding("b") b: Float,
             @Binding("c") c: Float
         ) {
-            val result = sut.diff(a, b)
-            assertThat(result).isEqualTo(c)
+            fail("Test should be ignored")
         }
 
         @Step("multiplying {a} and {b} equals {c}")
@@ -52,8 +41,7 @@ class CalculatorDocumentDisabledFixtures {
             @Binding("b") b: Float,
             @Binding("c") c: Float
         ) {
-            val result = sut.multiply(a, b)
-            assertThat(result).isEqualTo(c)
+            fail("Test should be ignored")
         }
 
         @Step("dividing {a} by {b} equals {c}")
@@ -62,8 +50,7 @@ class CalculatorDocumentDisabledFixtures {
             @Binding("b") b: Float,
             @Binding("c") c: Float
         ) {
-            val result = sut.divide(a, b)
-            assertThat(result).isEqualTo(c)
+            fail("Test should be ignored")
         }
 
         @Step("add {a} to itself and you get {b}")
@@ -71,8 +58,7 @@ class CalculatorDocumentDisabledFixtures {
             @Binding("a") a: Float,
             @Binding("b") b: Float
         ) {
-            val result = sut.sum(a, a)
-            assertThat(result).isEqualTo(b)
+            fail("Test should be ignored")
         }
     }
 
@@ -80,44 +66,29 @@ class CalculatorDocumentDisabledFixtures {
     @DecisionTableFixture
     class DisabledCalculatorDecisionTableFixture {
 
-        private lateinit var sut: Calculator
-
         @Input("a")
         private var valueA: Float = 0f
-        private var valueB: Float = 0f
-
-        @BeforeRow
-        fun beforeRow() {
-            sut = Calculator()
-        }
-
         @Input("b")
-        fun setValueB(valueB: Float) {
-            this.valueB = valueB
-        }
+        private var valueB: Float = 0f
 
         @Check("a + b = ?")
         fun checkSum(expectedValue: Float) {
-            val result = sut.sum(valueA, valueB)
-            assertThat(result).isEqualTo(expectedValue)
+            fail("Test should be ignored")
         }
 
         @Check("a - b = ?")
         fun checkDiff(expectedValue: Float) {
-            val result = sut.diff(valueA, valueB)
-            assertThat(result).isEqualTo(expectedValue)
+            fail("Test should be ignored")
         }
 
         @Check("a * b = ?")
         fun checkMultiply(expectedValue: Float) {
-            val result = sut.multiply(valueA, valueB)
-            assertThat(result).isEqualTo(expectedValue)
+            fail("Test should be ignored")
         }
 
         @Check("a / b = ?")
         fun checkDivide(expectedValue: Float) {
-            val result = sut.divide(valueA, valueB)
-            assertThat(result).isEqualTo(expectedValue)
+            fail("Test should be ignored")
         }
     }
 }
