@@ -1,5 +1,6 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
+import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
@@ -16,7 +17,7 @@ internal class DecisionTableExecution(
 ) {
 
     private val fixtureModel = DecisionTableFixtureModel(fixtureClass)
-    private val decisionTable = DecisionTableResult.from(decisionTable)
+    private val decisionTableResult = DecisionTableResult.from(decisionTable)
 
     private val fieldInjector = FixtureFieldInjector(document)
     private val methodInvoker = FixtureMethodInvoker(document)
@@ -29,6 +30,11 @@ internal class DecisionTableExecution(
      * the form of different result objects.
      */
     fun execute(): DecisionTableResult {
+        if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
+            markTableAsDisabled(fixtureClass.getAnnotation(Disabled::class.java).value)
+            return decisionTableResult
+        }
+
         try {
             assertFixtureIsDefinedCorrectly()
             executeTableWithBeforeAndAfter()
@@ -39,7 +45,7 @@ internal class DecisionTableExecution(
             markTableAsExecutedWithException(e)
         }
         setSkippedStatusForAllUnknownResults()
-        return decisionTable
+        return decisionTableResult
     }
 
     private fun assertFixtureIsDefinedCorrectly() {
@@ -55,7 +61,7 @@ internal class DecisionTableExecution(
     }
 
     private fun findUnmappedHeaders(): List<String> {
-        return decisionTable.headers
+        return decisionTableResult.headers
             .filter { (name) -> !fixtureModel.isInputAlias(name) && !fixtureModel.isCheckAlias(name) }
             .map { it.name }
     }
@@ -71,7 +77,7 @@ internal class DecisionTableExecution(
     private fun executeTable() {
         val inputHeaders = filterHeaders({ (name) -> fixtureModel.isInputAlias(name) })
         val checkHeaders = filterHeaders({ (name) -> fixtureModel.isCheckAlias(name) })
-        decisionTable.rows.forEach { row ->
+        decisionTableResult.rows.forEach { row ->
             try {
                 executeRowWithBeforeAndAfter(row, inputHeaders, checkHeaders)
                 markRowAsSuccessfullyExecuted(row)
@@ -141,7 +147,7 @@ internal class DecisionTableExecution(
     }
 
     private fun setSkippedStatusForAllUnknownResults() {
-        decisionTable.rows.forEach { row ->
+        decisionTableResult.rows.forEach { row ->
             row.headerToField.values.forEach { field ->
                 if (field.result === Result.Unknown) {
                     field.result = Result.Skipped
@@ -197,7 +203,7 @@ internal class DecisionTableExecution(
     }
 
     private fun filterHeaders(predicate: (Header) -> Boolean): Set<Header> {
-        return decisionTable.headers.filter(predicate).toSet()
+        return decisionTableResult.headers.filter(predicate).toSet()
     }
 
     private fun markFieldAsExecutedWithFailure(tableField: FieldResult, e: AssertionError) {
@@ -220,12 +226,16 @@ internal class DecisionTableExecution(
         row.result = Result.Exception(e)
     }
 
+    private fun markTableAsDisabled(reason: String) {
+        decisionTableResult.result = Result.Disabled(reason)
+    }
+
     private fun markTableAsSuccessfullyExecuted() {
-        decisionTable.result = Result.Executed
+        decisionTableResult.result = Result.Executed
     }
 
     private fun markTableAsExecutedWithException(e: Throwable) {
-        decisionTable.result = Result.Exception(e)
+        decisionTableResult.result = Result.Exception(e)
     }
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :

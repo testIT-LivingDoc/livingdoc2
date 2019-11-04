@@ -23,27 +23,35 @@ internal class HtmlReportRendererTest {
         val headerAPlusB = Header("a + b = ?")
 
         val documentResult = DocumentResult(
-                mutableListOf(DecisionTableResult(
-                        listOf(headerA, headerB, headerAPlusB),
-                        listOf(
-                                RowResult(mapOf(
-                                        headerA to FieldResult("2", Result.Executed),
-                                        headerB to FieldResult("3", Result.Executed),
-                                        headerAPlusB to FieldResult("6", Result.Failed(mockk(relaxed = true)))
-                                ), Result.Executed),
-                                RowResult(mapOf(
-                                        headerA to FieldResult("5", Result.Skipped),
-                                        headerB to FieldResult("6", Result.Unknown),
-                                        headerAPlusB to FieldResult("11", Result.Exception(mockk(relaxed = true)))
-                                ), Result.Executed)
+            Result.Executed,
+            mutableListOf(
+                DecisionTableResult(
+                    listOf(headerA, headerB, headerAPlusB),
+                    listOf(
+                        RowResult(
+                            mapOf(
+                                headerA to FieldResult("2", Result.Executed),
+                                headerB to FieldResult("3", Result.Executed),
+                                headerAPlusB to FieldResult("6", Result.Failed(mockk(relaxed = true)))
+                            ), Result.Executed
                         ),
-                        Result.Executed
-                )))
+                        RowResult(
+                            mapOf(
+                                headerA to FieldResult("5", Result.Skipped),
+                                headerB to FieldResult("6", Result.Unknown),
+                                headerAPlusB to FieldResult("11", Result.Exception(mockk(relaxed = true)))
+                            ), Result.Executed
+                        )
+                    ),
+                    Result.Executed
+                )
+            )
+        )
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-                """
+            """
                 <!DOCTYPE html>
                 <html>
                     <head>
@@ -91,7 +99,8 @@ internal class HtmlReportRendererTest {
                         </div>
                     </body>
                 </html>
-                """)
+                """
+        )
     }
 
     @Test
@@ -103,15 +112,19 @@ internal class HtmlReportRendererTest {
         val stepResultE = StepResult("E", Result.Exception(mockk()))
 
         val documentResult = DocumentResult(
-                mutableListOf(ScenarioResult(
-                        listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
-                        Result.Executed
-                )))
+            Result.Executed,
+            mutableListOf(
+                ScenarioResult(
+                    listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
+                    Result.Executed
+                )
+            )
+        )
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-                """
+            """
                 <!DOCTYPE html>
                 <html>
                     <head>
@@ -127,6 +140,7 @@ internal class HtmlReportRendererTest {
                         </ul>
                     </body>
                 </html>
-                """)
+                """
+        )
     }
 }

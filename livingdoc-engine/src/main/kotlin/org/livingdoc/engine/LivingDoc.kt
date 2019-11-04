@@ -1,10 +1,12 @@
 package org.livingdoc.engine
 
+import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
+import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.ExampleResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
@@ -33,8 +35,11 @@ class LivingDoc(
 
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
-        val documentClassModel = ExecutableDocumentModel.of(documentClass)
+        if (documentClass.isAnnotationPresent(Disabled::class.java)) {
+            return DocumentResult(Result.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
+        }
 
+        val documentClassModel = ExecutableDocumentModel.of(documentClass)
         val document = loadDocument(documentClassModel)
 
         val results: List<ExampleResult> = document.elements.mapNotNull { element ->
@@ -52,7 +57,7 @@ class LivingDoc(
             }
         }
 
-        return DocumentResult(results)
+        return DocumentResult(Result.Executed, results)
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {

@@ -5,6 +5,9 @@ sealed class Result {
     /** Nothing is known about the result state. */
     object Unknown : Result()
 
+    /** The fixture was disabled and is ignored */
+    data class Disabled(val reason: String = "") : Result()
+
     /** Execution was skipped. */
     object Skipped : Result()
 

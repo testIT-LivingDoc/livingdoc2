@@ -34,9 +34,9 @@ class DecisionTableTestDescriptor(
     private fun rowDisplayName(index: Int) = "Row #${index + 1}"
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        val result = tableResult.result
-        return when (result) {
+        return when (val result = tableResult.result) {
             Result.Unknown -> skip("unknown")
+            is Result.Disabled -> skip(result.reason)
             Result.Skipped -> skip("skipped")
             else -> doNotSkip()
         }
@@ -68,9 +68,9 @@ class DecisionTableTestDescriptor(
             "[${header.name}] = ${fieldResult.value}"
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-            val result = rowResult.result
-            return when (result) {
+            return when (val result = rowResult.result) {
                 Result.Unknown -> skip("unknown")
+                is Result.Disabled -> skip(result.reason)
                 Result.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }
@@ -97,9 +97,9 @@ class DecisionTableTestDescriptor(
             }
 
             override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-                val result = fieldResult.result
-                return when (result) {
+                return when (val result = fieldResult.result) {
                     Result.Unknown -> skip("unknown")
+                    is Result.Disabled -> skip(result.reason)
                     Result.Skipped -> skip("skipped")
                     else -> doNotSkip()
                 }
