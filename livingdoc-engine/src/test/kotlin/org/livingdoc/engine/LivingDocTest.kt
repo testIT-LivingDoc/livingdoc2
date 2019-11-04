@@ -9,7 +9,7 @@ import org.livingdoc.repositories.RepositoryManager
 internal class LivingDocTest {
 
     @Test
-    fun execute() {
+    fun disabledExecutableDocumentExecute() {
         val repoManagerMock = mockkJClass(RepositoryManager::class.java)
         val cut = LivingDoc(repoManagerMock)
         val documentClass = DisabledExecutableDocument::class.java
