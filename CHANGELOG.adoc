@@ -6,3 +6,15 @@ The format is based on https://keepachangelog.com/en/1.0.0[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
 == https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/compare/b81fe455...master[Unreleased]
+
+=== Added
+
+- Changelog to document changes between versions
+- Repository to load data from a webserver
+- Annotation to disable documents and fixtures
+- Test reports in JSON format
+
+=== Changed
+
+- DecisionTables and Scenarios without a matching fixture will now
+  generate an exception instead of being silently ignored.
