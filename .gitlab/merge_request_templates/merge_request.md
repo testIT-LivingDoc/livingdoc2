@@ -11,5 +11,5 @@
 #### Documentation
 
 - [ ] If needed, Architectural Decisions are documented as described in the [Wiki](https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/wikis/Product-Documentation/System-Documentation/Architecture-and-Design/ADR)
-- [ ] If needed, changes are documented in the [CHANGELOG](https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/blob/master/CHANGELOG.md)
+- [ ] If needed, changes are documented in the [CHANGELOG](https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/blob/master/CHANGELOG.adoc)
 - [ ] If needed, changes are documented in the [Wiki](https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/wikis/home)
