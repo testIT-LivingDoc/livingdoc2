@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.0.0[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
-== https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/compare/b81fe455...master[Unreleased]
+== link:++https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/compare/b81fe455...master++[Unreleased]
 
 === Added
 
