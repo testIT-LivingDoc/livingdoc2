@@ -6,7 +6,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
@@ -34,10 +34,10 @@ class DecisionTableTestDescriptor(
     private fun rowDisplayName(index: Int) = "Row #${index + 1}"
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        return when (val result = tableResult.result) {
-            Result.Unknown -> skip("unknown")
-            is Result.Disabled -> skip(result.reason)
-            Result.Skipped -> skip("skipped")
+        return when (val result = tableResult.status) {
+            Status.Unknown -> skip("unknown")
+            is Status.Disabled -> skip(result.reason)
+            Status.Skipped -> skip("skipped")
             else -> doNotSkip()
         }
     }
@@ -68,10 +68,10 @@ class DecisionTableTestDescriptor(
             "[${header.name}] = ${fieldResult.value}"
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-            return when (val result = rowResult.result) {
-                Result.Unknown -> skip("unknown")
-                is Result.Disabled -> skip(result.reason)
-                Result.Skipped -> skip("skipped")
+            return when (val result = rowResult.status) {
+                Status.Unknown -> skip("unknown")
+                is Status.Disabled -> skip(result.reason)
+                Status.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }
         }
@@ -88,19 +88,19 @@ class DecisionTableTestDescriptor(
                 context: LivingDocContext,
                 dynamicTestExecutor: Node.DynamicTestExecutor
             ): LivingDocContext {
-                val result = fieldResult.result
+                val result = fieldResult.status
                 when (result) {
-                    is Result.Failed -> throw result.reason
-                    is Result.Exception -> throw result.exception
+                    is Status.Failed -> throw result.reason
+                    is Status.Exception -> throw result.exception
                 }
                 return context
             }
 
             override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-                return when (val result = fieldResult.result) {
-                    Result.Unknown -> skip("unknown")
-                    is Result.Disabled -> skip(result.reason)
-                    Result.Skipped -> skip("skipped")
+                return when (val result = fieldResult.status) {
+                    Status.Unknown -> skip("unknown")
+                    is Status.Disabled -> skip(result.reason)
+                    Status.Skipped -> skip("skipped")
                     else -> doNotSkip()
                 }
             }

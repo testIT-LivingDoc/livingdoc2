@@ -2,7 +2,7 @@ package org.livingdoc.engine.execution.examples.scenarios
 
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.fixtures.scenarios.Binding
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
@@ -26,7 +26,7 @@ internal class ScenarioExecution(
      *
      * Does not throw any kind of exception.
      * Exceptional state of the execution is packaged inside the [ScenarioResult] in
-     * the form of different result objects.
+     * the form of different status objects.
      */
     fun execute(): ScenarioResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
@@ -64,13 +64,13 @@ internal class ScenarioExecution(
     }
 
     private fun executeSteps(fixture: Any) {
-        var previousResult: Result = Result.Executed
+        var previousStatus: Status = Status.Executed
         for (step in scenarioResult.steps) {
-            if (previousResult == Result.Executed) {
+            if (previousStatus == Status.Executed) {
                 executeStep(fixture, step)
-                previousResult = step.result
+                previousStatus = step.status
             } else {
-                step.result = Result.Skipped
+                step.status = Status.Skipped
             }
         }
     }
@@ -85,7 +85,7 @@ internal class ScenarioExecution(
                     { error("Missing parameter value: ${getParameterName(parameter)}") })
             }
             .toTypedArray()
-        step.result = invokeExpectingException {
+        step.status = invokeExpectingException {
             methodInvoker.invoke(method, fixture, parameterList)
         }
     }
@@ -95,14 +95,14 @@ internal class ScenarioExecution(
             ?: parameter.name
     }
 
-    private fun invokeExpectingException(function: () -> Unit): Result {
+    private fun invokeExpectingException(function: () -> Unit): Status {
         return try {
             function.invoke()
-            Result.Executed
+            Status.Executed
         } catch (e: AssertionError) {
-            Result.Failed(e)
+            Status.Failed(e)
         } catch (e: Exception) {
-            Result.Exception(e)
+            Status.Exception(e)
         }
     }
 
@@ -129,21 +129,21 @@ internal class ScenarioExecution(
     }
 
     private fun markScenarioAsSuccessfullyExecuted() {
-        scenarioResult.result = Result.Executed
+        scenarioResult.status = Status.Executed
     }
 
     private fun markScenarioAsDisabled(reason: String) {
-        scenarioResult.result = Result.Disabled(reason)
+        scenarioResult.status = Status.Disabled(reason)
     }
 
     private fun markScenarioAsExecutedWithException(e: Throwable) {
-        scenarioResult.result = Result.Exception(e)
+        scenarioResult.status = Status.Exception(e)
     }
 
     private fun setSkippedStatusForAllUnknownResults() {
         for (step in scenarioResult.steps) {
-            if (step.result === Result.Unknown) {
-                step.result = Result.Skipped
+            if (step.status === Status.Unknown) {
+                step.status = Status.Skipped
             }
         }
     }

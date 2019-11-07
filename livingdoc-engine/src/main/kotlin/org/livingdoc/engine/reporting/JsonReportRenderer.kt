@@ -4,7 +4,7 @@ import com.beust.klaxon.JsonObject
 import org.livingdoc.engine.execution.DocumentResult
 
 import com.beust.klaxon.json
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 
@@ -15,7 +15,7 @@ class JsonReportRenderer {
                 when (it) {
                     is DecisionTableResult -> handleDecisionTableResult(it)
                     is ScenarioResult -> handleScenarioResult(it)
-                    else -> throw IllegalArgumentException("Unknown ExampleResult type.")
+                    else -> throw IllegalArgumentException("Unknown Result type.")
                 }
             }))
         }
@@ -31,13 +31,13 @@ class JsonReportRenderer {
                                 "fields" to obj(it.headerToField.map { (header, fieldResult) ->
                                     header.name to obj(
                                             "value" to fieldResult.value,
-                                            "result" to handleResult(fieldResult.result)
+                                            "status" to handleResult(fieldResult.status)
                                     )
                                 }),
-                                "result" to handleResult(it.result)
+                                "status" to handleResult(it.status)
                         )
                     }),
-                    "result" to handleResult(decisionTableResult.result)
+                    "status" to handleResult(decisionTableResult.status)
             )
         }
     }
@@ -47,22 +47,22 @@ class JsonReportRenderer {
             obj(
                     "steps" to array(scenarioResult.steps.map {
                         obj(
-                                it.value to handleResult(it.result)
+                                it.value to handleResult(it.status)
                         )
                     }),
-                    "result" to handleResult(scenarioResult.result)
+                    "status" to handleResult(scenarioResult.status)
             )
         }
     }
 
-    private fun handleResult(result: Result): String {
-        return when (result) {
-            Result.Executed -> "executed"
-            is Result.Disabled -> "disabled"
-            Result.Skipped -> "skipped"
-            Result.Unknown -> "unknown"
-            is Result.Failed -> "failed"
-            is Result.Exception -> "exception"
+    private fun handleResult(status: Status): String {
+        return when (status) {
+            Status.Executed -> "executed"
+            is Status.Disabled -> "disabled"
+            Status.Skipped -> "skipped"
+            Status.Unknown -> "unknown"
+            is Status.Failed -> "failed"
+            is Status.Exception -> "exception"
         }
     }
 }

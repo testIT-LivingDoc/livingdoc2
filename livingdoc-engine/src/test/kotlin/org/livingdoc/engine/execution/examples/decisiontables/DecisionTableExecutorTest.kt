@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.Result.*
+import org.livingdoc.engine.execution.Status.*
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.MalformedDecisionTableFixtureException
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecution.UnmappedHeaderException
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
@@ -37,7 +37,7 @@ internal class DecisionTableExecutorTest {
         val rows = arrayListOf(row1, row2)
 
         val resultTable = cut.execute(DecisionTable(headers, rows), LifeCycleFixture::class.java, null)
-        assertThat(resultTable.result).isInstanceOf(Executed::class.java)
+        assertThat(resultTable.status).isInstanceOf(Executed::class.java)
 
         val fixture = LifeCycleFixture.callback
         verifySequence {
@@ -63,7 +63,7 @@ internal class DecisionTableExecutorTest {
         val decisionTable = DecisionTable(headers, rows)
         val fixtureClass = MalformedFixtures.NoDefaultConstructor::class.java
 
-        val tableResult = cut.execute(decisionTable, fixtureClass, null).result
+        val tableResult = cut.execute(decisionTable, fixtureClass, null).status
         assertThat(tableResult).isInstanceOf(Exception::class.java)
 
         val exception = (tableResult as Exception).exception
@@ -81,7 +81,7 @@ internal class DecisionTableExecutorTest {
         val decisionTable = DecisionTable(headers, rows)
         val fixtureClass = LifeCycleFixture::class.java
 
-        val tableResult = cut.execute(decisionTable, fixtureClass, null).result
+        val tableResult = cut.execute(decisionTable, fixtureClass, null).status
         assertThat(tableResult).isInstanceOf(Exception::class.java)
 
         val exception = (tableResult as Exception).exception
@@ -217,7 +217,7 @@ internal class DecisionTableExecutorTest {
 
                 val inputField = execute(row).rows[0].headerToField[input]!!
 
-                assertThat(inputField.result).isInstanceOf(Exception::class.java)
+                assertThat(inputField.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -244,7 +244,7 @@ internal class DecisionTableExecutorTest {
 
                 val inputField = execute(row).rows[0].headerToField[input]!!
 
-                assertThat(inputField.result).isInstanceOf(Failed::class.java)
+                assertThat(inputField.status).isInstanceOf(Failed::class.java)
             }
 
             @Test
@@ -275,7 +275,7 @@ internal class DecisionTableExecutorTest {
 
                 val checkField = execute(row).rows[0].headerToField[check]!!
 
-                assertThat(checkField.result).isInstanceOf(Exception::class.java)
+                assertThat(checkField.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -298,7 +298,7 @@ internal class DecisionTableExecutorTest {
 
                 val checkField = execute(row).rows[0].headerToField[check]!!
 
-                assertThat(checkField.result).isInstanceOf(Failed::class.java)
+                assertThat(checkField.status).isInstanceOf(Failed::class.java)
             }
 
             @Test
@@ -325,7 +325,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -335,8 +335,8 @@ internal class DecisionTableExecutorTest {
 
                 val rowResult = execute(row).rows[0]
 
-                assertThat(rowResult.headerToField[input]!!.result).isInstanceOf(Skipped::class.java)
-                assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[input]!!.status).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[check]!!.status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -364,7 +364,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -374,8 +374,8 @@ internal class DecisionTableExecutorTest {
 
                 val rowResult = execute(row).rows[0]
 
-                assertThat(rowResult.headerToField[input]!!.result).isInstanceOf(Skipped::class.java)
-                assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[input]!!.status).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[check]!!.status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -407,7 +407,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -417,7 +417,7 @@ internal class DecisionTableExecutorTest {
 
                 val rowResult = execute(row).rows[0]
 
-                assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[check]!!.status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -441,7 +441,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -451,7 +451,7 @@ internal class DecisionTableExecutorTest {
 
                 val rowResult = execute(row).rows[0]
 
-                assertThat(rowResult.headerToField[check]!!.result).isInstanceOf(Skipped::class.java)
+                assertThat(rowResult.headerToField[check]!!.status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -481,7 +481,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -501,7 +501,7 @@ internal class DecisionTableExecutorTest {
 
                 val row = execute(row).rows[0]
 
-                assertThat(row.result).isInstanceOf(Exception::class.java)
+                assertThat(row.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -525,7 +525,7 @@ internal class DecisionTableExecutorTest {
 
                 val table = execute(row)
 
-                assertThat(table.result).isInstanceOf(Exception::class.java)
+                assertThat(table.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -536,8 +536,8 @@ internal class DecisionTableExecutorTest {
                 val table = execute(row, anotherRow)
 
                 val rows = table.rows
-                assertThat(rows[0].result).isInstanceOf(Skipped::class.java)
-                assertThat(rows[1].result).isInstanceOf(Skipped::class.java)
+                assertThat(rows[0].status).isInstanceOf(Skipped::class.java)
+                assertThat(rows[1].status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -557,7 +557,7 @@ internal class DecisionTableExecutorTest {
 
                 val table = execute(row)
 
-                assertThat(table.result).isInstanceOf(Exception::class.java)
+                assertThat(table.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -568,8 +568,8 @@ internal class DecisionTableExecutorTest {
                 val table = execute(row, anotherRow)
 
                 val rows = table.rows
-                assertThat(rows[0].result).isInstanceOf(Skipped::class.java)
-                assertThat(rows[1].result).isInstanceOf(Skipped::class.java)
+                assertThat(rows[0].status).isInstanceOf(Skipped::class.java)
+                assertThat(rows[1].status).isInstanceOf(Skipped::class.java)
             }
 
             @Test
@@ -593,7 +593,7 @@ internal class DecisionTableExecutorTest {
 
                 val table = execute(row)
 
-                assertThat(table.result).isInstanceOf(Exception::class.java)
+                assertThat(table.status).isInstanceOf(Exception::class.java)
             }
 
             @Test
@@ -603,7 +603,7 @@ internal class DecisionTableExecutorTest {
 
                 val table = execute(row)
 
-                assertThat(table.result).isInstanceOf(Exception::class.java)
+                assertThat(table.status).isInstanceOf(Exception::class.java)
             }
         }
 
@@ -669,12 +669,12 @@ internal class DecisionTableExecutorTest {
 
         val resultTable = cut.execute(DecisionTable(headers, rows), CalculatorDecisionTableFixture::class.java, null)
 
-        assertThat(resultTable.result).isEqualTo(Executed)
+        assertThat(resultTable.status).isEqualTo(Executed)
         assertThat(resultTable.rows).hasSize(4)
         resultTable.rows.forEach { (headerToField, result) ->
             assertThat(result).isEqualTo(Executed)
             headerToField.values.forEach { field ->
-                assertThat(field.result).isEqualTo(Executed)
+                assertThat(field.status).isEqualTo(Executed)
             }
         }
     }
