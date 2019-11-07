@@ -14,7 +14,7 @@ import com.vladsch.flexmark.util.options.MutableDataSet
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.ParseException
-import org.livingdoc.repositories.model.Example
+import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -43,8 +43,8 @@ class MarkdownFormat : DocumentFormat {
         return Document(examples)
     }
 
-    private fun com.vladsch.flexmark.ast.Node.mapToNodes(): List<Example> {
-        val examples = mutableListOf<Example>()
+    private fun com.vladsch.flexmark.ast.Node.mapToNodes(): List<TestData> {
+        val examples = mutableListOf<TestData>()
 
         this.children.toList().forEach { node ->
             when (node) {

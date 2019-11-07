@@ -1,7 +1,7 @@
 package org.livingdoc.repositories.model.scenario
 
-import org.livingdoc.repositories.model.Example
+import org.livingdoc.repositories.model.TestData
 
 data class Scenario(
     val steps: List<Step>
-) : Example
+) : TestData
