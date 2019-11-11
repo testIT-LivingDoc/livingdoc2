@@ -125,7 +125,7 @@ rootProject.apply {
 
 tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
 
-	outputFormat = "html-as-java"
+	outputFormat = "javadoc"
 	outputDirectory = "$buildDir/dokka"
 
 	subProjects = listOf( "livingdoc-api",
