@@ -2,6 +2,8 @@ plugins {
 	id("io.gitlab.arturbosch.detekt")
 	id("com.gradle.build-scan")
 	id("com.diffplug.gradle.spotless")
+	id( "org.jetbrains.dokka")
+    kotlin("jvm")
 }
 
 buildScan {
@@ -119,6 +121,24 @@ rootProject.apply {
 			endWithNewline()
 		}
 	}
+}
+
+tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
+
+	outputFormat = "html-as-java"
+	outputDirectory = "$buildDir/dokka"
+
+	subProjects = listOf( "livingdoc-api",
+		"livingdoc-converters",
+		"livingdoc-documentation",
+		"livingdoc-engine",
+		"livingdoc-junit-engine",
+		"livingdoc-repositories",
+		"livingdoc-repository-file",
+		"livingdoc-repository-rest",
+		"livingdoc-sample"
+	)
+
 }
 
 tasks.create<JacocoReport>("codeCoverageReport") {

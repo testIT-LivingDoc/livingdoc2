@@ -25,6 +25,7 @@ object Versions {
     //Plugins
     val buildScanPlugin = "2.2.1"
     val spotlessPlugin = "3.23.0"
+    val dokkaPlugin =  "0.10.0"
 
     //AsciiDoctor
     val asciidoctorPlugin = "1.5.3"
