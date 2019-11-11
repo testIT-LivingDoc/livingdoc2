@@ -3,7 +3,7 @@ plugins {
 	id("com.gradle.build-scan")
 	id("com.diffplug.gradle.spotless")
 	id( "org.jetbrains.dokka")
-    kotlin("jvm")
+	kotlin("jvm")
 }
 
 buildScan {
