@@ -37,6 +37,18 @@ lint project:
     - ./gradlew spotlessCheck
     - ./gradlew detekt
 
+pages:
+  stage: deploy
+  script:
+    - ./gradlew aggregatedDokka
+    - mkdir public
+    - mv build/dokka public
+
+  artifacts:
+    paths:
+      - public
+
+
 publish:
   stage: deploy
   script:
