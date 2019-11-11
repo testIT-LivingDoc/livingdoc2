@@ -9,6 +9,10 @@ dependencies {
 	compile("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
 	compile(project(":livingdoc-repositories"))
 
-	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
-	testCompile("org.assertj:assertj-core:${Versions.assertJ}")
+	testRuntime(project(":livingdoc-junit-engine"))
+	testRuntime(project(":livingdoc-repository-file"))
+
+	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
+	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
+	testImplementation(project(":livingdoc-api"))
 }
