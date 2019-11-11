@@ -74,6 +74,9 @@ The smallest independently executable part of an
 more <<expectation,Expectations>>. If all expectations are met, the test case
 succeeds, otherwise it fails.
 
+TestData:: [[test-data]]
+Same as <<example,Example>>. This is only used in code as "example" is not very expressive there.
+
 Test Input:: [[test-input]]
 A value that is passed to the <<fixture,Fixture>> to set up an interaction
 with the <<system-under-test,System under Test>>.
