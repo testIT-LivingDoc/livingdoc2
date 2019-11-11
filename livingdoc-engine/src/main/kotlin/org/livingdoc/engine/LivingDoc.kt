@@ -10,6 +10,8 @@ import org.livingdoc.engine.execution.Result
 import org.livingdoc.engine.execution.examples.ExampleResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
+import org.livingdoc.engine.reporting.HtmlReportRenderer
+import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.Configuration
@@ -57,7 +59,13 @@ class LivingDoc(
             }
         }
 
-        return DocumentResult(Result.Executed, results)
+        val result = DocumentResult(Result.Executed, results)
+
+        val renderer = HtmlReportRenderer()
+        val html = renderer.render(result)
+        ReportWriter().writeToFile(html)
+
+        return result
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {
