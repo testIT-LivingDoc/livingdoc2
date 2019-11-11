@@ -4,7 +4,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.DocumentResult
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
@@ -23,27 +23,27 @@ internal class HtmlReportRendererTest {
         val headerAPlusB = Header("a + b = ?")
 
         val documentResult = DocumentResult(
-            Result.Executed,
+            Status.Executed,
             mutableListOf(
                 DecisionTableResult(
                     listOf(headerA, headerB, headerAPlusB),
                     listOf(
                         RowResult(
                             mapOf(
-                                headerA to FieldResult("2", Result.Executed),
-                                headerB to FieldResult("3", Result.Executed),
-                                headerAPlusB to FieldResult("6", Result.Failed(mockk(relaxed = true)))
-                            ), Result.Executed
+                                headerA to FieldResult("2", Status.Executed),
+                                headerB to FieldResult("3", Status.Executed),
+                                headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
+                            ), Status.Executed
                         ),
                         RowResult(
                             mapOf(
-                                headerA to FieldResult("5", Result.Skipped),
-                                headerB to FieldResult("6", Result.Unknown),
-                                headerAPlusB to FieldResult("11", Result.Exception(mockk(relaxed = true)))
-                            ), Result.Executed
+                                headerA to FieldResult("5", Status.Skipped),
+                                headerB to FieldResult("6", Status.Unknown),
+                                headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
+                            ), Status.Executed
                         )
                     ),
-                    Result.Executed
+                    Status.Executed
                 )
             )
         )
@@ -105,18 +105,18 @@ internal class HtmlReportRendererTest {
 
     @Test
     fun `scenarioResult is rendered correctly`() {
-        val stepResultA = StepResult("A", Result.Executed)
-        val stepResultB = StepResult("B", Result.Unknown)
-        val stepResultC = StepResult("C", Result.Skipped)
-        val stepResultD = StepResult("D", Result.Failed(mockk()))
-        val stepResultE = StepResult("E", Result.Exception(mockk()))
+        val stepResultA = StepResult("A", Status.Executed)
+        val stepResultB = StepResult("B", Status.Unknown)
+        val stepResultC = StepResult("C", Status.Skipped)
+        val stepResultD = StepResult("D", Status.Failed(mockk()))
+        val stepResultE = StepResult("E", Status.Exception(mockk()))
 
         val documentResult = DocumentResult(
-            Result.Executed,
+            Status.Executed,
             mutableListOf(
                 ScenarioResult(
                     listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
-                    Result.Executed
+                    Status.Executed
                 )
             )
         )

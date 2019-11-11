@@ -1,7 +1,7 @@
 package org.livingdoc.engine.reporting
 
 import org.jsoup.nodes.Element
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -20,7 +20,7 @@ class HtmlError(val number: Int, val message: String, val stacktrace: String)
 
 interface HtmlResult
 
-class HtmlTable(val renderContext: HtmlRenderContext, val tableResult: Result, val columnCount: Int) : HtmlResult {
+class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) : HtmlResult {
     val table = Element("table")
 
     init {
@@ -28,16 +28,16 @@ class HtmlTable(val renderContext: HtmlRenderContext, val tableResult: Result, v
     }
 
     private fun appendRowToDisplayFailedTableIfNecessary() {
-        if (tableResult is Result.Failed || tableResult is Result.Exception) {
+        if (tableStatus is Status.Failed || tableStatus is Status.Exception) {
             val tableFailedRow = Element("tr")
             tableFailedRow.appendChild(
                 Element("td").apply {
                     setStyleClasses(
                         HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
-                        determineCssClassForBackgroundColor(tableResult)
+                        determineCssClassForBackgroundColor(tableStatus)
                     )
                     attr("colspan", columnCount.toString())
-                    appendChild(createFailedPopupLink(renderContext, tableResult))
+                    appendChild(createFailedPopupLink(renderContext, tableStatus))
                 })
             table.appendChild(tableFailedRow)
         }
@@ -63,15 +63,15 @@ fun HtmlTable.headers(headers: List<Header>) {
 fun HtmlTable.rows(rows: List<RowResult>) {
     val htmlTable = this
 
-    fun appendCellToDisplayFailedRowIfNecessary(newRow: Element, rowResult: Result) {
-        if (rowResult is Result.Failed || rowResult is Result.Exception) {
+    fun appendCellToDisplayFailedRowIfNecessary(newRow: Element, rowStatus: Status) {
+        if (rowStatus is Status.Failed || rowStatus is Status.Exception) {
             newRow.appendChild(
                 Element("td").apply {
                     setStyleClasses(
                         HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
-                        determineCssClassForBackgroundColor(rowResult)
+                        determineCssClassForBackgroundColor(rowStatus)
                     )
-                    appendChild(createFailedPopupLink(htmlTable.renderContext, rowResult))
+                    appendChild(createFailedPopupLink(htmlTable.renderContext, rowStatus))
                 })
         }
     }
@@ -93,7 +93,7 @@ fun HtmlTable.rows(rows: List<RowResult>) {
                             html(value)
                         })
 
-                    if (cellResult is Result.Failed || cellResult is Result.Exception) {
+                    if (cellResult is Status.Failed || cellResult is Status.Exception) {
                         appendChild(createFailedPopupLink(htmlTable.renderContext, cellResult))
                     }
                 })
@@ -103,7 +103,7 @@ fun HtmlTable.rows(rows: List<RowResult>) {
     }
 }
 
-private fun createFailedPopupLink(renderContext: HtmlRenderContext, result: Result): Element {
+private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Status): Element {
     fun createStacktrace(e: Throwable): String {
         return StringWriter().use { stringWriter ->
             e.printStackTrace(PrintWriter(stringWriter))
@@ -116,17 +116,17 @@ private fun createFailedPopupLink(renderContext: HtmlRenderContext, result: Resu
     val failedPopupLink = Element("a")
     failedPopupLink.attr("href", "#popup$nextErrorNumber")
 
-    when (result) {
-        is Result.Failed -> {
+    when (status) {
+        is Status.Failed -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_FAILED)
             renderContext.addPopupError(
-                HtmlError(nextErrorNumber, result.reason.message ?: "", createStacktrace(result.reason))
+                HtmlError(nextErrorNumber, status.reason.message ?: "", createStacktrace(status.reason))
             )
         }
-        is Result.Exception -> {
+        is Status.Exception -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_EXCEPTION)
             renderContext.addPopupError(
-                HtmlError(nextErrorNumber, result.exception.message ?: "", createStacktrace(result.exception))
+                HtmlError(nextErrorNumber, status.exception.message ?: "", createStacktrace(status.exception))
             )
         }
     }
@@ -151,14 +151,14 @@ fun HtmlList.steps(stepResults: List<StepResult>) {
     }
 }
 
-private fun determineCssClassForBackgroundColor(result: Result): String {
-    return when (result) {
-        Result.Executed -> "background-executed"
-        is Result.Disabled -> "background-disabled"
-        Result.Skipped -> "background-skipped"
-        Result.Unknown -> "background-unknown"
-        is Result.Failed -> "background-failed"
-        is Result.Exception -> "background-exception"
+private fun determineCssClassForBackgroundColor(status: Status): String {
+    return when (status) {
+        Status.Executed -> "background-executed"
+        is Status.Disabled -> "background-disabled"
+        Status.Skipped -> "background-skipped"
+        Status.Unknown -> "background-unknown"
+        is Status.Failed -> "background-failed"
+        is Status.Exception -> "background-exception"
     }
 }
 

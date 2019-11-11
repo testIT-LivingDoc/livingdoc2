@@ -6,7 +6,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.junit.engine.LivingDocContext
@@ -32,10 +32,10 @@ class ScenarioTestDescriptor(
     private fun stepDisplayName(stepResult: StepResult) = stepResult.value
 
     override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-        return when (val result = scenarioResult.result) {
-            Result.Unknown -> skip("unknown")
-            is Result.Disabled -> skip(result.reason)
-            Result.Skipped -> skip("skipped")
+        return when (val result = scenarioResult.status) {
+            Status.Unknown -> skip("unknown")
+            is Status.Disabled -> skip(result.reason)
+            Status.Skipped -> skip("skipped")
             else -> doNotSkip()
         }
     }
@@ -52,19 +52,19 @@ class ScenarioTestDescriptor(
             context: LivingDocContext,
             dynamicTestExecutor: Node.DynamicTestExecutor
         ): LivingDocContext {
-            val result = stepResult.result
+            val result = stepResult.status
             when (result) {
-                is Result.Failed -> throw result.reason
-                is Result.Exception -> throw result.exception
+                is Status.Failed -> throw result.reason
+                is Status.Exception -> throw result.exception
             }
             return context
         }
 
         override fun shouldBeSkipped(context: LivingDocContext): Node.SkipResult {
-            return when (val result = stepResult.result) {
-                Result.Unknown -> skip("unknown")
-                is Result.Disabled -> skip(result.reason)
-                Result.Skipped -> skip("skipped")
+            return when (val result = stepResult.status) {
+                Status.Unknown -> skip("unknown")
+                is Status.Disabled -> skip(result.reason)
+                Status.Skipped -> skip("skipped")
                 else -> doNotSkip()
             }
         }

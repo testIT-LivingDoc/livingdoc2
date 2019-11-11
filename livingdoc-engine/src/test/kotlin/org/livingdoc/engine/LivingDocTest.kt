@@ -2,7 +2,7 @@ package org.livingdoc.engine
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.resources.DisabledExecutableDocument
 import org.livingdoc.repositories.RepositoryManager
 
@@ -16,7 +16,7 @@ internal class LivingDocTest {
 
         val result = cut.execute(documentClass)
 
-        assertThat(result.documentResult).isInstanceOf(Result.Disabled::class.java)
-        assertThat((result.documentResult as Result.Disabled).reason).isEqualTo("Skip this test document")
+        assertThat(result.documentStatus).isInstanceOf(Status.Disabled::class.java)
+        assertThat((result.documentStatus as Status.Disabled).reason).isEqualTo("Skip this test document")
     }
 }

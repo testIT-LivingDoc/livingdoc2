@@ -7,8 +7,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.Result
-import org.livingdoc.engine.execution.Result.*
+import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.Status.*
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
@@ -26,10 +26,10 @@ internal class ScenarioExecutorTest {
 
         val scenarioResult = cut.execute(Scenario(steps), SelfCheckoutScenarioFixture::class.java, null)
 
-        assertThat(scenarioResult.result).isEqualTo(Executed)
+        assertThat(scenarioResult.status).isEqualTo(Executed)
         assertThat(scenarioResult.steps).hasSize(3)
         scenarioResult.steps.forEach { step ->
-            assertThat(step.result).isEqualTo(Executed)
+            assertThat(step.status).isEqualTo(Executed)
         }
     }
 
@@ -38,7 +38,7 @@ internal class ScenarioExecutorTest {
         val steps = listOf(Step("step1"), Step("step2"))
 
         val resultScenario = cut.execute(Scenario(steps), LifeCycleFixture::class.java, null)
-        assertThat(resultScenario.result).isEqualTo(Executed)
+        assertThat(resultScenario.status).isEqualTo(Executed)
 
         val fixture = LifeCycleFixture.callback
 
@@ -88,7 +88,7 @@ internal class ScenarioExecutorTest {
 
         @Test
         fun `a mismatching parameter results in "Exception"`() {
-            val result = execute(Step("Step with mismatching parameter: Oh noes!")).result
+            val result = execute(Step("Step with mismatching parameter: Oh noes!")).status
 
             assertThat(result).isInstanceOf(Exception::class.java)
         }
@@ -103,7 +103,7 @@ internal class ScenarioExecutorTest {
         fun `the result of the scenario is Executed`() {
             every { fixture.step1() } throws AssertionError()
 
-            val result = execute(Step("step1"), Step("step2")).result
+            val result = execute(Step("step1"), Step("step2")).status
 
             assertThat(result).isInstanceOf(Executed::class.java)
         }
@@ -112,7 +112,7 @@ internal class ScenarioExecutorTest {
         fun `the result of the step is Failed`() {
             every { fixture.step1() } throws AssertionError()
 
-            val stepResult = execute(Step("step1"), Step("step2")).steps[0].result
+            val stepResult = execute(Step("step1"), Step("step2")).steps[0].status
 
             assertThat(stepResult).isInstanceOf(Failed::class.java)
         }
@@ -121,7 +121,7 @@ internal class ScenarioExecutorTest {
         fun `the following steps are Skipped`() {
             every { fixture.step1() } throws AssertionError()
 
-            val stepResult = execute(Step("step1"), Step("step2")).steps[1].result
+            val stepResult = execute(Step("step1"), Step("step2")).steps[1].status
 
             assertThat(stepResult).isInstanceOf(Skipped::class.java)
         }
@@ -151,7 +151,7 @@ internal class ScenarioExecutorTest {
             fun `the result is Exception`() {
                 every { fixture.before1() } throws IllegalStateException()
 
-                val result = execute(Step("step1"), Step("step2")).result
+                val result = execute(Step("step1"), Step("step2")).status
 
                 assertThat(result).isInstanceOf(Exception::class.java)
             }
@@ -183,8 +183,8 @@ internal class ScenarioExecutorTest {
 
                 val result = execute(Step("step1"), Step("step2"))
 
-                assertThat(result.steps[0].result).isEqualTo(Skipped)
-                assertThat(result.steps[1].result).isEqualTo(Skipped)
+                assertThat(result.steps[0].status).isEqualTo(Skipped)
+                assertThat(result.steps[1].status).isEqualTo(Skipped)
             }
 
             @Test
@@ -207,7 +207,7 @@ internal class ScenarioExecutorTest {
             fun `the result of the scenario is Executed`() {
                 every { fixture.step1() } throws IllegalStateException()
 
-                val result = execute(Step("step1"), Step("step2")).result
+                val result = execute(Step("step1"), Step("step2")).status
 
                 assertThat(result).isInstanceOf(Executed::class.java)
             }
@@ -216,7 +216,7 @@ internal class ScenarioExecutorTest {
             fun `the result of the step is Exception`() {
                 every { fixture.step1() } throws IllegalStateException()
 
-                val stepResult = execute(Step("step1"), Step("step2")).steps[0].result
+                val stepResult = execute(Step("step1"), Step("step2")).steps[0].status
 
                 assertThat(stepResult).isInstanceOf(Exception::class.java)
             }
@@ -225,7 +225,7 @@ internal class ScenarioExecutorTest {
             fun `the following steps are Skipped`() {
                 every { fixture.step1() } throws IllegalStateException()
 
-                val stepResult = execute(Step("step1"), Step("step2")).steps[1].result
+                val stepResult = execute(Step("step1"), Step("step2")).steps[1].status
 
                 assertThat(stepResult).isInstanceOf(Skipped::class.java)
             }
@@ -250,7 +250,7 @@ internal class ScenarioExecutorTest {
             fun `the result of the scenario is Exception`() {
                 every { fixture.after1() } throws IllegalStateException()
 
-                val result = execute().result
+                val result = execute().status
 
                 assertThat(result).isInstanceOf(Exception::class.java)
             }
@@ -262,7 +262,7 @@ internal class ScenarioExecutorTest {
                 every { fixture.after1() } throws exception1
                 every { fixture.after2() } throws exception2
 
-                val result = execute().result as Result.Exception
+                val result = execute().status as Status.Exception
 
                 assertThat(result.exception).isInstanceOf(ScenarioExecution.AfterMethodExecutionException::class.java)
                 assertThat(result.exception.suppressed).containsExactlyInAnyOrder(exception1, exception2)

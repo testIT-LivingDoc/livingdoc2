@@ -1,7 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.disabled.Disabled
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
@@ -27,7 +27,7 @@ internal class DecisionTableExecution(
      *
      * Does not throw any kind of exception.
      * Exceptional state of the execution is packages inside the [DecisionTableResult] in
-     * the form of different result objects.
+     * the form of different status objects.
      */
     fun execute(): DecisionTableResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
@@ -149,12 +149,12 @@ internal class DecisionTableExecution(
     private fun setSkippedStatusForAllUnknownResults() {
         decisionTableResult.rows.forEach { row ->
             row.headerToField.values.forEach { field ->
-                if (field.result === Result.Unknown) {
-                    field.result = Result.Skipped
+                if (field.status === Status.Unknown) {
+                    field.status = Status.Skipped
                 }
             }
-            if (row.result === Result.Unknown) {
-                row.result = Result.Skipped
+            if (row.status === Status.Unknown) {
+                row.status = Status.Skipped
             }
         }
     }
@@ -207,35 +207,35 @@ internal class DecisionTableExecution(
     }
 
     private fun markFieldAsExecutedWithFailure(tableField: FieldResult, e: AssertionError) {
-        tableField.result = Result.Failed(e)
+        tableField.status = Status.Failed(e)
     }
 
     private fun markFieldAsExecutedWithException(tableField: FieldResult, e: Exception) {
-        tableField.result = Result.Exception(e)
+        tableField.status = Status.Exception(e)
     }
 
     private fun markFieldAsSuccessfullyExecuted(tableField: FieldResult) {
-        tableField.result = Result.Executed
+        tableField.status = Status.Executed
     }
 
     private fun markRowAsSuccessfullyExecuted(row: RowResult) {
-        row.result = Result.Executed
+        row.status = Status.Executed
     }
 
     private fun markRowAsExecutedWithException(row: RowResult, e: Throwable) {
-        row.result = Result.Exception(e)
+        row.status = Status.Exception(e)
     }
 
     private fun markTableAsDisabled(reason: String) {
-        decisionTableResult.result = Result.Disabled(reason)
+        decisionTableResult.status = Status.Disabled(reason)
     }
 
     private fun markTableAsSuccessfullyExecuted() {
-        decisionTableResult.result = Result.Executed
+        decisionTableResult.status = Status.Executed
     }
 
     private fun markTableAsExecutedWithException(e: Throwable) {
-        decisionTableResult.result = Result.Exception(e)
+        decisionTableResult.status = Status.Exception(e)
     }
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :

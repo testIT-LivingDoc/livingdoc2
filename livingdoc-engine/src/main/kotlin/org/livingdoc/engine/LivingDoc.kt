@@ -6,8 +6,8 @@ import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
-import org.livingdoc.engine.execution.Result
-import org.livingdoc.engine.execution.examples.ExampleResult
+import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.Result
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
 import org.livingdoc.engine.reporting.HtmlReportRenderer
@@ -38,13 +38,13 @@ class LivingDoc(
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
         if (documentClass.isAnnotationPresent(Disabled::class.java)) {
-            return DocumentResult(Result.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
+            return DocumentResult(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
         }
 
         val documentClassModel = ExecutableDocumentModel.of(documentClass)
         val document = loadDocument(documentClassModel)
 
-        val results: List<ExampleResult> = document.elements.mapNotNull { element ->
+        val results: List<Result> = document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
@@ -59,7 +59,7 @@ class LivingDoc(
             }
         }
 
-        val result = DocumentResult(Result.Executed, results)
+        val result = DocumentResult(Status.Executed, results)
 
         val renderer = HtmlReportRenderer()
         val html = renderer.render(result)

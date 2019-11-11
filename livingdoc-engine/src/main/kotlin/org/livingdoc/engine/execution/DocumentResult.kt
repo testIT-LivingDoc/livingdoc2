@@ -1,8 +1,8 @@
 package org.livingdoc.engine.execution
 
-import org.livingdoc.engine.execution.examples.ExampleResult
+import org.livingdoc.engine.execution.examples.Result
 
 data class DocumentResult(
-    val documentResult: Result = Result.Unknown,
-    val results: List<ExampleResult> = emptyList()
+    val documentStatus: Status = Status.Unknown,
+    val results: List<Result> = emptyList()
 )

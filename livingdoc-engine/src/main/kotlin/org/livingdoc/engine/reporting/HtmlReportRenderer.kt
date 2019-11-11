@@ -1,7 +1,7 @@
 package org.livingdoc.engine.reporting
 
 import org.livingdoc.engine.execution.DocumentResult
-import org.livingdoc.engine.execution.Result
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 
@@ -16,7 +16,7 @@ class HtmlReportRenderer {
             when (result) {
                 is DecisionTableResult -> handleDecisionTableResult(result)
                 is ScenarioResult -> handleScenarioResult(result)
-                else -> throw IllegalArgumentException("Unknown ExampleResult type.")
+                else -> throw IllegalArgumentException("Unknown Result type.")
             }
         }
 
@@ -39,11 +39,11 @@ class HtmlReportRenderer {
 
     private fun table(
         renderContext: HtmlRenderContext,
-        tableResult: Result,
+        tableStatus: Status,
         columnCount: Int,
         block: HtmlTable.() -> Unit
     ): HtmlTable {
-        val table = HtmlTable(renderContext, tableResult, columnCount)
+        val table = HtmlTable(renderContext, tableStatus, columnCount)
         table.block()
         return table
     }
