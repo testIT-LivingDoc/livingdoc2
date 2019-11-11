@@ -4,6 +4,7 @@ default:
 stages:
   - build
   - test
+  - deploy
 
 build project:
   stage: build
@@ -35,3 +36,10 @@ lint project:
   script:
     - ./gradlew spotlessCheck
     - ./gradlew detekt
+
+publish:
+  stage: deploy
+  script:
+    - ./gradlew publish
+  only:
+    - master
