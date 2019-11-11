@@ -47,15 +47,10 @@ The fixture maps <<test-input,Test Inputs>> to a series of interactions with the
 
 Report:: [[report]]
 A meaningful composition of an <<executable-document, Document>> and the
-<<result, Results>> of its execution.
+<<status, Status>> of its execution.
 
 Repository:: [[repository]]
 This is were <<executable-document, Executable Documents>> are stored.
-
-Result:: [[result]]
-Calculated by LivingDoc for each <<test-case, Test Case>> when executing
-a <<executable-document, Document>>. A result is always one of: _Success_,
-_Failure_, _Error_ or _Skipped_.
 
 Scenario:: [[scenario]]
 An <<example, Example>> describing a single <<test-case,Test Case>> as a
@@ -64,6 +59,11 @@ sequence of <<scenario-step, Steps>>.
 Scenario Step:: [[scenario-step]]
 A single step of a <<scenario, Scenario>> represented as a sentence containing
 either one or more <<test-input,Test Inputs>> or one or more <<expectation,Expectations>>.
+
+Status:: [[status]]
+Calculated by LivingDoc for each <<test-case, Test Case>> when executing
+a <<executable-document, Document>>. A status is always one of: _Success_,
+_Failure_, _Error_ or _Skipped_.
 
 System under Test (SuT):: [[system-under-test]]
 The system against which <<test-case,Test Cases>> are executed.
