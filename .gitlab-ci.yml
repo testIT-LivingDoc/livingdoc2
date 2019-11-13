@@ -6,7 +6,7 @@ stages:
   - test
   - deploy
 
-build project:
+build:
   stage: build
   script:
     - ./gradlew assemble
