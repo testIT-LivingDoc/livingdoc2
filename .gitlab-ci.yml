@@ -54,5 +54,7 @@ publish:
   stage: deploy
   script:
     - ./gradlew publish
+  dependencies:
+    - build
   only:
     - master
