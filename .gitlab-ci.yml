@@ -43,7 +43,8 @@ pages:
     - ./gradlew aggregatedDokka
     - mkdir public
     - mv build/dokka public
-
+  dependencies:
+    - build
   artifacts:
     paths:
       - public
