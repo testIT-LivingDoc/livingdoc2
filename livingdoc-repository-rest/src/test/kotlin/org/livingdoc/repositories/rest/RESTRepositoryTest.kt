@@ -2,7 +2,6 @@ package org.livingdoc.repositories.rest
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
@@ -19,9 +18,9 @@ internal class RESTRepositoryTest {
     }
 
     @Test
-    fun `mocked server testing`(){
+    fun `mocked server testing`() {
 
-        //starting server
+        // starting server
         val wms = WireMockServer(8080)
         wms.stubFor(
             get(urlEqualTo("/Testing.html")).willReturn(
@@ -32,17 +31,15 @@ internal class RESTRepositoryTest {
         )
         wms.start()
 
-        //getting document
+        // getting document
         cut.getDocument("Testing.html")
 
-        //verifying
+        // verifying
         wms.verify(getRequestedFor(urlEqualTo("/Testing.html")))
-        //optional assertions
-        //Assertions.assertEquals()
+        // optional assertions
+        // Assertions.assertEquals()
 
-        //stopping server
+        // stopping server
         wms.stop()
-
-
     }
 }
