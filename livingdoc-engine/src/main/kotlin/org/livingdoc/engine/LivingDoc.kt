@@ -98,10 +98,10 @@ private data class ExecutableDocumentModel(
         }
 
         private fun getDocumentIdentifier(document: Class<*>): DocumentIdentifier {
-                val annotation = document.executableDocumentAnnotation!!
-                val values = annotation.value.split("://")
-                    .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
-                return DocumentIdentifier(values[0], values[1])
+            val annotation = document.executableDocumentAnnotation!!
+            val values = annotation.value.split("://")
+                .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
+            return DocumentIdentifier(values[0], values[1])
         }
 
         private fun validate(document: Class<*>) {
