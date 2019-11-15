@@ -1,7 +1,5 @@
 package org.livingdoc.engine
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
@@ -100,34 +98,10 @@ private data class ExecutableDocumentModel(
         }
 
         private fun getDocumentIdentifier(document: Class<*>): DocumentIdentifier {
-
-            val ann = document.executableDocumentAnnotation!!
-            if (ann.value.contains(";")) {
-
-                val separatedMap = ann.value.split(";")
-                val port: String = separatedMap[1]
-                val values__ = separatedMap[0].split("://")
-                    .also { require(it.size == 2) { "Illegal aanotation value '${separatedMap[0]}'" } }
-
-                var wms = WireMockServer(port.toInt())
-
-                wms.start()
-
-                wms.stubFor(
-                    WireMock.get(WireMock.urlEqualTo(values__[1])).willReturn(
-                        WireMock.aResponse().withBodyFile(
-                            values__[1]
-                        )
-                    )
-                )
-
-                return DocumentIdentifier(values__[0], values__[1])
-            } else {
-                // val annotation = document.executableDocumentAnnotation!!
-                val values = ann.value.split("://")
-                    .also { require(it.size == 2) { "Illegal annotation value '${ann.value}'." } }
+                val annotation = document.executableDocumentAnnotation!!
+                val values = annotation.value.split("://")
+                    .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
                 return DocumentIdentifier(values[0], values[1])
-            }
         }
 
         private fun validate(document: Class<*>) {

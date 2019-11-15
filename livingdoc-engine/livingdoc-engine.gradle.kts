@@ -7,9 +7,6 @@ dependencies {
 	api(project(":livingdoc-converters"))
 	api(project(":livingdoc-repositories"))
 
-
-	compile("com.github.tomakehurst:wiremock-jre8:2.25.1")
-
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation("com.beust:klaxon:${Versions.klaxon}")
 
