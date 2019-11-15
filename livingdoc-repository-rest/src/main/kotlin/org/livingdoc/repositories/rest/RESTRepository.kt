@@ -15,7 +15,7 @@ import java.io.IOException
 import java.io.InputStream
 
 /**
- * This implementation of a DocumentRepository uses a remote HTTP server to get the Docuemnts from.
+ * This implementation of a DocumentRepository uses a remote HTTP server to get the Documents from.
  * The remote host can be configured in the livingdoc.yml config section of the repository. Use baseURL to set the base
  * url of the remote host that hosts the Documents. As default the server on port 80 on the localhost is used as REST
  * Repository.
