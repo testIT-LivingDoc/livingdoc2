@@ -7,6 +7,8 @@ import org.jsoup.select.Elements
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.HtmlDocument
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.file.ParseContext
+import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -27,22 +29,35 @@ class HtmlFormat : DocumentFormat {
     override fun parse(stream: InputStream): HtmlDocument {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
-        val elements = parseTables(document) + parseLists(document)
-        // TODO: provide elements in order they occur inside the original source document
+        val elements = parseRecursive(document.body(), ParseContext())
         return HtmlDocument(elements, document)
     }
 
-    private fun parseTables(document: Document): List<DecisionTable> {
-        val tableElements = document.getElementsByTag("table")
-        return parseTableElements(tableElements)
-    }
-
-    private fun parseTableElements(tableElements: Elements): List<DecisionTable> {
+    private fun parseRecursive(root: Element, rootContext: ParseContext): List<TestData> {
         fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
+        fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
+        var context = rootContext
 
-        return tableElements
-            .filter(::tableHasAtLeastTwoRows)
-            .map(::parseTableToDecisionTable)
+        return root.children().flatMap {
+            when (it.tagName()) {
+                "h1", "h2", "h3", "h4", "h5", "h6" -> {
+                    context = ParseContext(it.text())
+                    emptyList()
+                }
+                "table" -> {
+                    if (tableHasAtLeastTwoRows(it))
+                        listOf(parseTableToDecisionTable(it))
+                    else emptyList()
+                }
+                "ul", "ol" -> {
+                    parseRecursive(it, context) +
+                    if (listHasAtLeastTwoItems(it))
+                        listOf(parseListIntoScenario(it))
+                    else emptyList()
+                }
+                else -> parseRecursive(it, context)
+            }
+        }
     }
 
     private fun parseTableToDecisionTable(table: Element): DecisionTable {
@@ -86,21 +101,6 @@ class HtmlFormat : DocumentFormat {
     }
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
-
-    private fun parseLists(document: Document): List<Scenario> {
-        val unorderedListElements = document.getElementsByTag("ul")
-        val orderedListElements = document.getElementsByTag("ol")
-
-        return parseListElements(unorderedListElements) + parseListElements(orderedListElements)
-    }
-
-    private fun parseListElements(htmlListElements: Elements): List<Scenario> {
-        fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
-
-        return htmlListElements
-            .filter(::listHasAtLeastTwoItems)
-            .map(::parseListIntoScenario)
-    }
 
     private fun parseListIntoScenario(htmlList: Element): Scenario {
         verifyZeroNestedLists(htmlList)
