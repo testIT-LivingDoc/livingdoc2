@@ -1,0 +1,5 @@
+repositories:
+  - name: "local"
+    factory: "org.livingdoc.repositories.file.FileRepositoryFactory"
+    config:
+      documentRoot: "src/test/docs"
