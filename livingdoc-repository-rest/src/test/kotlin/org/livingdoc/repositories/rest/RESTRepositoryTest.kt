@@ -1,7 +1,6 @@
 package org.livingdoc.repositories.rest
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.WireMockServer
@@ -14,7 +13,6 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -121,8 +119,6 @@ internal class RESTRepositoryTest {
         wms.verify(WireMock.getRequestedFor(WireMock.urlEqualTo("/$reponame")))
     }
 
-
-
     @Test
     fun `mocked server testing`() {
 
@@ -159,7 +155,6 @@ internal class RESTRepositoryTest {
 
         // verifying
         wms.verify(getRequestedFor(urlEqualTo(documentURL)))
-
     }
 
     @AfterEach
