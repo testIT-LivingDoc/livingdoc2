@@ -12,6 +12,7 @@ class HtmlReportTemplate {
             <style>
                 .background-executed {background-color: #31fa01;}
                 .background-disabled {background-color: #c0c0c0;}
+                .background-disabled {background-color: #ff8c00;}
                 .background-skipped {background-color: #9d9d9d;}
                 .background-unknown {background-color: white;}
                 .background-failed {background-color: #ff9b00;}
