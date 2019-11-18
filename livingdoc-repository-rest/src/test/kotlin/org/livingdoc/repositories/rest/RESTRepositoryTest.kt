@@ -15,7 +15,7 @@ internal class RESTRepositoryTest {
     @Test
     fun `exception is thrown if document could not be found`() {
 
-    val cut = RESTRepository("test", RESTRepositoryConfig())
+        val cut = RESTRepository("test", RESTRepositoryConfig())
         assertThrows<RESTDocumentNotFoundException> {
             cut.getDocument("foo-bar.html")
         }
@@ -30,20 +30,23 @@ internal class RESTRepositoryTest {
         configureFor("localhost", wms.port())
 
         // setting REST Repository
+        // configure variables
         val cfg = RESTRepositoryConfig()
         cfg.baseURL = "http://localhost:${wms.port()}/"
         val cut = RESTRepository("test", cfg)
+        val documentURL = "/TTT/Testing.html"
+        val hostedHtmlFile = "Testing.html"
 
         wms.stubFor(
-            get(urlEqualTo("/TTT/Testing.html")).willReturn(
+            get(urlEqualTo(documentURL)).willReturn(
                 aResponse().withBodyFile(
-                    "Testing.html"
+                    hostedHtmlFile
                 )
             )
         )
 
         // getting document and running asserts
-        val doc = cut.getDocument("TTT/Testing.html")
+        val doc = cut.getDocument(documentURL)
         assertThat(doc.elements[0]).isNotNull
 
         val documentNode = doc.elements[0] as DecisionTable
@@ -66,7 +69,7 @@ internal class RESTRepositoryTest {
             .containsExactly("1", "0", "1", "1", "0", "Infinity")
 
         // verifying
-        wms.verify(getRequestedFor(urlEqualTo("/TTT/Testing.html")))
+        wms.verify(getRequestedFor(urlEqualTo(documentURL)))
         // stopping server
         wms.stop()
     }
