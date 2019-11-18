@@ -42,11 +42,11 @@ class RESTRepositoryFactoryTest {
         val restrepoCfg = RESTRepositoryConfig()
         restrepoCfg.baseURL = testURL
         val comparisonRepository = RESTRepository(reponame, restrepoCfg, HttpClient())
-        //testing constructor of Rest Repository
+        // testing constructor of Rest Repository
         Assertions.assertThat(RESTRepository(reponame, restrepoCfg))
             .isInstanceOf(RESTRepository::class.java).isNotNull
 
-        //document related tests
+        // document related tests
         val document = comparisonRepository.getDocument(reponame)
 
         val scenario = document.elements[2] as Scenario
@@ -71,11 +71,11 @@ class RESTRepositoryFactoryTest {
         val configData: Map<String, Any> =
             mutableMapOf<String, Any>("baseURL" to testURL)
         val resultrepo = rrf.createRepository(reponame, configData)
-        //testing create Repository
+        // testing create Repository
         Assertions.assertThat(rrf.createRepository(reponame, configData))
             .isInstanceOf(RESTRepository::class.java).isNotNull
 
-        //document related tests
+        // document related tests
         val document = resultrepo.getDocument(reponame)
 
         val decisionTable = document.elements[1] as DecisionTable
