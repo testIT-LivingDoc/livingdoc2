@@ -28,7 +28,7 @@ We will implement a JUnit 5 test engine.
 
 == Status
 
-Proposed.
+Accepted.
 
 
 == Consequences

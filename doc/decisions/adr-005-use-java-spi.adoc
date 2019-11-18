@@ -1,0 +1,42 @@
+= ADR 5: Use Java SPI
+
+== Context
+
+LivingDoc should be extensible, so new features can be added and LivingDoc can be integrated with other systems.
+Extending LivingDoc should be possible without modifying existing source code or recompilation.
+Extensions should be loaded declaratively and extend the functionality of LivingDoc at well defined extension points.
+
+Example for extension points:
+- Type Converters
+- Repositories
+- Report Types
+
+To enable this we can use the link:https://www.baeldung.com/java-spi[Java SPI].
+The Java link:https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html[ServiceLoader] can be used to discover all implementations of the Service Provider from the classpath.
+In our case the Service Provider Interface defines either a factory for the extension or the extension interface directly.
+
+Using Java SPI it's possible to load and invoke extensions type-safe from LivingDoc.
+Extensions can be added by simple including them in the classpath.
+
+=== Alternatives
+
+Load the extension classes by name from the classpath.
+The names for the extensions are provided in a configuration file.
+The loading and runtime type check must be handled by LivingDoC.
+
+
+== Decision
+
+We will implement all the extension points using Java SPI.
+
+
+== Status
+
+Proposed.
+
+
+== Consequences
+
+* We'll have a clean definition of the extension points and their loading
+* We don't need to handle class loading and reflective access to the extensions code
+* We will provide our default implements also as extensions
