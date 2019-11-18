@@ -59,6 +59,7 @@ class JsonReportRenderer {
         return when (status) {
             Status.Executed -> "executed"
             is Status.Disabled -> "disabled"
+            Status.Manual -> "manual"
             Status.Skipped -> "skipped"
             Status.Unknown -> "unknown"
             is Status.Failed -> "failed"
