@@ -7,7 +7,7 @@ import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.Result
+import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
 import org.livingdoc.engine.reporting.HtmlReportRenderer
@@ -44,7 +44,7 @@ class LivingDoc(
         val documentClassModel = ExecutableDocumentModel.of(documentClass)
         val document = loadDocument(documentClassModel)
 
-        val results: List<Result> = document.elements.mapNotNull { element ->
+        val results: List<TestDataResult> = document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
