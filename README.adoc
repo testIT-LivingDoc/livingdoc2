@@ -14,12 +14,12 @@ When developing software, it is important that all participants have a common kn
 Each stakeholder has a specific task with LivingDoc. They can be defined as follows.
 
 ==== Example of roles
-* User: Writes the fixture. He therefore describes in a record or table what the input parameters are and what the result must be.
-* Tester: Is responsible for writing the tests. They get their input values and the results via annotations. The test cases are then implemented to verify that the implementation is correct.
-* Developer: Implements the required functionality.
+* User: Writes the Example/TestData. He therefore describes in a record or table what the input parameters are and what the result must be.
+* Tester: Is responsible for writing the test fixtures. They get their input values and the results via annotations. The test cases are then implemented to verify that the implementation is correct.
+* Developer: Implements the required functionality in the system under test.
 
 === Supported Platforms
-As for now, only working with local files and Confluence is supported.
+As for now, only working with local files is supported.
 
 
 You should also take a look at the link:doc/quality-goals.adoc[Qualiy Goals] defined for LivingDoc 2.
