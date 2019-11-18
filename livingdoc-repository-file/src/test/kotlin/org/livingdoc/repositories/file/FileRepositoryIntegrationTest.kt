@@ -22,7 +22,7 @@ class FileRepositoryIntegrationTest {
 
         @BeforeRow
         fun beforeRow() {
-            cut = FileRepository("", FileRepositoryConfig("src/test/kotlin/org/livingdoc/repositories/file"))
+            cut = FileRepository("", FileRepositoryConfig("src/test/resources"))
         }
 
         @Check("Throws FileNotFoundException")

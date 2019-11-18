@@ -10,8 +10,8 @@ dependencies {
 	testRuntime(project(":livingdoc-junit-engine"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
-    testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
-    testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
+	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
+	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 	testImplementation(project(":livingdoc-api"))
 	testImplementation(project(":livingdoc-repository-file"))
 }
