@@ -11,6 +11,7 @@ pluginManagement {
 				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlinVersion)
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"io.gitlab.arturbosch.detekt" -> useVersion(Versions.detektVersion)
+				"org.jetbrains.dokka" -> useVersion(Versions.dokkaPlugin)
 			}
 		}
 	}

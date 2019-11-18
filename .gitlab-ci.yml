@@ -6,7 +6,7 @@ stages:
   - test
   - deploy
 
-build project:
+build:
   stage: build
   script:
     - ./gradlew assemble
@@ -37,9 +37,25 @@ lint project:
     - ./gradlew spotlessCheck
     - ./gradlew detekt
 
+pages:
+  stage: deploy
+  script:
+    - ./gradlew aggregatedDokka
+    - mv build/dokka public
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+
 publish:
   stage: deploy
   script:
     - ./gradlew publish
+  dependencies:
+    - build
   only:
     - master

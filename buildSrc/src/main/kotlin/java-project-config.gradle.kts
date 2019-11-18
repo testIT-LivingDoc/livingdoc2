@@ -1,6 +1,8 @@
 plugins {
 	`java-library`
 	`maven-publish`
+	"org.jetbrains.dokka"
+	kotlin("jvm")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
