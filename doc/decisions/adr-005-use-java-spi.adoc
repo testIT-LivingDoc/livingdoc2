@@ -18,6 +18,12 @@ In our case the Service Provider Interface defines either a factory for the exte
 Using Java SPI it's possible to load and invoke extensions type-safe from LivingDoc.
 Extensions can be added by simple including them in the classpath.
 
+=== Alternatives
+
+Load the extension classes by name from the classpath.
+The names for the extensions are provided in a configuration file.
+The loading and runtime type check must be handled by LivingDoC.
+
 
 == Decision
 
