@@ -46,13 +46,13 @@ class HtmlFormat : DocumentFormat {
                 }
                 "table" -> {
                     if (tableHasAtLeastTwoRows(it))
-                        listOf(parseTableToDecisionTable(it))
+                        listOf(parseTableToDecisionTable(it, context))
                     else emptyList()
                 }
                 "ul", "ol" -> {
                     parseRecursive(it, context) +
                     if (listHasAtLeastTwoItems(it))
-                        listOf(parseListIntoScenario(it))
+                        listOf(parseListIntoScenario(it, context))
                     else emptyList()
                 }
                 else -> parseRecursive(it, context)
@@ -60,11 +60,11 @@ class HtmlFormat : DocumentFormat {
         }
     }
 
-    private fun parseTableToDecisionTable(table: Element): DecisionTable {
+    private fun parseTableToDecisionTable(table: Element, context: ParseContext): DecisionTable {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DecisionTable(headers, dataRows)
+        return DecisionTable(headers, dataRows, context.headline)
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
@@ -102,11 +102,11 @@ class HtmlFormat : DocumentFormat {
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
 
-    private fun parseListIntoScenario(htmlList: Element): Scenario {
+    private fun parseListIntoScenario(htmlList: Element, context: ParseContext): Scenario {
         verifyZeroNestedLists(htmlList)
 
         val listItemElements = htmlList.getElementsByTag("li")
-        return Scenario(parseListItems(listItemElements))
+        return Scenario(parseListItems(listItemElements), context.headline)
     }
 
     private fun parseListItems(listItemElements: Elements): List<Step> {

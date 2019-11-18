@@ -1,3 +1,5 @@
 package org.livingdoc.repositories.model
 
-interface TestData
+interface TestData {
+    val title : String?
+}

@@ -4,5 +4,6 @@ import org.livingdoc.repositories.model.TestData
 
 data class DecisionTable(
     val headers: List<Header>,
-    val rows: List<Row>
+    val rows: List<Row>,
+    override val title: String? = null
 ) : TestData
