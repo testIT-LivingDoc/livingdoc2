@@ -8,6 +8,9 @@ sealed class Status {
     /** The fixture was disabled and is ignored */
     data class Disabled(val reason: String = "") : Status()
 
+    /** The fixture will be tested manually */
+    object Manual : Status()
+
     /** Execution was skipped. */
     object Skipped : Status()
 
