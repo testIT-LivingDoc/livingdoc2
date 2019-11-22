@@ -107,7 +107,7 @@ class HtmlFormat : DocumentFormat {
         verifyZeroNestedLists(htmlList)
 
         val listItemElements = htmlList.getElementsByTag("li")
-        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, false))
+        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, isManual(context)))
     }
 
     private fun parseListItems(listItemElements: Elements): List<Step> {
@@ -119,5 +119,10 @@ class HtmlFormat : DocumentFormat {
         if (innerHtml.contains("<ul") || innerHtml.contains("<ol")) {
             throw ParseException("Nested lists within unordered or ordered lists are not supported: ${htmlList.html()}")
         }
+    }
+
+    private fun isManual(context: ParseContext): Boolean {
+        // == true needed for null check
+        return context.headline?.contains("MANUAL") == true
     }
 }
