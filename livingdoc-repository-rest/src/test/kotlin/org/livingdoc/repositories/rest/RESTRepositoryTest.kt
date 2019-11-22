@@ -127,7 +127,7 @@ internal class RESTRepositoryTest {
         val cfg = RESTRepositoryConfig()
         cfg.baseURL = "http://localhost:${wms.port()}/"
         val cut = RESTRepository("test", cfg)
-        val documentURL = "/TTT/Testing.html"
+        val documentURL = "/Testing.html"
         val hostedHtmlFile = "Testing.html"
 
         // getting document and running asserts
