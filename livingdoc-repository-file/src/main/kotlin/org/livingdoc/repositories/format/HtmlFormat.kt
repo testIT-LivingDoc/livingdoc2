@@ -9,6 +9,7 @@ import org.livingdoc.repositories.HtmlDocument
 import org.livingdoc.repositories.ParseException
 import org.livingdoc.repositories.file.ParseContext
 import org.livingdoc.repositories.model.TestData
+import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -64,7 +65,7 @@ class HtmlFormat : DocumentFormat {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DecisionTable(headers, dataRows, context.headline)
+        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, false))
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
@@ -106,7 +107,7 @@ class HtmlFormat : DocumentFormat {
         verifyZeroNestedLists(htmlList)
 
         val listItemElements = htmlList.getElementsByTag("li")
-        return Scenario(parseListItems(listItemElements), context.headline)
+        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, false))
     }
 
     private fun parseListItems(listItemElements: Elements): List<Step> {
