@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import io.ktor.client.HttpClient
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.Document
@@ -42,8 +41,7 @@ class RESTRepositoryUnitTest {
         }
     }
 
-
-    //to test getDocument there needs to be a host
+    // to test getDocument there needs to be a host
     var wms = WireMockServer(WireMockConfiguration.options().dynamicPort())
 
     @Test
@@ -67,12 +65,11 @@ class RESTRepositoryUnitTest {
         val configData: Map<String, Any> =
             mutableMapOf<String, Any>("baseURL" to testURL)
         val resultrepo = rrf.createRepository(reponame, configData)
-        //val document = resultrepo.getDocument(reponame)
+        // val document = resultrepo.getDocument(reponame)
         Assertions.assertThat(resultrepo.getDocument(reponame))
             .isInstanceOf(Document::class.java).isNotNull
         wms.verify(WireMock.getRequestedFor(WireMock.urlEqualTo("/$reponame")))
     }
-
 
     private fun `setup wiremock to test getDocument`() {
         wms = WireMockServer(WireMockConfiguration.options().dynamicPort())
@@ -87,5 +84,4 @@ class RESTRepositoryUnitTest {
         )
         testURL = "http://localhost:${wms.port()}/"
     }
-
 }
