@@ -1,3 +1,5 @@
 package org.livingdoc.repositories
 
-open class Document(val elements: List<Any>)
+import org.livingdoc.repositories.model.TestData
+
+open class Document(val elements: List<TestData>)
