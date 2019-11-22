@@ -7,23 +7,6 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import org.livingdoc.api.fixtures.scenarios.Before
-
-var wms: WireMockServer = WireMockServer(WireMockConfiguration.options().dynamicPort())
-
-@Before
-fun before() {
-    wms.start()
-    wms.stubFor(
-        WireMock.get(WireMock.urlEqualTo("/RestRepositoryIntegrationTest.md")).willReturn(
-            WireMock.aResponse().withBodyFile(
-                "htmlFileName"
-            )
-        ))
-}
 
 @ExecutableDocument("local://RestRepositoryIntegrationTest.md")
 class RestRepositoryIntegrationTest {
