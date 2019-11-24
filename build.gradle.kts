@@ -25,7 +25,8 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-junit-engine"),
 		project(":livingdoc-repositories"),
 		project(":livingdoc-repository-file"),
-		project(":livingdoc-repository-rest")
+		project(":livingdoc-repository-rest"),
+		project(":livingdoc-repository-confluence")
 	)
 )
 
@@ -136,6 +137,7 @@ tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
 		"livingdoc-repositories",
 		"livingdoc-repository-file",
 		"livingdoc-repository-rest",
+		"livingdoc-repository-confluence",
 		"livingdoc-sample"
 	)
 
