@@ -4,10 +4,10 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.fixtures.decisiontables.AfterRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
@@ -60,7 +60,7 @@ class RestRepositoryIntegrationTest {
             )
         }
 
-        @AfterEach
+        @AfterRow
         fun afterRow() {
             wms.stop()
         }
