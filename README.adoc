@@ -19,8 +19,8 @@ Each stakeholder has a specific task with LivingDoc. They can be defined as foll
 * Developer: Implements the required functionality in the system under test.
 
 === Supported Platforms
-As for now, only working with local files is supported.
-
+As for now, local files, Confluence and REST Repositories are supported.
+For more information, on how to use the different repositories see link:livingdoc-documentation/src/docs/asciidoc#using-document-repositories:[Repository documentation].
 
 You should also take a look at the link:doc/quality-goals.adoc[Qualiy Goals] defined for LivingDoc 2.
 
@@ -32,19 +32,14 @@ You can use the following fragment from our demo project to add the necessary de
 .build.gradle.kts
 [source, gradle]
 ----
-
 dependencies {
-
         ...
-
 	testRuntime("org.livingdoc:livingdoc-junit-engine:2.0-SNAPSHOT")
 	testRuntime("org.livingdoc:livingdoc-repository-file:2.0-SNAPSHOT")
 	testRuntime("org.livingdoc:livingdoc-repository-rest:2.0-SNAPSHOT")
 
 	testImplementation("org.livingdoc:livingdoc-api:2.0-SNAPSHOT")
-
         ...
-
 }
 ----
 

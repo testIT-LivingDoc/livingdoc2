@@ -1,3 +1,4 @@
 = LivingDoc Documentation
 
+include::repositories.adoc[]
 include::fixtures.adoc[]
