@@ -8,6 +8,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.AfterRow
+import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
@@ -40,8 +41,7 @@ class RestRepositoryIntegrationTest {
         @Input("File-Path")
         private var filePath: String = ""
 
-        // Input is not yet initialized when using @beforeRow,
-        // so this function has to be manually called before every test.
+        @BeforeFirstCheck
         private fun beforeCheck() {
             val restRepositoryConfig = RESTRepositoryConfig()
             restRepositoryConfig.baseURL = "$host:$port"
@@ -67,8 +67,6 @@ class RestRepositoryIntegrationTest {
 
         @Check("Throws RestDocumentNotFoundException")
         fun checkOutput(expectedValue: Boolean) {
-            this.beforeCheck()
-
             if (expectedValue) {
                 assertThrows<RESTDocumentNotFoundException> {
                     cut.getDocument(path)
