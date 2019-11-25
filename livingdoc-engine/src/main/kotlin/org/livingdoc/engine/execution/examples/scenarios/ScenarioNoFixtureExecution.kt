@@ -20,6 +20,10 @@ internal class ScenarioNoFixtureExecution(
 
         if (scenario.description.isManual) {
             result.status = Status.Manual
+
+            result.steps.forEach {
+                it.status = Status.Manual
+            }
         }
 
         return result

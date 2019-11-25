@@ -20,6 +20,10 @@ internal class DecisionTableNoFixtureExecution(
 
         if (decisionTable.description.isManual) {
             result.status = Status.Manual
+
+            result.rows.forEach {
+                it.status = Status.Manual
+            }
         }
 
         return result
