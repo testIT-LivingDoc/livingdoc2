@@ -24,5 +24,5 @@ class ScenarioToFixtureMatcher {
     }
 
     class ScenarioFixtureNotFoundException(scenario: Scenario, fixtures: List<Class<*>>) :
-        RuntimeException("Could not find Fixture for Scenario [$scenario]! Available fixtures: [$fixtures]")
+        RuntimeException("Could not find Fixture for Scenario:\n$scenario\nAvailable fixtures:\n$fixtures")
 }
