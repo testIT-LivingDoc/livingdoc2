@@ -23,7 +23,7 @@ repositories:
 `repositories` contains a list of different repository configurations.
 Each repository configuration has a `name` which is later used to reference this repository in the fixture classes.
 Each repository configuration also contains a `factory` which is the class file used as factory for the repository.
-Optionally a `config` can be specified, to pass Document Repository specific parameter for the repository.
+Optionally a `config` can be specified to pass Document Repository specific parameters for the repository.
 
 === Confluence Repository
 
