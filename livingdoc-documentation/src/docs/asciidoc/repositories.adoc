@@ -12,7 +12,7 @@ Supported Document Repositories:
 To configure the Document Repository use the `livingdoc.yml` config file.
 This file should be placed in the `src/test/resources` directory.
 The config file uses the yaml format, the top level element `repositories` is used to specify all used Document Repositories.
-[source, yml]
+[source, yaml]
 ----
 repositories:
   - name: "local"
@@ -26,8 +26,7 @@ Each repository configuration also contains a `factory` which is the class file 
 Optionally a `config` can be specified to pass Document Repository specific parameters for the repository.
 
 === Confluence Repository
-
-The Confluence Repository uses the unique DocumentID to identify the Executable Documents.
+The Confluence Repository uses the unique DocumentID of a confluence-page to identify the Executable Documents.
 To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html:[Confluence documentation].
 
 To use this repository use the factory: `org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory`.
@@ -44,3 +43,18 @@ The username of a confluence user with access to the Executable Documents.
 
 .password
 The password of the confluence user given by username.
+
+The `livingdoc.yml` could look like this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "confluence"
+    factory: "org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory"
+    config:
+      baseURL: "http://confluence.example.com"
+      path: "/"
+      username: "livingdoc"
+      password: "very good password"
+----
