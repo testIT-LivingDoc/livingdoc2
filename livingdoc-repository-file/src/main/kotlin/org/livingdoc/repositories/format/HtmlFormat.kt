@@ -84,7 +84,7 @@ class HtmlFormat : DocumentFormat {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, false))
+        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, isManual(context)))
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
