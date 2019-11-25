@@ -2,7 +2,7 @@
 
 In LivingDoc you can configure where the Executable Document is stored.
 A Document Repository is a configurable Location for multiple Executable Document.
-LivingDoc provides currently three types of Document Repository, but it is also possible to create an own Document Repository type if it's not supported jet.
+LivingDoc currently provides three types of Document Repositories, but it is also possible to create your own Document Repository type if it is not supported yet.
 
 Supported Document Repositories:
 * File Repository
