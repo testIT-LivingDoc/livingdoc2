@@ -15,7 +15,7 @@ internal class DecisionTableNoFixtureExecution(
      * Exceptional state of the execution is packaged inside the [DecisionTableResult] in
      * the form of different status objects.
      */
-    fun execute() : DecisionTableResult {
+    fun execute(): DecisionTableResult {
         val result = DecisionTableResult.from(decisionTable)
 
         if (decisionTable.description.isManual) {

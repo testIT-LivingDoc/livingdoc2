@@ -47,25 +47,13 @@ class LivingDoc(
         val results: List<TestDataResult> = document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
-                    if (element.description.isManual) {
-                        decisionTableExecutor.executeNoFixture(element)
-                    } else {
-                        decisionTableToFixtureMatcher
-                            .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                            .let { decisionTableExecutor.execute(element, it) }
-                    }
+                    mapDecisionTableToResult(element, documentClassModel)
                 }
                 is Scenario -> {
-                    if (element.description.isManual) {
-                        scenarioExecutor.executeNoFixture(element)
-                    } else {
-                        scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                            .let { scenarioExecutor.execute(element, it) }
-                    }
+                    mapScenarioToResult(element, documentClassModel)
                 }
                 else -> null
             }
-
         }
 
         val result = DocumentResult(Status.Executed, results)
@@ -75,6 +63,25 @@ class LivingDoc(
         ReportWriter().writeToFile(html)
 
         return result
+    }
+
+    private fun mapDecisionTableToResult(element: DecisionTable, documentClassModel: ExecutableDocumentModel): Result {
+        return if (element.description.isManual) {
+            decisionTableExecutor.executeNoFixture(element)
+        } else {
+            decisionTableToFixtureMatcher
+                .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
+                .let { decisionTableExecutor.execute(element, it) }
+        }
+    }
+
+    private fun mapScenarioToResult(element: Scenario, documentClassModel: ExecutableDocumentModel): Result {
+        return if (element.description.isManual) {
+            scenarioExecutor.executeNoFixture(element)
+        } else {
+            scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
+                .let { scenarioExecutor.execute(element, it) }
+        }
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {

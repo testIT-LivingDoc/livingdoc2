@@ -5,5 +5,5 @@ package org.livingdoc.repositories.file
  * It helps mapping a headline to all following test cases
  */
 data class ParseContext(
-    val headline : String? = null
+    val headline: String? = null
 )

@@ -1,7 +1,6 @@
 package org.livingdoc.repositories.format
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.livingdoc.repositories.DocumentFormat
@@ -35,8 +34,6 @@ class HtmlFormat : DocumentFormat {
     }
 
     private fun parseRecursive(root: Element, rootContext: ParseContext): List<TestData> {
-        fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
-        fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
         var context = rootContext
 
         return root.children().flatMap {
@@ -46,19 +43,23 @@ class HtmlFormat : DocumentFormat {
                     emptyList()
                 }
                 "table" -> {
-                    if (tableHasAtLeastTwoRows(it))
-                        listOf(parseTableToDecisionTable(it, context))
-                    else emptyList()
+                    parseTable(it, context)
                 }
                 "ul", "ol" -> {
                     parseRecursive(it, context) +
-                    if (listHasAtLeastTwoItems(it))
-                        listOf(parseListIntoScenario(it, context))
-                    else emptyList()
+                            parseList(it, context)
                 }
                 else -> parseRecursive(it, context)
             }
         }
+    }
+
+    private fun parseTable(table: Element, context: ParseContext): List<DecisionTable> {
+        fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
+
+        return if (tableHasAtLeastTwoRows(table))
+            listOf(parseTableToDecisionTable(table, context))
+        else emptyList()
     }
 
     private fun parseTableToDecisionTable(table: Element, context: ParseContext): DecisionTable {
@@ -102,6 +103,14 @@ class HtmlFormat : DocumentFormat {
     }
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
+
+    private fun parseList(list: Element, context: ParseContext): List<Scenario> {
+        fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
+
+        return if (listHasAtLeastTwoItems(list))
+            listOf(parseListIntoScenario(list, context))
+        else emptyList()
+    }
 
     private fun parseListIntoScenario(htmlList: Element, context: ParseContext): Scenario {
         verifyZeroNestedLists(htmlList)
