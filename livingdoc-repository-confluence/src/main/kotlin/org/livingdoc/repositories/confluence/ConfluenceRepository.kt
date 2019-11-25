@@ -15,6 +15,7 @@ import org.livingdoc.repositories.DocumentRepository
 import org.livingdoc.repositories.format.HtmlFormat
 import java.nio.charset.StandardCharsets
 import java.util.*
+import java.util.concurrent.ExecutionException
 
 /**
  * This implementation of a DocumentRepository uses a Confluence server to get the Documents from.
@@ -50,7 +51,7 @@ class ConfluenceRepository(
                 ).withId(ContentId.valueOf(documentIdentifier)).fetchCompletionStage()
                     .toCompletableFuture().get()
                     .orElseThrow { ConfluenceDocumentNotFoundException(documentIdentifier, config.baseURL) }
-            } catch (e: Throwable) {
+            } catch (e: ExecutionException) {
                 throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
             }
         return parse(content)
