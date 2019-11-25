@@ -14,6 +14,7 @@ dependencies {
 	compile("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
 	runtime("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 	compile(project(":livingdoc-repositories"))
+	compile(project(":livingdoc-repository-file"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")

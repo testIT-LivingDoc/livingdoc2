@@ -12,6 +12,9 @@ import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResou
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
+import org.livingdoc.repositories.format.HtmlFormat
+import java.nio.charset.StandardCharsets
+import java.util.*
 
 /**
  * This implementation of a DocumentRepository uses a Confluence server to get the Documents from.
@@ -57,6 +60,8 @@ class ConfluenceRepository(
         val body = content.body[ContentRepresentation.STORAGE]
             ?: throw IllegalArgumentException("Content must contain the storage representation")
         val value = body.value
-        return Document(emptyList())
+
+        val htmlFormat = HtmlFormat()
+        return htmlFormat.parse(value.byteInputStream(StandardCharsets.UTF_8))
     }
 }

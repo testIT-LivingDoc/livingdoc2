@@ -30,12 +30,11 @@ internal class ConfluenceRepositoryTest {
         // setting REST Repository
         val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("http://localhost:8090/", "", "api", "test"))
 
-
         // getting document and running asserts
         val doc = cut.getDocument("327693")
         assertThat(doc.elements).isNotEmpty
         // verifying
-        //TODO
+        // TODO
         // stopping server
         wms.stop()
     }

@@ -1,6 +1,5 @@
 package org.livingdoc.repositories.confluence
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
