@@ -65,7 +65,10 @@ class LivingDoc(
         return result
     }
 
-    private fun mapDecisionTableToResult(element: DecisionTable, documentClassModel: ExecutableDocumentModel): TestDataResult {
+    private fun mapDecisionTableToResult(
+        element: DecisionTable,
+        documentClassModel: ExecutableDocumentModel
+    ): TestDataResult {
         return if (element.description.isManual) {
             decisionTableExecutor.executeNoFixture(element)
         } else {
