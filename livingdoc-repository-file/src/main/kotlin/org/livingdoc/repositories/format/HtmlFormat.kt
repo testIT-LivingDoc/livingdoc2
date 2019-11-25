@@ -33,6 +33,16 @@ class HtmlFormat : DocumentFormat {
         return HtmlDocument(elements, document)
     }
 
+    /**
+     * Parses a html document recursively
+     * Extracts [Scenario]s and [DecisionTable]s in the order they occur
+     *
+     * @param root The root element of the currently processed DOM subtree
+     * @param rootContext The [ParseContext] of the currently processed DOM subtree.
+     * Holding i.e. the currently valid headline
+     *
+     * @return A list of all found [Scenario]s and [DecisionTable]s
+     */
     private fun parseRecursive(root: Element, rootContext: ParseContext): List<TestData> {
         var context = rootContext
 
@@ -54,6 +64,14 @@ class HtmlFormat : DocumentFormat {
         }
     }
 
+    /**
+     * Parses a single HTML table and decides whether it is big enough to be a [DecisionTable]
+     *
+     * @param table A single html table
+     * @param context The [ParseContext] of the processed table
+     *
+     * @return A list of parsed [DecisionTable]s
+     */
     private fun parseTable(table: Element, context: ParseContext): List<DecisionTable> {
         fun tableHasAtLeastTwoRows(table: Element) = table.getElementsByTag("tr").size > 1
 
@@ -104,6 +122,14 @@ class HtmlFormat : DocumentFormat {
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
 
+    /**
+     * Parses a single HTML list and decides whether it is big enough to be a [Scenario]
+     *
+     * @param list A single HTML list element
+     * @param context The [ParseContext] of the processed list
+     *
+     * @return A list of parsed [Scenario]s
+     */
     private fun parseList(list: Element, context: ParseContext): List<Scenario> {
         fun listHasAtLeastTwoItems(htmlList: Element) = htmlList.getElementsByTag("li").size > 1
 
@@ -123,6 +149,11 @@ class HtmlFormat : DocumentFormat {
         return listItemElements.map { Step(it.text()) }.toList()
     }
 
+    /**
+     * Checks whether the given HTML list contains nested lists
+     *
+     * @param htmlList A HTML list element
+     */
     private fun verifyZeroNestedLists(htmlList: Element) {
         val innerHtml = htmlList.html()
         if (innerHtml.contains("<ul") || innerHtml.contains("<ol")) {
@@ -130,6 +161,9 @@ class HtmlFormat : DocumentFormat {
         }
     }
 
+    /**
+     * Checks whether the current [ParseContext] indicates a manual test
+     */
     private fun isManual(context: ParseContext): Boolean {
         // == true needed for null check
         return context.headline?.contains("MANUAL") == true
