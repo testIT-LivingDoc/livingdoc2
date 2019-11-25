@@ -8,7 +8,17 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableExecutor {
 
+    /**
+     * Executes the given [DecisionTable] with the given fixture
+     */
     fun execute(decisionTable: DecisionTable, fixtureClass: Class<*>, document: Any? = null): DecisionTableResult {
         return DecisionTableExecution(fixtureClass, decisionTable, document).execute()
+    }
+
+    /**
+     * Executes the given [DecisionTable] without a fixture
+     */
+    fun executeNoFixture(decisionTable: DecisionTable, document: Any? = null): DecisionTableResult {
+        return DecisionTableNoFixtureExecution(decisionTable, document).execute()
     }
 }

@@ -251,4 +251,18 @@ object HtmlFormatTestData {
     </body>
     </html>
     """.byteInputStream()
+
+    fun getHtmlManualList() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+        <h2>MANUAL Test1</h2>
+        <ol>
+            <li>First list item</li>
+            <li>Second list item</li>
+        </ol>
+    </body>
+    </html>
+    """.byteInputStream()
 }

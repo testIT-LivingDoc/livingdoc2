@@ -36,6 +36,7 @@ class ScenarioTestDescriptor(
             Status.Unknown -> skip("unknown")
             is Status.Disabled -> skip(result.reason)
             Status.Skipped -> skip("skipped")
+            Status.Manual -> skip("manual")
             else -> doNotSkip()
         }
     }

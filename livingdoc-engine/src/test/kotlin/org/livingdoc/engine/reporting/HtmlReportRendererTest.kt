@@ -31,7 +31,7 @@ internal class HtmlReportRendererTest {
                         RowResult(
                             mapOf(
                                 headerA to FieldResult("2", Status.Executed),
-                                headerB to FieldResult("3", Status.Executed),
+                                headerB to FieldResult("3", Status.Manual),
                                 headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
                             ), Status.Executed
                         ),
@@ -66,7 +66,7 @@ internal class HtmlReportRendererTest {
                             </tr>
                             <tr>
                                 <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                <td class="border-black-onepx background-executed"><span class="result-value">3</span></td>
+                                <td class="border-black-onepx background-manual"><span class="result-value">3</span></td>
                                 <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
                              </tr>
                              <tr>
