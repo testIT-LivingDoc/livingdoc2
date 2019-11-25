@@ -21,7 +21,7 @@ If you do not want to serve a file, pick a path that does not exist.
 The file used is Testing.html.
 
 - Example 0 should exist
-- Example 1 should not exist
+- Example 3 should not exist
 
 - Example 0 should be a DecisionTable
 
