@@ -1,0 +1,15 @@
+== Using Document Repositories
+
+In LivingDoc you can configure where the Executable Document is stored.
+A Document Repository is a configurable Location for multiple Executable Document.
+LivingDoc provides currently three types of Document Repository, but it is also possible to create an own Document Repository type if it's not supported jet.
+
+Supported Document Repositories:
+* File Repository
+* REST Repository
+* Confluence Repository
+
+=== Confluence Repository
+
+The Confluence Repository uses the unique DocumentID to identify the Executable Documents.
+To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html:[Confluence documentation].
