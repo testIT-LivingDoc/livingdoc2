@@ -9,7 +9,38 @@ Supported Document Repositories:
 * REST Repository
 * Confluence Repository
 
+To configure the Document Repository use the `livingdoc.yml` config file.
+This file should be placed in the `src/test/resources` directory.
+The config file uses the yaml format, the top level element `repositories` is used to specify all used Document Repositories.
+[source, yml]
+----
+repositories:
+  - name: "local"
+    factory: "org.livingdoc.repositories.file.FileRepositoryFactory"
+    config:
+      documentRoot: "src/test/docs"
+----
+`repositories` contains a list of different repository configurations.
+Each repository configuration have a `name` which is later used to reference this repository in the fixture classes.
+Each repository configuration also contains a `factory` which is the class file used as factory for the repository.
+Optionally a `config` can be specified, to pass Document Repository specific parameter for the repository.
+
 === Confluence Repository
 
 The Confluence Repository uses the unique DocumentID to identify the Executable Documents.
 To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html:[Confluence documentation].
+
+To use this repository use the factory: `org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory`.
+
+==== Configuration
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`
+
+.username
+The username of a confluence user with access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
