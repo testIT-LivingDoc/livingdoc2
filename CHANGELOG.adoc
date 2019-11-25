@@ -13,6 +13,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Repository to load data from a webserver
 - Annotation to disable documents and fixtures
 - Test reports in JSON format
+- Add manual tests to HTML documents that will not be executed but appear in the reports
 
 === Changed
 
