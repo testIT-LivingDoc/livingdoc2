@@ -47,16 +47,25 @@ class LivingDoc(
         val results: List<TestDataResult> = document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
-                    decisionTableToFixtureMatcher
-                        .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                        .let { decisionTableExecutor.execute(element, it) }
+                    if (element.description.isManual) {
+                        decisionTableExecutor.executeNoFixture(element)
+                    } else {
+                        decisionTableToFixtureMatcher
+                            .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
+                            .let { decisionTableExecutor.execute(element, it) }
+                    }
                 }
                 is Scenario -> {
-                    scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                        .let { scenarioExecutor.execute(element, it) }
+                    if (element.description.isManual) {
+                        scenarioExecutor.executeNoFixture(element)
+                    } else {
+                        scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
+                            .let { scenarioExecutor.execute(element, it) }
+                    }
                 }
                 else -> null
             }
+
         }
 
         val result = DocumentResult(Status.Executed, results)

@@ -11,4 +11,8 @@ class DecisionTableExecutor {
     fun execute(decisionTable: DecisionTable, fixtureClass: Class<*>, document: Any? = null): DecisionTableResult {
         return DecisionTableExecution(fixtureClass, decisionTable, document).execute()
     }
+
+    fun executeNoFixture(decisionTable: DecisionTable, document: Any? = null): DecisionTableResult {
+        return DecisionTableNoFixtureExecution(decisionTable, document).execute()
+    }
 }

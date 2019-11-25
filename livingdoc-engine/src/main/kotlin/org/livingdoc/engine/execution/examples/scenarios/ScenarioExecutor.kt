@@ -11,4 +11,8 @@ class ScenarioExecutor {
     fun execute(scenario: Scenario, fixtureClass: Class<*>, document: Any? = null): ScenarioResult {
         return ScenarioExecution(fixtureClass, scenario, document).execute()
     }
+
+    fun executeNoFixture(scenario: Scenario, document: Any? = null): ScenarioResult {
+        return ScenarioNoFixtureExecution(scenario, document).execute()
+    }
 }
