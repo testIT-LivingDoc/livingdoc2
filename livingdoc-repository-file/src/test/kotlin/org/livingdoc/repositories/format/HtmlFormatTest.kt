@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlManualList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedOrderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedUnorderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlTableWithNonUniqueHeaders
@@ -154,5 +155,23 @@ class HtmlFormatTest {
         }
 
         assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
+    }
+
+    @Test fun `manual test healine is parsed`() {
+        val htmlDocument = cut.parse(getHtmlManualList())
+
+        assertThat(htmlDocument.elements[0].description.name).isEqualTo("MANUAL Test1")
+    }
+
+    @Test fun `manual test is marked as manual`() {
+        val htmlDocument = cut.parse(getHtmlManualList())
+
+        assertThat(htmlDocument.elements[0].description.isManual).isTrue()
+    }
+
+    @Test fun `non-manual test is marked as non-manual`() {
+        val htmlDocument = cut.parse(getHtmlWithOrderedList())
+
+        assertThat(htmlDocument.elements[0].description.isManual).isFalse()
     }
 }
