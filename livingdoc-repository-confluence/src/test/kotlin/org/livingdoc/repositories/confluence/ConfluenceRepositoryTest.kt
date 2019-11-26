@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class ConfluenceRepositoryTest {
-
     @Test
     fun `exception is thrown if document could not be found`() {
         val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("", "", "", ""))
@@ -28,7 +27,10 @@ internal class ConfluenceRepositoryTest {
         configureFor("localhost", wms.port())
 
         // setting REST Repository
-        val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("http://localhost:8090/", "", "api", "test"))
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig("http://localhost:8090/", "", "api", "test")
+        )
 
         // getting document and running asserts
         val doc = cut.getDocument("327693")

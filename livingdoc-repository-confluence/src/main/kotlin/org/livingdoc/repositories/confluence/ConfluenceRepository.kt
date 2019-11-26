@@ -14,7 +14,6 @@ import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
 import org.livingdoc.repositories.format.HtmlFormat
 import java.nio.charset.StandardCharsets
-import java.util.*
 import java.util.concurrent.ExecutionException
 
 /**
@@ -40,6 +39,11 @@ class ConfluenceRepository(
         )
     }
 
+    /**
+     * Get a confluence page as Document. This method uses the xml representation of the confluence page.
+     *
+     * @param documentIdentifier the DocumentID of the confluence page
+     */
     override fun getDocument(documentIdentifier: String): Document {
         val content =
             try {
@@ -57,6 +61,9 @@ class ConfluenceRepository(
         return parse(content)
     }
 
+    /**
+     * Parse the [content] returned by the confluence client library into a Document of LivingDoc
+     */
     private fun parse(content: Content): Document {
         val body = content.body[ContentRepresentation.STORAGE]
             ?: throw IllegalArgumentException("Content must contain the storage representation")

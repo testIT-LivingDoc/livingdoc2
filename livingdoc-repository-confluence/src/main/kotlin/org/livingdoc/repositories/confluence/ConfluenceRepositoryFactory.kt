@@ -8,7 +8,6 @@ import org.livingdoc.repositories.config.YamlUtils
  * Confluence Repository. For more details about the {@see ConfluenceRepository} see it's documentation.
  */
 class ConfluenceRepositoryFactory : DocumentRepositoryFactory<ConfluenceRepository> {
-
     override fun createRepository(name: String, configData: Map<String, Any>): ConfluenceRepository {
         val config = YamlUtils.toObject(configData, ConfluenceRepositoryConfig::class)
         return ConfluenceRepository(name, config)
