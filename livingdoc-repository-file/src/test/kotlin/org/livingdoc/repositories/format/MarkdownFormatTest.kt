@@ -268,7 +268,7 @@ internal class MarkdownFormatTest {
                 """.trimIndent().byteInputStream()
         )
 
-        assertThat(document.elements[0].description).isEqualTo("This is a test headline")
+        assertThat(document.elements[0].description.name).isEqualTo("This is a test headline")
     }
 
     @Test
