@@ -84,15 +84,15 @@ class HtmlFormat : DocumentFormat {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, isManual(context)))
+        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, context.isManual()))
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
         val firstRowContainingHeaders = tableRows[0]
         val headers = firstRowContainingHeaders.children()
-            .filter(::isHeaderOrDataCell)
-            .map(Element::text)
-            .map(::Header).toList()
+                .filter(::isHeaderOrDataCell)
+                .map(Element::text)
+                .map(::Header).toList()
 
         if (headers.size != headers.distinct().size) {
             throw ParseException("Headers must contains only unique values: $headers")
@@ -107,8 +107,8 @@ class HtmlFormat : DocumentFormat {
 
             if (headers.size != dataCells.size) {
                 throw ParseException(
-                    "Header count must match the data cell count in data row ${rowIndex + 1}. " +
-                            "Headers: ${headers.map(Header::name)}, DataCells: $dataCells"
+                        "Header count must match the data cell count in data row ${rowIndex + 1}. " +
+                                "Headers: ${headers.map(Header::name)}, DataCells: $dataCells"
                 )
             }
 
@@ -142,7 +142,7 @@ class HtmlFormat : DocumentFormat {
         verifyZeroNestedLists(htmlList)
 
         val listItemElements = htmlList.getElementsByTag("li")
-        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, isManual(context)))
+        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, context.isManual()))
     }
 
     private fun parseListItems(listItemElements: Elements): List<Step> {
@@ -159,13 +159,5 @@ class HtmlFormat : DocumentFormat {
         if (innerHtml.contains("<ul") || innerHtml.contains("<ol")) {
             throw ParseException("Nested lists within unordered or ordered lists are not supported: ${htmlList.html()}")
         }
-    }
-
-    /**
-     * Checks whether the current [ParseContext] indicates a manual test
-     */
-    private fun isManual(context: ParseContext): Boolean {
-        // == true needed for null check
-        return context.headline?.contains("MANUAL") == true
     }
 }

@@ -1,5 +1,6 @@
 package org.livingdoc.repositories.format
 
+import com.vladsch.flexmark.ast.Heading
 import com.vladsch.flexmark.ast.ListBlock
 import com.vladsch.flexmark.ast.Node
 import com.vladsch.flexmark.ast.Paragraph
@@ -14,7 +15,9 @@ import com.vladsch.flexmark.util.options.MutableDataSet
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.file.ParseContext
 import org.livingdoc.repositories.model.TestData
+import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -39,22 +42,25 @@ class MarkdownFormat : DocumentFormat {
         options.set(Parser.EXTENSIONS, asList(TablesExtension.create()))
         val parser = Parser.builder(options).build()
         val text = stream.reader().use { it.readText() }
-        val examples = parser.parse(text).mapToNodes()
+        val examples = parser.parse(text).mapToNodes(ParseContext())
         return Document(examples)
     }
 
-    private fun com.vladsch.flexmark.ast.Node.mapToNodes(): List<TestData> {
+    private fun com.vladsch.flexmark.ast.Node.mapToNodes(rootContext: ParseContext): List<TestData> {
         val examples = mutableListOf<TestData>()
+        var context = rootContext
 
         this.children.toList().forEach { node ->
             when (node) {
-                is ListBlock -> examples.add(node.toScenario())
+                is Heading ->
+                    context = ParseContext(node.text.toString())
+                is ListBlock -> examples.add(node.toScenario(context))
                 is TableBlock -> {
                     val firstRow = node.firstChild.children.toList()[0]
                     val numberOfColumns = firstRow.children.toList().size
                     when (numberOfColumns > 1) {
-                        true -> examples.add(node.toDecisionTable())
-                        else -> examples.add(node.toScenario())
+                        true -> examples.add(node.toDecisionTable(context))
+                        else -> examples.add(node.toScenario(context))
                     }
                 }
             }
@@ -74,7 +80,7 @@ class MarkdownFormat : DocumentFormat {
         return children
     }
 
-    private fun ListBlock.toScenario(): Scenario {
+    private fun ListBlock.toScenario(context: ParseContext): Scenario {
         val textItems = this.children.toList().map { child ->
             val listItemChildren = child.getAllChildrenOfListItem()
             val text = StringBuilder((listItemChildren.first() as Text).chars.toString())
@@ -91,10 +97,10 @@ class MarkdownFormat : DocumentFormat {
             }
             Step(text.toString())
         }
-        return Scenario(textItems)
+        return Scenario(textItems, TestDataDescription(context.headline, context.isManual()))
     }
 
-    private fun TableBlock.toScenario(): Scenario {
+    private fun TableBlock.toScenario(context: ParseContext): Scenario {
         val tableChildren = this.children.toList()
         val textItems = mutableListOf<Step>()
 
@@ -107,10 +113,10 @@ class MarkdownFormat : DocumentFormat {
             textItems.add(Step((row.children.first() as TableCell).text.toString()))
         }
 
-        return Scenario(textItems)
+        return Scenario(textItems, TestDataDescription(context.headline, context.isManual()))
     }
 
-    private fun TableBlock.toDecisionTable(): DecisionTable {
+    private fun TableBlock.toDecisionTable(context: ParseContext): DecisionTable {
         val children = this.children.toList()
         // the second item is the separator
         val tableHeadChildren = children[0].children.toList()
@@ -134,7 +140,7 @@ class MarkdownFormat : DocumentFormat {
             Row(map)
         }
 
-        return DecisionTable(headers, rows)
+        return DecisionTable(headers, rows, TestDataDescription(context.headline, context.isManual()))
     }
 
     private inline fun <reified U> Iterable<*>.verifyElementType(errorCallBack: (Any) -> Unit) {

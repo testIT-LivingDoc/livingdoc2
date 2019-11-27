@@ -6,4 +6,11 @@ package org.livingdoc.repositories.file
  */
 data class ParseContext(
     val headline: String? = null
-)
+) {
+    /**
+     * Checks whether the current [ParseContext] indicates a manual test
+     */
+    fun isManual(): Boolean {
+        return headline?.contains("MANUAL") ?: false
+    }
+}

@@ -14,7 +14,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Confluence Document Repository to load Examples from Confluence
 - Annotation to disable documents and fixtures
 - Test reports in JSON format
-- Add manual test annotation to HTML documents so the test will not be executed by junit but appear in the reports as manually executed
+- Add manual test annotation to markdown and HTML documents so the test will not be executed by junit but appear in the reports as manually executed
 
 === Changed
 

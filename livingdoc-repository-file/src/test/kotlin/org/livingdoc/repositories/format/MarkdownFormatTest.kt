@@ -257,4 +257,43 @@ internal class MarkdownFormatTest {
             assertThat(rows[1].headerToField.map { it.value.value }).containsExactly("CellA2", "CellB2")
         }
     }
+
+    @Test
+    fun `headline is parsed`() {
+        val document = MarkdownFormat().parse(
+                """
+                    # This is a test headline
+
+                    - Hello world
+                """.trimIndent().byteInputStream()
+        )
+
+        assertThat(document.elements[0].description.name).isEqualTo("This is a test headline")
+    }
+
+    @Test
+    fun `manual example is marked as manual`() {
+        val document = MarkdownFormat().parse(
+                """
+                    # MANUAL test
+
+                    - Hello world
+                """.trimIndent().byteInputStream()
+        )
+
+        assertThat(document.elements[0].description.isManual).isTrue()
+    }
+
+    @Test
+    fun `non-manual example is not marked as manual`() {
+        val document = MarkdownFormat().parse(
+                """
+                    # Automatic test
+
+                    - Hello world
+                """.trimIndent().byteInputStream()
+        )
+
+        assertThat(document.elements[0].description.isManual).isFalse()
+    }
 }
