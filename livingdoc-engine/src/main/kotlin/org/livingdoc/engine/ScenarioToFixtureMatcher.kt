@@ -1,8 +1,10 @@
 package org.livingdoc.engine
 
+import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureModel
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.matching.NoMatchingStepTemplate
+import org.livingdoc.engine.fixtures.FixtureWrapper
 import org.livingdoc.repositories.model.scenario.Scenario
 
 /**
@@ -10,7 +12,11 @@ import org.livingdoc.repositories.model.scenario.Scenario
  */
 class ScenarioToFixtureMatcher {
 
-    fun findMatchingFixture(scenario: Scenario, fixtures: List<ScenarioFixtureWrapper>): ScenarioFixtureWrapper {
+    fun findMatchingFixture(scenario: Scenario, fixtures: List<ScenarioFixtureWrapper>): FixtureWrapper {
+        if (scenario.description.isManual) {
+            return NoFixtureWrapper()
+        }
+
         return fixtures.firstOrNull { fixture ->
             val model = ScenarioFixtureModel(fixture.fixtureClass)
             try {

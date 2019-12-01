@@ -1,7 +1,9 @@
 package org.livingdoc.engine
 
+import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureModel
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
+import org.livingdoc.engine.fixtures.FixtureWrapper
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 /**
@@ -9,8 +11,11 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableToFixtureMatcher {
 
-    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>):
-            DecisionTableFixtureWrapper {
+    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>): FixtureWrapper {
+        if (decisionTable.description.isManual) {
+            return NoFixtureWrapper()
+        }
+
         val headerNames = decisionTable.headers.map { it.name }
         val numberOfHeaders = headerNames.size
 
