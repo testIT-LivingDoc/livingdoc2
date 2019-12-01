@@ -7,8 +7,19 @@ import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
-class NoFixtureWrapper : Fixture {
-    override fun execute(testData: TestData): TestDataResult {
+/**
+ * Handles execution of test data without a fixture
+ *
+ * @param T Specifies the type of the executed test data
+ */
+class NoFixtureWrapper<T : TestData> : Fixture<T> {
+    /**
+     * Exetutes the given test data as a manual test
+     *
+     * @param testData Test data of the corresponding type
+     * @throws TestDataUnknownTypeException when the given test data can't be executed by this class
+     */
+    override fun execute(testData: T): TestDataResult {
         return when (testData) {
             is DecisionTable -> {
                 DecisionTableNoFixtureExecution(testData, null).execute()

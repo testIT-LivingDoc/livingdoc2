@@ -11,7 +11,10 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableToFixtureMatcher {
 
-    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>): Fixture {
+    fun findMatchingFixture(
+        decisionTable: DecisionTable,
+        fixtures: List<DecisionTableFixtureWrapper>
+    ): Fixture<DecisionTable> {
         if (decisionTable.description.isManual) {
             return NoFixtureWrapper()
         }
