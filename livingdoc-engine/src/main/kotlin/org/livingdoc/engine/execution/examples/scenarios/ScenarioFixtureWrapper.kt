@@ -10,6 +10,12 @@ class ScenarioFixtureWrapper(
     val fixtureClass: Class<*>
 ) : Fixture {
 
+    /**
+     * Executes the wrapped fixture class with the give scenario
+     *
+     * @param testData A scenario instance that can be mapped to the wrapped fixture
+     * @return A ScenarioResult for the execution
+     */
     fun execute(testData: Scenario): ScenarioResult {
         return ScenarioExecution(this.fixtureClass, testData, null).execute()
     }

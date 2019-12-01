@@ -10,6 +10,12 @@ class DecisionTableFixtureWrapper(
     val fixtureClass: Class<*>
 ) : Fixture {
 
+    /**
+     * Executes the wrapped fixture class with the give decision table
+     *
+     * @param testData A decision table instance that can be mapped to the wrapped fixture
+     * @return A DecisionTableResult for the execution
+     */
     fun execute(testData: DecisionTable): DecisionTableResult {
         return DecisionTableExecution(this.fixtureClass, testData, null).execute()
     }
