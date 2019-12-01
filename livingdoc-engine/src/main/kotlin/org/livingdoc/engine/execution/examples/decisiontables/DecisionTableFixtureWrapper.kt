@@ -4,6 +4,9 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTabl
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
+/**
+ * Obviously wraps a decision table fixture
+ */
 class DecisionTableFixtureWrapper(
     val fixtureClass: Class<*>
 ) : Fixture<DecisionTable> {

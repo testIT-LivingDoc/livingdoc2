@@ -4,6 +4,9 @@ import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
 
+/**
+ * Obviously wraps a scenario fixture
+ */
 class ScenarioFixtureWrapper(
     val fixtureClass: Class<*>
 ) : Fixture<Scenario> {
