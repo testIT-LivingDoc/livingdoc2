@@ -21,12 +21,11 @@ class ScenarioFixtureWrapper(
     }
 
     override fun execute(testData: TestData): TestDataResult {
-        return when(testData) {
+        return when (testData) {
             is Scenario -> execute(testData)
             else -> throw TestDataNoScenarioException(testData, this.fixtureClass)
         }
     }
-
 
     class TestDataNoScenarioException(testData: TestData, fixtureClass: Class<*>) :
         RuntimeException(

@@ -21,12 +21,11 @@ class DecisionTableFixtureWrapper(
     }
 
     override fun execute(testData: TestData): TestDataResult {
-        return when(testData) {
+        return when (testData) {
             is DecisionTable -> execute(testData)
             else -> throw TestDataNoDecisionTableException(testData, this.fixtureClass)
         }
     }
-
 
     class TestDataNoDecisionTableException(testData: TestData, fixtureClass: Class<*>) :
         RuntimeException(
