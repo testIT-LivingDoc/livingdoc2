@@ -1,6 +1,7 @@
 package org.livingdoc.engine
 
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureModel
+import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.matching.NoMatchingStepTemplate
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -9,9 +10,9 @@ import org.livingdoc.repositories.model.scenario.Scenario
  */
 class ScenarioToFixtureMatcher {
 
-    fun findMatchingFixture(scenario: Scenario, fixtures: List<Class<*>>): Class<*> {
+    fun findMatchingFixture(scenario: Scenario, fixtures: List<ScenarioFixtureWrapper>): ScenarioFixtureWrapper {
         return fixtures.firstOrNull { fixture ->
-            val model = ScenarioFixtureModel(fixture)
+            val model = ScenarioFixtureModel(fixture.fixtureClass)
             try {
                 scenario.steps.forEach { (step) ->
                     model.getMatchingStepTemplate(step)
@@ -23,6 +24,6 @@ class ScenarioToFixtureMatcher {
         } ?: throw ScenarioFixtureNotFoundException(scenario, fixtures)
     }
 
-    class ScenarioFixtureNotFoundException(scenario: Scenario, fixtures: List<Class<*>>) :
+    class ScenarioFixtureNotFoundException(scenario: Scenario, fixtures: List<ScenarioFixtureWrapper>) :
         RuntimeException("Could not find Fixture for Scenario:\n$scenario\nAvailable fixtures:\n$fixtures")
 }

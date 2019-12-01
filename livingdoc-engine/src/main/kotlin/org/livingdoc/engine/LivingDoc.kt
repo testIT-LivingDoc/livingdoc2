@@ -9,7 +9,9 @@ import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
+import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.reporting.HtmlReportRenderer
 import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
@@ -74,7 +76,7 @@ class LivingDoc(
         } else {
             decisionTableToFixtureMatcher
                 .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                .let { decisionTableExecutor.execute(element, it) }
+                .execute(element)
         }
     }
 
@@ -82,8 +84,9 @@ class LivingDoc(
         return if (element.description.isManual) {
             scenarioExecutor.executeNoFixture(element)
         } else {
-            scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                .let { scenarioExecutor.execute(element, it) }
+            scenarioToFixtureMatcher
+                .findMatchingFixture(element, documentClassModel.scenarioFixtures)
+                .execute(element)
         }
     }
 
@@ -101,8 +104,8 @@ private data class DocumentIdentifier(
 
 private data class ExecutableDocumentModel(
     val documentIdentifier: DocumentIdentifier,
-    val decisionTableFixtures: List<Class<*>>,
-    val scenarioFixtures: List<Class<*>>
+    val decisionTableFixtures: List<DecisionTableFixtureWrapper>,
+    val scenarioFixtures: List<ScenarioFixtureWrapper>
 ) {
 
     companion object {
@@ -131,11 +134,17 @@ private data class ExecutableDocumentModel(
             }
         }
 
-        private fun getDecisionTableFixtures(document: Class<*>) =
-            getFixtures(document, DecisionTableFixture::class)
+        private fun getDecisionTableFixtures(document: Class<*>) : List<DecisionTableFixtureWrapper> {
+            return getFixtures(document, DecisionTableFixture::class).map {
+                DecisionTableFixtureWrapper(it)
+            }
+        }
 
-        private fun getScenarioFixtures(document: Class<*>) =
-            getFixtures(document, ScenarioFixture::class)
+        private fun getScenarioFixtures(document: Class<*>) : List<ScenarioFixtureWrapper> {
+            return getFixtures(document, ScenarioFixture::class).map {
+                ScenarioFixtureWrapper(it)
+            }
+        }
 
         private fun getFixtures(document: Class<*>, annotationClass: KClass<out Annotation>): List<Class<*>> {
             val declaredInside = document.declaredClasses

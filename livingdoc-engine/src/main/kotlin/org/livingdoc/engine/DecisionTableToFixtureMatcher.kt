@@ -1,6 +1,7 @@
 package org.livingdoc.engine
 
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureModel
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 /**
@@ -8,12 +9,13 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableToFixtureMatcher {
 
-    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<Class<*>>): Class<*> {
+    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>):
+            DecisionTableFixtureWrapper {
         val headerNames = decisionTable.headers.map { it.name }
         val numberOfHeaders = headerNames.size
 
-        val matchingFixtures = fixtures.filter { fixtureClass ->
-            val fixtureModel = DecisionTableFixtureModel(fixtureClass)
+        val matchingFixtures = fixtures.filter { fixture ->
+            val fixtureModel = DecisionTableFixtureModel(fixture.fixtureClass)
             val aliases = fixtureModel.aliases
             val numberOfAliases = aliases.size
             val numberOfMatchedHeaders = headerNames.filter { aliases.contains(it) }.size
@@ -27,11 +29,15 @@ class DecisionTableToFixtureMatcher {
         return matchingFixtures.firstOrNull() ?: throw NoMatchingFixturesException(headerNames, fixtures)
     }
 
-    class MultipleMatchingFixturesException(headerNames: List<String>, matchingFixtures: List<Class<*>>) :
-        RuntimeException("Could not identify a unique fixture matching the Decision Table's headers " +
-            "${headerNames.map { "'$it'" }}. Matching fixtures found: $matchingFixtures")
+    class MultipleMatchingFixturesException(
+        headerNames: List<String>,
+        matchingFixtures: List<DecisionTableFixtureWrapper>
+    ) : RuntimeException("Could not identify a unique fixture matching the Decision Table's headers " +
+            "${headerNames.map { "'$it'" }}. Matching fixtures found: $matchingFixtures"
+    )
 
-    class NoMatchingFixturesException(headerNames: List<String>, fixtures: List<Class<*>>) :
+    class NoMatchingFixturesException(headerNames: List<String>, fixtures: List<DecisionTableFixtureWrapper>) :
         RuntimeException("Could not find any fixture matching the Decision Table's headers " +
-                "${headerNames.map { "'$it'" }}. Available fixtures: $fixtures")
+                "${headerNames.map { "'$it'" }}. Available fixtures: $fixtures"
+        )
 }
