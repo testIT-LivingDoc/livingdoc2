@@ -3,7 +3,7 @@ package org.livingdoc.engine
 import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureModel
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
-import org.livingdoc.engine.fixtures.FixtureWrapper
+import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 /**
@@ -11,7 +11,7 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
  */
 class DecisionTableToFixtureMatcher {
 
-    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>): FixtureWrapper {
+    fun findMatchingFixture(decisionTable: DecisionTable, fixtures: List<DecisionTableFixtureWrapper>): Fixture {
         if (decisionTable.description.isManual) {
             return NoFixtureWrapper()
         }

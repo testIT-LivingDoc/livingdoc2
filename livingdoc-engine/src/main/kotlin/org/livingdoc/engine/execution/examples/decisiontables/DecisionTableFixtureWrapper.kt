@@ -2,13 +2,13 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
-import org.livingdoc.engine.fixtures.FixtureWrapper
+import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 class DecisionTableFixtureWrapper(
     val fixtureClass: Class<*>
-) : FixtureWrapper {
+) : Fixture {
 
     fun execute(testData: DecisionTable): DecisionTableResult {
         return DecisionTableExecution(this.fixtureClass, testData, null).execute()

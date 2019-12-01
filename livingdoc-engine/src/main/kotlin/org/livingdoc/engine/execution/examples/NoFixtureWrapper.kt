@@ -2,12 +2,12 @@ package org.livingdoc.engine.execution.examples
 
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableNoFixtureExecution
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioNoFixtureExecution
-import org.livingdoc.engine.fixtures.FixtureWrapper
+import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
-class NoFixtureWrapper : FixtureWrapper {
+class NoFixtureWrapper : Fixture {
     override fun execute(testData: TestData): TestDataResult {
         return when (testData) {
             is DecisionTable -> {
