@@ -8,9 +8,7 @@ import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
-import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
-import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.reporting.HtmlReportRenderer
 import org.livingdoc.engine.reporting.ReportWriter
@@ -31,9 +29,7 @@ import kotlin.reflect.KClass
  */
 class LivingDoc(
     val repositoryManager: RepositoryManager = RepositoryManager.from(Configuration.load()),
-    val decisionTableExecutor: DecisionTableExecutor = DecisionTableExecutor(),
     val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
-    val scenarioExecutor: ScenarioExecutor = ScenarioExecutor(),
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
 
