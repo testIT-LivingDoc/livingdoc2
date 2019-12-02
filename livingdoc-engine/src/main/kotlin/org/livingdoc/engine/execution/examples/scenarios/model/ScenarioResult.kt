@@ -24,6 +24,14 @@ data class ScenarioResult private constructor(
 
         fun withStep(step: StepResult): Builder {
             steps.add(step)
+            when (step.status) {
+                is Status.Failed -> {
+                    status = Status.Failed(step.status.reason)
+                }
+                is Status.Exception -> {
+                    status = Status.Exception(step.status.exception)
+                }
+            }
             return this
         }
 
@@ -38,18 +46,43 @@ data class ScenarioResult private constructor(
         }
 
         fun build(): ScenarioResult {
-            // TODO validate result
-            return when {
+            when {
                 this.fixture == null -> {
                     throw IllegalArgumentException("Cant't build ScenarioResult without a fixture")
                 }
                 this.scenario == null -> {
                     throw IllegalArgumentException("Cant't build ScenarioResult without a scenario")
                 }
-                else -> {
-                    ScenarioResult(this.steps, this.status, this.fixture!!, this.scenario!!)
+            }
+
+            when (this.status) {
+                is Status.Unknown -> {
+                    // Retrieve status from steps
+                    status = if (steps.filter {
+                            it.status !is Status.Executed
+                        }.isEmpty()) Status.Executed else Status.Skipped
+                }
+                is Status.Manual, is Status.Disabled -> {
+                    steps = scenario!!.steps.map {
+                        StepResult.Builder()
+                            .withStatus(this.status)
+                            .withValue(it.value)
+                            .build()
+                    }.toMutableList()
                 }
             }
+
+            // Do all scenario steps have a valid result?
+            scenario!!.steps.forEach {
+                val step = it
+                if (steps.filter {
+                        it.value == step.value && it.status != Status.Unknown
+                    }.isEmpty()) {
+                    throw java.lang.IllegalArgumentException("Not all scenario steps are contained in the result")
+                }
+            }
+
+            return ScenarioResult(this.steps, this.status, this.fixture!!, this.scenario!!)
         }
     }
 }

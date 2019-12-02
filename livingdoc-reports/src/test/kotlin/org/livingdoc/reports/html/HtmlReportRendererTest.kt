@@ -5,12 +5,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.scenario.Scenario
+import java.util.*
 
 internal class HtmlReportRendererTest {
 
@@ -78,7 +81,7 @@ internal class HtmlReportRendererTest {
 
                         <div id="popup1" class="overlay">
                             <div class="popup">
-                                <h2></h2>
+                                <h2></h2>StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
                                 <a class="close" href="#">&times;</a>
                                 <div class="content">
                                     <pre>
@@ -105,19 +108,25 @@ internal class HtmlReportRendererTest {
 
     @Test
     fun `scenarioResult is rendered correctly`() {
-        val stepResultA = StepResult("A", Status.Executed)
-        val stepResultB = StepResult("B", Status.Unknown)
-        val stepResultC = StepResult("C", Status.Skipped)
-        val stepResultD = StepResult("D", Status.Failed(mockk()))
-        val stepResultE = StepResult("E", Status.Exception(mockk()))
+        val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
+        val stepResultB = StepResult.Builder().withValue("B").withStatus(Status.Unknown).build()
+        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Skipped).build()
+        val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
+        val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
 
         val documentResult = DocumentResult(
             Status.Executed,
             mutableListOf(
-                ScenarioResult(
-                    listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE),
-                    Status.Executed
-                )
+                ScenarioResult.Builder()
+                    .withStep(stepResultA)
+                    .withStep(stepResultB)
+                    .withStep(stepResultC)
+                    .withStep(stepResultD)
+                    .withStep(stepResultE)
+                    .withStatus(Status.Executed)
+                    .ofScenario(Scenario(listOf()))
+                    .ofFixture(NoFixtureWrapper())
+                    .build()
             )
         )
 

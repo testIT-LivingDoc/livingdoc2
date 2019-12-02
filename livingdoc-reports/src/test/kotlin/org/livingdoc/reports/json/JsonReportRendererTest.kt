@@ -1,4 +1,4 @@
-package org.livingdoc.reports.json
+package org.livingdoc.engine.reporting
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -51,7 +51,7 @@ internal class JsonReportRendererTest {
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
+                """
                 {
                     "results": [{
                         "rows": [{
@@ -96,20 +96,29 @@ internal class JsonReportRendererTest {
 
     @Test
     fun `scenarioResult is rendered correctly`() {
-        val stepResultA = StepResult("A", Status.Executed)
-        val stepResultB = StepResult("B", Status.Disabled("Disabled test"))
-        val stepResultC = StepResult("C", Status.Unknown)
-        val stepResultD = StepResult("D", Status.Skipped)
-        val stepResultE = StepResult("E", Status.Failed(mockk()))
-        val stepResultF = StepResult("F", Status.Exception(mockk()))
+        val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
+        val stepResultB = StepResult.Builder().withValue("B")
+            .withStatus(Status.Disabled("Disabled test"))
+            .build()
+        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Unknown).build()
+        val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Skipped).build()
+        val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Failed(mockk())).build()
+        val stepResultF = StepResult.Builder().withValue("F").withStatus(Status.Exception(mockk())).build()
 
         val documentResult = DocumentResult(
             Status.Executed,
             mutableListOf(
-                ScenarioResult(
-                    listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE, stepResultF),
-                    Status.Executed
-                )
+                ScenarioResult.Builder()
+                    .withStep(stepResultA)
+                    .withStep(stepResultB)
+                    .withStep(stepResultC)
+                    .withStep(stepResultD)
+                    .withStep(stepResultE)
+                    .withStep(stepResultF)
+                    .withStatus(Status.Executed)
+                    .ofScenario(Scenario(listOf()))
+                    .ofFixture(NoFixtureWrapper())
+                    .build()
             )
         )
 
