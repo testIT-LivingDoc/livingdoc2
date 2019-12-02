@@ -4,6 +4,9 @@ import org.yaml.snakeyaml.Yaml
 import java.io.InputStream
 import kotlin.reflect.KClass
 
+/**
+ * Tools to parse yaml configurations into typed objects or extract generic configuration objects form [InputStream].
+ */
 object YamlUtils {
 
     private val yaml = Yaml()

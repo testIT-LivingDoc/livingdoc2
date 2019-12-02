@@ -3,6 +3,10 @@ package org.livingdoc.config
 import java.io.FileNotFoundException
 import java.io.InputStream
 
+/**
+ * Provider for all Configurations of LivingDoc. Use this Object to get the global configuration and then parse specific
+ * parts of this config into typed config objects Using the [YamlUtils].
+ */
 object ConfigProvider {
 
     /**
