@@ -1,4 +1,7 @@
-package org.livingdoc.api.fixtures.scenarios;
+package org.livingdoc.api;
+
+import org.livingdoc.api.fixtures.scenarios.ScenarioFixture;
+import org.livingdoc.api.fixtures.scenarios.Step;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
