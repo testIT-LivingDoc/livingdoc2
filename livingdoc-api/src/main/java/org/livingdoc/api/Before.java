@@ -1,5 +1,6 @@
 package org.livingdoc.api;
 
+import org.livingdoc.api.documents.ExecutableDocument;
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture;
 import org.livingdoc.api.fixtures.scenarios.Step;
 
@@ -10,7 +11,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Methods annotated with this annotation are invoked before the first scenario {@link Step} method is invoked.
+ * Methods annotated with this annotation are invoked before the first fixture of an {@link ExecutableDocument} or
+ * before the first scenario {@link Step} method is invoked.
  * <p>
  * <b>Constraints:</b>
  * <ol>
@@ -18,6 +20,7 @@ import java.lang.annotation.Target;
  * <li>If multiple methods of a single fixture are annotated the invocation order is non-deterministic!</li>
  * </ol>
  *
+ * @see ExecutableDocument
  * @see Step
  * @see ScenarioFixture
  * @since 2.0
