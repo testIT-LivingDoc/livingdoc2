@@ -81,7 +81,7 @@ internal class HtmlReportRendererTest {
 
                         <div id="popup1" class="overlay">
                             <div class="popup">
-                                <h2></h2>StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
+                                <h2></h2>
                                 <a class="close" href="#">&times;</a>
                                 <div class="content">
                                     <pre>

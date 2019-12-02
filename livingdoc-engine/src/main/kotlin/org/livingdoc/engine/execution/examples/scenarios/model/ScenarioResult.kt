@@ -8,7 +8,7 @@ import org.livingdoc.repositories.model.scenario.Scenario
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
-    val fixture: Fixture<Scenario>,
+    val fixture: Fixture<Scenario>?,
     val scenario: Scenario
 ) : TestDataResult {
     class Builder {
@@ -48,7 +48,8 @@ data class ScenarioResult private constructor(
         fun build(): ScenarioResult {
             when {
                 this.fixture == null -> {
-                    throw IllegalArgumentException("Cant't build ScenarioResult without a fixture")
+                    // TODO Can't add this check until execution is part of fixture class
+                    // throw IllegalArgumentException("Cant't build ScenarioResult without a fixture")
                 }
                 this.scenario == null -> {
                     throw IllegalArgumentException("Cant't build ScenarioResult without a scenario")
@@ -82,7 +83,7 @@ data class ScenarioResult private constructor(
                 }
             }
 
-            return ScenarioResult(this.steps, this.status, this.fixture!!, this.scenario!!)
+            return ScenarioResult(this.steps, this.status, this.fixture, this.scenario!!)
         }
     }
 }
