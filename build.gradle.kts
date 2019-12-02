@@ -20,6 +20,7 @@ val livingdocJavaProjects by extra(
 
 val livingdocKotlinProjects by extra(
 	listOf(
+		project(":livingdoc-config"),
 		project(":livingdoc-converters"),
 		project(":livingdoc-engine"),
 		project(":livingdoc-junit-engine"),
@@ -130,6 +131,7 @@ tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
 	outputDirectory = "$buildDir/dokka"
 
 	subProjects = listOf( "livingdoc-api",
+		"livingdoc-config",
 		"livingdoc-converters",
 		"livingdoc-documentation",
 		"livingdoc-engine",

@@ -3,14 +3,14 @@ package org.livingdoc.repositories
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.livingdoc.config.YamlUtils
 import org.livingdoc.repositories.RepositoryManager.*
-import org.livingdoc.repositories.config.Configuration
-import org.livingdoc.repositories.config.YamlUtils
+import org.livingdoc.repositories.config.RepositoryConfiguration
 
 internal class RepositoryManagerTest {
 
-    val repositoryFactory = TestRepositoryFactory::class.java.name
-    val notARepositoryFactory = NotARepositoryFactory::class.java.name
+    private val repositoryFactory = TestRepositoryFactory::class.java.name
+    private val notARepositoryFactory = NotARepositoryFactory::class.java.name
 
     @Test fun `multiple repositories can be defined in configuration`() {
 
@@ -30,7 +30,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         val repositoryManager = RepositoryManager.from(configuration)
         val repository1 = repositoryManager.getRepository("repo-1") as TestRepository
         val repository2 = repositoryManager.getRepository("repo-2") as TestRepository
@@ -52,7 +52,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         val repositoryManager = RepositoryManager.from(configuration)
         val repository = repositoryManager.getRepository("repo") as TestRepository
 
@@ -69,7 +69,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         val repositoryManager = RepositoryManager.from(configuration)
         val repository = repositoryManager.getRepository("default") as TestRepository
 
@@ -89,7 +89,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         assertThrows(RepositoryAlreadyRegisteredException::class.java) {
             RepositoryManager.from(configuration)
         }
@@ -104,7 +104,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         assertThrows(NoRepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
         }
@@ -120,7 +120,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         assertThrows(NotARepositoryFactoryException::class.java) {
             RepositoryManager.from(configuration)
         }
@@ -138,7 +138,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         assertThrows(RuntimeException::class.java) {
             RepositoryManager.from(configuration)
         }
@@ -156,7 +156,7 @@ internal class RepositoryManagerTest {
 
         """.trimIndent()
 
-        val configuration = Configuration.loadFromStream(configYaml.byteInputStream())
+        val configuration = readConfigFromString(configYaml)
         val repositoryManager = RepositoryManager.from(configuration)
         val exception = assertThrows(RepositoryNotFoundException::class.java) {
             repositoryManager.getRepository("xur")
@@ -183,4 +183,8 @@ internal class RepositoryManagerTest {
     }
 
     class NotARepositoryFactory
+
+    private fun readConfigFromString(config: String): RepositoryConfiguration {
+        return RepositoryConfiguration.from(YamlUtils.loadFromStream(config.byteInputStream()))
+    }
 }

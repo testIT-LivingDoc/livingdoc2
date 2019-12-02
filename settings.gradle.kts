@@ -20,6 +20,7 @@ pluginManagement {
 rootProject.name = "livingdoc"
 
 include( "livingdoc-api",
+"livingdoc-config",
 "livingdoc-converters",
 "livingdoc-documentation",
 "livingdoc-engine",

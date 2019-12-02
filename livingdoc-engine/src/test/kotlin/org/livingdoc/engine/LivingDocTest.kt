@@ -11,7 +11,7 @@ internal class LivingDocTest {
     @Test
     fun disabledExecutableDocumentExecute() {
         val repoManagerMock = mockkJClass(RepositoryManager::class.java)
-        val cut = LivingDoc(repoManagerMock)
+        val cut = LivingDoc(emptyMap(), repoManagerMock)
         val documentClass = DisabledExecutableDocument::class.java
 
         val result = cut.execute(documentClass)

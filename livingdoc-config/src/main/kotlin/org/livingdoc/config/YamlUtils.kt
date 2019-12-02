@@ -1,4 +1,4 @@
-package org.livingdoc.repositories.config
+package org.livingdoc.config
 
 import org.yaml.snakeyaml.Yaml
 import java.io.InputStream

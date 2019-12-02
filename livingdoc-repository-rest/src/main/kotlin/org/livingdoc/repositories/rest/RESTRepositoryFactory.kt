@@ -1,7 +1,7 @@
 package org.livingdoc.repositories.rest
 
+import org.livingdoc.config.YamlUtils
 import org.livingdoc.repositories.DocumentRepositoryFactory
-import org.livingdoc.repositories.config.YamlUtils
 
 /**
  * This Factory is used to create a RESTRepository. This Factory must be specified in the livingdoc.yml to use the REST

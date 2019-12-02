@@ -3,13 +3,14 @@ plugins {
 }
 
 dependencies {
-	compile("org.slf4j:slf4j-api:${Versions.slf4j}")
-	compile("org.jsoup:jsoup:${Versions.jsoup}")
-	compile("com.vladsch.flexmark:flexmark:${Versions.flexmark}")
-	compile("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
-	compile(project(":livingdoc-repositories"))
+	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
+	implementation("org.jsoup:jsoup:${Versions.jsoup}")
+	implementation("com.vladsch.flexmark:flexmark:${Versions.flexmark}")
+	implementation("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
+	implementation(project(":livingdoc-config"))
+	implementation(project(":livingdoc-repositories"))
 
-	testRuntime(project(":livingdoc-junit-engine"))
+	testRuntimeOnly(project(":livingdoc-junit-engine"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")

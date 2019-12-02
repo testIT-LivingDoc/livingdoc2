@@ -4,6 +4,7 @@ import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
+import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.Status
@@ -14,7 +15,7 @@ import org.livingdoc.engine.reporting.HtmlReportRenderer
 import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
-import org.livingdoc.repositories.config.Configuration
+import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 import kotlin.reflect.KClass
@@ -28,7 +29,8 @@ import kotlin.reflect.KClass
  * @since 2.0
  */
 class LivingDoc(
-    val repositoryManager: RepositoryManager = RepositoryManager.from(Configuration.load()),
+    val configuration: Map<String, Any> = ConfigProvider.load(),
+    val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configuration)),
     val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {

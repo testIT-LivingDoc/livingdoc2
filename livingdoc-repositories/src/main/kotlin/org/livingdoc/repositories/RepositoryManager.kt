@@ -1,6 +1,6 @@
 package org.livingdoc.repositories
 
-import org.livingdoc.repositories.config.Configuration
+import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -10,7 +10,7 @@ class RepositoryManager {
 
         private val log: Logger = LoggerFactory.getLogger(RepositoryManager::class.java)
 
-        fun from(config: Configuration): RepositoryManager {
+        fun from(config: RepositoryConfiguration): RepositoryManager {
             log.debug("creating new repository manager...")
             val repositoryManager = RepositoryManager()
             config.repositories.forEach { (name, factory, configData) ->
