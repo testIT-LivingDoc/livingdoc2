@@ -1,7 +1,7 @@
 package org.livingdoc.engine.execution.examples.scenarios;
 
-import org.livingdoc.api.fixtures.scenarios.After;
-import org.livingdoc.api.fixtures.scenarios.Before;
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
 import org.livingdoc.api.fixtures.scenarios.Step;
 
 import static org.livingdoc.engine.MockkExtKt.clearJMockk;

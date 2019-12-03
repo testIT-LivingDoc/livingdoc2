@@ -12,7 +12,7 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import org.livingdoc.api.fixtures.scenarios.Before
+import org.livingdoc.api.Before
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step

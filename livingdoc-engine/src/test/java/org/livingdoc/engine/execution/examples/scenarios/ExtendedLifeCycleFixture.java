@@ -1,8 +1,8 @@
 package org.livingdoc.engine.execution.examples.scenarios;
 
 import org.jetbrains.annotations.NotNull;
-import org.livingdoc.api.fixtures.scenarios.After;
-import org.livingdoc.api.fixtures.scenarios.Before;
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
 import org.livingdoc.api.fixtures.scenarios.Binding;
 import org.livingdoc.api.fixtures.scenarios.Step;
 

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
-import org.livingdoc.api.fixtures.scenarios.Before;
+import org.livingdoc.api.Before;
 import org.livingdoc.api.fixtures.scenarios.Binding;
 import org.livingdoc.api.fixtures.scenarios.Step;
 
