@@ -4,6 +4,7 @@ default:
 stages:
   - build
   - test
+  - documentation
   - deploy
 
 build:
@@ -37,13 +38,24 @@ lint project:
     - ./gradlew spotlessCheck
     - ./gradlew detekt
 
+generate documentation:
+  stage: documentation
+  script:
+    - ./gradlew aggregatedDokka
+  dependencies:
+    - build
+  artifacts:
+    name: documentation-artifacts
+    expire_in: 1d
+    paths:
+      - build/dokka
+
 pages:
   stage: deploy
   script:
-    - ./gradlew aggregatedDokka
     - mv build/dokka public
   dependencies:
-    - build
+    - generate documentation
   artifacts:
     paths:
       - public
