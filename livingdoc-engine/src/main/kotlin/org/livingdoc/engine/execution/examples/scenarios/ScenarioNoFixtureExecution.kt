@@ -17,7 +17,7 @@ internal class ScenarioNoFixtureExecution(
      */
     fun execute(): ScenarioResult {
         val resultBuilder = ScenarioResult.Builder()
-            .ofScenario(scenario)
+            .withScenario(scenario)
 
         if (scenario.description.isManual) {
             resultBuilder.withStatus(Status.Manual)

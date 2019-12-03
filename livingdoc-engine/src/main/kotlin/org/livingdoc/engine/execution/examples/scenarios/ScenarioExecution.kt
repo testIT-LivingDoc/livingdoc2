@@ -19,7 +19,7 @@ internal class ScenarioExecution(
 ) {
 
     private val fixtureModel = ScenarioFixtureModel(fixtureClass)
-    private val scenarioResultBuilder = ScenarioResult.Builder().ofScenario(scenario)
+    private val scenarioResultBuilder = ScenarioResult.Builder().withScenario(scenario)
     private val methodInvoker = FixtureMethodInvoker(document)
 
     /**

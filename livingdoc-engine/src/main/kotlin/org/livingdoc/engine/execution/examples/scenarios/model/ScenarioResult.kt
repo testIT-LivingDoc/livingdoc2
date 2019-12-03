@@ -35,12 +35,12 @@ data class ScenarioResult private constructor(
             return this
         }
 
-        fun ofFixture(fixture: Fixture<Scenario>): Builder {
+        fun withFixture(fixture: Fixture<Scenario>): Builder {
             this.fixture = fixture
             return this
         }
 
-        fun ofScenario(scenario: Scenario): Builder {
+        fun withScenario(scenario: Scenario): Builder {
             this.scenario = scenario
             return this
         }
