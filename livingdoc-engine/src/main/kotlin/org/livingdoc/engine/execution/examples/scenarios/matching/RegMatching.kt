@@ -6,37 +6,53 @@ internal class RegMatching(
     val step: String,
     val maxCost: Int
 ) {
+    /**
+     * cost of getting the best fitting pattern
+     */
     val totalCost: Int by lazy {
         getCost()
     }
-    val variables: Map<String, String> by lazy {
-        if (!isMisaligned()) getVars() else emptyMap()
-    }
-
-    fun isMisaligned() = totalCost >= maxCost
-
-    fun start() {
-
-        match()
-    }
-
-    private lateinit var preparedtemplatetext: String
-    private lateinit var reggedText: Regex
-
-    private var testText = step
-    private var cost = 0
-    private var templatetext = stepTemplate.toString()
-    private var templatetextTokenized: MutableMap<String, String> = mutableMapOf()
-
     private fun getCost(): Int {
         start()
         return cost
     }
 
+    /**
+     * variable matching
+     *
+      */
+    val variables: Map<String, String> by lazy {
+        if (!isMisaligned()) getVars() else emptyMap()
+    }
     private fun getVars(): Map<String, String> {
         return templatetextTokenized
     }
 
+    // misalignment
+    fun isMisaligned() = totalCost >= maxCost
+
+    /**
+     * startpoint of the Regex algorithm to match sentences
+     */
+    private fun start() {
+        match()
+    }
+
+    // copy the input strings to local variables
+    private var templatetext = stepTemplate.toString()
+    private var testText = step
+
+    // containers to store global values
+    private lateinit var preparedtemplatetext: String
+    private lateinit var reggedText: Regex
+    private var cost = 0
+
+    // variable to string matching container
+    private var templatetextTokenized: MutableMap<String, String> = mutableMapOf()
+
+    /**
+     * matching method of the algorithm
+     */
     private fun match() {
 
         tokenizetemplateText()
@@ -54,6 +70,10 @@ internal class RegMatching(
         }
     }
 
+    /**
+     * string matching function with a certain tolerance for typos depending on the maximum tolerance
+     * TODO build the tolerance
+     */
     private fun matchStrings(): List<String> {
 
         val matchedResult = reggedText.find(testText)
@@ -64,6 +84,9 @@ internal class RegMatching(
             println(step)
             println(cost)
             println("______________FAILED________________")
+
+            // TODO make some tolerance here for typos by using the levenshtein again
+            // TODO scan word by word except for the variables
             cost++
             return emptyList()
         } else {
@@ -72,6 +95,10 @@ internal class RegMatching(
         }
     }
 
+    /**
+     * getting the variables and creating the regex by replacing the "{variable}"
+     * with regexes
+     */
     private fun tokenizetemplateText(): List<String> {
         val interntext = templatetext.split(" ")
 

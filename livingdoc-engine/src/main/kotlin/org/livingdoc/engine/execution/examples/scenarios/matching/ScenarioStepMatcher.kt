@@ -12,15 +12,6 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
 
     fun match(step: String): MatchingResult {
 
-        // input is a stepTemplate List
-        // returns a Matching result: Steptemplate, variables matching
-
-        // start alignemnt
-        // find best
-        // if none fit throw exception
-        // get vars
-        // get steptemplate
-
         val bestFit = stepTemplates
             .map { it.alignWith(step, maxCostOfAlignment = 2) }
             .minBy { it.totalCost }
