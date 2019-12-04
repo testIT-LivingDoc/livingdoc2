@@ -1,0 +1,41 @@
+== Generate Reports
+
+A Report represent the Results of executing a Document.
+The Report include the Document and the Status of the execution.
+A Report can be represented in different formats like HTML or PDF.
+
+Supported Report Formats:
+
+* HTML Report
+* Json Report
+
+Configure the generation of Reports in the `living-doc.yaml` file.
+The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
+This file should be placed in the `src/test/resources` directory.
+[source, yaml]
+----
+reports:
+  - name: "default-html"
+    format: "html"
+    config:
+      outputDir: "livingdoc/reports/html"
+----
+`reports` is a list of different reports.
+Each report have a `name` as unique identifier.
+Each report also specifies the `format` of the generated Report.
+Optionally a `config` can be specified for Report format specific parameters.
+
+=== HTML Reports
+The HTML Report format is similar to the HTML Document format, with additional coloring to represent the Status of the execution.
+
+==== Configuration
+.outputDir
+The directory where the HTML Reports are save.
+The default value is `livingdoc/reports/html`.
+
+=== Json Reports
+
+==== Configuration
+.outputDir
+The directory where the HTML Reports are save.
+The default value is `livingdoc/reports/json`.
