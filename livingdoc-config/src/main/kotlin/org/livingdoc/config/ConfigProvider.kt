@@ -2,32 +2,50 @@ package org.livingdoc.config
 
 import java.io.FileNotFoundException
 import java.io.InputStream
+import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Provider for all Configurations of LivingDoc. Use this Object to get the global configuration and then parse specific
  * parts of this config into typed config objects Using the [YamlUtils].
  */
-object ConfigProvider {
+class ConfigProvider(private val config: Map<String, Any>) {
 
     /**
-     * Loads the configuration from the `livingdoc.yml` file on the classpath root.
+     * Get the configuration with the [configurationName] from the ConfigProvider. The configuration is parsed into a
+     * typed object given by the [type]. The [type] must have a top-level property with name [configurationName].
      */
-    fun load(): Map<String, Any> {
-        return loadFromFile("livingdoc.yml")
+    fun <T : Any> getConfigAs(configurationName: String, type: KClass<T>): T {
+        return YamlUtils.toObject(mapOf(configurationName to config.getOrDefault(configurationName, Any())), type)
     }
 
     /**
-     * Loads the configuration from the given [configFile] from Classpath.
+     * Get the raw configuration by [configurationName]
      */
-    fun loadFromFile(configFileName: String): Map<String, Any> {
-        val configFile = ConfigProvider::class.java.classLoader.getResource(configFileName)
-            ?: throw FileNotFoundException("File not found: $configFileName")
-        val inputStream = configFile.openStream()
-        return loadFromStream(inputStream)
-    }
+    fun getConfig(configurationName: String) = Optional.ofNullable(config[configurationName])
 
-    /**
-     * Loads the configuration from the given [InputStream].
-     */
-    fun loadFromStream(inputStream: InputStream) = YamlUtils.loadFromStream(inputStream)
+    companion object {
+
+        /**
+         * Loads the configuration from the `livingdoc.yml` file on the classpath root.
+         */
+        fun load(): ConfigProvider {
+            return loadFromFile("livingdoc.yml")
+        }
+
+        /**
+         * Loads the configuration from the given [configFileName] from Classpath.
+         */
+        fun loadFromFile(configFileName: String): ConfigProvider {
+            val configFile = ConfigProvider::class.java.classLoader.getResource(configFileName)
+                ?: throw FileNotFoundException("File not found: $configFileName")
+            val inputStream = configFile.openStream()
+            return loadFromStream(inputStream)
+        }
+
+        /**
+         * Loads the configuration from the given [InputStream].
+         */
+        fun loadFromStream(inputStream: InputStream) = ConfigProvider(YamlUtils.loadFromStream(inputStream))
+    }
 }

@@ -3,6 +3,7 @@ package org.livingdoc.repositories
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.livingdoc.config.ConfigProvider
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.repositories.RepositoryManager.*
 import org.livingdoc.repositories.config.RepositoryConfiguration
@@ -185,6 +186,6 @@ internal class RepositoryManagerTest {
     class NotARepositoryFactory
 
     private fun readConfigFromString(config: String): RepositoryConfiguration {
-        return RepositoryConfiguration.from(YamlUtils.loadFromStream(config.byteInputStream()))
+        return RepositoryConfiguration.from(ConfigProvider.loadFromStream(config.byteInputStream()))
     }
 }

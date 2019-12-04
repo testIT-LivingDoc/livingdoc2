@@ -1,0 +1,13 @@
+list:
+  - name: bla
+    value: 1
+  - name: foo
+    value: 0
+object:
+  a:
+  b:
+    - "string"
+    -
+fail:
+  test1:
+  test2:

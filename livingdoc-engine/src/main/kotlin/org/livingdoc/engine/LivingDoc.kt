@@ -29,8 +29,8 @@ import kotlin.reflect.KClass
  * @since 2.0
  */
 class LivingDoc(
-    val configuration: Map<String, Any> = ConfigProvider.load(),
-    val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configuration)),
+    val configProvider: ConfigProvider = ConfigProvider.load(),
+    val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
     val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
