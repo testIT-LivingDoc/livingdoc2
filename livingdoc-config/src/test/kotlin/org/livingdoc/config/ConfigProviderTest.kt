@@ -41,4 +41,13 @@ internal class ConfigProviderTest {
 
     data class ConfigFail(var fail: ConfigFailInner)
     data class ConfigFailInner(var test1: Any)
+
+    @Test
+    fun `return default typed config object if not given in yaml`() {
+        val config = ConfigProvider.loadFromFile(configFile)
+        config.getConfigAs("default", ConfigDefault::class)
+    }
+
+    data class ConfigDefault(var default: List<ComplexType> = emptyList())
+    data class ComplexType(var someValue: String = "important")
 }

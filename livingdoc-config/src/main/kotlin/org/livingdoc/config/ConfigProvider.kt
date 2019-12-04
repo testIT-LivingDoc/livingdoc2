@@ -4,6 +4,7 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 /**
  * Provider for all Configurations of LivingDoc. Use this Object to get the global configuration and then parse specific
@@ -16,7 +17,8 @@ class ConfigProvider(private val config: Map<String, Any>) {
      * typed object given by the [type]. The [type] must have a top-level property with name [configurationName].
      */
     fun <T : Any> getConfigAs(configurationName: String, type: KClass<T>): T {
-        return YamlUtils.toObject(mapOf(configurationName to config.getOrDefault(configurationName, Any())), type)
+        val configurationProperty = config[configurationName] ?: return type.createInstance()
+        return YamlUtils.toObject(mapOf(configurationName to configurationProperty), type)
     }
 
     /**
