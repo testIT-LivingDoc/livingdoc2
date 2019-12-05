@@ -5,6 +5,7 @@ A Document Repository is a configurable Location for multiple Executable Documen
 LivingDoc currently provides three types of Document Repositories, but it is also possible to create your own Document Repository type if it is not supported yet.
 
 Supported Document Repositories:
+
 * File Repository
 * REST Repository
 * Confluence Repository
