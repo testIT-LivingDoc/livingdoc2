@@ -6,6 +6,8 @@
       <module name="livingdoc.buildSrc.test" target="11" />
       <module name="livingdoc.livingdoc-api.main" target="11" />
       <module name="livingdoc.livingdoc-api.test" target="11" />
+      <module name="livingdoc.livingdoc-config.main" target="11" />
+      <module name="livingdoc.livingdoc-config.test" target="11" />
       <module name="livingdoc.livingdoc-converters.main" target="11" />
       <module name="livingdoc.livingdoc-converters.test" target="11" />
       <module name="livingdoc.livingdoc-documentation.main" target="11" />

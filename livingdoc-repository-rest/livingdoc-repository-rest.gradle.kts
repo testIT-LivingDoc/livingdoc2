@@ -3,11 +3,12 @@ plugins {
 }
 
 dependencies {
-	compile("org.slf4j:slf4j-api:${Versions.slf4j}")
-	compile("io.ktor:ktor-client-apache:1.2.5")
-	compile(project(":livingdoc-repositories"))
+	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
+	implementation("io.ktor:ktor-client-apache:1.2.5")
+	implementation(project(":livingdoc-config"))
+	implementation(project(":livingdoc-repositories"))
 
-	testRuntime(project(":livingdoc-junit-engine"))
+	testRuntimeOnly(project(":livingdoc-junit-engine"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")

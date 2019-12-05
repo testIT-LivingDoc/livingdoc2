@@ -1,7 +1,7 @@
 package org.livingdoc.repositories.file
 
+import org.livingdoc.config.YamlUtils
 import org.livingdoc.repositories.DocumentRepositoryFactory
-import org.livingdoc.repositories.config.YamlUtils
 
 class FileRepositoryFactory : DocumentRepositoryFactory<FileRepository> {
 

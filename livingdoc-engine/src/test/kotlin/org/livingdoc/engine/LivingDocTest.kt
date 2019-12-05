@@ -2,6 +2,7 @@ package org.livingdoc.engine
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.resources.DisabledExecutableDocument
 import org.livingdoc.repositories.RepositoryManager
@@ -11,7 +12,8 @@ internal class LivingDocTest {
     @Test
     fun disabledExecutableDocumentExecute() {
         val repoManagerMock = mockkJClass(RepositoryManager::class.java)
-        val cut = LivingDoc(repoManagerMock)
+        val configProviderMock = mockkJClass(ConfigProvider::class.java)
+        val cut = LivingDoc(configProviderMock, repoManagerMock)
         val documentClass = DisabledExecutableDocument::class.java
 
         val result = cut.execute(documentClass)

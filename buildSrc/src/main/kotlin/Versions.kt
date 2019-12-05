@@ -15,8 +15,8 @@ object Versions {
     val klaxon = "5.0.1"
 
     //Test
-    val junitPlatform = "1.5.1"
-    val junitJupiter = "5.5.1"
+    val junitPlatform = "1.5.2"
+    val junitJupiter = "5.5.2"
     val mockk = "1.9.3"
     val logback = "1.2.3"
     val assertJ = "3.11.1"
