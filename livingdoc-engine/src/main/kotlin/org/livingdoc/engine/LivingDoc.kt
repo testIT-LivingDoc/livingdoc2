@@ -13,6 +13,7 @@ import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.engine.reporting.HtmlReportRenderer
 import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
@@ -37,8 +38,11 @@ class LivingDoc(
     val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
+
+    private lateinit var documentClass: Class<*>
     private lateinit var documentClassModel: ExecutableDocumentModel
     private lateinit var document: Document
+    private lateinit var methodInvoker: FixtureMethodInvoker
 
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
@@ -46,8 +50,10 @@ class LivingDoc(
             return DocumentResult(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
         }
 
+        this.documentClass = documentClass
         documentClassModel = ExecutableDocumentModel.of(documentClass)
         document = loadDocument(documentClassModel)
+        methodInvoker = FixtureMethodInvoker(document)
 
         val result = executeDocument()
 
@@ -59,9 +65,20 @@ class LivingDoc(
     }
 
     private fun executeDocument(): DocumentResult {
+        val documentInstance = createDocumentInstance()
+        invokeBeforeMethods(documentInstance)
         val results: List<TestDataResult> = executeFixtures()
+        invokeAfterMethods(documentInstance)
 
         return DocumentResult(Status.Executed, results)
+    }
+
+    private fun createDocumentInstance(): Any {
+        return documentClass.getConstructor().newInstance()
+    }
+
+    private fun invokeBeforeMethods(documentInstance: Any) {
+        documentClassModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, documentInstance) }
     }
 
     private fun executeFixtures(): List<TestDataResult> {
@@ -80,6 +97,10 @@ class LivingDoc(
                 else -> null
             }
         }
+    }
+
+    private fun invokeAfterMethods(documentInstance: Any) {
+        documentClassModel.afterMethods.forEach { method -> methodInvoker.invoke(method, documentInstance) }
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {
