@@ -21,3 +21,4 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - DecisionTables and Scenarios without a matching fixture will now
   generate an exception instead of being silently ignored.
 - Updated to gradle version 5.6.4
+- `@Before` and `@After` annotations can now also be used on methods inside classes annotated with `@ExecutableDocument`
