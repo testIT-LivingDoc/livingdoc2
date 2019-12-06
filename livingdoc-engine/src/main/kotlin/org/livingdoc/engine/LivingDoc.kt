@@ -37,6 +37,8 @@ class LivingDoc(
     val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
+    private lateinit var documentClassModel: ExecutableDocumentModel
+    private lateinit var document: Document
 
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
@@ -44,10 +46,26 @@ class LivingDoc(
             return DocumentResult(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
         }
 
-        val documentClassModel = ExecutableDocumentModel.of(documentClass)
-        val document = loadDocument(documentClassModel)
+        documentClassModel = ExecutableDocumentModel.of(documentClass)
+        document = loadDocument(documentClassModel)
 
-        val results: List<TestDataResult> = document.elements.mapNotNull { element ->
+        val result = executeDocument()
+
+        val renderer = HtmlReportRenderer()
+        val html = renderer.render(result)
+        ReportWriter().writeToFile(html)
+
+        return result
+    }
+
+    private fun executeDocument(): DocumentResult {
+        val results: List<TestDataResult> = executeFixtures()
+
+        return DocumentResult(Status.Executed, results)
+    }
+
+    private fun executeFixtures(): List<TestDataResult> {
+        return document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
@@ -62,14 +80,6 @@ class LivingDoc(
                 else -> null
             }
         }
-
-        val result = DocumentResult(Status.Executed, results)
-
-        val renderer = HtmlReportRenderer()
-        val html = renderer.render(result)
-        ReportWriter().writeToFile(html)
-
-        return result
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {
