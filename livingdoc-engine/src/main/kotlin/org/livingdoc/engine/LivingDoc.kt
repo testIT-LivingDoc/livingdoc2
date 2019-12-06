@@ -1,5 +1,7 @@
 package org.livingdoc.engine
 
+import org.livingdoc.api.After
+import org.livingdoc.api.Before
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
@@ -18,6 +20,7 @@ import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
+import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 /**
@@ -48,13 +51,13 @@ class LivingDoc(
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
-                        .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                        .execute(element)
+                            .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
+                            .execute(element)
                 }
                 is Scenario -> {
                     scenarioToFixtureMatcher
-                        .findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                        .execute(element)
+                            .findMatchingFixture(element, documentClassModel.scenarioFixtures)
+                            .execute(element)
                 }
                 else -> null
             }
@@ -84,7 +87,9 @@ private data class DocumentIdentifier(
 private data class ExecutableDocumentModel(
     val documentIdentifier: DocumentIdentifier,
     val decisionTableFixtures: List<DecisionTableFixtureWrapper>,
-    val scenarioFixtures: List<ScenarioFixtureWrapper>
+    val scenarioFixtures: List<ScenarioFixtureWrapper>,
+    val beforeMethods: List<Method>,
+    val afterMethods: List<Method>
 ) {
 
     companion object {
@@ -92,23 +97,25 @@ private data class ExecutableDocumentModel(
         fun of(documentClass: Class<*>): ExecutableDocumentModel {
             validate(documentClass)
             return ExecutableDocumentModel(
-                documentIdentifier = getDocumentIdentifier(documentClass),
-                decisionTableFixtures = getDecisionTableFixtures(documentClass),
-                scenarioFixtures = getScenarioFixtures(documentClass)
+                    documentIdentifier = getDocumentIdentifier(documentClass),
+                    decisionTableFixtures = getDecisionTableFixtures(documentClass),
+                    scenarioFixtures = getScenarioFixtures(documentClass),
+                    beforeMethods = getBeforeMethods(documentClass),
+                    afterMethods = getAfterMethods(documentClass)
             )
         }
 
         private fun getDocumentIdentifier(document: Class<*>): DocumentIdentifier {
             val annotation = document.executableDocumentAnnotation!!
             val values = annotation.value.split("://")
-                .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
+                    .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
             return DocumentIdentifier(values[0], values[1])
         }
 
         private fun validate(document: Class<*>) {
             if (document.executableDocumentAnnotation == null) {
                 throw IllegalArgumentException(
-                    "ExecutableDocument annotation is not present on class ${document.canonicalName}."
+                        "ExecutableDocument annotation is not present on class ${document.canonicalName}."
                 )
             }
         }
@@ -125,12 +132,20 @@ private data class ExecutableDocumentModel(
             }
         }
 
+        private fun getAfterMethods(document: Class<*>): List<Method> {
+            return document.methods.filter { method -> method.isAnnotationPresent(After::class.java) }
+        }
+
+        private fun getBeforeMethods(document: Class<*>): List<Method> {
+            return document.methods.filter { method -> method.isAnnotationPresent(Before::class.java) }
+        }
+
         private fun getFixtures(document: Class<*>, annotationClass: KClass<out Annotation>): List<Class<*>> {
             val declaredInside = document.declaredClasses
-                .filter { it.isAnnotationPresent(annotationClass.java) }
+                    .filter { it.isAnnotationPresent(annotationClass.java) }
             val fromAnnotation = document.executableDocumentAnnotation!!.fixtureClasses
-                .map { it.java }
-                .filter { it.isAnnotationPresent(annotationClass.java) }
+                    .map { it.java }
+                    .filter { it.isAnnotationPresent(annotationClass.java) }
             return declaredInside + fromAnnotation
         }
 
