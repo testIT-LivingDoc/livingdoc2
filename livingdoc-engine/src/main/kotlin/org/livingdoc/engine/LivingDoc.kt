@@ -13,6 +13,7 @@ import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.engine.reporting.HtmlReportRenderer
 import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
@@ -38,16 +39,50 @@ class LivingDoc(
     val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
 
+    private lateinit var documentClass: Class<*>
+    private lateinit var documentClassModel: ExecutableDocumentModel
+    private lateinit var document: Document
+    private lateinit var methodInvoker: FixtureMethodInvoker
+
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
         if (documentClass.isAnnotationPresent(Disabled::class.java)) {
             return DocumentResult(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
         }
 
-        val documentClassModel = ExecutableDocumentModel.of(documentClass)
-        val document = loadDocument(documentClassModel)
+        this.documentClass = documentClass
+        documentClassModel = ExecutableDocumentModel.of(documentClass)
+        document = loadDocument(documentClassModel)
+        methodInvoker = FixtureMethodInvoker(document)
 
-        val results: List<TestDataResult> = document.elements.mapNotNull { element ->
+        val result = executeDocument()
+
+        val renderer = HtmlReportRenderer()
+        val html = renderer.render(result)
+        ReportWriter().writeToFile(html)
+
+        return result
+    }
+
+    private fun executeDocument(): DocumentResult {
+        val documentInstance = createDocumentInstance()
+        invokeBeforeMethods(documentInstance)
+        val results: List<TestDataResult> = executeFixtures()
+        invokeAfterMethods(documentInstance)
+
+        return DocumentResult(Status.Executed, results)
+    }
+
+    private fun createDocumentInstance(): Any {
+        return documentClass.getConstructor().newInstance()
+    }
+
+    private fun invokeBeforeMethods(documentInstance: Any) {
+        documentClassModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, documentInstance) }
+    }
+
+    private fun executeFixtures(): List<TestDataResult> {
+        return document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
@@ -62,14 +97,10 @@ class LivingDoc(
                 else -> null
             }
         }
+    }
 
-        val result = DocumentResult(Status.Executed, results)
-
-        val renderer = HtmlReportRenderer()
-        val html = renderer.render(result)
-        ReportWriter().writeToFile(html)
-
-        return result
+    private fun invokeAfterMethods(documentInstance: Any) {
+        documentClassModel.afterMethods.forEach { method -> methodInvoker.invoke(method, documentInstance) }
     }
 
     private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {
