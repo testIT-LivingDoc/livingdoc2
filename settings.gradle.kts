@@ -9,6 +9,7 @@ pluginManagement {
 				"com.gradle.build-scan" -> useVersion(Versions.buildScanPlugin)
 				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
 				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlinVersion)
+				"org.jetbrains.kotlin.kotlin-reflect" -> useVersion(Versions.kotlinVersion)
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"io.gitlab.arturbosch.detekt" -> useVersion(Versions.detektVersion)
 				"org.jetbrains.dokka" -> useVersion(Versions.dokkaPlugin)

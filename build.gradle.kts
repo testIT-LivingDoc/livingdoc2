@@ -1,10 +1,12 @@
 plugins {
 	id("io.gitlab.arturbosch.detekt")
-	id("com.gradle.build-scan")
+	`build-scan`
 	id("com.diffplug.gradle.spotless")
 	id("org.jetbrains.dokka")
 	kotlin("jvm")
 }
+
+rootProject.description = "LivingDoc"
 
 buildScan {
 	termsOfServiceUrl = "https://gradle.com/terms-of-service"
@@ -96,33 +98,29 @@ subprojects {
 				xml.enabled = false
 				html {
 					enabled = true
-					destination = file("${rootProject.projectDir}/build/reports/detekt/${project.name}.html")
+					destination = file("${rootProject.buildDir}/reports/detekt/${project.name}.html")
 				}
 			}
 		}
 
 		tasks.withType<Delete> {
-			delete("${rootProject.projectDir}/build")
+			delete(rootProject.buildDir)
 		}
 	}
 }
 
-rootProject.apply {
-	description = "LivingDoc"
-
-	spotless {
-		format("misc") {
-			target("**/*.gradle", "**/*.gradle.kts", "**/*.gitignore")
-			targetExclude("**/build/**")
-			indentWithTabs()
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
-		format("documentation") {
-			target("**/*.adoc", "**/*.md")
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
+spotless {
+	format("misc") {
+		target("**/*.gradle", "**/*.gradle.kts", "**/*.gitignore")
+		targetExclude("**/build/**")
+		indentWithTabs()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	format("documentation") {
+		target("**/*.adoc", "**/*.md")
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
 }
 
@@ -131,8 +129,7 @@ tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
 	outputFormat = "javadoc"
 	outputDirectory = "$buildDir/dokka"
 
-	subProjects = subprojects.map { it.path }
-
+	subProjects = subprojects.map { it.path.substring(1) }
 }
 
 tasks.create<JacocoReport>("codeCoverageReport") {
@@ -146,7 +143,6 @@ tasks.create<JacocoReport>("codeCoverageReport") {
 		it.pluginManager.withPlugin("kotlin") {
 			sourceSets(it.the<SourceSetContainer>()["main"])
 		}
-
 	}
 
 	reports {

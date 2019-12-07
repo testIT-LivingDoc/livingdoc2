@@ -49,7 +49,7 @@ object TypeConverterManager {
     private fun getInstance(converterType: Class<out TypeConverter<out Any>>): TypeConverter<*> {
         return cache.computeIfAbsent(converterType) { clazz ->
             log.debug("creating new cached instance of {}", clazz.canonicalName)
-            clazz.newInstance()
+            clazz.getDeclaredConstructor().newInstance()
         }
     }
 

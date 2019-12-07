@@ -107,7 +107,7 @@ internal class ScenarioExecution(
     }
 
     private fun createFixtureInstance(): Any {
-        return fixtureClass.newInstance()
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
     private fun invokeBeforeMethods(fixture: Any) {

@@ -23,6 +23,7 @@ test project:
   script:
     - ./gradlew check -x detekt -x spotlessCheck
     - ./gradlew codeCoverageReport
+    - cat build/reports/jacoco/index.html
   artifacts:
     name: test-artifacts
     expire_in: 1d
