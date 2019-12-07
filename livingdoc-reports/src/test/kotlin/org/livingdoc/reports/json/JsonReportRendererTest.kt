@@ -1,4 +1,4 @@
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.json
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +14,7 @@ import org.livingdoc.repositories.model.decisiontable.Header
 
 internal class JsonReportRendererTest {
 
-    val cut = JsonReportRenderer()
+    private val cut = JsonReportRenderer()
 
     @Test
     fun `decisionTableResult is rendered correctly`() {
@@ -23,28 +23,35 @@ internal class JsonReportRendererTest {
         val headerAPlusB = Header("a + b = ?")
 
         val documentResult = DocumentResult(
-                Status.Executed,
-                mutableListOf(DecisionTableResult(
-                        listOf(headerA, headerB, headerAPlusB),
-                        listOf(
-                                RowResult(mapOf(
-                                        headerA to FieldResult("2", Status.Executed),
-                                        headerB to FieldResult("3", Status.Disabled("Disabled test")),
-                                        headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
-                                ), Status.Executed),
-                                RowResult(mapOf(
-                                        headerA to FieldResult("5", Status.Skipped),
-                                        headerB to FieldResult("6", Status.Unknown),
-                                        headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
-                                ), Status.Executed)
+            Status.Executed,
+            mutableListOf(
+                DecisionTableResult(
+                    listOf(headerA, headerB, headerAPlusB),
+                    listOf(
+                        RowResult(
+                            mapOf(
+                                headerA to FieldResult("2", Status.Executed),
+                                headerB to FieldResult("3", Status.Disabled("Disabled test")),
+                                headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
+                            ), Status.Executed
                         ),
-                        Status.Executed
-                )))
+                        RowResult(
+                            mapOf(
+                                headerA to FieldResult("5", Status.Skipped),
+                                headerB to FieldResult("6", Status.Unknown),
+                                headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
+                            ), Status.Executed
+                        )
+                    ),
+                    Status.Executed
+                )
+            )
+        )
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-                """
+            """
                 {
                     "results": [{
                         "rows": [{
@@ -83,7 +90,8 @@ internal class JsonReportRendererTest {
                         "status": "executed"
                     }]
                 }
-                """)
+                """
+        )
     }
 
     @Test
@@ -96,16 +104,19 @@ internal class JsonReportRendererTest {
         val stepResultF = StepResult("F", Status.Exception(mockk()))
 
         val documentResult = DocumentResult(
-                Status.Executed,
-                mutableListOf(ScenarioResult(
-                        listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE, stepResultF),
-                        Status.Executed
-                )))
+            Status.Executed,
+            mutableListOf(
+                ScenarioResult(
+                    listOf(stepResultA, stepResultB, stepResultC, stepResultD, stepResultE, stepResultF),
+                    Status.Executed
+                )
+            )
+        )
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-                """
+            """
                 {
                     "results": [{
                         "steps": [{
@@ -124,6 +135,7 @@ internal class JsonReportRendererTest {
                         "status": "executed"
                     }]
                 }
-                """)
+                """
+        )
     }
 }

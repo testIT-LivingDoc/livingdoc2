@@ -1,4 +1,4 @@
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.html
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +14,7 @@ import org.livingdoc.repositories.model.decisiontable.Header
 
 internal class HtmlReportRendererTest {
 
-    val cut = HtmlReportRenderer()
+    private val cut = HtmlReportRenderer()
 
     @Test
     fun `decisionTableResult is rendered correctly`() {

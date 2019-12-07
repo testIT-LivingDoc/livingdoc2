@@ -2,7 +2,7 @@ plugins {
 	id("io.gitlab.arturbosch.detekt")
 	id("com.gradle.build-scan")
 	id("com.diffplug.gradle.spotless")
-	id( "org.jetbrains.dokka")
+	id("org.jetbrains.dokka")
 	kotlin("jvm")
 }
 
@@ -24,6 +24,7 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-converters"),
 		project(":livingdoc-engine"),
 		project(":livingdoc-junit-engine"),
+		project(":livingdoc-reports"),
 		project(":livingdoc-repositories"),
 		project(":livingdoc-repository-file"),
 		project(":livingdoc-repository-rest"),
@@ -74,7 +75,7 @@ subprojects {
 		}
 	}
 
-	if(project in livingdocKotlinProjects) {
+	if (project in livingdocKotlinProjects) {
 		apply(plugin = "io.gitlab.arturbosch.detekt")
 
 		detekt {
@@ -130,18 +131,7 @@ tasks.create<org.jetbrains.dokka.gradle.DokkaTask>("aggregatedDokka") {
 	outputFormat = "javadoc"
 	outputDirectory = "$buildDir/dokka"
 
-	subProjects = listOf( "livingdoc-api",
-		"livingdoc-config",
-		"livingdoc-converters",
-		"livingdoc-documentation",
-		"livingdoc-engine",
-		"livingdoc-junit-engine",
-		"livingdoc-repositories",
-		"livingdoc-repository-file",
-		"livingdoc-repository-rest",
-		"livingdoc-repository-confluence",
-		"livingdoc-sample"
-	)
+	subProjects = subprojects.map { it.path }
 
 }
 

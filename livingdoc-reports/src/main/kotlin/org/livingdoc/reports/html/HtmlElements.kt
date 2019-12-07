@@ -1,4 +1,4 @@
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.html
 
 import org.jsoup.nodes.Element
 import org.livingdoc.engine.execution.Status
@@ -20,7 +20,8 @@ class HtmlError(val number: Int, val message: String, val stacktrace: String)
 
 interface HtmlResult
 
-class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) : HtmlResult {
+class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) :
+    HtmlResult {
     val table = Element("table")
 
     init {
@@ -37,7 +38,12 @@ class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, v
                         determineCssClassForBackgroundColor(tableStatus)
                     )
                     attr("colspan", columnCount.toString())
-                    appendChild(createFailedPopupLink(renderContext, tableStatus))
+                    appendChild(
+                        createFailedPopupLink(
+                            renderContext,
+                            tableStatus
+                        )
+                    )
                 })
             table.appendChild(tableFailedRow)
         }
@@ -71,7 +77,12 @@ fun HtmlTable.rows(rows: List<RowResult>) {
                         HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
                         determineCssClassForBackgroundColor(rowStatus)
                     )
-                    appendChild(createFailedPopupLink(htmlTable.renderContext, rowStatus))
+                    appendChild(
+                        createFailedPopupLink(
+                            htmlTable.renderContext,
+                            rowStatus
+                        )
+                    )
                 })
         }
     }
@@ -94,7 +105,12 @@ fun HtmlTable.rows(rows: List<RowResult>) {
                         })
 
                     if (cellResult is Status.Failed || cellResult is Status.Exception) {
-                        appendChild(createFailedPopupLink(htmlTable.renderContext, cellResult))
+                        appendChild(
+                            createFailedPopupLink(
+                                htmlTable.renderContext,
+                                cellResult
+                            )
+                        )
                     }
                 })
         }
@@ -120,13 +136,21 @@ private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Stat
         is Status.Failed -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_FAILED)
             renderContext.addPopupError(
-                HtmlError(nextErrorNumber, status.reason.message ?: "", createStacktrace(status.reason))
+                HtmlError(
+                    nextErrorNumber,
+                    status.reason.message ?: "",
+                    createStacktrace(status.reason)
+                )
             )
         }
         is Status.Exception -> {
             failedPopupLink.setStyleClasses(HtmlReportTemplate.CSS_CLASS_ICON_EXCEPTION)
             renderContext.addPopupError(
-                HtmlError(nextErrorNumber, status.exception.message ?: "", createStacktrace(status.exception))
+                HtmlError(
+                    nextErrorNumber,
+                    status.exception.message ?: "",
+                    createStacktrace(status.exception)
+                )
             )
         }
     }

@@ -1,0 +1,2 @@
+org.livingdoc.reports.html.HtmlReportRenderer
+org.livingdoc.reports.json.JsonReportRenderer
