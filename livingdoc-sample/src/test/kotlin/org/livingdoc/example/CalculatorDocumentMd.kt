@@ -1,12 +1,12 @@
 package org.livingdoc.example
 
 import org.assertj.core.api.Assertions.assertThat
+import org.livingdoc.api.Before
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import org.livingdoc.api.Before
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
@@ -76,6 +76,20 @@ class CalculatorDocumentMd {
         ) {
             val result = sut.sum(a, b)
             assertThat(result).isEqualTo(c)
+        }
+
+        @Step("adding {aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa} and {bb} and {cc} and {dd} and {ee} and {ff} and {gg} equals {hh}")
+        fun addMultiple(
+            @Binding("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") a: Float,
+            @Binding("bb") b: Float,
+            @Binding("cc") c: Float,
+            @Binding("dd") d: Float,
+            @Binding("ee") e: Float,
+            @Binding("ff") f: Float,
+            @Binding("gg") g: Float,
+            @Binding("hh") h: Float
+        ) {
+            assertThat(a + b + c + d + e + f + g).isEqualTo(h)
         }
 
         @Step("subtraction {b} form {a} equals {c}")
