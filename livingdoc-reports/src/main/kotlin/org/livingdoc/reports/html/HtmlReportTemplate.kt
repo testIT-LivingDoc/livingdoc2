@@ -1,5 +1,5 @@
 @file:Suppress("MaxLineLength")
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.html
 
 class HtmlReportTemplate {
 

@@ -12,6 +12,7 @@ import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.junit.engine.LivingDocContext
+import org.livingdoc.reports.ReportsManager
 
 class ExecutableDocumentDescriptor(
     uniqueId: UniqueId,
@@ -24,6 +25,8 @@ class ExecutableDocumentDescriptor(
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: DynamicTestExecutor): LivingDocContext {
         val result = context.livingDoc.execute(documentClass)
+        val reportsManager = ReportsManager.from(context.livingDoc.configProvider)
+        reportsManager.generateReports(result)
 
         result.results.forEachIndexed { index, exampleResult ->
             when (exampleResult) {

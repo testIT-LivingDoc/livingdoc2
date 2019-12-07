@@ -3,3 +3,12 @@ repositories:
     factory: "org.livingdoc.repositories.file.FileRepositoryFactory"
     config:
       documentRoot: "src/test/docs"
+reports:
+  - name: "default"
+    format: "html"
+    config:
+      outputDir: "build/livingdoc/reports/html/"
+  - name: "json"
+    format: "json"
+    config:
+      outputDir: "build/livingdoc/reports/json/"

@@ -1,13 +1,25 @@
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.html
 
+import org.livingdoc.config.YamlUtils
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
+import org.livingdoc.reports.spi.ReportRenderer
+import org.livingdoc.reports.ReportWriter
+import org.livingdoc.reports.spi.Format
+import java.util.*
 
-class HtmlReportRenderer {
+@Format("html")
+class HtmlReportRenderer : ReportRenderer {
 
     private val renderContext = HtmlRenderContext()
+
+    override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
+        val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
+        val html = render(documentResult)
+        ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(html, UUID.randomUUID().toString())
+    }
 
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
@@ -20,7 +32,8 @@ class HtmlReportRenderer {
             }
         }
 
-        return HtmlReportTemplate().renderTemplate(htmlResults, renderContext)
+        return HtmlReportTemplate()
+            .renderTemplate(htmlResults, renderContext)
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): HtmlTable {

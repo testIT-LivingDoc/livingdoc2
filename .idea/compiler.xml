@@ -16,6 +16,8 @@
       <module name="livingdoc.livingdoc-engine.test" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.main" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.test" target="11" />
+      <module name="livingdoc.livingdoc-reports.main" target="11" />
+      <module name="livingdoc.livingdoc-reports.test" target="11" />
       <module name="livingdoc.livingdoc-repositories.main" target="11" />
       <module name="livingdoc.livingdoc-repositories.test" target="11" />
       <module name="livingdoc.livingdoc-repository-confluence.main" target="11" />

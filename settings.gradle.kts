@@ -5,7 +5,7 @@ pluginManagement {
 	}
 	resolutionStrategy {
 		eachPlugin {
-			when(requested.id.id) {
+			when (requested.id.id) {
 				"com.gradle.build-scan" -> useVersion(Versions.buildScanPlugin)
 				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
 				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlinVersion)
@@ -19,17 +19,20 @@ pluginManagement {
 
 rootProject.name = "livingdoc"
 
-include( "livingdoc-api",
-"livingdoc-config",
-"livingdoc-converters",
-"livingdoc-documentation",
-"livingdoc-engine",
-"livingdoc-junit-engine",
-"livingdoc-repositories",
-"livingdoc-repository-file",
-"livingdoc-repository-rest",
-"livingdoc-repository-confluence",
-"livingdoc-sample")
+include(
+	"livingdoc-api",
+	"livingdoc-config",
+	"livingdoc-converters",
+	"livingdoc-documentation",
+	"livingdoc-engine",
+	"livingdoc-junit-engine",
+	"livingdoc-reports",
+	"livingdoc-repositories",
+	"livingdoc-repository-file",
+	"livingdoc-repository-rest",
+	"livingdoc-repository-confluence",
+	"livingdoc-sample"
+)
 
 rootProject.children.forEach { project ->
 	project.buildFileName = "${project.name}.gradle"

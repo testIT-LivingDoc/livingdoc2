@@ -1,6 +1,7 @@
 package org.livingdoc.config
 
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.error.YAMLException
 import java.io.InputStream
 import kotlin.reflect.KClass
 
@@ -48,7 +49,13 @@ object YamlUtils {
         // This is easier than implementing the function. But it is a workaround.
         // The Yaml class does not provide a function for this type of conversion.
         // TODO: maybe implement own function, or do it some other way.
-        val yamlString = yaml.dump(configData)
-        return yaml.loadAs(yamlString, type.java)
+        try {
+            val yamlString = yaml.dump(configData)
+            return yaml.loadAs(yamlString, type.java)
+        } catch (e: YAMLException) {
+            throw YamlToTypedObjectException("Can't convert the Yaml data '$configData' to object of type: $type", e)
+        }
     }
 }
+
+class YamlToTypedObjectException(message: String, throwable: Throwable) : IllegalArgumentException(message, throwable)

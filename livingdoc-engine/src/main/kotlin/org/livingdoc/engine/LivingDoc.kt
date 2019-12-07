@@ -14,8 +14,6 @@ import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
-import org.livingdoc.engine.reporting.HtmlReportRenderer
-import org.livingdoc.engine.reporting.ReportWriter
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
@@ -35,8 +33,8 @@ import kotlin.reflect.KClass
 class LivingDoc(
     val configProvider: ConfigProvider = ConfigProvider.load(),
     val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
-    val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
-    val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
+    private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
 
     private lateinit var documentClass: Class<*>
@@ -55,13 +53,7 @@ class LivingDoc(
         document = loadDocument(documentClassModel)
         methodInvoker = FixtureMethodInvoker(document)
 
-        val result = executeDocument()
-
-        val renderer = HtmlReportRenderer()
-        val html = renderer.render(result)
-        ReportWriter().writeToFile(html)
-
-        return result
+        return executeDocument()
     }
 
     private fun executeDocument(): DocumentResult {
