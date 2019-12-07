@@ -1,7 +1,6 @@
 plugins {
 	`java-library`
 	`maven-publish`
-	"org.jetbrains.dokka"
 	kotlin("jvm")
 }
 

@@ -19,7 +19,8 @@ class RepositoryManager {
 
                 val factoryClass = Class.forName(factory)
                 if (DocumentRepositoryFactory::class.java.isAssignableFrom(factoryClass)) {
-                    val factoryInstance = factoryClass.newInstance() as DocumentRepositoryFactory<*>
+                    val factoryInstance =
+                        factoryClass.getDeclaredConstructor().newInstance() as DocumentRepositoryFactory<*>
                     val repository = factoryInstance.createRepository(name, configData)
                     repositoryManager.registerRepository(name, repository)
                 } else {

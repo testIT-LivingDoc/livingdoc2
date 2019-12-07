@@ -174,7 +174,7 @@ internal class DecisionTableExecution(
     }
 
     private fun createFixtureInstance(): Any {
-        return fixtureClass.newInstance()
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
     private fun invokeBeforeRowMethods(fixture: Any) {
