@@ -61,7 +61,6 @@ internal class RegMatching(
     private fun match() {
         tokenizetemplateText()
         reggedText = preparedtemplatetext.toRegex()
-        // println(preparedtemplatetext)
         val output = matchStrings()
         if (!output.isEmpty()) {
             val x = output
@@ -75,7 +74,8 @@ internal class RegMatching(
 
     /**
      * string matching function with a certain tolerance for typos depending on the maximum tolerance
-     * TODO build the tolerance
+     *
+     *@return List of variables matched to the string
      */
     private fun matchStrings(): List<String> {
         var matched = emptyList<String>()
@@ -83,12 +83,7 @@ internal class RegMatching(
         val matchedResult = reggedText.find(testText)
 
         if (matchedResult == null) {
-            println(testText)
-            println(templatetext)
-            println("here")
             val mr = rematch()
-            println(mr)
-            println(cost)
             if (!mr.isEmpty()) {
                 matched = mr
             } else {
@@ -102,6 +97,11 @@ internal class RegMatching(
         }
     }
 
+    /**
+     * method extracted out of rematch
+     *
+     * @return strings to be changed
+     */
     private fun foreachMap(markermap: Map<String, String>): Map<String, String> {
         val regexTransformMap = mutableMapOf<String, String>()
         markermap.forEach {
@@ -113,15 +113,16 @@ internal class RegMatching(
 
     /**
      * if the first try did not succeed then we try replacing more values with regex
+     *and perform the regex matching on the adapted template string
      *
-     *
+     * @return the matching list of Strings
      */
     private fun rematch(): List<String> {
         var splittedTemplate = templatetext.toString().split(" ").toMutableList()
         var splittedStep = step.toString().split(" ")
 
         var values = extractedWhile(splittedStep, splittedTemplate)
-        println(values)
+
         var costincrease = values.second
         var markermap = values.first
 
@@ -160,6 +161,14 @@ internal class RegMatching(
         }
     }
 
+    /**
+     * extracted method out of rematch,
+     * iterates over both strings and finds matching strings and gives an evaluation via leveshtein
+     *
+     * @param splittedStep step split up to List of strings
+     * @param splittedTemplate template split up to strings
+     * @return Map of changed strings and the cost of this change
+     */
     private fun extractedWhile(
         splittedStep: List<String>,
         splittedTemplate: List<String>
@@ -227,7 +236,6 @@ internal class RegMatching(
                 var variable = outer
                 val bracketcount = countBrackets(variable.toCharArray())
                 if (bracketcount == -1) {
-                    // println("bracketcount")
                     return emptyList()
                 }
                 checkVar(variable, bracketcount)
@@ -235,13 +243,11 @@ internal class RegMatching(
                 variable = variable.replace("}" + afterconc, "")
 
                 templatetextTokenized.put(variable, "")
-                // println(beforeconc+ " " + afterconc)
                 preparedtemplatetext = preparedtemplatetext.replace(outer, beforeconc + regularExpression + afterconc)
                 interntext[interncounter] = beforeconc + regularExpression + afterconc
             }
             interncounter++
         }
-        // println("$interntext intern")
         return interntext
     }
 
@@ -261,7 +267,7 @@ internal class RegMatching(
         var beforestring = true
 
         variable.forEach {
-            // muss von hinten nach vorne
+            // order MUST NOT be changed
             if (afterstring)
                 afterconc += it
 
@@ -271,11 +277,11 @@ internal class RegMatching(
                 closed--
             }
 
-            // der main string
+            // the main string
             if (!beforestring && !afterstring)
                 mainstring += it
 
-            // der before string
+            // the before string
             if (it.equals('{')) {
                 open--
                 beforestring = false
@@ -303,7 +309,6 @@ internal class RegMatching(
                 closecount++
             }
         }
-        // println(opencount.toString()+" "+closecount.toString())
         if ((opencount == 0 && closecount == 0) || opencount != closecount)
             return -1
         return opencount
