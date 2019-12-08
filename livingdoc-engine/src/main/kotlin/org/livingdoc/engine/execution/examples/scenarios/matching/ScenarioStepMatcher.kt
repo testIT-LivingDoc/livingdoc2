@@ -13,7 +13,7 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
     fun match(step: String): MatchingResult {
 
         val bestFit = stepTemplates
-            .map { it.alignWith(step, maxCostOfAlignment = 2) }
+            .map { it.alignWith(step, maxCostOfAlignment = 15) }
             .minBy { it.totalCost }
 
         if (bestFit == null || bestFit.isMisaligned()) {
@@ -23,9 +23,6 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
             if (it.value == "")
                 throw NoMatchingStepTemplate("No matching template!")
         }
-
-        println(bestFit.stepTemplate.toString())
-        println(bestFit.variables)
         return MatchingResult(bestFit.stepTemplate, bestFit.variables)
     }
 }
