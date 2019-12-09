@@ -30,8 +30,8 @@ data class StepResult private constructor(
         }
 
         fun build(): StepResult {
-            return when {
-                this.fixtureMethod == null -> {
+            return when (this.fixtureMethod) {
+                null -> {
                     StepResult(this.value, this.status, Optional.empty())
                 }
                 else -> {
