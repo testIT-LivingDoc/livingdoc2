@@ -20,3 +20,5 @@ org.livingdoc.converters.time.ZonedDateTimeConverter
 org.livingdoc.converters.collection.ListConverter
 org.livingdoc.converters.collection.SetConverter
 org.livingdoc.converters.collection.MapConverter
+
+org.livingdoc.converters.color.ColorConverter
