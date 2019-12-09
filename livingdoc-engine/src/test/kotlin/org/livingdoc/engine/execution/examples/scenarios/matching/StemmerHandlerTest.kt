@@ -20,21 +20,21 @@ class StemmerHandlerTest {
 
     @Test
     fun `stemWords`() {
-        Assertions.assertThat(StemmerHandler.stemWords(string))
+        Assertions.assertThat(StemmerHandler.stemWords(string).first)
             .isEqualTo("hello world git")
     }
 
     @Test
     fun `stemming`() {
-        Assertions.assertThat(StemmerHandler.stemWords("deny"))
+        Assertions.assertThat(StemmerHandler.stemWords("deny").first)
             .isEqualTo("deni")
-        Assertions.assertThat(StemmerHandler.stemWords("declining"))
+        Assertions.assertThat(StemmerHandler.stemWords("declining").first)
             .isEqualTo("declin")
-        Assertions.assertThat(StemmerHandler.stemWords("diversity"))
+        Assertions.assertThat(StemmerHandler.stemWords("diversity").first)
             .isEqualTo("diversit")
-        Assertions.assertThat(StemmerHandler.stemWords("divers"))
+        Assertions.assertThat(StemmerHandler.stemWords("divers").first)
             .isEqualTo("diver")
-        Assertions.assertThat(StemmerHandler.stemWords("dental"))
+        Assertions.assertThat(StemmerHandler.stemWords("dental").first)
             .isEqualTo("dental")
     }
 }

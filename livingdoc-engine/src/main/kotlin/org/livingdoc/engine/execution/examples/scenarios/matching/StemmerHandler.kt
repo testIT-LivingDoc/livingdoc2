@@ -39,7 +39,8 @@ object StemmerHandler {
      * @param input the string to be looked at
      * @return The sentence stem
      */
-    fun stemWords(input: String): String {
+    fun stemWords(input: String): Pair<String, Int> {
+        var matchingcost = 0
         val w = CharArray(501)
         val s = Stemmer()
         var collector = ""
@@ -85,8 +86,10 @@ object StemmerHandler {
                 } catch (e: StringIndexOutOfBoundsException) {
                     break
                 }
+
+                matchingcost += 1 / input.length
             }
         }
-        return cutLast(collector).toString()
+        return Pair(cutLast(collector).toString(), matchingcost)
     }
 }

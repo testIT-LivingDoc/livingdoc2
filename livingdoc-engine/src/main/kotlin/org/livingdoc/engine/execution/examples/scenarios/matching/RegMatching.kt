@@ -81,8 +81,10 @@ internal class RegMatching(
         val matchedResult = reggedText.find(testText)
 
         if (matchedResult == null) {
-            val mr = rematch()
+            val rematchResult = rematch()
+            val mr = rematchResult.first
             if (!mr.isEmpty()) {
+                cost += rematchResult.second
                 matched = mr
             } else {
                 cost = maxCost
@@ -152,16 +154,19 @@ internal class RegMatching(
      * the matching function start point if there is a non stem word
      * @return the matched strings to the variables
      */
-    private fun rematch(): List<String> {
+    private fun rematch(): Pair<List<String>, Int> {
+        var matchingcost = 1
 
         val preppedString = StemmerHandler.stemWords(testText)
 
         var output = prepareTemplateString(templateS = templatetext)
         var sentence = output.first
-        var preppedTemplate = StemmerHandler.stemWords(sentence)
+        var stemmedsentence = StemmerHandler.stemWords(sentence)
+        matchingcost = stemmedsentence.second
+
         val vari = output.second
 
-        preppedTemplate = reconstructVars(templateS = preppedTemplate, variables = vari)
+        var preppedTemplate = reconstructVars(templateS = stemmedsentence.first, variables = vari)
 
         val templateTxt = tokenizetemplateText(ininterntext = preppedTemplate)
         var textTemp = ""
@@ -171,11 +176,11 @@ internal class RegMatching(
         textTemp = StemmerHandler.cutLast(textTemp).toString()
         var regexText = textTemp.toRegex()
 
-        val matchresult = regexText.find(preppedString)
+        val matchresult = regexText.find(preppedString.first)
 
         if (matchresult != null)
-            return matchresult.destructured.toList()
-        else return emptyList()
+            return Pair(matchresult.destructured.toList(), matchingcost)
+        else return Pair(emptyList(), maxCost)
     }
 
     /**
