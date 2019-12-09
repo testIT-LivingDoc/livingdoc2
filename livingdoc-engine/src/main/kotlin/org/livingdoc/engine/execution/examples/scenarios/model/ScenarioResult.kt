@@ -52,19 +52,16 @@ data class ScenarioResult private constructor(
                     // throw IllegalArgumentException("Cant't build ScenarioResult without a fixture")
                 }
                 this.scenario == null -> {
-                    throw IllegalArgumentException("Cant't build ScenarioResult without a scenario")
+                    throw IllegalArgumentException("Cannot build ScenarioResult without a scenario")
                 }
             }
 
             when (this.status) {
                 is Status.Unknown -> {
-                    // Retrieve status from steps
-                    status = if (steps.filter {
-                            it.status !is Status.Executed
-                        }.isEmpty()) Status.Executed else Status.Skipped
+                    throw IllegalArgumentException("Cannot build ScenarioResult with unknown status")
                 }
                 is Status.Manual, is Status.Disabled -> {
-                    steps = scenario!!.steps.map {
+                    this.steps = scenario!!.steps.map {
                         StepResult.Builder()
                             .withStatus(this.status)
                             .withValue(it.value)

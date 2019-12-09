@@ -30,6 +30,10 @@ data class StepResult private constructor(
         }
 
         fun build(): StepResult {
+            if (this.status == Status.Unknown) {
+                throw IllegalArgumentException("Cannot build StepResult with unknown status")
+            }
+
             return when (this.fixtureMethod) {
                 null -> {
                     StepResult(this.value, this.status, Optional.empty())

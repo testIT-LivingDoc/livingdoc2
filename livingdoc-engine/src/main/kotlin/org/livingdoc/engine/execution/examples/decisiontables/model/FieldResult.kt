@@ -23,10 +23,10 @@ data class FieldResult private constructor(
         fun build(): FieldResult {
             return when {
                 this.value == null -> {
-                    throw IllegalArgumentException("Cannot build field result without a value")
+                    throw IllegalArgumentException("Cannot build FieldResult without a value")
                 }
                 this.status == Status.Unknown -> {
-                    throw IllegalArgumentException("Cannot build field result with status ${this.status}")
+                    throw IllegalArgumentException("Cannot build FieldResult with unknown status")
                 }
                 else -> {
                     FieldResult(this.value!!, this.status)

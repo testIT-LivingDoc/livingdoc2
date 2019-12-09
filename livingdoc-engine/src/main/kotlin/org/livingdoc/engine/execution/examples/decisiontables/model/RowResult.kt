@@ -20,7 +20,7 @@ data class RowResult private constructor(
         private var fixtureMethod: Method? = null
 
         fun withFieldResult(header: Header, result: FieldResult): Builder {
-            this.fieldResults.put(header, result)
+            this.fieldResults[header] = result
             return this
         }
 
@@ -46,6 +46,19 @@ data class RowResult private constructor(
                 throw IllegalArgumentException(
                     "Cannot build RowResult without a decision table to match. Cannot determine required headers"
                 )
+            }
+
+            when (this.status) {
+                Status.Unknown -> {
+                    throw IllegalArgumentException("Cannot build RowResult with unknown status")
+                }
+                Status.Manual, is Status.Disabled -> {
+                    this.headers.forEach {
+                        this.fieldResults[it] = FieldResult.Builder()
+                            .withValue(it.name)
+                            .withStatus(this.status).build()
+                    }
+                }
             }
 
             val unmatchedHeaders = this.headers.filter {

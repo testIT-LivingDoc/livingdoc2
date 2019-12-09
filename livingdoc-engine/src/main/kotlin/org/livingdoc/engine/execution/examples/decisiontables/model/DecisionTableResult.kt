@@ -5,7 +5,7 @@ import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
-import java.lang.IllegalArgumentException
+import kotlin.IllegalArgumentException
 
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
@@ -55,10 +55,7 @@ data class DecisionTableResult private constructor(
 
             when (this.status) {
                 is Status.Unknown -> {
-                    // Retrieve status from rows
-                    status = if (rows.filter {
-                            it.status !is Status.Executed
-                        }.isEmpty()) Status.Executed else Status.Skipped
+                    throw IllegalArgumentException("Cannot build DecisionTableResult with unknown status")
                 }
                 is Status.Manual, is Status.Disabled -> {
                     rows = decisionTable!!.rows.map {
