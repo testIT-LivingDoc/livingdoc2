@@ -1,7 +1,5 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
-import org.livingdoc.engine.algo.LevenshteinAlgo
-
 @Suppress("NestedBlockDepth")
 internal class RegMatching(
     val stepTemplate: StepTemplate,
@@ -97,113 +95,89 @@ internal class RegMatching(
         }
     }
 
-    /**
-     * method extracted out of rematch
-     *
-     * @return strings to be changed
-     */
-    private fun foreachMap(markermap: Map<String, String>): Map<String, String> {
-        val regexTransformMap = mutableMapOf<String, String>()
-        markermap.forEach {
-            if (!it.key.equals(it.value))
-                regexTransformMap.put(it.key, it.value)
-        }
-        return regexTransformMap
-    }
 
     /**
-     * if the first try did not succeed then we try replacing more values with regex
-     *and perform the regex matching on the adapted template string
-     *
-     * @return the matching list of Strings
+     * reconstruct the Template with its variables
+     * @param templateS the template string
+     * @param variables the variables in their {} brackets and the position of them
+     * @return rebuilt template string
      */
-    private fun rematch(): List<String> {
-        var splittedTemplate = templatetext.toString().split(" ").toMutableList()
-        var splittedStep = step.toString().split(" ")
-
-        var values = extractedWhile(splittedStep, splittedTemplate)
-
-        var costincrease = values.second
-        var markermap = values.first
-
-        var regexTransformMap = foreachMap(markermap)
-
-        var stringId = 0
-
-        splittedTemplate.forEach {
-            if (regexTransformMap.contains(it)) {
-
-                splittedTemplate[stringId] = regexTransformMap[it].toString()
-            }
-            stringId++
-        }
-
-        var spltteredString = ""
-        spltteredString += splittedTemplate.first()
-        splittedTemplate.forEach {
-            if (!it.equals(splittedTemplate.first()))
-                spltteredString += " " + it
-        }
-        cost += costincrease
-        val innerreggedText = tokenizetemplateText(ininterntext = spltteredString)
-
-        var regtext = innerreggedText.first()
-        innerreggedText.forEach {
-            if (!it.equals(innerreggedText.first()))
-                regtext += " " + it
-        }
-        val regularized = regtext.toRegex()
-        val rt = regularized.find(testText)
-        if (rt != null) {
-            return rt.destructured.toList()
-        } else {
-            return emptyList()
-        }
-    }
-
-    /**
-     * extracted method out of rematch,
-     * iterates over both strings and finds matching strings and gives an evaluation via leveshtein
-     *
-     * @param splittedStep step split up to List of strings
-     * @param splittedTemplate template split up to strings
-     * @return Map of changed strings and the cost of this change
-     */
-    private fun extractedWhile(
-        splittedStep: List<String>,
-        splittedTemplate: List<String>
-    ): Pair<Map<String, String>, Int> {
-        var pointer1 = 0
-        var pointer2 = 0
-        var costincrease = 0
-
-        val markermap = mutableMapOf<String, String>()
-
-        while (pointer2 < splittedStep.size - 1 && pointer1 < splittedTemplate.size - 1) {
-
-            if (checkIfVar(splittedTemplate[pointer1])) {
-
-                pointer1++
-            } else {
-                if (splittedStep[pointer2].equals(splittedTemplate[pointer1])) {
-                    markermap.put(splittedStep[pointer2], splittedStep[pointer2])
-                    pointer1++
-                    pointer2++
-                } else {
-                    val innerdistance = 2
-                    var dist = LevenshteinAlgo.levenshtein(splittedTemplate[pointer1], splittedStep[pointer2])
-                    if (dist < innerdistance && costincrease + dist < maxCost) {
-                        markermap.put(splittedTemplate[pointer1], splittedStep[pointer2])
-                        costincrease += dist
-                        pointer1++
-                        pointer2++
-                    } else if (dist >= innerdistance) {
-                        pointer2++
-                    }
+    private fun reconstructVars(templateS: String = templatetext, variables: Map<String, Int>): String {
+        var s = templateS.split(" ")
+        var reconString = ""
+        var counter = 0
+        s.forEach {
+            var replaced = false
+            variables.forEach { variable ->
+                if (variable.value == counter) {
+                    reconString += variable.key + " "
+                    replaced = true
                 }
             }
+            if (!replaced) {
+                reconString += it + " "
+            }
+            counter++
         }
-        return Pair(markermap, costincrease)
+        reconString = StemmerHandler.cutLast(reconString).toString()
+        return reconString
+    }
+
+    /**
+     * preparation of the template stirng for stemming
+     * @param templateS the template string ot be prepared
+     * @return the variables and their position in the template string
+     */
+    private fun prepareTemplateString(templateS: String = templatetext): Pair<String, Map<String, Int>> {
+        var s = templateS.split(" ")
+        var reconString = ""
+        var variableLocations = mutableMapOf<String, Int>()
+        var iterat = 0
+        s.forEach {
+
+            if (checkIfVar(it)) {
+                reconString += "Word "
+                variableLocations.put(it, iterat)
+            } else {
+                reconString += it + " "
+            }
+            iterat++
+
+        }
+
+        reconString = StemmerHandler.cutLast(reconString).toString()
+
+        return Pair(reconString, variableLocations)
+    }
+
+    /**
+     * the matching function start point if there is a non stem word
+     * @return the matched strings to the variables
+     */
+    private fun rematch(): List<String> {
+
+        val preppedString = StemmerHandler.stemWords(testText)
+
+        var output = prepareTemplateString(templateS = templatetext)
+        var sentence = output.first
+        var preppedTemplate = StemmerHandler.stemWords(sentence)
+        val vari = output.second
+
+        preppedTemplate = reconstructVars(templateS = preppedTemplate, variables = vari)
+
+        val templateTxt = tokenizetemplateText(ininterntext = preppedTemplate)
+        var textTemp = ""
+        templateTxt.forEach {
+            textTemp += it + " "
+        }
+        textTemp = StemmerHandler.cutLast(textTemp).toString()
+        var regexText = textTemp.toRegex()
+
+        val matchresult = regexText.find(preppedString)
+
+        if (matchresult != null)
+            return matchresult.destructured.toList()
+        else return emptyList()
     }
 
     /**

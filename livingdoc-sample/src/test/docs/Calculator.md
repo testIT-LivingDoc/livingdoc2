@@ -45,8 +45,3 @@ Succeeded finding matching template before
 # Scenario 3
 
 - add 5 to itself and you get 10
-
-# Scenario 4
-## this test tests the maximum typo a sentence can have
-
- - add 9 to itselt ans you get 18
