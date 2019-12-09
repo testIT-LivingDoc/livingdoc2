@@ -10,6 +10,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 === Added
 
 - Changelog to document changes between versions
+- The Livingdoc configuration can be specified via Java System Properties
 - Repository to load data from a webserver
 - Confluence Document Repository to load Examples from Confluence
 - Annotation to disable documents and fixtures
