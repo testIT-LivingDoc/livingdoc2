@@ -5,6 +5,7 @@ import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
 import kotlin.IllegalArgumentException
 
 data class DecisionTableResult private constructor(
@@ -24,6 +25,40 @@ data class DecisionTableResult private constructor(
         fun withRow(row: RowResult): Builder {
             this.rows.add(row)
             return this
+        }
+
+        fun withUnassignedRowsSkipped(): Builder {
+            when (this.decisionTable) {
+                null -> {
+                    throw IllegalStateException(
+                        "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
+                    )
+                }
+                else -> {
+                    this.decisionTable!!.rows.forEach {
+                        if (findMatchingRowResult(it) != null) {
+                            return@forEach
+                        }
+
+                        withRow(
+                            RowResult.Builder()
+                                .withStatus(Status.Skipped)
+                                .withRow(it)
+                                .withUnassignedFieldsSkipped()
+                                .build()
+                        )
+                    }
+                }
+            }
+            return this
+        }
+
+        private fun findMatchingRowResult(row: Row): RowResult? {
+            return this.rows.firstOrNull {
+                it.headerToField.none {
+                    it.value.value != row.headerToField[it.key]?.value
+                }
+            }
         }
 
         fun withStatus(status: Status): Builder {
@@ -60,6 +95,7 @@ data class DecisionTableResult private constructor(
                 is Status.Manual, is Status.Disabled -> {
                     rows = decisionTable!!.rows.map {
                         RowResult.Builder()
+                            .withRow(it)
                             .withStatus(this.status)
                             .build()
                     }.toMutableList()

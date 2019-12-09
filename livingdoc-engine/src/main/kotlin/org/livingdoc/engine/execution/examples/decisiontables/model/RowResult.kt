@@ -1,11 +1,10 @@
 package org.livingdoc.engine.execution.examples.decisiontables.model
 
 import org.livingdoc.engine.execution.Status
-import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
 import java.lang.reflect.Method
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 data class RowResult private constructor(
@@ -14,7 +13,7 @@ data class RowResult private constructor(
     val fixtureMethod: Optional<Method>
 ) {
     class Builder {
-        private var headers: MutableList<Header> = ArrayList()
+        private var row: Row? = null
         private var fieldResults: MutableMap<Header, FieldResult> = HashMap()
         private var status: Status = Status.Unknown
         private var fixtureMethod: Method? = null
@@ -34,18 +33,50 @@ data class RowResult private constructor(
             return this
         }
 
-        fun withDecisionTable(decisionTable: DecisionTable): Builder {
-            decisionTable.headers.forEach { (name) ->
-                this.headers.add(Header(name))
+        fun withRow(row: Row): Builder {
+            this.row = row
+            return this
+        }
+
+        fun withUnassignedFieldsSkipped(): Builder {
+            when (this.row) {
+                null -> {
+                    throw IllegalStateException(
+                        "Cannot determine unmatched fields. A Row needs to be assigned to the builder first."
+                    )
+                }
+                else -> {
+                    this.row!!.headerToField.forEach {
+                        if (this.fieldResults[it.key] != null) {
+                            return@forEach
+                        }
+
+                        withFieldResult(
+                            it.key,
+                            FieldResult.Builder()
+                                .withValue(this.row!!.headerToField[it.key]!!.value)
+                                .withStatus(Status.Skipped)
+                                .build()
+                        )
+                    }
+                }
             }
             return this
         }
 
         fun build(): RowResult {
-            if (this.headers.size == 0) {
-                throw IllegalArgumentException(
-                    "Cannot build RowResult without a decision table to match. Cannot determine required headers"
-                )
+            val headers = mutableListOf<Header>()
+            when (this.row) {
+                null -> {
+                    throw IllegalArgumentException(
+                        "Cannot build RowResult without a Row to match. Cannot determine required headers"
+                    )
+                }
+                else -> {
+                    this.row!!.headerToField.forEach { (header, _) ->
+                        headers.add(Header(header.name))
+                    }
+                }
             }
 
             when (this.status) {
@@ -53,15 +84,16 @@ data class RowResult private constructor(
                     throw IllegalArgumentException("Cannot build RowResult with unknown status")
                 }
                 Status.Manual, is Status.Disabled -> {
-                    this.headers.forEach {
+                    headers.forEach {
                         this.fieldResults[it] = FieldResult.Builder()
                             .withValue(it.name)
-                            .withStatus(this.status).build()
+                            .withStatus(this.status)
+                            .build()
                     }
                 }
             }
 
-            val unmatchedHeaders = this.headers.filter {
+            val unmatchedHeaders = headers.filter {
                 !this.fieldResults.containsKey(it)
             }
             if (unmatchedHeaders.isNotEmpty()) {

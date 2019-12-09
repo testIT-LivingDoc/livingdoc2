@@ -45,6 +45,18 @@ data class ScenarioResult private constructor(
             return this
         }
 
+        fun withUnassignedSkipped(): Builder {
+            this.scenario!!.steps.forEach {
+                withStep(
+                    StepResult.Builder()
+                        .withValue(it.value)
+                        .withStatus(Status.Skipped)
+                        .build()
+                )
+            }
+            return this
+        }
+
         fun build(): ScenarioResult {
             when {
                 this.fixture == null -> {
