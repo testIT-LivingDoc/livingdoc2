@@ -29,10 +29,12 @@ class ConfigProvider(private val config: Map<String, Any>) {
     companion object {
 
         /**
-         * Loads the configuration from the `livingdoc.yml` file on the classpath root.
+         * Loads the configuration from the `livingdoc.yml` file on the classpath root. The file location can be changed
+         * by the Java System Property `livingdoc.config`.
          */
         fun load(): ConfigProvider {
-            return loadFromFile("livingdoc.yml")
+            val fileName = System.getProperty("livingdoc.config", "livingdoc.yml")
+            return loadFromFile(fileName)
         }
 
         /**

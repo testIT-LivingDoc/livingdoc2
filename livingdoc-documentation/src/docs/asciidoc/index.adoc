@@ -3,3 +3,4 @@
 include::repositories.adoc[]
 include::fixtures.adoc[]
 include::reports.adoc[]
+include::configuration.adoc[]
