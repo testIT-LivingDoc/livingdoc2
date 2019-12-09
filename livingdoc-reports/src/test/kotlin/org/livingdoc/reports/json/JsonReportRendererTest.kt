@@ -27,23 +27,27 @@ internal class JsonReportRendererTest {
         val headerB = Header("b")
         val headerAPlusB = Header("a + b = ?")
 
-        val row1 = mapOf(
-            headerA to Field("2"),
-            headerB to Field("3"),
-            headerAPlusB to Field("6")
+        val row1 = Row(
+            mapOf(
+                headerA to Field("2"),
+                headerB to Field("3"),
+                headerAPlusB to Field("6")
+            )
         )
-        val row2 = mapOf(
-            headerA to Field("5"),
-            headerB to Field("6"),
-            headerAPlusB to Field("11")
+        val row2 = Row(
+            mapOf(
+                headerA to Field("5"),
+                headerB to Field("6"),
+                headerAPlusB to Field("11")
+            )
         )
 
         val decisionTable = DecisionTable(
             listOf(headerA, headerB, headerAPlusB),
-            listOf(Row(row1), Row(row2))
+            listOf(row1, row2)
         )
 
-        val rowResult1 = RowResult.Builder().withRow(decisionTable)
+        val rowResult1 = RowResult.Builder().withRow(row1)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("2")
@@ -64,7 +68,7 @@ internal class JsonReportRendererTest {
             )
             .withStatus(Status.Executed)
 
-        val rowResult2 = RowResult.Builder().withRow(decisionTable)
+        val rowResult2 = RowResult.Builder().withRow(row2)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("5")
@@ -149,7 +153,7 @@ internal class JsonReportRendererTest {
         val stepResultB = StepResult.Builder().withValue("B")
             .withStatus(Status.Disabled("Disabled test"))
             .build()
-        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Unknown).build()
+        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Manual).build()
         val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Skipped).build()
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Failed(mockk())).build()
         val stepResultF = StepResult.Builder().withValue("F").withStatus(Status.Exception(mockk())).build()
@@ -179,7 +183,7 @@ internal class JsonReportRendererTest {
                         }, {
                             "B": "disabled"
                         }, {
-                            "C": "unknown"
+                            "C": "manual"
                         }, {
                             "D": "skipped"
                         }, {

@@ -27,23 +27,27 @@ internal class HtmlReportRendererTest {
         val headerB = Header("b")
         val headerAPlusB = Header("a + b = ?")
 
-        val row1 = mapOf(
-            headerA to Field("2"),
-            headerB to Field("3"),
-            headerAPlusB to Field("6")
+        val row1 = Row(
+            mapOf(
+                headerA to Field("2"),
+                headerB to Field("3"),
+                headerAPlusB to Field("6")
+            )
         )
-        val row2 = mapOf(
-            headerA to Field("5"),
-            headerB to Field("6"),
-            headerAPlusB to Field("11")
+        val row2 = Row(
+            mapOf(
+                headerA to Field("5"),
+                headerB to Field("6"),
+                headerAPlusB to Field("11")
+            )
         )
 
         val decisionTable = DecisionTable(
             listOf(headerA, headerB, headerAPlusB),
-            listOf(Row(row1), Row(row2))
+            listOf(row1, row2)
         )
 
-        val rowResult1 = RowResult.Builder().withRow(decisionTable)
+        val rowResult1 = RowResult.Builder().withRow(row1)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("2")
@@ -64,7 +68,7 @@ internal class HtmlReportRendererTest {
             )
             .withStatus(Status.Executed)
 
-        val rowResult2 = RowResult.Builder().withRow(decisionTable)
+        val rowResult2 = RowResult.Builder().withRow(row2)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("5")
@@ -115,12 +119,12 @@ internal class HtmlReportRendererTest {
                             </tr>
                             <tr>
                                 <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                <td class="border-black-onepx background-manual"><span class="result-value">3</span></td>
+                                <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
                                 <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
                              </tr>
                              <tr>
                                 <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
-                                <td class="border-black-onepx background-unknown"><span class="result-value">6</span></td>
+                                <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
                                 <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
                              </tr>
                         </table>
@@ -176,7 +180,7 @@ internal class HtmlReportRendererTest {
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-                """
+            """
                 <!DOCTYPE html>
                 <html>
                     <head>
