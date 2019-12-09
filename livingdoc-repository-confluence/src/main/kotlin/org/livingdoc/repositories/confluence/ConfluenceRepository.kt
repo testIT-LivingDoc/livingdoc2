@@ -25,6 +25,9 @@ class ConfluenceRepository(
     private val config: ConfluenceRepositoryConfig
 ) : DocumentRepository {
     private val client: RemoteContentService
+    private val visioningSeparator = '@'
+
+    data class ConfluenceIdentifier(val documentId: String, val documentVersion: Int)
 
     init {
         val authenticatedWebResourceProvider = AuthenticatedWebResourceProvider(
@@ -47,18 +50,44 @@ class ConfluenceRepository(
     override fun getDocument(documentIdentifier: String): Document {
         val content =
             try {
-                client.find(
+                val page = client.find(
                     Expansion(
                         Content.Expansions.BODY,
                         Expansions(Expansion("storage", Expansions(Expansion("content"))))
                     )
-                ).withId(ContentId.valueOf(documentIdentifier)).fetchCompletionStage()
+                )
+
+                val contentFetcher = if (documentIdentifier.contains(visioningSeparator)) {
+                    val docParams = getDocumentIdAndVersion(documentIdentifier)
+                    page.withIdAndVersion(ContentId.valueOf(docParams.documentId), docParams.documentVersion)
+                } else {
+                    page.withId(ContentId.valueOf(documentIdentifier))
+                }
+
+                contentFetcher.fetchCompletionStage()
                     .toCompletableFuture().get()
                     .orElseThrow { ConfluenceDocumentNotFoundException(documentIdentifier, config.baseURL) }
             } catch (e: ExecutionException) {
                 throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
             }
         return parse(content)
+    }
+
+    /**
+     * Reads the DocumentId and the Page Version from an documentIdentifieer and returns it.
+     *
+     * @param documentIdentifier The raw DocumentIdentifier containing ID and Version
+     * @return A Pair containing the Confluence Page ID and the Page Version
+     */
+    fun getDocumentIdAndVersion(documentIdentifier: String): ConfluenceIdentifier {
+        val docParams = documentIdentifier.split(visioningSeparator)
+        val docId = docParams[0]
+        if (docParams.size != 2) {
+            throw ConfluenceDocumentNotFoundException(docParams.size - 1)
+        }
+        val docVersion = docParams[1].toInt()
+
+        return ConfluenceIdentifier(docId, docVersion)
     }
 
     /**

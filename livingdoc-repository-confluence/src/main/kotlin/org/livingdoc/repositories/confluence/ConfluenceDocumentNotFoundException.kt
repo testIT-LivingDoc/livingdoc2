@@ -9,4 +9,5 @@ class ConfluenceDocumentNotFoundException : DocumentNotFoundException {
         id: String,
         url: String
     ) : super("Could not find document with ID [$id] on server [$url]!", throwable)
+    constructor(parts: Int) : super("Found to many version identifiers! Found $parts but only 1 is allowed!")
 }
