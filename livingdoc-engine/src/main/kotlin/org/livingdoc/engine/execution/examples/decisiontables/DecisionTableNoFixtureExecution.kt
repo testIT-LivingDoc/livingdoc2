@@ -2,6 +2,8 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
+import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 internal class DecisionTableNoFixtureExecution(
@@ -16,16 +18,30 @@ internal class DecisionTableNoFixtureExecution(
      * the form of different status objects.
      */
     fun execute(): DecisionTableResult {
-        val result = DecisionTableResult.from(decisionTable)
+        val result = DecisionTableResult.Builder().withDecisionTable(decisionTable)
 
         if (decisionTable.description.isManual) {
-            result.status = Status.Manual
+            result.withStatus(Status.Manual)
 
-            result.rows.forEach {
-                it.status = Status.Manual
+            decisionTable.rows.forEach {
+                val rowResult = RowResult.Builder()
+                    .withDecisionTable(decisionTable)
+                    .withStatus(Status.Manual)
+
+                decisionTable.headers.forEach {
+                    rowResult.withFieldResult(
+                        it,
+                        FieldResult.Builder()
+                            .withValue(it.name)
+                            .withStatus(Status.Manual)
+                            .build()
+                    )
+                }
+
+                result.withRow(rowResult.build())
             }
         }
 
-        return result
+        return result.build()
     }
 }

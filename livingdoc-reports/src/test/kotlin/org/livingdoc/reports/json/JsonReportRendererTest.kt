@@ -11,7 +11,10 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class JsonReportRendererTest {
@@ -24,28 +27,75 @@ internal class JsonReportRendererTest {
         val headerB = Header("b")
         val headerAPlusB = Header("a + b = ?")
 
-        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
-            DecisionTableResult(
-                listOf(headerA, headerB, headerAPlusB),
-                listOf(
-                    RowResult(
-                        mapOf(
-                            headerA to FieldResult("2", Status.Executed),
-                            headerB to FieldResult("3", Status.Disabled("Disabled test")),
-                            headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
-                        ), Status.Executed
-                    ),
-                    RowResult(
-                        mapOf(
-                            headerA to FieldResult("5", Status.Skipped),
-                            headerB to FieldResult("6", Status.Unknown),
-                            headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
-                        ), Status.Executed
-                    )
-                ),
-                Status.Executed
+        val row1 = mapOf(
+            headerA to Field("2"),
+            headerB to Field("3"),
+            headerAPlusB to Field("6")
+        )
+        val row2 = mapOf(
+            headerA to Field("5"),
+            headerB to Field("6"),
+            headerAPlusB to Field("11")
+        )
+
+        val decisionTable = DecisionTable(
+            listOf(headerA, headerB, headerAPlusB),
+            listOf(Row(row1), Row(row2))
+        )
+
+        val rowResult1 = RowResult.Builder().withDecisionTable(decisionTable)
+            .withFieldResult(
+                headerA, FieldResult.Builder()
+                    .withValue("2")
+                    .withStatus(Status.Executed)
+                    .build()
             )
-        ).build()
+            .withFieldResult(
+                headerB, FieldResult.Builder()
+                    .withValue("3")
+                    .withStatus(Status.Disabled("Disabled test"))
+                    .build()
+            )
+            .withFieldResult(
+                headerAPlusB, FieldResult.Builder()
+                    .withValue("6")
+                    .withStatus(Status.Failed(mockk(relaxed = true)))
+                    .build()
+            )
+            .withStatus(Status.Executed)
+
+        val rowResult2 = RowResult.Builder().withDecisionTable(decisionTable)
+            .withFieldResult(
+                headerA, FieldResult.Builder()
+                    .withValue("5")
+                    .withStatus(Status.Skipped)
+                    .build()
+            )
+            .withFieldResult(
+                headerB, FieldResult.Builder()
+                    .withValue("6")
+                    .withStatus(Status.Manual)
+                    .build()
+            )
+            .withFieldResult(
+                headerAPlusB, FieldResult.Builder()
+                    .withValue("11")
+                    .withStatus(Status.Exception(mockk(relaxed = true)))
+                    .build()
+            )
+            .withStatus(Status.Executed)
+
+        val decisionTableResult = DecisionTableResult.Builder().withDecisionTable(decisionTable)
+
+        decisionTableResult
+            .withRow(rowResult1.build())
+            .withRow(rowResult2.build())
+            .withStatus(Status.Executed)
+
+        val documentResult = DocumentResult.Builder()
+            .withStatus(Status.Executed)
+            .withResult(decisionTableResult.build())
+            .build()
 
         val renderResult = cut.render(documentResult)
 
@@ -77,7 +127,7 @@ internal class JsonReportRendererTest {
                                 },
                                 "b": {
                                     "value": "6",
-                                    "status": "unknown"
+                                    "status": "manual"
                                 },
                                 "a + b = ?": {
                                     "value": "11",
