@@ -15,6 +15,7 @@ tasks.withType<KotlinCompile>().configureEach{
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	systemProperties(System.getProperties().filter { (it.key as? String)?.startsWith("livingdoc")?: false } as Map<String, *>)
 }
 
 dependencies {

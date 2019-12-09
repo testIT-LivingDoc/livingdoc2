@@ -2,6 +2,7 @@ package org.livingdoc.reports
 
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.reports.config.ReportDefinition
 import org.livingdoc.reports.config.ReportsConfig
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
@@ -13,10 +14,16 @@ class ReportsManager(
     private val serviceLoader: ServiceLoader<ReportRenderer>
 ) {
     fun generateReports(result: DocumentResult) {
-        for (report in config.reports) {
+        val reports = getActivatedReports()
+        for (report in reports) {
             val renderer = getReportRenderer(report.format)
             renderer.render(result, report.config)
         }
+    }
+
+    private fun getActivatedReports(): List<ReportDefinition> {
+        val includedReports = System.getProperty("livingdoc.reports.include")?.split(",")
+        return includedReports?.let { config.reports.filter { includedReports.contains(it.name) } } ?: config.reports
     }
 
     private fun getReportRenderer(format: String): ReportRenderer {
