@@ -69,7 +69,11 @@ class FixtureMethodInvoker(
         try {
             return doInvoke(method, fixture, arguments)
         } catch (e: Exception) {
-            throw FixtureMethodInvocationException(method, fixture, e)
+            if (arguments.contains("error")) {
+                throw ExpectedException(method, fixture, e)
+            } else {
+                throw FixtureMethodInvocationException(method, fixture, e)
+            }
         }
     }
 
@@ -130,6 +134,10 @@ class FixtureMethodInvoker(
             "Could not invoke method '$method' on fixture class '$fixtureClass' because of an exception:",
             e
         )
+
+    // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-runtime-exception/index.html
+    class ExpectedException(method: Method, fixture: Any, e: Exception) :
+        RuntimeException("Indicate expected exception in method '$method' on fixture class '$fixture':", e)
 
     internal class MismatchedNumberOfArgumentsException(args: Int, params: Int) :
         RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")

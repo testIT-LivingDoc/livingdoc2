@@ -8,8 +8,10 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker.ExpectedException
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
+
 internal class DecisionTableExecution(
     private val fixtureClass: Class<*>,
     decisionTable: DecisionTable,
@@ -133,8 +135,23 @@ internal class DecisionTableExecution(
         } catch (e: AssertionError) {
             markFieldAsExecutedWithFailure(tableField, e)
         } catch (e: Exception) {
+            handleException(tableField, e)
+        }
+    }
+
+    private fun handleException(tableField: FieldResult, e: Exception) {
+        if (isExpectedException(e)) {
+            // TODO: use exceptionconverter and compare e.cause with tableField.value?
+            if (tableField.value == "error") {
+                markFieldAsSuccessfullyExecuted(tableField)
+            }
+        } else {
             markFieldAsExecutedWithException(tableField, e)
         }
+    }
+
+    private fun isExpectedException(e: Exception): Boolean {
+        return e is ExpectedException
     }
 
     private fun doSetInput(fixture: Any, header: Header, tableField: FieldResult) {

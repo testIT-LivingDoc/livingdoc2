@@ -17,4 +17,8 @@ class Calculator {
     fun divide(a: Float, b: Float): Float {
         return a / b
     }
+
+    fun throwEx(): Float {
+        throw ArithmeticException()
+    }
 }

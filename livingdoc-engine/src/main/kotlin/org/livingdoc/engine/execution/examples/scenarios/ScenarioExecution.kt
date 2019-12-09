@@ -8,6 +8,7 @@ import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker.FixtureMethodInvocationException
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker.ExpectedException
 import org.livingdoc.repositories.model.scenario.Scenario
 import java.lang.reflect.Parameter
 
@@ -101,6 +102,8 @@ internal class ScenarioExecution(
             Status.Executed
         } catch (e: AssertionError) {
             Status.Failed(e)
+        } catch (e: ExpectedException) {
+            Status.Executed
         } catch (e: Exception) {
             Status.Exception(e)
         }
