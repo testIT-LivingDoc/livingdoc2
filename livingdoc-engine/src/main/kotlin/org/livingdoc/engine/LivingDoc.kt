@@ -10,7 +10,6 @@ import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
@@ -44,8 +43,9 @@ class LivingDoc(
 
     @Throws(ExecutionException::class)
     fun execute(documentClass: Class<*>): DocumentResult {
+        val builder = DocumentResult.Builder()
         if (documentClass.isAnnotationPresent(Disabled::class.java)) {
-            return DocumentResult(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value))
+            return builder.withStatus(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value)).build()
         }
 
         this.documentClass = documentClass
@@ -53,16 +53,17 @@ class LivingDoc(
         document = loadDocument(documentClassModel)
         methodInvoker = FixtureMethodInvoker(document)
 
-        return executeDocument()
+        executeDocument(builder)
+
+        return builder.build()
     }
 
-    private fun executeDocument(): DocumentResult {
+    private fun executeDocument(builder: DocumentResult.Builder) {
         val documentInstance = createDocumentInstance()
         invokeBeforeMethods(documentInstance)
-        val results: List<TestDataResult> = executeFixtures()
+        executeFixtures(builder)
+        builder.withStatus(Status.Executed)
         invokeAfterMethods(documentInstance)
-
-        return DocumentResult(Status.Executed, results)
     }
 
     private fun createDocumentInstance(): Any {
@@ -73,22 +74,22 @@ class LivingDoc(
         documentClassModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, documentInstance) }
     }
 
-    private fun executeFixtures(): List<TestDataResult> {
-        return document.elements.mapNotNull { element ->
+    private fun executeFixtures(builder: DocumentResult.Builder) {
+        document.elements.mapNotNull { element ->
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
-                            .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                            .execute(element)
+                        .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
+                        .execute(element)
                 }
                 is Scenario -> {
                     scenarioToFixtureMatcher
-                            .findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                            .execute(element)
+                        .findMatchingFixture(element, documentClassModel.scenarioFixtures)
+                        .execute(element)
                 }
                 else -> null
             }
-        }
+        }.forEach { result -> builder.withResult(result) }
     }
 
     private fun invokeAfterMethods(documentInstance: Any) {

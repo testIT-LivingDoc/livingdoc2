@@ -5,16 +5,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class JsonReportRendererTest {
 
-    private val cut = JsonReportRenderer()
+    val cut = JsonReportRenderer()
 
     @Test
     fun `decisionTableResult is rendered correctly`() {
@@ -98,29 +100,26 @@ internal class JsonReportRendererTest {
     fun `scenarioResult is rendered correctly`() {
         val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
         val stepResultB = StepResult.Builder().withValue("B")
-            .withStatus(Status.Disabled("Disabled test"))
-            .build()
+                .withStatus(Status.Disabled("Disabled test"))
+                .build()
         val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Unknown).build()
         val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Skipped).build()
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Failed(mockk())).build()
         val stepResultF = StepResult.Builder().withValue("F").withStatus(Status.Exception(mockk())).build()
 
-        val documentResult = DocumentResult(
-            Status.Executed,
-            mutableListOf(
+        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
                 ScenarioResult.Builder()
-                    .withStep(stepResultA)
-                    .withStep(stepResultB)
-                    .withStep(stepResultC)
-                    .withStep(stepResultD)
-                    .withStep(stepResultE)
-                    .withStep(stepResultF)
-                    .withStatus(Status.Executed)
-                    .ofScenario(Scenario(listOf()))
-                    .ofFixture(NoFixtureWrapper())
-                    .build()
-            )
-        )
+                        .withStep(stepResultA)
+                        .withStep(stepResultB)
+                        .withStep(stepResultC)
+                        .withStep(stepResultD)
+                        .withStep(stepResultE)
+                        .withStep(stepResultF)
+                        .withStatus(Status.Executed)
+                        .ofScenario(Scenario(listOf()))
+                        .ofFixture(NoFixtureWrapper())
+                        .build()
+        ).build()
 
         val renderResult = cut.render(documentResult)
 

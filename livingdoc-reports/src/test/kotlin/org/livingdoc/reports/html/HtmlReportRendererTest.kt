@@ -25,36 +25,33 @@ internal class HtmlReportRendererTest {
         val headerB = Header("b")
         val headerAPlusB = Header("a + b = ?")
 
-        val documentResult = DocumentResult(
-            Status.Executed,
-            mutableListOf(
+        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
                 DecisionTableResult(
-                    listOf(headerA, headerB, headerAPlusB),
-                    listOf(
-                        RowResult(
-                            mapOf(
-                                headerA to FieldResult("2", Status.Executed),
-                                headerB to FieldResult("3", Status.Manual),
-                                headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
-                            ), Status.Executed
+                        listOf(headerA, headerB, headerAPlusB),
+                        listOf(
+                                RowResult(
+                                        mapOf(
+                                                headerA to FieldResult("2", Status.Executed),
+                                                headerB to FieldResult("3", Status.Manual),
+                                                headerAPlusB to FieldResult("6", Status.Failed(mockk(relaxed = true)))
+                                        ), Status.Executed
+                                ),
+                                RowResult(
+                                        mapOf(
+                                                headerA to FieldResult("5", Status.Skipped),
+                                                headerB to FieldResult("6", Status.Unknown),
+                                                headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
+                                        ), Status.Executed
+                                )
                         ),
-                        RowResult(
-                            mapOf(
-                                headerA to FieldResult("5", Status.Skipped),
-                                headerB to FieldResult("6", Status.Unknown),
-                                headerAPlusB to FieldResult("11", Status.Exception(mockk(relaxed = true)))
-                            ), Status.Executed
-                        )
-                    ),
-                    Status.Executed
+                        Status.Executed
                 )
-            )
-        )
+        ).build()
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
+                """
                 <!DOCTYPE html>
                 <html>
                     <head>
@@ -114,26 +111,25 @@ internal class HtmlReportRendererTest {
         val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
 
-        val documentResult = DocumentResult(
-            Status.Executed,
-            mutableListOf(
+        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
+
                 ScenarioResult.Builder()
-                    .withStep(stepResultA)
-                    .withStep(stepResultB)
-                    .withStep(stepResultC)
-                    .withStep(stepResultD)
-                    .withStep(stepResultE)
-                    .withStatus(Status.Executed)
-                    .ofScenario(Scenario(listOf()))
-                    .ofFixture(NoFixtureWrapper())
-                    .build()
-            )
-        )
+                        .withStep(stepResultA)
+                        .withStep(stepResultB)
+                        .withStep(stepResultC)
+                        .withStep(stepResultD)
+                        .withStep(stepResultE)
+                        .withStatus(Status.Executed)
+                        .ofScenario(Scenario(listOf()))
+                        .ofFixture(NoFixtureWrapper())
+                        .build()
+
+        ).build()
 
         val renderResult = cut.render(documentResult)
 
         assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
+                """
                 <!DOCTYPE html>
                 <html>
                     <head>
