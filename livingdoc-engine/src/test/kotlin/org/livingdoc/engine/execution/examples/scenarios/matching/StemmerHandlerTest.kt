@@ -3,29 +3,29 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class StemmerHandlerTest{
+class StemmerHandlerTest {
     val string: String = "hello world git"
 
     @Test
-    fun `test cut`(){
+    fun `test cut`() {
         Assertions.assertThat(StemmerHandler.cutLast(string).toString())
             .isEqualTo("hello world git")
     }
 
     @Test
-    fun `test cut with blank in end`(){
-        Assertions.assertThat(StemmerHandler.cutLast(string+" ").toString())
+    fun `test cut with blank in end`() {
+        Assertions.assertThat(StemmerHandler.cutLast(string + " ").toString())
             .isEqualTo("hello world git")
     }
 
     @Test
-    fun `stemWords`(){
+    fun `stemWords`() {
         Assertions.assertThat(StemmerHandler.stemWords(string))
             .isEqualTo("hello world git")
     }
 
     @Test
-    fun `stemming`(){
+    fun `stemming`() {
         Assertions.assertThat(StemmerHandler.stemWords("deny"))
             .isEqualTo("deni")
         Assertions.assertThat(StemmerHandler.stemWords("declining"))
@@ -36,6 +36,5 @@ class StemmerHandlerTest{
             .isEqualTo("diver")
         Assertions.assertThat(StemmerHandler.stemWords("dental"))
             .isEqualTo("dental")
-
     }
 }

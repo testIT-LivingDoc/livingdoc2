@@ -95,7 +95,6 @@ internal class RegMatching(
         }
     }
 
-
     /**
      * reconstruct the Template with its variables
      * @param templateS the template string
@@ -142,7 +141,6 @@ internal class RegMatching(
                 reconString += it + " "
             }
             iterat++
-
         }
 
         reconString = StemmerHandler.cutLast(reconString).toString()

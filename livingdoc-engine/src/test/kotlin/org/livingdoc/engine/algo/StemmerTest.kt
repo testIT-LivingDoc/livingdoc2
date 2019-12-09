@@ -3,12 +3,12 @@ package org.livingdoc.engine.algo
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class StemmerTest{
+class StemmerTest {
     val input = "this modified String is a test string"
     val input2 = "The user buys an apple"
 
     @Test
-    fun `test add function`(){
+    fun `test add function`() {
         val s = Stemmer()
         val chars: CharArray = "asdfghjkl".toCharArray()
         s.add(chars, chars.size)
@@ -17,11 +17,11 @@ class StemmerTest{
     }
 
     @Test
-    fun `max chararray size`(){
+    fun `max chararray size`() {
         val s = Stemmer()
-        var testingstring= ""
-        for(a in 0..52)
-            testingstring+=a.toString()
+        var testingstring = ""
+        for (a in 0..52)
+            testingstring += a.toString()
         val chars = testingstring.toCharArray()
         s.add(chars, chars.size)
 
@@ -29,14 +29,13 @@ class StemmerTest{
     }
 
     @Test
-    fun `max char size`(){
+    fun `max char size`() {
         val stemmer = Stemmer()
         Assertions.assertThat(stemmer).isNotNull()
-
     }
 
     @Test
-    fun `testing special cases for stemmer`(){
+    fun `testing special cases for stemmer`() {
         val w = CharArray(501)
         val s = Stemmer()
         var collector = ""
@@ -92,9 +91,8 @@ class StemmerTest{
         Assertions.assertThat(collector).isEqualTo("the user bui an appl ")
     }
 
-
     @Test
-    fun `testing stemmer algorithm`(){
+    fun `testing stemmer algorithm`() {
         val w = CharArray(501)
         val s = Stemmer()
         var collector = ""
