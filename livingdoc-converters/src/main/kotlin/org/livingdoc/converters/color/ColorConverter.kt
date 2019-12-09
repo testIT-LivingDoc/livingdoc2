@@ -13,7 +13,7 @@ open class ColorConverter : TypeConverter<String> {
 
     override fun convert(value: String?, element: AnnotatedElement?, documentClass: Class<*>?): String {
 
-        if(value.isNullOrEmpty()){
+        if (value.isNullOrEmpty()) {
             throw ColorFormatException(value)
         }
 
@@ -24,42 +24,37 @@ open class ColorConverter : TypeConverter<String> {
         val isHexValue = hexMatcher.matches()
         val isRgbValue = lowerCaseAndTrimmedValue.startsWith("rgb(") && value.endsWith(")")
 
-        if(isHexValue){
+        if (isHexValue) {
             return value
-        }
-        else if(isRgbValue){
-            var splittedColorValues : List<String> = lowerCaseAndTrimmedValue.substring(4, lowerCaseAndTrimmedValue.length-1).split(",")
-            var colorHexValue : String = "#"
+        } else if (isRgbValue) {
+            val splittedColorValues: List<String> = lowerCaseAndTrimmedValue.substring(4, lowerCaseAndTrimmedValue.length - 1).split(",")
+            var colorHexValue = "#"
 
-            if(splittedColorValues.size != 3){
+            if (splittedColorValues.size != 3) {
                 throw ColorFormatException(lowerCaseAndTrimmedValue)
-            }
-            else{
+            } else {
 
-                for(colorValue in splittedColorValues){
-                    var colorValueInt = colorValue.toInt()
+                for (colorValue in splittedColorValues) {
+                    val colorValueInt = colorValue.toInt()
 
-                    if(colorValueInt in 0..255){
-                        var hexString = java.lang.Integer.toHexString(colorValueInt)
-                        if(hexString.length == 1){
-                            hexString+=hexString
+                    if (colorValueInt in 0..255) {
+                        var hexString = Integer.toHexString(colorValueInt)
+                        if (hexString.length == 1) {
+                            hexString += hexString
                         }
-                        colorHexValue+=hexString
-                    }
-                    else{
+                        colorHexValue += hexString
+                    } else {
                         throw ColorFormatException(lowerCaseAndTrimmedValue)
                     }
                 }
                 return colorHexValue
-
             }
-        }
-        else{
+        } else {
             val fis = ColorConverter :: class.java.getResourceAsStream("/properties/color.properties")
             val prop = Properties()
             prop.load(fis)
 
-            return prop.getProperty(lowerCaseAndTrimmedValue) ?: throw ColorFormatException(lowerCaseAndTrimmedValue)
+            return prop.getProperty(lowerCaseAndTrimmedValue)?.toLowerCase() ?: throw ColorFormatException(lowerCaseAndTrimmedValue)
         }
     }
 }
