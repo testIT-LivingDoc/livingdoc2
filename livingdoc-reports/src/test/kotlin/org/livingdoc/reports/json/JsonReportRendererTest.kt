@@ -43,7 +43,7 @@ internal class JsonReportRendererTest {
             listOf(Row(row1), Row(row2))
         )
 
-        val rowResult1 = RowResult.Builder().withDecisionTable(decisionTable)
+        val rowResult1 = RowResult.Builder().withRow(decisionTable)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("2")
@@ -64,7 +64,7 @@ internal class JsonReportRendererTest {
             )
             .withStatus(Status.Executed)
 
-        val rowResult2 = RowResult.Builder().withDecisionTable(decisionTable)
+        val rowResult2 = RowResult.Builder().withRow(decisionTable)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("5")

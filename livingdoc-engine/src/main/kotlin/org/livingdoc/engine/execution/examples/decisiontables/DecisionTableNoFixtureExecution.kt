@@ -25,7 +25,7 @@ internal class DecisionTableNoFixtureExecution(
 
             decisionTable.rows.forEach {
                 val rowResult = RowResult.Builder()
-                    .withDecisionTable(decisionTable)
+                    .withRow(decisionTable)
                     .withStatus(Status.Manual)
 
                 decisionTable.headers.forEach {

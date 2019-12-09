@@ -42,10 +42,10 @@ internal class ScenarioExecution(
             scenarioResultBuilder.withStatus(Status.Executed)
         } catch (e: Exception) {
             scenarioResultBuilder.withStatus(Status.Exception(e))
-            skipAllSteps(scenario, scenarioResultBuilder)
+                .withUnassignedSkipped()
         } catch (e: AssertionError) {
             scenarioResultBuilder.withStatus(Status.Exception(e))
-            skipAllSteps(scenario, scenarioResultBuilder)
+                .withUnassignedSkipped()
         }
         return scenarioResultBuilder.build()
     }
@@ -147,23 +147,6 @@ internal class ScenarioExecution(
                 Status.Executed
             } catch (e: Exception) {
                 Status.Exception(e)
-            }
-        }
-
-        /**
-         * Sets the result of all the steps of a scenario to skipped
-         *
-         * @param scenario The scenario to retrieve the steps from
-         * @param resultBuilder A [ScenarioResult.Builder] that should contain the skipped steps
-         */
-        private fun skipAllSteps(scenario: Scenario, resultBuilder: ScenarioResult.Builder) {
-            scenario.steps.forEach {
-                resultBuilder.withStep(
-                    StepResult.Builder()
-                        .withValue(it.value)
-                        .withStatus(Status.Skipped)
-                        .build()
-                )
             }
         }
     }

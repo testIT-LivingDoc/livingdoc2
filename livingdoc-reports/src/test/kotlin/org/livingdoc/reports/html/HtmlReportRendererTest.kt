@@ -43,7 +43,7 @@ internal class HtmlReportRendererTest {
             listOf(Row(row1), Row(row2))
         )
 
-        val rowResult1 = RowResult.Builder().withDecisionTable(decisionTable)
+        val rowResult1 = RowResult.Builder().withRow(decisionTable)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("2")
@@ -64,7 +64,7 @@ internal class HtmlReportRendererTest {
             )
             .withStatus(Status.Executed)
 
-        val rowResult2 = RowResult.Builder().withDecisionTable(decisionTable)
+        val rowResult2 = RowResult.Builder().withRow(decisionTable)
             .withFieldResult(
                 headerA, FieldResult.Builder()
                     .withValue("5")
@@ -155,7 +155,7 @@ internal class HtmlReportRendererTest {
     @Test
     fun `scenarioResult is rendered correctly`() {
         val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
-        val stepResultB = StepResult.Builder().withValue("B").withStatus(Status.Unknown).build()
+        val stepResultB = StepResult.Builder().withValue("B").withStatus(Status.Manual).build()
         val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Skipped).build()
         val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
@@ -185,7 +185,7 @@ internal class HtmlReportRendererTest {
                     <body>
                         <ul>
                             <li class="background-executed">A</li>
-                            <li class="background-unknown">B</li>
+                            <li class="background-manual">B</li>
                             <li class="background-skipped">C</li>
                             <li class="background-failed">D</li>
                             <li class="background-exception">E</li>
