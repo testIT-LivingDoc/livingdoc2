@@ -6,7 +6,7 @@ data class FieldResult private constructor(
     val value: String,
     val status: Status
 ) {
-    class Builder() {
+    class Builder {
         private var value: String? = null
         private var status: Status = Status.Unknown
 

@@ -52,7 +52,6 @@ internal class DecisionTableExecution(
         } catch (e: AssertionError) {
             decisionTableResult.withStatus(Status.Exception(e))
         }
-        //setSkippedStatusForAllUnknownResults()
         return decisionTableResult.build()
     }
 
@@ -206,7 +205,6 @@ internal class DecisionTableExecution(
         fixtureModel.beforeTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
-
     private fun invokeBeforeRowMethods(fixture: Any) {
         fixtureModel.beforeRowMethods.forEach { methodInvoker.invoke(it, fixture) }
     }
@@ -223,7 +221,6 @@ internal class DecisionTableExecution(
         fixtureModel.afterTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
-
     private fun filter(row: Row, headers: Set<Header>): Map<Header, Field> {
         return row.headerToField
             .filterKeys { headers.contains(it) }
@@ -233,11 +230,9 @@ internal class DecisionTableExecution(
         return decisionTable.headers.filter(predicate).toSet()
     }
 
-
     private fun createFixtureInstance(): Any {
         return fixtureClass.getDeclaredConstructor().newInstance()
     }
-
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :
         RuntimeException(
