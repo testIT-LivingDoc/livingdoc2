@@ -25,6 +25,11 @@ Each report have a `name` as unique identifier.
 Each report also specifies the `format` of the generated Report.
 Optionally a `config` can be specified for Report format specific parameters.
 
+Configuration from the command line and environment dependent configuration can be archived using the Java System Property `livingdoc.reports.include` to specify a comma separated list of report names that should be generated.
+The provided list act as a whitelist, so only reports from the list are generated.
+If this property is not specified all reports that are configured are generated.
+For more information about the configuration see link:configuration.adoc[Configuration].
+
 === HTML Reports
 The HTML Report format is similar to the HTML Document format, with additional coloring to represent the Status of the execution.
 

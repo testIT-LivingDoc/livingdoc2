@@ -1,0 +1,11 @@
+== LivingDoc Configuration
+
+The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
+The configuration contains the configuration of link:repositories.adoc[Repositories] and link:reports.adoc[Reports].
+The configuration file should be placed in the `src/test/resources` directory, so it is in the classpath when running the tests.
+
+A different configuration file can be specified using the Java System Property `livingdoc.config`.
+Depending on the build system used and the test configuration, the Java System Property have to be specified in a different way and may require changing the build configuration.
+In the simplest case the property can be passed on the command line using the `-D` option of `java`, `mvn` or `gradle`.
+For example use `gradle test -Dlivingdoc.config=dev-livingdoc.yaml` to execute the tests with the `dev-livingdoc.yaml` configuration file.
+This only works if the tests run in the same JVM and not as a forked process.
