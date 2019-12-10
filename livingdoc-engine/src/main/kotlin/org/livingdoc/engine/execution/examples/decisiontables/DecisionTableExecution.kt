@@ -146,10 +146,6 @@ internal class DecisionTableExecution(
         }
     }
 
-    private fun isExpectedException(e: Exception): Boolean {
-        return e is ExpectedException
-    }
-
     private fun doSetInput(fixture: Any, header: Header, tableField: FieldResult) {
         val alias = header.name
         when {
