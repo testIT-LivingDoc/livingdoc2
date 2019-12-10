@@ -1,6 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.disabled.Disabled
+import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
@@ -134,18 +135,13 @@ internal class DecisionTableExecution(
             markFieldAsSuccessfullyExecuted(tableField)
         } catch (e: AssertionError) {
             markFieldAsExecutedWithFailure(tableField, e)
-        } catch (e: Exception) {
-            handleException(tableField, e)
-        }
-    }
-
-    private fun handleException(tableField: FieldResult, e: Exception) {
-        if (isExpectedException(e)) {
-            // TODO: use exceptionconverter and compare e.cause with tableField.value?
-            if (tableField.value == "error") {
+        } catch (e: ExpectedException) {
+            if (tableField.value == ExampleSyntax.EXCEPTION) {
                 markFieldAsSuccessfullyExecuted(tableField)
+                return
             }
-        } else {
+            markFieldAsExecutedWithException(tableField, e)
+        } catch (e: Exception) {
             markFieldAsExecutedWithException(tableField, e)
         }
     }
