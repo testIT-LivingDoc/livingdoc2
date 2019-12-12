@@ -4,7 +4,7 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
-    val maxCost: Int
+    val maxNumberOfOperations: Int
 ) {
     /**
      * cost of getting the best fitting pattern
@@ -15,7 +15,7 @@ internal class RegMatching(
 
     private fun getCost(): Int {
         start()
-        return cost
+        return operationNumber
     }
 
     /**
@@ -31,7 +31,7 @@ internal class RegMatching(
     }
 
     // misalignment
-    fun isMisaligned() = totalCost >= maxCost
+    fun isMisaligned() = totalCost >= maxNumberOfOperations
 
     /**
      * startpoint of the Regex algorithm to match sentences
@@ -47,7 +47,7 @@ internal class RegMatching(
     // containers to store global values
     private lateinit var preparedtemplatetext: String
     private lateinit var reggedText: Regex
-    private var cost = 0
+    private var operationNumber = 0
     private val regularExpression = "([\\w\\s\\.\\}\\{\\P{M}\\p{M}*]+)"
 
     // variable to string matching container
@@ -84,10 +84,10 @@ internal class RegMatching(
             val rematchResult = rematch()
             val mr = rematchResult.first
             if (!mr.isEmpty()) {
-                cost += rematchResult.second
+                operationNumber += rematchResult.second
                 matched = mr
             } else {
-                cost = maxCost
+                operationNumber = maxNumberOfOperations
                 matched = emptyList()
             }
             return matched
@@ -137,7 +137,7 @@ internal class RegMatching(
         s.forEach {
 
             if (checkIfVar(it)) {
-                reconString += "Word "
+                reconString += "word "
                 variableLocations.put(it, iterat)
             } else {
                 reconString += it + " "
@@ -151,22 +151,92 @@ internal class RegMatching(
     }
 
     /**
+     * syntax:
+     * preparation for stemmer algorithm
+     * increasing the cost of the matching
+     * @param string input string in our case it will be the step and the template
+     * @return string where a/an are changed to a
+     */
+    private fun filterString(string: String): String {
+        var outstring = ""
+        var tokens = string.split(" ")
+
+        for (i in 0..tokens.size - 1) {
+            if (!checkIfVar(tokens[i])) {
+                if (tokens[i].equals("a") || tokens[i].equals("an"))
+                    outstring += "a "
+                else
+                    outstring += tokens[i] + " "
+            } else
+                outstring += tokens[i] + " "
+        }
+        outstring = StemmerHandler.cutLast(outstring).toString()
+
+        return outstring
+    }
+
+    /**
      * the matching function start point if there is a non stem word
      * @return the matched strings to the variables
      */
     private fun rematch(): Pair<List<String>, Int> {
         var matchingcost = 1
 
-        val preppedString = StemmerHandler.stemWords(testText)
+        // stepString
+        var preppedString = StemmerHandler.stemWords(testText)
+        var stepAsString = preppedString
 
+        // template string
         var output = prepareTemplateString(templateS = templatetext)
         var sentence = output.first
         var stemmedsentence = StemmerHandler.stemWords(sentence)
-        matchingcost = stemmedsentence.second
 
-        val vari = output.second
+        // regex matching
+        var regexText = prepareTemplateToRegex(stemmedsentence, output.second)
+        var matchresult = regexText.find(stepAsString)
 
-        var preppedTemplate = reconstructVars(templateS = stemmedsentence.first, variables = vari)
+        if (matchresult == null) {
+            // matching cost increase since we used tw
+            matchingcost = 2
+
+            // step refinement
+            val stepToStemmed = filterString(testText)
+            preppedString = StemmerHandler.stemWords(stepToStemmed)
+            stepAsString = preppedString
+
+            // prepare the template string
+            val sentenceToStemmed = filterString(templatetext)
+
+            // now use refined string as input to stemmer
+            output = prepareTemplateString(templateS = sentenceToStemmed)
+            sentence = output.first
+            stemmedsentence = StemmerHandler.stemWords(sentence)
+
+            // regex matching
+            regexText = prepareTemplateToRegex(stemmedsentence, output.second)
+            matchresult = regexText.find(stepAsString)
+        }
+
+        // extend here if more algorithm have to be applied to strings or if
+        // a rematch has to be made
+        //
+
+        if (matchresult != null)
+            return Pair(matchresult.destructured.toList(), matchingcost)
+        else return Pair(emptyList(), maxNumberOfOperations)
+    }
+
+    /**
+     * extracted method for readability
+     * turns a text and its variables to a regex
+     * @param stemmedsentence sentence from stemmer without variables
+     * @param variables variables alongside their location in the string
+     * @return a regex to start comparisons
+     */
+    private fun prepareTemplateToRegex(stemmedsentence: String, variables: Map<String, Int>): Regex {
+        val vari = variables
+
+        var preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
 
         val templateTxt = tokenizetemplateText(ininterntext = preppedTemplate)
         var textTemp = ""
@@ -176,11 +246,7 @@ internal class RegMatching(
         textTemp = StemmerHandler.cutLast(textTemp).toString()
         var regexText = textTemp.toRegex()
 
-        val matchresult = regexText.find(preppedString.first)
-
-        if (matchresult != null)
-            return Pair(matchresult.destructured.toList(), matchingcost)
-        else return Pair(emptyList(), maxCost)
+        return regexText
     }
 
     /**

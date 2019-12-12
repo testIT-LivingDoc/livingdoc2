@@ -20,7 +20,6 @@ public class SelfCheckoutScenarioFixture {
     }
 
     @Step("when the customer scans a {product} for {price} cents")
-    @Step("and an {product} for {price} cents")
     @Step("and a {product} for {price} cents")
     void scanProduct(String product, Integer price) {
         sut.add(product, price);

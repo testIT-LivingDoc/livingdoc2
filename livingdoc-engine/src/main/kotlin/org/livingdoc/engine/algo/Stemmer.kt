@@ -1,5 +1,15 @@
 package org.livingdoc.engine.algo
 
+/*
+
+   Porter stemmer in Java. The original paper is in
+
+       Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
+       no. 3, pp 130-137,
+
+   See also http://www.tartarus.org/~martin/PorterStemmer
+*/
+
 /**
  * Stemmer, implementing the Porter Stemming Algorithm
  *
@@ -8,20 +18,17 @@ package org.livingdoc.engine.algo
  * by calling one of the various stem(something) methods.
  */
 @Suppress(
-    "LongMethod",
+
     "ComplexMethod",
-    "NestedBlockDepth",
-    "TooGenericExceptionCaught",
-    "VariableNaming",
+    "LongMethod",
     "ReturnCount",
-    "MaxLineLength",
-    "MagicNumber",
-    "ComplexCondition",
-    "NewLineAtEndOfFile"
+    "ComplexCondition"
 )
 class Stemmer {
 
-    private val INC = 50
+    companion object IncNumber {
+        val INC = 50
+    }
 
     /**
      * Returns a reference to a character buffer containing the results of
@@ -46,9 +53,9 @@ class Stemmer {
      */
     fun add(ch: Char) {
         if (i == resultBuffer.size) {
-            val new_b = CharArray(i + INC)
-            for (c in 0 until i) new_b[c] = resultBuffer[c]
-            resultBuffer = new_b
+            val newb = CharArray(i + INC)
+            for (c in 0 until i) newb[c] = resultBuffer[c]
+            resultBuffer = newb
         }
         resultBuffer[i++] = ch
     }
@@ -59,9 +66,9 @@ class Stemmer {
      */
     fun add(w: CharArray, wLen: Int) {
         if (i + wLen >= resultBuffer.size) {
-            val new_b = CharArray(i + wLen + INC)
-            for (c in 0 until i) new_b[c] = resultBuffer[c]
-            resultBuffer = new_b
+            val newb = CharArray(i + wLen + INC)
+            for (c in 0 until i) newb[c] = resultBuffer[c]
+            resultBuffer = newb
         }
         for (c in 0 until wLen) resultBuffer[i++] = w[c]
     }
@@ -200,13 +207,18 @@ class Stemmer {
    */
     private fun step1() {
         if (resultBuffer[k] == 's') {
-            if (ends("sses")) k -= 2 else if (ends("ies")) setto("i") else if (resultBuffer[k - 1] != 's') k--
+            if (ends("sses")) k -= 2
+            else if (ends("ies")) setto("i")
+            else if (resultBuffer[k - 1] != 's') k--
         }
         if (ends("eed")) {
             if (m() > 0) k--
         } else if ((ends("ed") || ends("ing")) && vowelinstem()) {
             k = j
-            if (ends("at")) setto("ate") else if (ends("bl")) setto("ble") else if (ends("iz")) setto("ize") else if (doublec(
+            if (ends("at")) setto("ate")
+            else if (ends("bl")) setto("ble")
+            else if (ends("iz")) setto("ize")
+            else if (doublec(
                     k
                 )
             ) {
@@ -373,7 +385,8 @@ class Stemmer {
                             return
             }
             'o' -> {
-                if (ends("ion") && j >= 0 && (resultBuffer[j] == 's' || resultBuffer[j] == 't'))
+                if (ends("ion") && j >= 0 &&
+                    (resultBuffer[j] == 's' || resultBuffer[j] == 't'))
                 /* j >= 0 fixes Bug 2 */ if (ends("ou"))
                     return
             }

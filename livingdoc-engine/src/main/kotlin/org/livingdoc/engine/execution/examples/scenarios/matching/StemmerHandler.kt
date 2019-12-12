@@ -10,37 +10,31 @@ import org.livingdoc.engine.algo.Stemmer
  * suppress annotation is needed.
  */
 @Suppress(
-    "LongMethod",
     "ComplexMethod",
     "NestedBlockDepth",
-    "TooGenericExceptionCaught",
-    "VariableNaming",
-    "ReturnCount",
-    "MaxLineLength",
-    "MagicNumber",
-    "ComplexCondition",
-    "NewLineAtEndOfFile"
+    "MagicNumber"
 )
 object StemmerHandler {
 
     /**
      * api function to make strings usable
      */
-    fun cutLast(str: String): String? {
-        var str = str
-        if (str != null && str.length > 0 && str[str.length - 1] == ' ') {
+    fun cutLast(string: String): String? {
+        var str = string
+        if (str.length > 0 && str[str.length - 1] == ' ') {
             str = str.substring(0, str.length - 1)
         }
         return str
     }
+
     /**
      * stem algorithm initialisaation point
      *
      * @param input the string to be looked at
      * @return The sentence stem
      */
-    fun stemWords(input: String): Pair<String, Int> {
-        var matchingcost = 0
+    fun stemWords(input: String): String {
+
         val w = CharArray(501)
         val s = Stemmer()
         var collector = ""
@@ -86,10 +80,8 @@ object StemmerHandler {
                 } catch (e: StringIndexOutOfBoundsException) {
                     break
                 }
-
-                matchingcost += 1 / input.length
             }
         }
-        return Pair(cutLast(collector).toString(), matchingcost)
+        return cutLast(collector).toString()
     }
 }

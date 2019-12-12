@@ -13,7 +13,7 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
     fun match(step: String): MatchingResult {
 
         val bestFit = stepTemplates
-            .map { it.alignWith(step, maxCostOfAlignment = 15) }
+            .map { it.alignWith(step, maxLevelOfStemming = 3) }
             .minBy { it.totalCost }
 
         if (bestFit == null || bestFit.isMisaligned()) {

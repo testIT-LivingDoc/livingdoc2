@@ -29,12 +29,6 @@ class StemmerTest {
     }
 
     @Test
-    fun `max char size`() {
-        val stemmer = Stemmer()
-        Assertions.assertThat(stemmer).isNotNull()
-    }
-
-    @Test
     fun `testing special cases for stemmer`() {
         val w = CharArray(501)
         val s = Stemmer()
