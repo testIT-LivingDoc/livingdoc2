@@ -44,3 +44,25 @@ The default value is `livingdoc/reports/html`.
 .outputDir
 The directory where the HTML Reports are save.
 The default value is `livingdoc/reports/json`.
+
+
+== Create Custom Report Formats
+This documentation is for developer which want to implement own Report Formats.
+
+To create a new Report Format, you must create a `ReportRenderer` that contains the logic for generating the reports.
+It is called after the execution of the LivingDoc tests.
+The `ReportRenderer` have one method `render(documentResult, config)` that must be implemented.
+The first argument is the `DocumentResult` which represent the the Result of executing a single Document with all Examples and Fixtures defined by the Document.
+The second argument is a configuration which can be used for Report Format specific configuration, like output directory for the Reports.
+The `render` method must not only generate the Reports but also store the Reports in an appropriate format and location.
+
+A ReportRenderer must be annotated with `@Format` and the unique Format identifier must be passed as argument of the Annotation.
+In order to be discovered the Java SPI configuration file `META-INF/services/org.livingdoc.reports.spi.ReportRenderer` must be created.
+The content of the file is the fully qualified class name of your ReportRenderer implementation as:
+[source]
+----
+org.livingdoc.reports.html.HtmlReportRenderer
+----
+
+Now to use your ReportRenderer to generate Reports, the ReportRenderer must be in the classpath while LivingDoc is executed.
+In the reports configuration of LivingDoc use the unique format id to configure a Report that uses your Format.
