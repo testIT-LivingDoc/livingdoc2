@@ -72,7 +72,7 @@ class RegMatchingTest {
     }
 
     @Test
-    fun `test plural`(){
+    fun `test plural`() {
         val template = "I have a {a} and inputs and a {b}"
         val step = "I have a apple and input and a bulletpoint"
         val sp = StepTemplate.parse(template)
@@ -83,9 +83,7 @@ class RegMatchingTest {
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
         Assertions.assertThat(regm.totalCost).isEqualTo(1)
         Assertions.assertThat(regm.variables).isNotNull
-
     }
-
 
     @Test
     fun `more complex test with a or an`() {

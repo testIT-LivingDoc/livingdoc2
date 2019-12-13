@@ -72,7 +72,7 @@ class StemmerHandlerTest {
             .isEqualTo("meet")
     }
     @Test
-    fun `stemming tests words part3`(){
+    fun `stemming tests words part3`() {
         Assertions.assertThat(StemmerHandler.stemWords("mappization"))
             .isEqualTo("mappiz")
         Assertions.assertThat(StemmerHandler.stemWords("sensational"))
@@ -113,7 +113,7 @@ class StemmerHandlerTest {
     }
 
     @Test
-    fun `stemming test words part4`(){
+    fun `stemming test words part4`() {
         Assertions.assertThat(StemmerHandler.stemWords("taliti"))
             .isEqualTo("taliti")
         Assertions.assertThat(StemmerHandler.stemWords("leiviti"))
