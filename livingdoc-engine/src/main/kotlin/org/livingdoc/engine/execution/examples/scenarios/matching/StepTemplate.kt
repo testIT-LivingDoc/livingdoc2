@@ -27,9 +27,10 @@ internal class StepTemplate(
     }
 
     /**
-     * Returns an `Alignment` of the template and the specified scenario step.
+     * Returns a Matching of the template and the specified scenario step.
      */
-    fun alignWith(step: String, maxCostOfAlignment: Int = 20) = Alignment(this, step, maxCostOfAlignment)
+
+    fun alignWith(step: String, maxLevelOfStemming: Int = 3) = RegMatching(this, step, maxLevelOfStemming)
 
     override fun toString(): String = fragments.joinToString(separator = "") { fragment ->
         when (fragment) {
