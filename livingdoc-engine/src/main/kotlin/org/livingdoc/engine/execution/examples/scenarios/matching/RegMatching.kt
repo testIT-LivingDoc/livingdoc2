@@ -82,7 +82,9 @@ internal class RegMatching(
 
         if (matchedResult == null) {
             val rematchResult = rematch()
+
             val mr = rematchResult.first
+            println(mr.isEmpty())
             if (!mr.isEmpty()) {
                 operationNumber += rematchResult.second
                 matched = mr
@@ -103,7 +105,7 @@ internal class RegMatching(
      * @param variables the variables in their {} brackets and the position of them
      * @return rebuilt template string
      */
-    private fun reconstructVars(templateS: String = templatetext, variables: Map<String, Int>): String {
+    private fun reconstructVars(templateS: String, variables: Map<String, Int>): String {
         var s = templateS.split(" ")
         var reconString = ""
         var counter = 0
@@ -129,7 +131,7 @@ internal class RegMatching(
      * @param templateS the template string ot be prepared
      * @return the variables and their position in the template string
      */
-    private fun prepareTemplateString(templateS: String = templatetext): Pair<String, Map<String, Int>> {
+    private fun prepareTemplateString(templateS: String): Pair<String, Map<String, Int>> {
         var s = templateS.split(" ")
         var reconString = ""
         var variableLocations = mutableMapOf<String, Int>()
@@ -278,9 +280,7 @@ internal class RegMatching(
             if (checkIfVar(outer)) {
                 var variable = outer
                 val bracketcount = countBrackets(variable.toCharArray())
-                if (bracketcount == -1) {
-                    return emptyList()
-                }
+
                 checkVar(variable, bracketcount)
                 variable = variable.replace(beforeconc + "{", "")
                 variable = variable.replace("}" + afterconc, "")
@@ -352,8 +352,6 @@ internal class RegMatching(
                 closecount++
             }
         }
-        if ((opencount == 0 && closecount == 0) || opencount != closecount)
-            return -1
         return opencount
     }
 }

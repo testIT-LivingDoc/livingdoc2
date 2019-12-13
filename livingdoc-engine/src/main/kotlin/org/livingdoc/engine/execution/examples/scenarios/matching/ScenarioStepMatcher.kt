@@ -19,10 +19,10 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
         if (bestFit == null || bestFit.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }
-        bestFit.variables.forEach {
+        /*bestFit.variables.forEach {
             if (it.value == "")
                 throw NoMatchingStepTemplate("No matching template!")
-        }
+        }*/
         return MatchingResult(bestFit.stepTemplate, bestFit.variables)
     }
 }

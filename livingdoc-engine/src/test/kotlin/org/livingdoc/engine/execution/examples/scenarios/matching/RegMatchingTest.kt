@@ -72,6 +72,22 @@ class RegMatchingTest {
     }
 
     @Test
+    fun `test plural`(){
+        val template = "I have a {a} and inputs and a {b}"
+        val step = "I have a apple and input and a bulletpoint"
+        val sp = StepTemplate.parse(template)
+        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
+        Assertions.assertThat(regm.step).isEqualTo(step)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
+        Assertions.assertThat(regm.totalCost).isEqualTo(1)
+        Assertions.assertThat(regm.variables).isNotNull
+
+    }
+
+
+    @Test
     fun `more complex test with a or an`() {
         val template = "I have a {a} and a input and a {b}"
         val step = "I have an apple and an input and an bulletpoint"
