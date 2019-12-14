@@ -1,11 +1,23 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
 /**
- * RegMatching to match a steptemplate to a template
- * @param step the String input
- * @param stepTemplate the template to be matched to
- * @param maxNumberOfOperations the maximum number of Operations for the algorithm
- * @param lengthOfVariables the maximum length of a variable before considered in the cost
+ * RegMatching is used to match a step to a template and give them a cost depending on the
+ * similarity of the strings.
+ *
+ * If the template does not match at all the variables consists of an empty list.
+ * The cost is the maximum possible cost(maxNumberOfOperations).
+ *
+ * The cost consists of the number of operations on the step/the template.
+ * Additionally the number of symbols and the number of strings in a variable is also considered into the cost.
+ *
+ * If the template and the step can be matched initally the cost only considers the length of each variable string.
+ * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
+ *
+ * The variables yield the matched strings from the step.
+ * @param step the String input.
+ * @param stepTemplate the template to be matched to.
+ * @param maxNumberOfOperations the maximum number of operations for the algorithm.
+ * @param lengthOfVariables the maximum number of symbols of a variable before considered in the cost.
  *
  */
 @Suppress("NestedBlockDepth")
