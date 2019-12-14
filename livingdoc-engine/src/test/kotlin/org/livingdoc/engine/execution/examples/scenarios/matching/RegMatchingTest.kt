@@ -27,7 +27,7 @@ class RegMatchingTest {
     fun `long input with mismatch`(step: String, cost: Int) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3, 6)
+        val regm = RegMatching(sp, step, 3, 6)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
@@ -41,7 +41,7 @@ class RegMatchingTest {
     fun `long input text test`(step: String, cost: Int) {
         val template = "adding {a} and {b} and {c} and {d} and {e} and {f} and {g} equals {h}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        val regm = RegMatching(sp, step, 3)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
@@ -65,7 +65,7 @@ class RegMatchingTest {
     fun `test inputs to match to a template`(step: String) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3, 10)
+        val regm = RegMatching(sp, step, 3, 10)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
@@ -80,7 +80,7 @@ class RegMatchingTest {
         val template = "understandable text here is not understanable at {all}"
         val step = "unnasdjiaosd aiojdoaij aisodja"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 4)
+        val regm = RegMatching(sp, step, 4)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(4)
@@ -94,7 +94,7 @@ class RegMatchingTest {
         val template = "I have a {a}"
         val step = "I have an apple"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        val regm = RegMatching(sp, step, 3)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
@@ -109,7 +109,7 @@ class RegMatchingTest {
         val template = "I have a {a} and inputs and a {b}"
         val step = "I have a apple and input and a bulletpoint"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        val regm = RegMatching(sp, step, 3)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
@@ -124,7 +124,7 @@ class RegMatchingTest {
         val template = "I have a {a} and a input and a {b}"
         val step = "I have an apple and an input and an bulletpoint"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        val regm = RegMatching(sp, step, 3)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)

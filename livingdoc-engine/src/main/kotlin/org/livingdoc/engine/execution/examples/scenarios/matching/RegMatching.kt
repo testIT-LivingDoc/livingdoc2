@@ -1,5 +1,13 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
+/**
+ * RegMatching to match a steptemplate to a template
+ * @param step the String input
+ * @param stepTemplate the template to be matched to
+ * @param maxNumberOfOperations the maximum number of Operations for the algorithm
+ * @param lengthOfVariables the maximum length of a variable before considered in the cost
+ *
+ */
 @Suppress("NestedBlockDepth")
 internal class RegMatching(
     val stepTemplate: StepTemplate,
@@ -179,6 +187,12 @@ internal class RegMatching(
         return outstring
     }
 
+    /**
+     * function to consider the length of each variable
+     * cost is added if variable length is too high
+     * @param variables the list of variables
+     * @return the increase of cost
+     */
     private fun considerVarLength(variables: List<String>): Int {
         var costIncrease = 0
         variables.forEach {
