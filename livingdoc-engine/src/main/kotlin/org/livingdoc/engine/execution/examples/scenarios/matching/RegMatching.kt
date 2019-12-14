@@ -8,16 +8,18 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * The cost is the maximum possible cost(maxNumberOfOperations).
  *
  * The cost consists of the number of operations on the step/the template.
- * Additionally the number of symbols and the number of strings in a variable is also considered into the cost.
+ * Additionally the number of separate strings in a single variable is also considered into the cost.
  *
  * If the template and the step can be matched initally the cost only considers the length of each variable string.
  * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
  *
  * The variables yield the matched strings from the step.
+ *
+ * Adjusting numOfStringsInSingleVar will lead to test differences
  * @param step the String input.
  * @param stepTemplate the template to be matched to.
  * @param maxNumberOfOperations the maximum number of operations for the algorithm.
- * @param lengthOfVariables the maximum number of symbols of a variable before considered in the cost.
+ * @param numOfStringsInSingleVar the maximum number of separated strings in a single variable before cost increase
  *
  */
 @Suppress("NestedBlockDepth")
@@ -25,7 +27,7 @@ internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
     val maxNumberOfOperations: Int,
-    val lengthOfVariables: Int = 10
+    val numOfStringsInSingleVar: Int = 14
 ) {
     /**
      * cost of getting the best fitting pattern
@@ -208,9 +210,9 @@ internal class RegMatching(
     private fun considerVarLength(variables: List<String>): Int {
         var costIncrease = 0
         variables.forEach {
-            if (it.split(" ").size >= lengthOfVariables) {
+            if (it.split(" ").size >= numOfStringsInSingleVar) {
 
-                costIncrease += it.split(" ").size - lengthOfVariables
+                costIncrease += it.split(" ").size - numOfStringsInSingleVar
             }
         }
         return costIncrease
