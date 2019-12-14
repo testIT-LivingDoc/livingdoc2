@@ -4,7 +4,8 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
-    val maxNumberOfOperations: Int
+    val maxNumberOfOperations: Int,
+    val lengthOfVariables: Int = 10
 ) {
     /**
      * cost of getting the best fitting pattern
@@ -84,9 +85,9 @@ internal class RegMatching(
             val rematchResult = rematch()
 
             val mr = rematchResult.first
-            println(mr.isEmpty())
             if (!mr.isEmpty()) {
                 operationNumber += rematchResult.second
+                operationNumber += considerVarLength(matched)
                 matched = mr
             } else {
                 operationNumber = maxNumberOfOperations
@@ -95,6 +96,7 @@ internal class RegMatching(
             return matched
         } else {
             matched = matchedResult.destructured.toList()
+            operationNumber += considerVarLength(matched)
             return matched
         }
     }
@@ -177,12 +179,23 @@ internal class RegMatching(
         return outstring
     }
 
+    private fun considerVarLength(variables: List<String>): Int {
+        var costIncrease = 0
+        variables.forEach {
+            if (it.split(" ").size >= lengthOfVariables) {
+
+                costIncrease += it.split(" ").size - lengthOfVariables
+            }
+        }
+        return costIncrease
+    }
+
     /**
      * the matching function start point if there is a non stem word
      * @return the matched strings to the variables
      */
     private fun rematch(): Pair<List<String>, Int> {
-        var matchingcost = 1
+        var matchingcost = 0
 
         // stepString
         var preppedString = StemmerHandler.stemWords(testText)
@@ -197,9 +210,10 @@ internal class RegMatching(
         var regexText = prepareTemplateToRegex(stemmedsentence, output.second)
         var matchresult = regexText.find(stepAsString)
 
+        matchingcost++
         if (matchresult == null) {
             // matching cost increase since we used tw
-            matchingcost = 2
+            matchingcost++
 
             // step refinement
             val stepToStemmed = filterString(testText)

@@ -20,6 +20,7 @@ Failed finding matching template before
 
 - adding 10 and 10 and 10 and 10 and 10 and 10 and 10 equals 70
 - adding 10 and 10 and 10 and 10 and 10 and 10 and 100000000000000000000000 equals 100000000000000000000060
+- adding 120 and 120 and 0 and 0 and 0 and 0 and 0 equals 240
 
 - adding 01111 and 02222 equals 03333
 - adding 11111 and 22222 equals 33333

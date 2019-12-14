@@ -2,16 +2,43 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.stream.Stream
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RegMatchingTest {
 
+    fun valueProvider(): Stream<Arguments> {
+        return Stream.of(
+            Arguments.of(
+                "adding 10 and 10 and 10 and 10 and 10 and 10 and 100000000000000000000000 equals 100000000000000000000060",
+                0
+            ),
+            Arguments.of("adding 10 and 10 and 10 and 10 and 10 and 10 and 10 equals 70", 0)
+        )
+    }
+
+    @ParameterizedTest()
+    @MethodSource("valueProvider")
+    fun `long input with mismatch`(step: String, cost: Int) {
+        val template = "adding {a} and {b} equals {c}"
+        val sp = StepTemplate.parse(template)
+        val regm = RegMatching(StepTemplate.parse(template), step, 3, 6)
+        Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
+        Assertions.assertThat(regm.step).isEqualTo(step)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(true)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(6)
+        Assertions.assertThat(regm.variables["b"]).isNull()
+    }
+
     @ParameterizedTest
-    @ValueSource(strings = arrayOf(
-        "adding 10 and 10 and 10 and 10 and 10 and 10 and 100000000000000000000000 equals 100000000000000000000060",
-        "adding 10 and 10 and 10 and 10 and 10 and 10 and 10 equals 70"))
-    fun `long input text test`(step: String) {
+    @MethodSource("valueProvider")
+    fun `long input text test`(step: String, cost: Int) {
         val template = "adding {a} and {b} and {c} and {d} and {e} and {f} and {g} equals {h}"
         val sp = StepTemplate.parse(template)
         val regm = RegMatching(StepTemplate.parse(template), step, 3)
@@ -19,25 +46,30 @@ class RegMatchingTest {
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(0)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(10)
+        Assertions.assertThat(regm.totalCost).isEqualTo(cost)
     }
 
     @ParameterizedTest
-    @ValueSource(strings = arrayOf("adding 1111 and 02222 equals 03333",
-        "adding 1111 and 2222 equals 03333",
-        "adding 1111 and 2222 equals 3333",
-        "adding 12345678 and 98765432 equals 111111110",
-        "adding 11111 and 22222 equals 33333",
-        "adding 01111 and 02222 equals 03333",
-        "adding 012319 and 01239104 equals 1251423")
+    @ValueSource(
+        strings = arrayOf(
+            "adding 1111 and 02222 equals 03333",
+            "adding 1111 and 2222 equals 03333",
+            "adding 1111 and 2222 equals 3333",
+            "adding 12345678 and 98765432 equals 111111110",
+            "adding 11111 and 22222 equals 33333",
+            "adding 01111 and 02222 equals 03333",
+            "adding 012319 and 01239104 equals 1251423"
+        )
     )
     fun `test inputs to match to a template`(step: String) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(StepTemplate.parse(template), step, 3)
+        val regm = RegMatching(StepTemplate.parse(template), step, 3, 10)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(10)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
         Assertions.assertThat(regm.totalCost).isEqualTo(0)
         Assertions.assertThat(regm.variables).isNotNull
@@ -66,6 +98,7 @@ class RegMatchingTest {
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(10)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
         Assertions.assertThat(regm.totalCost).isEqualTo(2)
         Assertions.assertThat(regm.variables).isNotNull
@@ -80,6 +113,7 @@ class RegMatchingTest {
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(10)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
         Assertions.assertThat(regm.totalCost).isEqualTo(1)
         Assertions.assertThat(regm.variables).isNotNull
@@ -94,6 +128,7 @@ class RegMatchingTest {
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
         Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.lengthOfVariables).isEqualTo(10)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
         Assertions.assertThat(regm.totalCost).isEqualTo(2)
         Assertions.assertThat(regm.variables).isNotNull
