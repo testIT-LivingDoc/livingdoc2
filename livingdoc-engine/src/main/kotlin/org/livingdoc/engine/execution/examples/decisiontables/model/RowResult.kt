@@ -18,6 +18,12 @@ data class RowResult private constructor(
         private var status: Status = Status.Unknown
         private var fixtureMethod: Method? = null
 
+        /**
+         * Sets the [FieldResult] for a given field in this row
+         *
+         * @param header Identifies the field of the [FieldResult]
+         * @param field The given [FieldResult]
+         */
         fun withFieldResult(header: Header, field: FieldResult): Builder {
             this.fieldResults[header] = field
             when (field.status) {
@@ -31,21 +37,33 @@ data class RowResult private constructor(
             return this
         }
 
+        /**
+         * Sets the status for the built [RowResult]
+         */
         fun withStatus(status: Status): Builder {
             this.status = status
             return this
         }
 
+        /**
+         * Adds a fixture method that corresponds to the tested fixture method of this row
+         */
         fun withFixtureMethod(method: Method): Builder {
             this.fixtureMethod = method
             return this
         }
 
+        /**
+         * Adds the corresponding [Row] for this [RowResult]
+         */
         fun withRow(row: Row): Builder {
             this.row = row
             return this
         }
 
+        /**
+         * Marks all fields that have no result yet with [Status.Skipped]
+         */
         fun withUnassignedFieldsSkipped(): Builder {
             when (this.row) {
                 null -> {
@@ -72,11 +90,17 @@ data class RowResult private constructor(
             return this
         }
 
+        /**
+         * Build an immutable [RowResult]
+         *
+         * @returns A new [RowResult] with the data from this builder
+         * @throws IllegalStateException If the builder is missing data to build a [RowResult]
+         */
         fun build(): RowResult {
             val headers = mutableListOf<Header>()
             when (this.row) {
                 null -> {
-                    throw IllegalArgumentException(
+                    throw IllegalStateException(
                         "Cannot build RowResult without a Row to match. Cannot determine required headers"
                     )
                 }
@@ -89,7 +113,7 @@ data class RowResult private constructor(
 
             when (this.status) {
                 Status.Unknown -> {
-                    throw IllegalArgumentException("Cannot build RowResult with unknown status")
+                    throw IllegalStateException("Cannot build RowResult with unknown status")
                 }
                 Status.Manual, is Status.Disabled -> {
                     headers.forEach {
@@ -106,7 +130,7 @@ data class RowResult private constructor(
                 !this.fieldResults.containsKey(it)
             }
             if (!allowUnmatched && unmatchedHeaders.isNotEmpty()) {
-                throw IllegalArgumentException(
+                throw IllegalStateException(
                     "Cannot build RowResut. Not every header is matched with a value. Missing: $unmatchedHeaders"
                 )
             }
