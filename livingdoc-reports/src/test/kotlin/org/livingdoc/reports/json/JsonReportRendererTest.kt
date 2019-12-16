@@ -17,6 +17,7 @@ import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.repositories.model.scenario.Step
 
 internal class JsonReportRendererTest {
 
@@ -168,7 +169,14 @@ internal class JsonReportRendererTest {
                 .withStep(stepResultE)
                 .withStep(stepResultF)
                 .withStatus(Status.Executed)
-                .withScenario(Scenario(listOf()))
+                .withScenario(
+                    Scenario(
+                        listOf(
+                            Step("A"), Step("B"), Step("C"),
+                            Step("D"), Step("E"), Step("F")
+                        )
+                    )
+                )
                 .withFixture(NoFixtureWrapper())
                 .build()
         ).build()
