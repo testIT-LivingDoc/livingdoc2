@@ -1,6 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables.model
 
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import java.lang.reflect.Method
@@ -38,7 +39,9 @@ data class RowResult private constructor(
         }
 
         /**
-         * Sets the status for the built [RowResult]
+         * Sets or overrides the status for the built [RowResult]
+         *
+         * @param status Can be any [Status] except [Status.Unknown]
          */
         fun withStatus(status: Status): Builder {
             this.status = status
@@ -46,7 +49,7 @@ data class RowResult private constructor(
         }
 
         /**
-         * Adds a fixture method that corresponds to the tested fixture method of this row
+         * Sets or overrides the [Method] that the built [RowResult] refers to
          */
         fun withFixtureMethod(method: Method): Builder {
             this.fixtureMethod = method
@@ -54,7 +57,7 @@ data class RowResult private constructor(
         }
 
         /**
-         * Adds the corresponding [Row] for this [RowResult]
+         * Sets or overrides the [Row] that the built [RowResult] refers to
          */
         fun withRow(row: Row): Builder {
             this.row = row

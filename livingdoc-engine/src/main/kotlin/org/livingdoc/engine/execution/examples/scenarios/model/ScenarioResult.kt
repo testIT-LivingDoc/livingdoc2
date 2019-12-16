@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.scenarios.model
 
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
+import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -17,11 +18,21 @@ data class ScenarioResult private constructor(
         private var fixture: Fixture<Scenario>? = null
         private var scenario: Scenario? = null
 
+        /**
+         * Sets or overrides the status for the built [ScenarioResult]
+         *
+         * @param status Can be any [Status] except [Status.Unknown]
+         */
         fun withStatus(status: Status): Builder {
             this.status = status
             return this
         }
 
+        /**
+         * Sets the [StepResult] for a step in the given [Scenario]
+         *
+         * @param step A sucessfully built [StepResult]
+         */
         fun withStep(step: StepResult): Builder {
             steps.add(step)
             when (step.status) {
@@ -35,16 +46,25 @@ data class ScenarioResult private constructor(
             return this
         }
 
+        /**
+         * Sets or overrides the [Fixture] that the built [ScenarioResult] refers to
+         */
         fun withFixture(fixture: Fixture<Scenario>): Builder {
             this.fixture = fixture
             return this
         }
 
+        /**
+         * Sets or overrides the [Scenario] that the built [ScenarioResult] refers to
+         */
         fun withScenario(scenario: Scenario): Builder {
             this.scenario = scenario
             return this
         }
 
+        /**
+         * Marks all steps that have no result yet with [Status.Skipped]
+         */
         fun withUnassignedSkipped(): Builder {
             this.scenario!!.steps.forEach {
                 withStep(
