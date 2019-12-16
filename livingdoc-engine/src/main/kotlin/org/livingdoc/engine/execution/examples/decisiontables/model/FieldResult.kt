@@ -43,6 +43,5 @@ data class FieldResult private constructor(
 
             return FieldResult(value, this.status)
         }
-
     }
 }

@@ -8,16 +8,15 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class DocumentExecution(
-        private val documentClass: Class<*>,
-        private val document: Document,
-        private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
-        private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
+    private val documentClass: Class<*>,
+    private val document: Document,
+    private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
 ) {
     private val documentFixtureModel: DocumentFixtureModel = DocumentFixtureModel(documentClass)
     private val builder = DocumentResult.Builder().withStatus(Status.Executed)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(documentClass)
     private val fixture: Any = documentClass.getDeclaredConstructor().newInstance()
-
 
     fun execute(): DocumentResult {
         executeBeforeMethods()
@@ -27,7 +26,7 @@ internal class DocumentExecution(
     }
 
     private fun executeBeforeMethods() {
-        documentFixtureModel.beforeMethods.forEach {  method ->  methodInvoker.invoke(method, fixture) }
+        documentFixtureModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, fixture) }
     }
 
     private fun executeFixtures() {

@@ -1,7 +1,6 @@
 package org.livingdoc.engine.execution.examples.decisiontables.model
 
 import org.livingdoc.engine.execution.Status
-import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import java.lang.reflect.Method

@@ -2,13 +2,10 @@ package org.livingdoc.engine.execution.examples.decisiontables.model
 
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
-import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import org.livingdoc.repositories.model.scenario.Scenario
 import kotlin.IllegalArgumentException
 
 data class DecisionTableResult private constructor(
