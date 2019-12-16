@@ -13,10 +13,11 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
     fun match(step: String): MatchingResult {
 
         val bestFit = stepTemplates
-            .map { it.alignWith(step, maxLevelOfStemming = 3) }
-            .minBy { it.totalCost }
+            .map { it.alignWith(step, maxLevelOfStemming = 4.0f) }
+            .sortedWith(compareBy({ it.totalCost.first }, { it.totalCost.second }))
+            .first()
 
-        if (bestFit == null || bestFit.isMisaligned()) {
+        if (bestFit.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }
         /*bestFit.variables.forEach {

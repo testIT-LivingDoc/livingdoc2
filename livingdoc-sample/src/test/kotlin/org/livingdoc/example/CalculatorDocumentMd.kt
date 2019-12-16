@@ -131,4 +131,25 @@ class CalculatorDocumentMd {
             assertThat(result).isEqualTo(b)
         }
     }
+
+    @ScenarioFixture
+    class CalculatorScenarioFixture2 {
+
+        private lateinit var sut: Calculator
+
+        @Before
+        fun before() {
+            sut = Calculator()
+        }
+
+        @Step("adding {a} and {b} equals {c}")
+        fun add(
+            @Binding("a") a: Float,
+            @Binding("b") b: Float,
+            @Binding("c") c: Float
+        ) {
+            val result = sut.sum(a, b)
+            assertThat(result).isEqualTo(c)
+        }
+    }
 }

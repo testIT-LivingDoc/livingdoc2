@@ -1,21 +1,43 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
+/**
+ * RegMatching is used to match a step to a template and give them a cost depending on the
+ * similarity of the strings.
+ *
+ * If the template does not match at all the variables consists of an empty list.
+ * The cost is the maximum possible cost(maxNumberOfOperations).
+ *
+ * The cost consists of the number of operations on the step/the template.
+ * Additionally length of the strings in each variable is also considered into the cost.
+ *
+ * If the template and the step can be matched initally,
+ * the cost only considers the length of the strings in each variable.
+ * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
+ *
+ * The variables yield the matched strings from the step.
+ *
+ * @param step the String input.
+ * @param stepTemplate the template to be matched to.
+ * @param maxNumberOfOperations the maximum number of operations for the algorithm.
+ *
+ */
 @Suppress("NestedBlockDepth")
 internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
-    val maxNumberOfOperations: Int
+    val maxNumberOfOperations: Float
 ) {
     /**
      * cost of getting the best fitting pattern
      */
-    val totalCost: Int by lazy {
+    val totalCost: Pair<Float, Float> by lazy {
         getCost()
     }
 
-    private fun getCost(): Int {
+    private fun getCost(): Pair<Float, Float> {
         start()
-        return operationNumber
+        val cons = considerVarLength()
+        return Pair(operationNumber, considerVarLength() + operationNumber.toFloat())
     }
 
     /**
@@ -31,7 +53,7 @@ internal class RegMatching(
     }
 
     // misalignment
-    fun isMisaligned() = totalCost >= maxNumberOfOperations
+    fun isMisaligned() = totalCost.first >= maxNumberOfOperations
 
     /**
      * startpoint of the Regex algorithm to match sentences
@@ -47,7 +69,7 @@ internal class RegMatching(
     // containers to store global values
     private lateinit var preparedtemplatetext: String
     private lateinit var reggedText: Regex
-    private var operationNumber = 0
+    private var operationNumber = 0.0f
     private val regularExpression = "([\\w\\s\\.\\}\\{\\P{M}\\p{M}*]+)"
 
     // variable to string matching container
@@ -84,7 +106,6 @@ internal class RegMatching(
             val rematchResult = rematch()
 
             val mr = rematchResult.first
-            println(mr.isEmpty())
             if (!mr.isEmpty()) {
                 operationNumber += rematchResult.second
                 matched = mr
@@ -178,11 +199,25 @@ internal class RegMatching(
     }
 
     /**
+     * function to consider the length of each variable
+     * cost is added if variable length is too high
+     * @param variables the list of variables
+     * @return the increase of cost
+     */
+    private fun considerVarLength(): Float {
+        var sum = 0.0f
+        templatetextTokenized.forEach {
+            sum += it.value.length / templatetextTokenized.size
+        }
+        return sum
+    }
+
+    /**
      * the matching function start point if there is a non stem word
      * @return the matched strings to the variables
      */
-    private fun rematch(): Pair<List<String>, Int> {
-        var matchingcost = 1
+    private fun rematch(): Pair<List<String>, Float> {
+        var matchingcost = 0.0f
 
         // stepString
         var preppedString = StemmerHandler.stemWords(testText)
@@ -197,9 +232,10 @@ internal class RegMatching(
         var regexText = prepareTemplateToRegex(stemmedsentence, output.second)
         var matchresult = regexText.find(stepAsString)
 
+        matchingcost++
         if (matchresult == null) {
             // matching cost increase since we used tw
-            matchingcost = 2
+            matchingcost++
 
             // step refinement
             val stepToStemmed = filterString(testText)
