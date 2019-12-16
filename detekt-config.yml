@@ -2,7 +2,6 @@ build:
   maxIssues: 0
 
 complexity:
-  threshold: 12
   TooManyFunctions:
     ignorePrivate: true
 

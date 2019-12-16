@@ -97,24 +97,18 @@ data class RowResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [RowResult]
          */
         fun build(): RowResult {
+            // Read headers
             val headers = mutableListOf<Header>()
-            when (this.row) {
-                null -> {
-                    throw IllegalStateException(
-                        "Cannot build RowResult without a Row to match. Cannot determine required headers"
-                    )
-                }
-                else -> {
-                    this.row!!.headerToField.forEach { (header, _) ->
-                        headers.add(Header(header.name))
-                    }
-                }
+            val row = this.row ?: throw IllegalStateException(
+                "Cannot build RowResult without a Row to match. Cannot determine required headers"
+            )
+            row.headerToField.forEach { (header, _) ->
+                headers.add(Header(header.name))
             }
 
+            // Validate status
             when (this.status) {
-                Status.Unknown -> {
-                    throw IllegalStateException("Cannot build RowResult with unknown status")
-                }
+                Status.Unknown -> throw IllegalStateException("Cannot build RowResult with unknown status")
                 Status.Manual, is Status.Disabled -> {
                     headers.forEach {
                         this.fieldResults[it] = FieldResult.Builder()
@@ -125,6 +119,7 @@ data class RowResult private constructor(
                 }
             }
 
+            // Check whether all fields have a valid result
             val allowUnmatched = this.status is Status.Failed || this.status is Status.Exception
             val unmatchedHeaders = headers.filter {
                 !this.fieldResults.containsKey(it)
@@ -135,14 +130,11 @@ data class RowResult private constructor(
                 )
             }
 
-            return when (this.fixtureMethod) {
-                null -> {
-                    RowResult(this.fieldResults, this.status, Optional.empty())
-                }
-                else -> {
-                    RowResult(this.fieldResults, this.status, Optional.of(this.fixtureMethod!!))
-                }
-            }
+            // Build result
+            return if (this.fixtureMethod == null)
+                RowResult(this.fieldResults, this.status, Optional.empty())
+            else
+                RowResult(this.fieldResults, this.status, Optional.of(this.fixtureMethod!!))
         }
     }
 }
