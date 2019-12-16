@@ -106,6 +106,12 @@ data class ScenarioResult private constructor(
                 this.steps
 
             // Do all scenario steps have a valid result?
+            if (steps.size != scenario.steps.size) {
+                throw IllegalStateException(
+                    "Cannot build ScenarioResult. The number of step results (${steps.size})" +
+                            " does not match the expected number (${scenario.steps.size})"
+                )
+            }
             scenario.steps.forEach {
                 val step = it
                 if (steps.filter {

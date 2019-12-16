@@ -119,10 +119,10 @@ data class RowResult private constructor(
             val unmatchedHeaders = headers.filter {
                 !fieldResults.containsKey(it)
             }
-            if (fieldResults.size == headers.size) {
+            if (fieldResults.size != headers.size) {
                 throw IllegalStateException(
-                    "Cannot build RowResult. The number of field results (${fieldResults.size})"
-                            + " does not match the expected number (${headers.size})"
+                    "Cannot build RowResult. The number of field results (${fieldResults.size})" +
+                            " does not match the expected number (${headers.size})"
                 )
             } else if (unmatchedHeaders.isNotEmpty()) {
                 throw IllegalStateException(
