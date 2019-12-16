@@ -11,6 +11,7 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
+import org.livingdoc.reports.json.JsonReportRenderer
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
