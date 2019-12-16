@@ -77,7 +77,7 @@ data class RowResult private constructor(
                     withFieldResult(
                         it.key,
                         FieldResult.Builder()
-                            .withValue(this.row!!.headerToField[it.key]!!.value)
+                            .withValue(row.headerToField[it.key]!!.value)
                             .withStatus(Status.Skipped)
                             .build()
                     )

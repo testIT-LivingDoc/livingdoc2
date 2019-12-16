@@ -128,9 +128,8 @@ data class DecisionTableResult private constructor(
                 this.rows
 
             // Get headers
-            val headers = mutableListOf<Header>()
-            decisionTable.headers.forEach { (name) ->
-                headers.add(Header(name))
+            val headers = decisionTable.headers.map { (name) ->
+                Header(name)
             }
 
             // Build the result
