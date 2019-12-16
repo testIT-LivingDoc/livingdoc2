@@ -73,7 +73,7 @@ class FixtureMethodInvoker(
         } catch (e: AssertionError) {
             throw e
         } catch (e: Exception) {
-            if (arguments.contains(ExampleSyntax.EXCEPTION)) {
+            if (arguments.contains(ExampleSyntax.EXCEPTION) && e !is java.lang.IllegalArgumentException) {
                 throw ExpectedException(method, fixture, e)
             } else {
                 throw FixtureMethodInvocationException(method, fixture, e)
