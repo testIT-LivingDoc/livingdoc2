@@ -68,7 +68,7 @@ See link:https://confluence.atlassian.com/doc/page-history-and-page-comparison-v
 The version history shows you versions like `v.3` and `v.12`.
 In your document you should add `@3` or `@12` to specify a version.
 
-For example, `@ExecutableDocument("confluence://123456789@3")` gets the page with ID 123456789 and version 3.
+For example, `@ExecutableDocument("confluence://123456789@3")` gets the page with ID 123456789 and version v.3.
 
 It is possible to delete a version from the Confluence page.
 By default, Confluence not only deletes the specific version, but also reduces each page version by one.

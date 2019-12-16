@@ -1,5 +1,11 @@
 == Writing Fixture Code
 
+In the following, the supported fixtures are explained.
+
 include::fixtures-decision-tables.adoc[]
 
 include::fixtures-scenarios.adoc[]
+
+=== Special Cases
+LivingDoc 2 allows you to handle Exceptions in your decision tables and scenarios.
+By making the corresponding parameter nullable and set its value to "error", LivingDoc will catch any exception that is thrown and let the test case pass.
