@@ -12,7 +12,7 @@ data class ScenarioResult private constructor(
     val scenario: Scenario
 ) : TestDataResult {
     class Builder {
-        private var status: Status = Status.Unknown
+        private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
         private var fixture: Fixture<Scenario>? = null
         private var scenario: Scenario? = null
@@ -91,19 +91,19 @@ data class ScenarioResult private constructor(
                 this.scenario ?: throw IllegalStateException("Cannot build ScenarioResult without a scenario")
 
             // Check status
-            when (this.status) {
-                is Status.Unknown -> {
-                    throw IllegalStateException("Cannot build ScenarioResult with unknown status")
-                }
-                is Status.Manual, is Status.Disabled -> {
-                    this.steps = scenario.steps.map {
-                        StepResult.Builder()
-                            .withStatus(this.status)
-                            .withValue(it.value)
-                            .build()
-                    }.toMutableList()
-                }
+            if (!this::status.isInitialized) {
+                throw IllegalStateException("Cannot build ScenarioResult with unknown status")
             }
+            val status = this.status
+            val steps = if (status is Status.Manual || status is Status.Disabled)
+                scenario.steps.map {
+                    StepResult.Builder()
+                        .withStatus(this.status)
+                        .withValue(it.value)
+                        .build()
+                }.toMutableList()
+            else
+                this.steps
 
             // Do all scenario steps have a valid result?
             scenario.steps.forEach {
@@ -116,7 +116,7 @@ data class ScenarioResult private constructor(
             }
 
             // Build result
-            return ScenarioResult(this.steps, this.status, fixture, scenario)
+            return ScenarioResult(steps, status, fixture, scenario)
         }
     }
 }

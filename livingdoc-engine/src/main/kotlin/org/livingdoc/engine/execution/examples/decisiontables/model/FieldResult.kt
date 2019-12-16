@@ -8,8 +8,8 @@ data class FieldResult private constructor(
     val status: Status
 ) {
     class Builder {
-        private var value: String? = null
-        private var status: Status = Status.Unknown
+        private lateinit var value: String
+        private lateinit var status: Status
 
         /**
          * Sets or overrides the value of a [DecisionTable] row that the built [FieldResult] refers to
@@ -36,12 +36,13 @@ data class FieldResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [FieldResult]
          */
         fun build(): FieldResult {
-            if (this.status == Status.Unknown)
+            if (!this::status.isInitialized)
                 throw IllegalStateException("Cannot build FieldResult with unknown status")
 
-            val value = this.value ?: throw IllegalArgumentException("Cannot build FieldResult without a value")
+            if (!this::value.isInitialized)
+                throw IllegalArgumentException("Cannot build FieldResult without a value")
 
-            return FieldResult(value, this.status)
+            return FieldResult(this.value, this.status)
         }
     }
 }

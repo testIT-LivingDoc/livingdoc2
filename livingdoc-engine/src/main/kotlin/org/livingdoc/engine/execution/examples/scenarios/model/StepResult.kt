@@ -11,8 +11,8 @@ data class StepResult private constructor(
     val fixtureMethod: Optional<Method>
 ) {
     class Builder {
-        private var status: Status = Status.Unknown
-        private var value: String = ""
+        private lateinit var status: Status
+        private lateinit var value: String
         private var fixtureMethod: Method? = null
 
         /**
@@ -48,8 +48,13 @@ data class StepResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [StepResult]
          */
         fun build(): StepResult {
+            // Check value
+            if (!this::value.isInitialized) {
+                throw IllegalStateException("Cannot build StepResult with unknown value")
+            }
+
             // Check status
-            if (this.status == Status.Unknown) {
+            if (!this::status.isInitialized) {
                 throw IllegalStateException("Cannot build StepResult with unknown status")
             }
 

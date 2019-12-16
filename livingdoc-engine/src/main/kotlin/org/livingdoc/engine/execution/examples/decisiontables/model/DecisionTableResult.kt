@@ -17,8 +17,8 @@ data class DecisionTableResult private constructor(
 ) : TestDataResult {
 
     class Builder {
-        private var rows = mutableListOf<RowResult>()
-        private var status: Status = Status.Unknown
+        private val rows = mutableListOf<RowResult>()
+        private lateinit var status: Status
         private var fixture: Fixture<DecisionTable>? = null
         private var decisionTable: DecisionTable? = null
 
@@ -113,19 +113,19 @@ data class DecisionTableResult private constructor(
                 ?: throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
 
             // Check status
-            when (this.status) {
-                is Status.Unknown -> {
-                    throw IllegalArgumentException("Cannot build DecisionTableResult with unknown status")
-                }
-                is Status.Manual, is Status.Disabled -> {
-                    rows = decisionTable.rows.map {
-                        RowResult.Builder()
-                            .withRow(it)
-                            .withStatus(this.status)
-                            .build()
-                    }.toMutableList()
-                }
+            if (!this::status.isInitialized) {
+                throw IllegalArgumentException("Cannot build DecisionTableResult with unknown status")
             }
+            val status = this.status
+            val rows = if (status is Status.Manual || status is Status.Disabled)
+                decisionTable.rows.map {
+                    RowResult.Builder()
+                        .withRow(it)
+                        .withStatus(this.status)
+                        .build()
+                }.toMutableList()
+            else
+                this.rows
 
             // Get headers
             val headers = mutableListOf<Header>()
@@ -134,7 +134,7 @@ data class DecisionTableResult private constructor(
             }
 
             // Build the result
-            return DecisionTableResult(headers, this.rows, this.status, fixture, decisionTable)
+            return DecisionTableResult(headers, rows, status, fixture, decisionTable)
         }
     }
 }

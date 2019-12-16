@@ -14,8 +14,8 @@ data class RowResult private constructor(
 ) {
     class Builder {
         private var row: Row? = null
-        private var fieldResults: MutableMap<Header, FieldResult> = HashMap()
-        private var status: Status = Status.Unknown
+        private val fieldResults: MutableMap<Header, FieldResult> = HashMap()
+        private lateinit var status: Status
         private var fixtureMethod: Method? = null
 
         /**
@@ -102,21 +102,22 @@ data class RowResult private constructor(
             }
 
             // Validate status
-            when (this.status) {
-                Status.Unknown -> throw IllegalStateException("Cannot build RowResult with unknown status")
-                Status.Manual, is Status.Disabled -> {
-                    headers.forEach {
-                        this.fieldResults[it] = FieldResult.Builder()
-                            .withValue(it.name)
-                            .withStatus(this.status)
-                            .build()
-                    }
-                }
+            if (!this::status.isInitialized) {
+                throw IllegalStateException("Cannot build RowResult with unknown status")
             }
+            val status = this.status
+            val fieldResults = if (status is Status.Manual || status is Status.Disabled)
+                headers.map {
+                    it to FieldResult.Builder()
+                        .withValue(it.name)
+                        .withStatus(this.status)
+                        .build()
+                }.toMap()
+            else this.fieldResults
 
             // Check whether all fields have a valid result
             val unmatchedHeaders = headers.filter {
-                !this.fieldResults.containsKey(it)
+                !fieldResults.containsKey(it)
             }
             if (unmatchedHeaders.isNotEmpty()) {
                 throw IllegalStateException(
@@ -125,7 +126,7 @@ data class RowResult private constructor(
             }
 
             // Build result
-            return RowResult(this.fieldResults, this.status, Optional.ofNullable(this.fixtureMethod))
+            return RowResult(fieldResults, status, Optional.ofNullable(this.fixtureMethod))
         }
     }
 }
