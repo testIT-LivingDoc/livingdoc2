@@ -21,17 +21,13 @@ data class FieldResult private constructor(
         }
 
         fun build(): FieldResult {
-            return when {
-                this.value == null -> {
-                    throw IllegalArgumentException("Cannot build FieldResult without a value")
-                }
-                this.status == Status.Unknown -> {
-                    throw IllegalArgumentException("Cannot build FieldResult with unknown status")
-                }
-                else -> {
-                    FieldResult(this.value!!, this.status)
-                }
-            }
+            if (this.status == Status.Unknown)
+                throw IllegalStateException("Cannot build FieldResult with unknown status")
+
+            val value = this.value ?: throw IllegalArgumentException("Cannot build FieldResult without a value")
+
+            return FieldResult(value, this.status)
         }
+
     }
 }

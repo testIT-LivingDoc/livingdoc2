@@ -86,22 +86,20 @@ data class DecisionTableResult private constructor(
 
         fun build(): DecisionTableResult {
 
-            when {
-                this.fixture == null -> {
-                    // TODO Can't add this check until execution is part of fixture class
-                    // throw IllegalArgumentException("Cant't build DecisionTableResult without a fixture")
-                }
-                this.decisionTable == null -> {
-                    throw IllegalArgumentException("Cant't build DecisionTableResult without a decisionTable")
-                }
-            }
+            // TODO Can't add this check until execution is part of fixture class
+            val fixture = this.fixture
+            // ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
 
+            val decisionTable = this.decisionTable ?:
+            throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
+
+            // Check status
             when (this.status) {
                 is Status.Unknown -> {
                     throw IllegalArgumentException("Cannot build DecisionTableResult with unknown status")
                 }
                 is Status.Manual, is Status.Disabled -> {
-                    rows = decisionTable!!.rows.map {
+                    rows = decisionTable.rows.map {
                         RowResult.Builder()
                             .withRow(it)
                             .withStatus(this.status)
@@ -110,12 +108,14 @@ data class DecisionTableResult private constructor(
                 }
             }
 
+            // Get headers
             val headers = mutableListOf<Header>()
-            this.decisionTable!!.headers.forEach { (name) ->
+            decisionTable.headers.forEach { (name) ->
                 headers.add(Header(name))
             }
 
-            return DecisionTableResult(headers, this.rows, this.status, this.fixture, this.decisionTable!!)
+            // Build the result
+            return DecisionTableResult(headers, this.rows, this.status, fixture, decisionTable)
         }
     }
 }

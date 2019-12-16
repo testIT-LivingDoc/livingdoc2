@@ -58,22 +58,20 @@ data class ScenarioResult private constructor(
         }
 
         fun build(): ScenarioResult {
-            when {
-                this.fixture == null -> {
-                    // TODO Can't add this check until execution is part of fixture class
-                    // throw IllegalArgumentException("Cant't build ScenarioResult without a fixture")
-                }
-                this.scenario == null -> {
-                    throw IllegalArgumentException("Cannot build ScenarioResult without a scenario")
-                }
-            }
+            // TODO Can't add this check until execution is part of fixture class
+            val fixture = this.fixture
+            // ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
 
+            val scenario =
+                this.scenario ?: throw IllegalStateException("Cannot build ScenarioResult without a scenario")
+
+            // Check status
             when (this.status) {
                 is Status.Unknown -> {
                     throw IllegalArgumentException("Cannot build ScenarioResult with unknown status")
                 }
                 is Status.Manual, is Status.Disabled -> {
-                    this.steps = scenario!!.steps.map {
+                    this.steps = scenario.steps.map {
                         StepResult.Builder()
                             .withStatus(this.status)
                             .withValue(it.value)
@@ -83,7 +81,7 @@ data class ScenarioResult private constructor(
             }
 
             // Do all scenario steps have a valid result?
-            scenario!!.steps.forEach {
+            scenario.steps.forEach {
                 val step = it
                 if (steps.filter {
                         it.value == step.value && it.status != Status.Unknown
@@ -92,6 +90,7 @@ data class ScenarioResult private constructor(
                 }
             }
 
+            // Build result
             return ScenarioResult(this.steps, this.status, this.fixture, this.scenario!!)
         }
     }
