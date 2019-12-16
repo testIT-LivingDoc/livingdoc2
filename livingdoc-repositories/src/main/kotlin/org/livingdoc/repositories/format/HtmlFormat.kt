@@ -4,9 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.livingdoc.repositories.DocumentFormat
-import org.livingdoc.repositories.HtmlDocument
 import org.livingdoc.repositories.ParseException
-import org.livingdoc.repositories.file.ParseContext
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable

@@ -1,5 +1,6 @@
-package org.livingdoc.repositories
+package org.livingdoc.repositories.format
 
+import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.model.TestData
 
 class HtmlDocument(
