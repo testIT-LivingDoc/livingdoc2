@@ -1,6 +1,5 @@
 package org.livingdoc.converters.color
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -21,8 +20,16 @@ internal class ColorConverterTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = arrayOf("/colorData.csv"), numLinesToSkip = 1, delimiter = '=')
-    fun testDifferentColorValues(input:String, expected:String){
-        assertEquals(colorConverter.convert(input, null, null), expected)
+    fun testValidColorValues(input: String, expected: String) {
+        assertEquals(colorConverter.convert(input, null, null), expected.toLowerCase())
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = arrayOf("/invalidColorData.csv"), numLinesToSkip = 1, delimiter = '=')
+    fun testInvalidColorValues(input: String) {
+        assertThrows(ColorFormatException::class.java) {
+            colorConverter.convert(input, null, null)
+        }
     }
 
     @Test
@@ -33,32 +40,6 @@ internal class ColorConverterTest {
 
         assertThrows(ColorFormatException::class.java) {
             colorConverter.convert(nullColorValue, null, null)
-        }
-    }
-
-    @Test
-    fun testInvalidHexValues() {
-        assertThrows(ColorFormatException::class.java) {
-            colorConverter.convert(inCorrectHexValue, null, null)
-        }
-    }
-
-    @Test
-    fun testInvalidColorNames() {
-
-        assertThrows(ColorFormatException::class.java) {
-            colorConverter.convert(incorrectColorName, null, null)
-        }
-
-        assertThrows(ColorFormatException::class.java) {
-            colorConverter.convert(notPresentColorName, null, null)
-        }
-    }
-
-    @Test
-    fun testInvalidRgbValues() {
-        assertThrows(ColorFormatException::class.java) {
-            colorConverter.convert(incorrectRgbValue, null, null)
         }
     }
 }
