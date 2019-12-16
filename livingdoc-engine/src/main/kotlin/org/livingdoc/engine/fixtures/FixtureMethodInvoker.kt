@@ -143,7 +143,6 @@ class FixtureMethodInvoker(
             e
         )
 
-    // https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-runtime-exception/index.html
     class ExpectedException(method: Method, fixture: Any, e: Exception) :
         RuntimeException("Indicate expected exception in method '$method' on fixture class '$fixture':", e)
 
