@@ -16,24 +16,22 @@ class RegMatchingTest {
         return Stream.of(
             Arguments.of(
                 "adding 10 and 10 and 10 and 10 and 10 and 10 and 100000000000000000000000 equals 100000000000000000000060",
-                0
+                0.0f
             ),
-            Arguments.of("adding 10 and 10 and 10 and 10 and 10 and 10 and 10 equals 70", 0)
+            Arguments.of("adding 10 and 10 and 10 and 10 and 10 and 10 and 10 equals 70", 0.0f)
         )
     }
 
     @ParameterizedTest()
     @MethodSource("valueProvider")
-    fun `long input with mismatch`(step: String, cost: Int) {
+    fun `long input with mismatch`(step: String, cost: Float) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 6)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.isMisaligned()).isEqualTo(true)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(6)
-        Assertions.assertThat(regm.variables["b"]).isNull()
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
     }
 
     @Test
@@ -47,13 +45,13 @@ class RegMatchingTest {
                 "and 123919239129312731923718279187391823717246 " +
                 "and 12936187312836178238123678134572935123 " +
                 "equals 12039120391489283"
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.isMisaligned()).isEqualTo(true)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
-        Assertions.assertThat(regm.totalCost).isEqualTo(7)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(115.0f)
     }
 
     @Test
@@ -79,13 +77,13 @@ class RegMatchingTest {
                 "and bananas" +
                 "and popcorn " +
                 "to the cart"
-        val regm = RegMatching(sp, step, 3, 1000)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(1000)
-        Assertions.assertThat(regm.totalCost).isEqualTo(0)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(451.0f)
     }
 
     @Test
@@ -100,13 +98,13 @@ class RegMatchingTest {
                 "and 64378289734647382938478392847839284783948 " +
                 "and 34678237465347829834743829847543892038483902938 " +
                 "equals 0"
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
-        Assertions.assertThat(regm.totalCost).isEqualTo(0)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(37.0f)
     }
 
     @Test
@@ -114,13 +112,13 @@ class RegMatchingTest {
         val template = "adding {a}"
         val step = "adding 10 and 10 and 10 and 10 and 10 and 10 and 10"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
-        Assertions.assertThat(regm.isMisaligned()).isEqualTo(true)
-        Assertions.assertThat(regm.totalCost).isEqualTo(3)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(44.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 
@@ -129,28 +127,27 @@ class RegMatchingTest {
         val template = "adding {a}"
         val step = "adding 10 and 10 and 10 and 10 and 10 and 10 and 10"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 12)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(12)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(1)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(44.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 
     @ParameterizedTest
     @MethodSource("valueProvider")
-    fun `long input text test`(step: String, cost: Int) {
+    fun `long input text test`(step: String, cost: Float) {
         val template = "adding {a} and {b} and {c} and {d} and {e} and {f} and {g} equals {h}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
-        Assertions.assertThat(regm.totalCost).isEqualTo(cost)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(cost)
     }
 
     @ParameterizedTest
@@ -168,13 +165,12 @@ class RegMatchingTest {
     fun `test inputs to match to a template`(step: String) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(0)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(0.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 
@@ -183,12 +179,13 @@ class RegMatchingTest {
         val template = "understandable text here is not understanable at {all}"
         val step = "unnasdjiaosd aiojdoaij aisodja"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 4, 10)
+        val regm = RegMatching(sp, step, 4.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(4)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(4.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(true)
-        Assertions.assertThat(regm.totalCost).isEqualTo(4)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(4.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(4.0f)
         Assertions.assertThat(regm.variables).isEmpty()
     }
 
@@ -197,13 +194,13 @@ class RegMatchingTest {
         val template = "I have a {a}"
         val step = "I have an apple"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(2)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(2.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(6.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 
@@ -212,13 +209,13 @@ class RegMatchingTest {
         val template = "I have a {a} and inputs and a {b}"
         val step = "I have a apple and input and a bulletpoint"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(1)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(1.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(8.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 
@@ -227,13 +224,13 @@ class RegMatchingTest {
         val template = "I have a {a} and a input and a {b}"
         val step = "I have an apple and an input and an bulletpoint"
         val sp = StepTemplate.parse(template)
-        val regm = RegMatching(sp, step, 3, 10)
+        val regm = RegMatching(sp, step, 3.0f)
         Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
         Assertions.assertThat(regm.step).isEqualTo(step)
-        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3)
-        Assertions.assertThat(regm.numOfStringsInSingleVar).isEqualTo(10)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
         Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
-        Assertions.assertThat(regm.totalCost).isEqualTo(2)
+        Assertions.assertThat(regm.totalCost.first).isEqualTo(2.0f)
+        Assertions.assertThat(regm.totalCost.second).isEqualTo(9.0f)
         Assertions.assertThat(regm.variables).isNotNull
     }
 }

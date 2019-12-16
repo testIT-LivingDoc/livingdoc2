@@ -8,37 +8,36 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * The cost is the maximum possible cost(maxNumberOfOperations).
  *
  * The cost consists of the number of operations on the step/the template.
- * Additionally the number of separate strings in a single variable is also considered into the cost.
+ * Additionally length of the strings in each variable is also considered into the cost.
  *
- * If the template and the step can be matched initally the cost only considers the length of each variable string.
+ * If the template and the step can be matched initally,
+ * the cost only considers the length of the strings in each variable.
  * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
  *
  * The variables yield the matched strings from the step.
  *
- * Adjusting numOfStringsInSingleVar will lead to test differences
  * @param step the String input.
  * @param stepTemplate the template to be matched to.
  * @param maxNumberOfOperations the maximum number of operations for the algorithm.
- * @param numOfStringsInSingleVar the maximum number of separated strings in a single variable before cost increase
  *
  */
 @Suppress("NestedBlockDepth")
 internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
-    val maxNumberOfOperations: Int,
-    val numOfStringsInSingleVar: Int = 14
+    val maxNumberOfOperations: Float
 ) {
     /**
      * cost of getting the best fitting pattern
      */
-    val totalCost: Int by lazy {
+    val totalCost: Pair<Float, Float> by lazy {
         getCost()
     }
 
-    private fun getCost(): Int {
+    private fun getCost(): Pair<Float, Float> {
         start()
-        return operationNumber
+        val cons = considerVarLength()
+        return Pair(operationNumber, considerVarLength() + operationNumber.toFloat())
     }
 
     /**
@@ -54,7 +53,7 @@ internal class RegMatching(
     }
 
     // misalignment
-    fun isMisaligned() = totalCost >= maxNumberOfOperations
+    fun isMisaligned() = totalCost.first >= maxNumberOfOperations
 
     /**
      * startpoint of the Regex algorithm to match sentences
@@ -70,7 +69,7 @@ internal class RegMatching(
     // containers to store global values
     private lateinit var preparedtemplatetext: String
     private lateinit var reggedText: Regex
-    private var operationNumber = 0
+    private var operationNumber = 0.0f
     private val regularExpression = "([\\w\\s\\.\\}\\{\\P{M}\\p{M}*]+)"
 
     // variable to string matching container
@@ -109,7 +108,6 @@ internal class RegMatching(
             val mr = rematchResult.first
             if (!mr.isEmpty()) {
                 operationNumber += rematchResult.second
-                operationNumber += considerVarLength(matched)
                 matched = mr
             } else {
                 operationNumber = maxNumberOfOperations
@@ -118,7 +116,6 @@ internal class RegMatching(
             return matched
         } else {
             matched = matchedResult.destructured.toList()
-            operationNumber += considerVarLength(matched)
             return matched
         }
     }
@@ -207,23 +204,20 @@ internal class RegMatching(
      * @param variables the list of variables
      * @return the increase of cost
      */
-    private fun considerVarLength(variables: List<String>): Int {
-        var costIncrease = 0
-        variables.forEach {
-            if (it.split(" ").size >= numOfStringsInSingleVar) {
-
-                costIncrease += it.split(" ").size - numOfStringsInSingleVar
-            }
+    private fun considerVarLength(): Float {
+        var sum = 0.0f
+        templatetextTokenized.forEach {
+            sum += it.value.length / templatetextTokenized.size
         }
-        return costIncrease
+        return sum
     }
 
     /**
      * the matching function start point if there is a non stem word
      * @return the matched strings to the variables
      */
-    private fun rematch(): Pair<List<String>, Int> {
-        var matchingcost = 0
+    private fun rematch(): Pair<List<String>, Float> {
+        var matchingcost = 0.0f
 
         // stepString
         var preppedString = StemmerHandler.stemWords(testText)
