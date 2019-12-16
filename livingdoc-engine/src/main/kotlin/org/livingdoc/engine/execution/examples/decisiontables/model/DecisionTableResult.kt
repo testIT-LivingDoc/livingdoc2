@@ -24,6 +24,14 @@ data class DecisionTableResult private constructor(
 
         fun withRow(row: RowResult): Builder {
             this.rows.add(row)
+            when (row.status) {
+                is Status.Exception -> {
+                    this.status = Status.Exception(row.status.exception)
+                }
+                is Status.Failed -> {
+                    this.status = Status.Failed(row.status.reason)
+                }
+            }
             return this
         }
 

@@ -52,8 +52,8 @@ internal class DecisionTableExecution(
         } catch (e: AssertionError) {
             decisionTableResult.withStatus(Status.Exception(e))
         }
-        decisionTableResult.withUnassignedRowsSkipped()
 
+        decisionTableResult.withUnassignedRowsSkipped()
         return decisionTableResult.build()
     }
 
@@ -86,6 +86,7 @@ internal class DecisionTableExecution(
     private fun executeTable() {
         val inputHeaders = filterHeaders { (name) -> fixtureModel.isInputAlias(name) }
         val checkHeaders = filterHeaders { (name) -> fixtureModel.isCheckAlias(name) }
+
         decisionTable.rows.forEach { row ->
             val rowResult = RowResult.Builder()
                 .withRow(row)
@@ -97,6 +98,8 @@ internal class DecisionTableExecution(
             } catch (e: AssertionError) {
                 rowResult.withStatus(Status.Exception(e))
             }
+
+            rowResult.withUnassignedFieldsSkipped()
             decisionTableResult.withRow(rowResult.build())
         }
     }

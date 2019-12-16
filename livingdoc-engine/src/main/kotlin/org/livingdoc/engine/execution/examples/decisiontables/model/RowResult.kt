@@ -18,8 +18,16 @@ data class RowResult private constructor(
         private var status: Status = Status.Unknown
         private var fixtureMethod: Method? = null
 
-        fun withFieldResult(header: Header, result: FieldResult): Builder {
-            this.fieldResults[header] = result
+        fun withFieldResult(header: Header, field: FieldResult): Builder {
+            this.fieldResults[header] = field
+            when (field.status) {
+                is Status.Exception -> {
+                    this.status = Status.Exception(field.status.exception)
+                }
+                is Status.Failed -> {
+                    this.status = Status.Failed(field.status.reason)
+                }
+            }
             return this
         }
 
@@ -93,10 +101,11 @@ data class RowResult private constructor(
                 }
             }
 
+            val allowUnmatched = this.status is Status.Failed || this.status is Status.Exception
             val unmatchedHeaders = headers.filter {
                 !this.fieldResults.containsKey(it)
             }
-            if (unmatchedHeaders.isNotEmpty()) {
+            if (!allowUnmatched && unmatchedHeaders.isNotEmpty()) {
                 throw IllegalArgumentException(
                     "Cannot build RowResut. Not every header is matched with a value. Missing: $unmatchedHeaders"
                 )
