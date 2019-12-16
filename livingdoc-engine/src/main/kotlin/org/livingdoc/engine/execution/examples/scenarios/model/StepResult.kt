@@ -42,10 +42,7 @@ data class StepResult private constructor(
                 throw IllegalStateException("Cannot build StepResult with unknown status")
             }
 
-            return if (this.fixtureMethod == null)
-                StepResult(this.value, this.status, Optional.empty())
-            else
-                StepResult(this.value, this.status, Optional.of(this.fixtureMethod!!))
+            return StepResult(this.value, this.status, Optional.ofNullable(this.fixtureMethod))
         }
     }
 }

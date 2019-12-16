@@ -123,10 +123,7 @@ data class RowResult private constructor(
             }
 
             // Build result
-            return if (this.fixtureMethod == null)
-                RowResult(this.fieldResults, this.status, Optional.empty())
-            else
-                RowResult(this.fieldResults, this.status, Optional.of(this.fixtureMethod!!))
+            return RowResult(this.fieldResults, this.status, Optional.ofNullable(this.fixtureMethod))
         }
     }
 }
