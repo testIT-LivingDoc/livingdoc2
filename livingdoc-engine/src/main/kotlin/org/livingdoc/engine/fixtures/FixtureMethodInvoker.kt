@@ -1,6 +1,7 @@
 package org.livingdoc.engine.fixtures
 
 import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.converters.TypeConverters
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -64,12 +65,19 @@ class FixtureMethodInvoker(
      * @param arguments the arguments for the invoked method as strings
      * @return the result of the invocation or `null` in case the invoked method has not return type (`void` / `Unit`)
      * @throws FixtureMethodInvocationException in case anything went wrong with the invocation
+     * @throws ExpectedException in case the thrown exception was expected
      */
     fun invoke(method: Method, fixture: Any, arguments: Array<String> = emptyArray()): Any? {
         try {
             return doInvoke(method, fixture, arguments)
+        } catch (e: AssertionError) {
+            throw e
         } catch (e: Exception) {
-            throw FixtureMethodInvocationException(method, fixture, e)
+            if (arguments.contains(ExampleSyntax.EXCEPTION)) {
+                throw ExpectedException(method, fixture, e)
+            } else {
+                throw FixtureMethodInvocationException(method, fixture, e)
+            }
         }
     }
 
@@ -94,8 +102,8 @@ class FixtureMethodInvoker(
     private fun convert(
         arguments: Array<String>,
         methodParameters: Array<Parameter>
-    ): Array<Any> { // TODO: Zip function?
-        val convertedArguments = mutableListOf<Any>()
+    ): Array<Any?> { // TODO: Zip function?
+        val convertedArguments = mutableListOf<Any?>()
         for (i in arguments.indices) {
             val argument = arguments[i]
             val methodParameter = methodParameters[i]
@@ -105,15 +113,19 @@ class FixtureMethodInvoker(
         return convertedArguments.toTypedArray()
     }
 
-    private fun convert(argument: String, methodParameter: Parameter): Any {
+    private fun convert(argument: String, methodParameter: Parameter): Any? {
+        if (argument == ExampleSyntax.EXCEPTION) {
+            return null
+        }
+
         val documentClass = document?.javaClass
         val typeConverter = TypeConverters.findTypeConverter(methodParameter, documentClass)
-                ?: throw NoTypeConverterFoundException(methodParameter)
+            ?: throw NoTypeConverterFoundException(methodParameter)
         return typeConverter.convert(argument, methodParameter, documentClass)
     }
 
     @Suppress("SpreadOperator")
-    private fun forceInvocation(method: Method, arguments: Array<Any>, instance: Any? = null): Any? {
+    private fun forceInvocation(method: Method, arguments: Array<Any?>, instance: Any? = null): Any? {
         method.isAccessible = true
         try {
             return method.invoke(instance, *arguments)
@@ -130,6 +142,9 @@ class FixtureMethodInvoker(
             "Could not invoke method '$method' on fixture class '$fixtureClass' because of an exception:",
             e
         )
+
+    class ExpectedException(method: Method, fixture: Any, e: Exception) :
+        RuntimeException("Indicate expected exception in method '$method' on fixture class '$fixture':", e)
 
     internal class MismatchedNumberOfArgumentsException(args: Int, params: Int) :
         RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")

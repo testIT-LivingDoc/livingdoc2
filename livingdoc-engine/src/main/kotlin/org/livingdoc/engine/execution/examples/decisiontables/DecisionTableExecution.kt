@@ -1,6 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.disabled.Disabled
+import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
@@ -8,8 +9,10 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker.ExpectedException
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
+
 internal class DecisionTableExecution(
     private val fixtureClass: Class<*>,
     decisionTable: DecisionTable,
@@ -132,6 +135,12 @@ internal class DecisionTableExecution(
             markFieldAsSuccessfullyExecuted(tableField)
         } catch (e: AssertionError) {
             markFieldAsExecutedWithFailure(tableField, e)
+        } catch (e: ExpectedException) {
+            if (tableField.value == ExampleSyntax.EXCEPTION) {
+                markFieldAsSuccessfullyExecuted(tableField)
+                return
+            }
+            markFieldAsExecutedWithException(tableField, e)
         } catch (e: Exception) {
             markFieldAsExecutedWithException(tableField, e)
         }
