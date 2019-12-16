@@ -14,12 +14,12 @@ import java.lang.reflect.Parameter
 
 internal class ScenarioExecution(
     private val fixtureClass: Class<*>,
-    scenario: Scenario,
+    private val scenario: Scenario,
     document: Any?
 ) {
 
     private val fixtureModel = ScenarioFixtureModel(fixtureClass)
-    private val scenarioResult = ScenarioResult.from(scenario)
+    private val scenarioResultBuilder = ScenarioResult.Builder().withScenario(scenario)
     private val methodInvoker = FixtureMethodInvoker(document)
 
     /**
@@ -31,21 +31,23 @@ internal class ScenarioExecution(
      */
     fun execute(): ScenarioResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            markScenarioAsDisabled(fixtureClass.getAnnotation(Disabled::class.java).value)
-            return scenarioResult
+            return scenarioResultBuilder
+                .withStatus(Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value))
+                .build()
         }
 
         try {
             assertFixtureIsDefinedCorrectly()
             executeScenario()
-            markScenarioAsSuccessfullyExecuted()
+            scenarioResultBuilder.withStatus(Status.Executed)
         } catch (e: Exception) {
-            markScenarioAsExecutedWithException(e)
+            scenarioResultBuilder.withStatus(Status.Exception(e))
+                .withUnassignedSkipped()
         } catch (e: AssertionError) {
-            markScenarioAsExecutedWithException(e)
+            scenarioResultBuilder.withStatus(Status.Exception(e))
+                .withUnassignedSkipped()
         }
-        setSkippedStatusForAllUnknownResults()
-        return scenarioResult
+        return scenarioResultBuilder.build()
     }
 
     private fun assertFixtureIsDefinedCorrectly() {
@@ -66,18 +68,24 @@ internal class ScenarioExecution(
 
     private fun executeSteps(fixture: Any) {
         var previousStatus: Status = Status.Executed
-        for (step in scenarioResult.steps) {
+        for (step in scenario.steps) {
+            val stepResultBuilder = StepResult.Builder().withValue(step.value)
+
             if (previousStatus == Status.Executed) {
-                executeStep(fixture, step)
-                previousStatus = step.status
+                executeStep(fixture, step.value, stepResultBuilder)
             } else {
-                step.status = Status.Skipped
+                stepResultBuilder.withStatus(Status.Skipped)
+            }
+
+            stepResultBuilder.build().also {
+                scenarioResultBuilder.withStep(it)
+                previousStatus = it.status
             }
         }
     }
 
-    private fun executeStep(fixture: Any, step: StepResult) {
-        val result = fixtureModel.getMatchingStepTemplate(step.value)
+    private fun executeStep(fixture: Any, stepValue: String, stepResultBuilder: StepResult.Builder) {
+        val result = fixtureModel.getMatchingStepTemplate(stepValue)
         val method = fixtureModel.getStepMethod(result.template)
         val parameterList = method.parameters
             .map { parameter ->
@@ -86,31 +94,14 @@ internal class ScenarioExecution(
                     { error("Missing parameter value: ${getParameterName(parameter)}") })
             }
             .toTypedArray()
-        step.status = invokeExpectingException {
-            methodInvoker.invoke(method, fixture, parameterList)
-        }
+        stepResultBuilder.withStatus(
+            invokeExpectingException { methodInvoker.invoke(method, fixture, parameterList) }
+        )
     }
 
     private fun getParameterName(parameter: Parameter): String {
         return parameter.getAnnotationsByType(Binding::class.java).firstOrNull()?.value
             ?: parameter.name
-    }
-
-    private fun invokeExpectingException(function: () -> Unit): Status {
-        return try {
-            function.invoke()
-            Status.Executed
-        } catch (e: AssertionError) {
-            Status.Failed(e)
-        } catch (e: ExpectedException) {
-            Status.Executed
-        } catch (e: Exception) {
-            Status.Exception(e)
-        }
-    }
-
-    private fun createFixtureInstance(): Any {
-        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
     private fun invokeBeforeMethods(fixture: Any) {
@@ -131,22 +122,31 @@ internal class ScenarioExecution(
         if (exceptions.isNotEmpty()) throw AfterMethodExecutionException(exceptions)
     }
 
-    private fun markScenarioAsSuccessfullyExecuted() {
-        scenarioResult.status = Status.Executed
+    /**
+     * Creates a new instance of the fixture class passed to this execution
+     */
+    private fun createFixtureInstance(): Any {
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
-    private fun markScenarioAsDisabled(reason: String) {
-        scenarioResult.status = Status.Disabled(reason)
-    }
-
-    private fun markScenarioAsExecutedWithException(e: Throwable) {
-        scenarioResult.status = Status.Exception(e)
-    }
-
-    private fun setSkippedStatusForAllUnknownResults() {
-        for (step in scenarioResult.steps) {
-            if (step.status === Status.Unknown) {
-                step.status = Status.Skipped
+    companion object {
+        /**
+         * Invokes the given function and returns the status as a result
+         *
+         * @param function A kotlin function with no return value
+         * @return [Status.Executed] if the function was executed successfully
+         * [Status.Exception] otherwise
+         */
+        private fun invokeExpectingException(function: () -> Unit): Status {
+            return try {
+                function.invoke()
+                Status.Executed
+            } catch (e: AssertionError) {
+                Status.Failed(e)
+            } catch (e: ExpectedException) {
+                Status.Executed
+            } catch (e: Exception) {
+                Status.Exception(e)
             }
         }
     }

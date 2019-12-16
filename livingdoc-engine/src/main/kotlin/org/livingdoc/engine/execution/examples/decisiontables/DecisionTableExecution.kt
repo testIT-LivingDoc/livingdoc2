@@ -11,16 +11,18 @@ import org.livingdoc.engine.fixtures.FixtureFieldInjector
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker.ExpectedException
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.repositories.model.decisiontable.Row
 
 internal class DecisionTableExecution(
     private val fixtureClass: Class<*>,
-    decisionTable: DecisionTable,
+    private val decisionTable: DecisionTable,
     document: Any?
 ) {
 
     private val fixtureModel = DecisionTableFixtureModel(fixtureClass)
-    private val decisionTableResult = DecisionTableResult.from(decisionTable)
+    private val decisionTableResult = DecisionTableResult.Builder().withDecisionTable(decisionTable)
 
     private val fieldInjector = FixtureFieldInjector(document)
     private val methodInvoker = FixtureMethodInvoker(document)
@@ -34,21 +36,25 @@ internal class DecisionTableExecution(
      */
     fun execute(): DecisionTableResult {
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            markTableAsDisabled(fixtureClass.getAnnotation(Disabled::class.java).value)
-            return decisionTableResult
+            return decisionTableResult.withStatus(
+                Status.Disabled(
+                    fixtureClass.getAnnotation(Disabled::class.java).value
+                )
+            ).build()
         }
 
         try {
             assertFixtureIsDefinedCorrectly()
             executeTableWithBeforeAndAfter()
-            markTableAsSuccessfullyExecuted()
+            decisionTableResult.withStatus(Status.Executed)
         } catch (e: Exception) {
-            markTableAsExecutedWithException(e)
+            decisionTableResult.withStatus(Status.Exception(e))
         } catch (e: AssertionError) {
-            markTableAsExecutedWithException(e)
+            decisionTableResult.withStatus(Status.Exception(e))
         }
-        setSkippedStatusForAllUnknownResults()
-        return decisionTableResult
+
+        decisionTableResult.withUnassignedRowsSkipped()
+        return decisionTableResult.build()
     }
 
     private fun assertFixtureIsDefinedCorrectly() {
@@ -64,7 +70,7 @@ internal class DecisionTableExecution(
     }
 
     private fun findUnmappedHeaders(): List<String> {
-        return decisionTableResult.headers
+        return decisionTable.headers
             .filter { (name) -> !fixtureModel.isInputAlias(name) && !fixtureModel.isCheckAlias(name) }
             .map { it.name }
     }
@@ -78,75 +84,111 @@ internal class DecisionTableExecution(
     }
 
     private fun executeTable() {
-        val inputHeaders = filterHeaders({ (name) -> fixtureModel.isInputAlias(name) })
-        val checkHeaders = filterHeaders({ (name) -> fixtureModel.isCheckAlias(name) })
-        decisionTableResult.rows.forEach { row ->
+        val inputHeaders = filterHeaders { (name) -> fixtureModel.isInputAlias(name) }
+        val checkHeaders = filterHeaders { (name) -> fixtureModel.isCheckAlias(name) }
+
+        decisionTable.rows.forEach { row ->
+            val rowResult = RowResult.Builder()
+                .withRow(row)
             try {
-                executeRowWithBeforeAndAfter(row, inputHeaders, checkHeaders)
-                markRowAsSuccessfullyExecuted(row)
+                executeRowWithBeforeAndAfter(row, rowResult, inputHeaders, checkHeaders)
+                rowResult.withStatus(Status.Executed)
             } catch (e: Exception) {
-                markRowAsExecutedWithException(row, e)
+                rowResult.withStatus(Status.Exception(e))
             } catch (e: AssertionError) {
-                markRowAsExecutedWithException(row, e)
+                rowResult.withStatus(Status.Exception(e))
             }
+
+            rowResult.withUnassignedFieldsSkipped()
+            decisionTableResult.withRow(rowResult.build())
         }
     }
 
-    private fun executeRowWithBeforeAndAfter(row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
+    private fun executeRowWithBeforeAndAfter(
+        row: Row,
+        rowResult: RowResult.Builder,
+        inputHeaders: Set<Header>,
+        checkHeaders: Set<Header>
+    ) {
         val fixture = createFixtureInstance()
         executeWithBeforeAndAfter(
             before = { invokeBeforeRowMethods(fixture) },
-            body = { executeRow(fixture, row, inputHeaders, checkHeaders) },
+            body = { executeRow(fixture, row, rowResult, inputHeaders, checkHeaders) },
             after = { invokeAfterRowMethods(fixture) }
         )
     }
 
-    private fun executeRow(fixture: Any, row: RowResult, inputHeaders: Set<Header>, checkHeaders: Set<Header>) {
+    private fun executeRow(
+        fixture: Any,
+        row: Row,
+        rowResult: RowResult.Builder,
+        inputHeaders: Set<Header>,
+        checkHeaders: Set<Header>
+    ) {
         var allInputsSucceeded = true
-        filter(row, inputHeaders).forEach { inputColumn, tableField ->
-            val success = setInput(fixture, inputColumn, tableField)
+        val fieldResults = row.headerToField.mapValues {
+            FieldResult.Builder().withValue(it.value.value)
+        }
+
+        filter(row, inputHeaders).forEach { (inputColumn, field) ->
+            val fieldResult = fieldResults[inputColumn] ?: throw IllegalStateException() // This should never happen
+            val success = setInput(fixture, inputColumn, field, fieldResult)
+            rowResult.withFieldResult(inputColumn, fieldResult.build())
             allInputsSucceeded = allInputsSucceeded && success
         }
 
         if (allInputsSucceeded) {
             invokeBeforeFirstCheckMethods(fixture)
-            filter(row, checkHeaders).forEach { checkColumn, tableField ->
-                executeCheck(fixture, checkColumn, tableField)
+            filter(row, checkHeaders).forEach { (checkColumn, field) ->
+                val fieldResult = fieldResults[checkColumn] ?: throw IllegalStateException() // This should never happen
+                executeCheck(fixture, checkColumn, field, fieldResult)
+                rowResult.withFieldResult(checkColumn, fieldResult.build())
+            }
+        } else {
+            filter(row, checkHeaders).forEach { (checkColumn, _) ->
+                val fieldResult = fieldResults[checkColumn] ?: throw IllegalStateException() // This should never happen
+                fieldResult.withStatus(Status.Skipped)
+                rowResult.withFieldResult(checkColumn, fieldResult.build())
             }
         }
     }
 
-    private fun setInput(fixture: Any, header: Header, tableField: FieldResult): Boolean {
+    private fun setInput(fixture: Any, header: Header, tableField: Field, fieldResult: FieldResult.Builder): Boolean {
         try {
             doSetInput(fixture, header, tableField)
-            markFieldAsSuccessfullyExecuted(tableField)
+            fieldResult.withStatus(Status.Executed)
             return true
         } catch (e: AssertionError) {
-            markFieldAsExecutedWithFailure(tableField, e)
+            fieldResult.withStatus(Status.Failed(e))
         } catch (e: Exception) {
-            markFieldAsExecutedWithException(tableField, e)
+            fieldResult.withStatus(Status.Exception(e))
         }
         return false
     }
 
-    private fun executeCheck(fixture: Any, header: Header, tableField: FieldResult) {
+    private fun executeCheck(fixture: Any, header: Header, tableField: Field, fieldResult: FieldResult.Builder) {
         try {
             doExecuteCheck(fixture, header, tableField)
-            markFieldAsSuccessfullyExecuted(tableField)
+            fieldResult.withStatus(Status.Executed)
         } catch (e: AssertionError) {
-            markFieldAsExecutedWithFailure(tableField, e)
+            fieldResult.withStatus(Status.Failed(e))
         } catch (e: ExpectedException) {
             if (tableField.value == ExampleSyntax.EXCEPTION) {
-                markFieldAsSuccessfullyExecuted(tableField)
+                fieldResult.withStatus(Status.Executed)
                 return
             }
-            markFieldAsExecutedWithException(tableField, e)
+            fieldResult.withStatus(Status.Exception(e))
         } catch (e: Exception) {
-            markFieldAsExecutedWithException(tableField, e)
+            fieldResult.withStatus(Status.Exception(e))
         }
     }
 
-    private fun doSetInput(fixture: Any, header: Header, tableField: FieldResult) {
+    private fun doExecuteCheck(fixture: Any, header: Header, tableField: Field) {
+        val method = fixtureModel.getCheckMethod(header.name)!!
+        methodInvoker.invoke(method, fixture, arrayOf(tableField.value))
+    }
+
+    private fun doSetInput(fixture: Any, header: Header, tableField: Field) {
         val alias = header.name
         when {
             fixtureModel.isFieldInput(alias) -> setFieldInput(fixture, header, tableField)
@@ -155,25 +197,12 @@ internal class DecisionTableExecution(
         }
     }
 
-    private fun setSkippedStatusForAllUnknownResults() {
-        decisionTableResult.rows.forEach { row ->
-            row.headerToField.values.forEach { field ->
-                if (field.status === Status.Unknown) {
-                    field.status = Status.Skipped
-                }
-            }
-            if (row.status === Status.Unknown) {
-                row.status = Status.Skipped
-            }
-        }
-    }
-
-    private fun setFieldInput(fixture: Any, header: Header, tableField: FieldResult) {
+    private fun setFieldInput(fixture: Any, header: Header, tableField: Field) {
         val field = fixtureModel.getInputField(header.name)!!
         fieldInjector.inject(field, fixture, tableField.value)
     }
 
-    private fun setMethodInput(fixture: Any, header: Header, tableField: FieldResult) {
+    private fun setMethodInput(fixture: Any, header: Header, tableField: Field) {
         val method = fixtureModel.getInputMethod(header.name)!!
         methodInvoker.invoke(method, fixture, arrayOf(tableField.value))
     }
@@ -182,25 +211,12 @@ internal class DecisionTableExecution(
         fixtureModel.beforeTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
-    private fun createFixtureInstance(): Any {
-        return fixtureClass.getDeclaredConstructor().newInstance()
-    }
-
     private fun invokeBeforeRowMethods(fixture: Any) {
         fixtureModel.beforeRowMethods.forEach { methodInvoker.invoke(it, fixture) }
     }
 
-    private fun filter(row: RowResult, headers: Set<Header>): Map<Header, FieldResult> {
-        return row.headerToField.filterKeys { headers.contains(it) }
-    }
-
     private fun invokeBeforeFirstCheckMethods(fixture: Any) {
         fixtureModel.beforeFirstCheckMethods.forEach { methodInvoker.invoke(it, fixture) }
-    }
-
-    private fun doExecuteCheck(fixture: Any, header: Header, tableField: FieldResult) {
-        val method = fixtureModel.getCheckMethod(header.name)!!
-        methodInvoker.invoke(method, fixture, arrayOf(tableField.value))
     }
 
     private fun invokeAfterRowMethods(fixture: Any) {
@@ -211,40 +227,17 @@ internal class DecisionTableExecution(
         fixtureModel.afterTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
+    private fun filter(row: Row, headers: Set<Header>): Map<Header, Field> {
+        return row.headerToField
+            .filterKeys { headers.contains(it) }
+    }
+
     private fun filterHeaders(predicate: (Header) -> Boolean): Set<Header> {
-        return decisionTableResult.headers.filter(predicate).toSet()
+        return decisionTable.headers.filter(predicate).toSet()
     }
 
-    private fun markFieldAsExecutedWithFailure(tableField: FieldResult, e: AssertionError) {
-        tableField.status = Status.Failed(e)
-    }
-
-    private fun markFieldAsExecutedWithException(tableField: FieldResult, e: Exception) {
-        tableField.status = Status.Exception(e)
-    }
-
-    private fun markFieldAsSuccessfullyExecuted(tableField: FieldResult) {
-        tableField.status = Status.Executed
-    }
-
-    private fun markRowAsSuccessfullyExecuted(row: RowResult) {
-        row.status = Status.Executed
-    }
-
-    private fun markRowAsExecutedWithException(row: RowResult, e: Throwable) {
-        row.status = Status.Exception(e)
-    }
-
-    private fun markTableAsDisabled(reason: String) {
-        decisionTableResult.status = Status.Disabled(reason)
-    }
-
-    private fun markTableAsSuccessfullyExecuted() {
-        decisionTableResult.status = Status.Executed
-    }
-
-    private fun markTableAsExecutedWithException(e: Throwable) {
-        decisionTableResult.status = Status.Exception(e)
+    private fun createFixtureInstance(): Any {
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :

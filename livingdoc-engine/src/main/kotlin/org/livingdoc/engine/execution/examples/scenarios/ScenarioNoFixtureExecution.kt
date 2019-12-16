@@ -16,16 +16,13 @@ internal class ScenarioNoFixtureExecution(
      * the form of different status objects.
      */
     fun execute(): ScenarioResult {
-        val result = ScenarioResult.from(scenario)
+        val resultBuilder = ScenarioResult.Builder()
+            .withScenario(scenario)
 
         if (scenario.description.isManual) {
-            result.status = Status.Manual
-
-            result.steps.forEach {
-                it.status = Status.Manual
-            }
+            resultBuilder.withStatus(Status.Manual)
         }
 
-        return result
+        return resultBuilder.build()
     }
 }
