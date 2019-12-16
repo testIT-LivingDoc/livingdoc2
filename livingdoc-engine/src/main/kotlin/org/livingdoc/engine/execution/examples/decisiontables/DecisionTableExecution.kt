@@ -3,6 +3,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
@@ -169,8 +170,16 @@ internal class DecisionTableExecution(
     private fun executeCheck(fixture: Any, header: Header, tableField: Field, fieldResult: FieldResult.Builder) {
         try {
             doExecuteCheck(fixture, header, tableField)
+            if (tableField.value == ExampleSyntax.EXCEPTION) {
+                fieldResult.withStatus(Status.Failed(NoExpectedExceptionThrownException()))
+                return
+            }
             fieldResult.withStatus(Status.Executed)
         } catch (e: AssertionError) {
+            if (tableField.value == ExampleSyntax.EXCEPTION) {
+                fieldResult.withStatus(Status.Failed(NoExpectedExceptionThrownException()))
+                return
+            }
             fieldResult.withStatus(Status.Failed(e))
         } catch (e: ExpectedException) {
             if (tableField.value == ExampleSyntax.EXCEPTION) {

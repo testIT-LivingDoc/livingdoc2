@@ -1,15 +1,18 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
 import org.livingdoc.api.disabled.Disabled
+import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
-import org.livingdoc.engine.fixtures.FixtureMethodInvoker.FixtureMethodInvocationException
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker.ExpectedException
+import org.livingdoc.engine.fixtures.FixtureMethodInvoker.FixtureMethodInvocationException
 import org.livingdoc.repositories.model.scenario.Scenario
+import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
 internal class ScenarioExecution(
@@ -95,13 +98,40 @@ internal class ScenarioExecution(
             }
             .toTypedArray()
         stepResultBuilder.withStatus(
-            invokeExpectingException { methodInvoker.invoke(method, fixture, parameterList) }
+            invokeExpectingException(method, fixture, parameterList)
         )
     }
 
     private fun getParameterName(parameter: Parameter): String {
         return parameter.getAnnotationsByType(Binding::class.java).firstOrNull()?.value
             ?: parameter.name
+    }
+
+    private fun invokeExpectingException(
+        method: Method,
+        fixture: Any,
+        parameterList: Array<String>
+    ): Status {
+        return try {
+            methodInvoker.invoke(method, fixture, parameterList)
+            if (parameterList.contains(ExampleSyntax.EXCEPTION)) {
+                return Status.Failed(NoExpectedExceptionThrownException())
+            }
+            Status.Executed
+        } catch (e: AssertionError) {
+            this.handleAssertionError(parameterList, e)
+        } catch (e: ExpectedException) {
+            Status.Executed
+        } catch (e: Exception) {
+            Status.Exception(e)
+        }
+    }
+
+    /**
+     * Creates a new instance of the fixture class passed to this execution
+     */
+    private fun createFixtureInstance(): Any {
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 
     private fun invokeBeforeMethods(fixture: Any) {
@@ -122,11 +152,11 @@ internal class ScenarioExecution(
         if (exceptions.isNotEmpty()) throw AfterMethodExecutionException(exceptions)
     }
 
-    /**
-     * Creates a new instance of the fixture class passed to this execution
-     */
-    private fun createFixtureInstance(): Any {
-        return fixtureClass.getDeclaredConstructor().newInstance()
+    private fun handleAssertionError(parameterList: Array<String>, e: AssertionError): Status {
+        if (parameterList.contains(ExampleSyntax.EXCEPTION)) {
+            return Status.Failed(NoExpectedExceptionThrownException())
+        }
+        return Status.Failed(e)
     }
 
     companion object {
