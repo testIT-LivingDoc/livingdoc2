@@ -11,7 +11,7 @@ import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 internal class DocumentFixtureModel(
-    val documentClass: Class<*>
+    private val documentClass: Class<*>
 ) {
     val beforeMethods: List<Method>
     val afterMethods: List<Method>

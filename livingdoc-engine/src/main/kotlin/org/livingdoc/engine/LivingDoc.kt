@@ -16,10 +16,10 @@ import org.livingdoc.repositories.config.RepositoryConfiguration
  * @since 2.0
  */
 class LivingDoc(
-        val configProvider: ConfigProvider = ConfigProvider.load(),
-        val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
-        private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
-        private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
+    val configProvider: ConfigProvider = ConfigProvider.load(),
+    val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
+    private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
 
     @Throws(ExecutionException::class)
