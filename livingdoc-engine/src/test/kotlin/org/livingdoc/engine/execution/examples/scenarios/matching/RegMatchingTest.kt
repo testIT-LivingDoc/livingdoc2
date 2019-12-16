@@ -35,6 +35,19 @@ class RegMatchingTest {
     }
 
     @Test
+    fun `multiple templates for one case`() {
+
+        val step1 = "adding 1234 and 234 and 345 equals 0"
+        val template1 = "adding {a} and {b} equals {c}"
+        val template2 = "adding {a} and {b} and {c} equals {d}"
+        val sp1 = StepTemplate.parse(template1)
+        val sp2 = StepTemplate.parse(template2)
+        val stm = ScenarioStepMatcher(listOf(sp1, sp2)).match(step1)
+        Assertions.assertThat(stm.variables)
+            .isEqualTo(mapOf(("a" to "1234"), ("b" to "234"), ("c" to "345"), ("d" to "0")))
+    }
+
+    @Test
     fun `longest input 1000`() {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
