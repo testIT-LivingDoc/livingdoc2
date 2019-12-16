@@ -1,6 +1,7 @@
 package org.livingdoc.engine.execution.examples.scenarios.model
 
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import java.lang.reflect.Method
 import java.util.*
 
@@ -29,6 +30,12 @@ data class StepResult private constructor(
             return this
         }
 
+        /**
+         * Build an immutable [StepResult]
+         *
+         * @returns A new [StepResult] with the data from this builder
+         * @throws IllegalStateException If the builder is missing data to build a [StepResult]
+         */
         fun build(): StepResult {
             // Check status
             if (this.status == Status.Unknown) {

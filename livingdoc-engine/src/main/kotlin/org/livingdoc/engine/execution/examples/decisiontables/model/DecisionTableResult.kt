@@ -17,7 +17,7 @@ data class DecisionTableResult private constructor(
 ) : TestDataResult {
 
     class Builder {
-        private var rows: MutableList<RowResult> = ArrayList()
+        private var rows = mutableListOf<RowResult>()
         private var status: Status = Status.Unknown
         private var fixture: Fixture<DecisionTable>? = null
         private var decisionTable: DecisionTable? = null
@@ -36,28 +36,22 @@ data class DecisionTableResult private constructor(
         }
 
         fun withUnassignedRowsSkipped(): Builder {
-            when (this.decisionTable) {
-                null -> {
-                    throw IllegalStateException(
-                        "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
+            val decisionTable = this.decisionTable ?: throw IllegalStateException(
+                "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
+            )
+
+            decisionTable.rows
+                .filter { findMatchingRowResult(it) == null }
+                .forEach {
+                    this.withRow(
+                        RowResult.Builder()
+                            .withStatus(Status.Skipped)
+                            .withRow(it)
+                            .withUnassignedFieldsSkipped()
+                            .build()
                     )
                 }
-                else -> {
-                    this.decisionTable!!.rows.forEach {
-                        if (findMatchingRowResult(it) != null) {
-                            return@forEach
-                        }
 
-                        withRow(
-                            RowResult.Builder()
-                                .withStatus(Status.Skipped)
-                                .withRow(it)
-                                .withUnassignedFieldsSkipped()
-                                .build()
-                        )
-                    }
-                }
-            }
             return this
         }
 
@@ -84,14 +78,20 @@ data class DecisionTableResult private constructor(
             return this
         }
 
+        /**
+         * Build an immutable [DecisionTableResult]
+         *
+         * @returns A new [DecisionTableResult] with the data from this builder
+         * @throws IllegalStateException If the builder is missing data to build a [DecisionTableResult]
+         */
         fun build(): DecisionTableResult {
 
             // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
             // ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
 
-            val decisionTable = this.decisionTable ?:
-            throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
+            val decisionTable = this.decisionTable
+                ?: throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
 
             // Check status
             when (this.status) {

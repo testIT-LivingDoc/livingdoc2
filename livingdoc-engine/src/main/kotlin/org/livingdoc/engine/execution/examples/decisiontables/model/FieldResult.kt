@@ -20,6 +20,12 @@ data class FieldResult private constructor(
             return this
         }
 
+        /**
+         * Build an immutable [FieldResult]
+         *
+         * @returns A new [FieldResult] with the data from this builder
+         * @throws IllegalStateException If the builder is missing data to build a [FieldResult]
+         */
         fun build(): FieldResult {
             if (this.status == Status.Unknown)
                 throw IllegalStateException("Cannot build FieldResult with unknown status")

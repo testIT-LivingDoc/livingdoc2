@@ -65,28 +65,22 @@ data class RowResult private constructor(
          * Marks all fields that have no result yet with [Status.Skipped]
          */
         fun withUnassignedFieldsSkipped(): Builder {
-            when (this.row) {
-                null -> {
-                    throw IllegalStateException(
-                        "Cannot determine unmatched fields. A Row needs to be assigned to the builder first."
+            val row = this.row ?: throw IllegalStateException(
+                "Cannot determine unmatched fields. A Row needs to be assigned to the builder first."
+            )
+
+            row.headerToField
+                .filter { this.fieldResults[it.key] == null }
+                .forEach {
+                    withFieldResult(
+                        it.key,
+                        FieldResult.Builder()
+                            .withValue(this.row!!.headerToField[it.key]!!.value)
+                            .withStatus(Status.Skipped)
+                            .build()
                     )
                 }
-                else -> {
-                    this.row!!.headerToField.forEach {
-                        if (this.fieldResults[it.key] != null) {
-                            return@forEach
-                        }
 
-                        withFieldResult(
-                            it.key,
-                            FieldResult.Builder()
-                                .withValue(this.row!!.headerToField[it.key]!!.value)
-                                .withStatus(Status.Skipped)
-                                .build()
-                        )
-                    }
-                }
-            }
             return this
         }
 
@@ -98,12 +92,11 @@ data class RowResult private constructor(
          */
         fun build(): RowResult {
             // Read headers
-            val headers = mutableListOf<Header>()
             val row = this.row ?: throw IllegalStateException(
                 "Cannot build RowResult without a Row to match. Cannot determine required headers"
             )
-            row.headerToField.forEach { (header, _) ->
-                headers.add(Header(header.name))
+            val headers = row.headerToField.map { (header, _) ->
+                Header(header.name)
             }
 
             // Validate status
@@ -120,13 +113,12 @@ data class RowResult private constructor(
             }
 
             // Check whether all fields have a valid result
-            val allowUnmatched = this.status is Status.Failed || this.status is Status.Exception
             val unmatchedHeaders = headers.filter {
                 !this.fieldResults.containsKey(it)
             }
-            if (!allowUnmatched && unmatchedHeaders.isNotEmpty()) {
+            if (unmatchedHeaders.isNotEmpty()) {
                 throw IllegalStateException(
-                    "Cannot build RowResut. Not every header is matched with a value. Missing: $unmatchedHeaders"
+                    "Cannot build RowResult. Not every header is matched with a value. Missing: $unmatchedHeaders"
                 )
             }
 

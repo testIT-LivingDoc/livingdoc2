@@ -13,7 +13,7 @@ data class ScenarioResult private constructor(
 ) : TestDataResult {
     class Builder {
         private var status: Status = Status.Unknown
-        private var steps: MutableList<StepResult> = ArrayList()
+        private var steps = mutableListOf<StepResult>()
         private var fixture: Fixture<Scenario>? = null
         private var scenario: Scenario? = null
 
@@ -57,6 +57,12 @@ data class ScenarioResult private constructor(
             return this
         }
 
+        /**
+         * Build an immutable [ScenarioResult]
+         *
+         * @returns A new [ScenarioResult] with the data from this builder
+         * @throws IllegalStateException If the builder is missing data to build a [ScenarioResult]
+         */
         fun build(): ScenarioResult {
             // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
@@ -68,7 +74,7 @@ data class ScenarioResult private constructor(
             // Check status
             when (this.status) {
                 is Status.Unknown -> {
-                    throw IllegalArgumentException("Cannot build ScenarioResult with unknown status")
+                    throw IllegalStateException("Cannot build ScenarioResult with unknown status")
                 }
                 is Status.Manual, is Status.Disabled -> {
                     this.steps = scenario.steps.map {
@@ -86,12 +92,12 @@ data class ScenarioResult private constructor(
                 if (steps.filter {
                         it.value == step.value && it.status != Status.Unknown
                     }.isEmpty()) {
-                    throw java.lang.IllegalArgumentException("Not all scenario steps are contained in the result")
+                    throw IllegalStateException("Not all scenario steps are contained in the result")
                 }
             }
 
             // Build result
-            return ScenarioResult(this.steps, this.status, this.fixture, this.scenario!!)
+            return ScenarioResult(this.steps, this.status, fixture, scenario)
         }
     }
 }
