@@ -3,6 +3,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
@@ -169,15 +170,11 @@ internal class DecisionTableExecution(
     private fun executeCheck(fixture: Any, header: Header, tableField: Field, fieldResult: FieldResult.Builder) {
         try {
             doExecuteCheck(fixture, header, tableField)
-            fieldResult.withStatus(Status.Executed)
+            this.handleSuccessfulExecution(fieldResult, tableField)
         } catch (e: AssertionError) {
-            fieldResult.withStatus(Status.Failed(e))
+            this.handleAssertionError(fieldResult, tableField, e)
         } catch (e: ExpectedException) {
-            if (tableField.value == ExampleSyntax.EXCEPTION) {
-                fieldResult.withStatus(Status.Executed)
-                return
-            }
-            fieldResult.withStatus(Status.Exception(e))
+            this.handleExpectedException(fieldResult, tableField, e)
         } catch (e: Exception) {
             fieldResult.withStatus(Status.Exception(e))
         }
@@ -238,6 +235,30 @@ internal class DecisionTableExecution(
 
     private fun createFixtureInstance(): Any {
         return fixtureClass.getDeclaredConstructor().newInstance()
+    }
+
+    private fun handleSuccessfulExecution(fieldResult: FieldResult.Builder, tableField: Field) {
+        if (tableField.value == ExampleSyntax.EXCEPTION) {
+            fieldResult.withStatus(Status.Failed(NoExpectedExceptionThrownException()))
+            return
+        }
+        fieldResult.withStatus(Status.Executed)
+    }
+
+    private fun handleAssertionError(fieldResult: FieldResult.Builder, tableField: Field, e: AssertionError) {
+        if (tableField.value == ExampleSyntax.EXCEPTION) {
+            fieldResult.withStatus(Status.Failed(NoExpectedExceptionThrownException()))
+            return
+        }
+        fieldResult.withStatus(Status.Failed(e))
+    }
+
+    private fun handleExpectedException(fieldResult: FieldResult.Builder, tableField: Field, e: ExpectedException) {
+        if (tableField.value == ExampleSyntax.EXCEPTION) {
+            fieldResult.withStatus(Status.Executed)
+            return
+        }
+        fieldResult.withStatus(Status.Exception(e))
     }
 
     internal class MalformedDecisionTableFixtureException(fixtureClass: Class<*>, errors: List<String>) :

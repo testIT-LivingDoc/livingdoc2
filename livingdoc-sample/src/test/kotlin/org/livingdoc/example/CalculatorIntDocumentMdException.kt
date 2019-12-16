@@ -90,7 +90,7 @@ class CalculatorIntDocumentMdException {
         fun divide(
             @Binding("a") a: Int,
             @Binding("b") b: Int,
-            @Binding("c") c: Int
+            @Binding("c") c: Int?
         ) {
             val result = sut.divide(a, b)
             assertThat(result).isEqualTo(c)

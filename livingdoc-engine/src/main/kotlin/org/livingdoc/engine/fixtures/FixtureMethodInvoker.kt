@@ -73,10 +73,16 @@ class FixtureMethodInvoker(
         } catch (e: AssertionError) {
             throw e
         } catch (e: Exception) {
-            if (arguments.contains(ExampleSyntax.EXCEPTION)) {
-                throw ExpectedException(method, fixture, e)
-            } else {
-                throw FixtureMethodInvocationException(method, fixture, e)
+            when {
+                arguments.contains(ExampleSyntax.EXCEPTION) && e is java.lang.IllegalArgumentException -> {
+                    throw ExpectedOutputIsNotNullableException(method, fixture)
+                }
+                arguments.contains(ExampleSyntax.EXCEPTION) -> {
+                    throw ExpectedException(method, fixture, e)
+                }
+                else -> {
+                    throw FixtureMethodInvocationException(method, fixture, e)
+                }
             }
         }
     }
@@ -145,6 +151,12 @@ class FixtureMethodInvoker(
 
     class ExpectedException(method: Method, fixture: Any, e: Exception) :
         RuntimeException("Indicate expected exception in method '$method' on fixture class '$fixture':", e)
+
+    class ExpectedOutputIsNotNullableException(method: Method, fixture: Any) :
+        RuntimeException(
+            "The expected output parameter in method '$method' on fixture class '$fixture' should be nullable when " +
+                    "an exception is expected"
+        )
 
     internal class MismatchedNumberOfArgumentsException(args: Int, params: Int) :
         RuntimeException("Method argument number mismatch: arguments = $args, method parameters = $params")
