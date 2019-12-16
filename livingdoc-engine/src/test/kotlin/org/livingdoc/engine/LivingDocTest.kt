@@ -23,9 +23,4 @@ internal class LivingDocTest {
         assertThat(result.documentStatus).isInstanceOf(Status.Disabled::class.java)
         assertThat((result.documentStatus as Status.Disabled).reason).isEqualTo("Skip this test document")
     }
-
-    @AfterEach
-    fun cleanUp() {
-        File("build/livingdoc").deleteRecursively()
-    }
 }
