@@ -7,5 +7,10 @@ include::fixtures-decision-tables.adoc[]
 include::fixtures-scenarios.adoc[]
 
 === Special Cases
-LivingDoc 2 allows you to handle Exceptions in your decision tables and scenarios.
-By making the corresponding parameter nullable and set its value to "error", LivingDoc will catch any exception that is thrown and let the test case pass.
+This section shows some details that are valid for decision tables and scenarios.
+
+==== Expecting Exceptions as Output
+Some inputs lead to an `Exception` being thrown.
+As a business expert, you can expect this to happen by using the keyword `error` as expected value in the
+decision table or scenario.
+If an `Exception` is thrown and expected, the test is marked as executed successfully.

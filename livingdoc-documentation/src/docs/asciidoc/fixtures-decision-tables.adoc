@@ -85,12 +85,6 @@ The occurrence of any `Exception` in `before row`, `before first check` or
 of any `Exception` in `before table` or `after table` mark the entire table
 with `exception`.
 
-==== Expecting Exceptions as Output
-
-Some inputs lead to an `Exception` being thrown. As a business expert, you can
-expect this to happen by using the keyword `error` as expected value in the
-decision table or scenario. If an `Exception` is thrown and expected, the test
-is marked as executed successfully.
 
 ==== Annotations
 
