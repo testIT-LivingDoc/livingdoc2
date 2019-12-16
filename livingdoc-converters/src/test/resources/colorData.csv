@@ -4,6 +4,7 @@ input=expected
  #000 = #000000
  #abc = #aabbcc
  #fff = #ffffff
+ #FFF = #ffffff
 green=#008000
 blue=#0000ff
 rgb( 122, 234, 100)=#7aea64

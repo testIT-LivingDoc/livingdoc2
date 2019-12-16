@@ -12,6 +12,13 @@ open class ColorConverter : TypeConverter<String> {
 
     private val hexRegexString = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\$"
 
+    private val prop: Properties = Properties()
+
+    init {
+        val fis = ColorConverter::class.java.getResourceAsStream("/properties/color.properties")
+        prop.load(fis)
+    }
+
     override fun canConvertTo(targetType: Class<*>?): Boolean = String::class.java == targetType
 
     /**
@@ -82,10 +89,6 @@ open class ColorConverter : TypeConverter<String> {
                 return colorHexValue.toLowerCase()
             }
         } else {
-            val fis = ColorConverter::class.java.getResourceAsStream("/properties/color.properties")
-            val prop = Properties()
-            prop.load(fis)
-
             return prop.getProperty(lowerCaseAndTrimmedValue)?.toLowerCase() ?: throw ColorFormatException(
                 lowerCaseAndTrimmedValue
             )
