@@ -26,6 +26,12 @@ You should also take a look at the link:doc/quality-goals.adoc[Qualiy Goals] def
 
 
 == Getting started
+
+There is several documentation available:
+
+* The link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/wikis/Product-Documentation/Developer-Documentation:[Developer Documentation] focuses on topics that are important for developers of LivingDoc 2. In addition, the repository contains link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/tree/master/doc/decisions:[architectural decisions] besides other link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/tree/master/doc:[documents] and the code documentation is extracted to link:http://enpro-ws2019-20.pages.informatik.uni-stuttgart.de/enpro-livingdoc/:[GitLab Pages].
+* The link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/blob/master/livingdoc-documentation/src/docs/asciidoc/index.adoc:[End-User Documentation] focuses on topics that are relevant for users of LivingDoc 2, either test engineers or business experts. Its ASCIIDoc-based source is included in the repository.
+
 If you want to start working with LivingDoc 2 you will need to clone this repository or add dependencies to your project via link:https://maven.apache.org/[Maven] or link:https://gradle.org/[Gradle].
 You can use the following fragment from our demo project to add the necessary dependencies.
 
