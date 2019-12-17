@@ -4,12 +4,12 @@ import org.livingdoc.api.documents.Group
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.repositories.RepositoryManager
 
-class GroupFixture(
+internal class GroupFixture(
     private val groupClass: Class<*>,
-    val documentClasses: List<Class<*>>,
-    val repositoryManager: RepositoryManager,
-    val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
-    val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
+    private val documentClasses: List<Class<*>>,
+    private val repositoryManager: RepositoryManager,
+    private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
 ) {
     fun execute(): List<DocumentResult> {
         validate()
