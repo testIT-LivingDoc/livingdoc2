@@ -21,9 +21,13 @@ class LivingDoc(
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
+    @Throws(ExecutionException::class)
+    fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
+        return documentClasses.map { documentClass -> execute(documentClass) }
+    }
 
     @Throws(ExecutionException::class)
-    fun execute(documentClass: Class<*>): DocumentResult {
+    private fun execute(documentClass: Class<*>): DocumentResult {
         return DocumentFixture(documentClass, repositoryManager,
                 decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
     }

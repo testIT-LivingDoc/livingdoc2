@@ -1,4 +1,4 @@
-package org.livingdoc.engine.reporting
+package org.livingdoc.reports.json
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -11,7 +11,6 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
-import org.livingdoc.reports.json.JsonReportRenderer
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -51,19 +50,22 @@ internal class JsonReportRendererTest {
 
         val rowResult1 = RowResult.Builder().withRow(row1)
             .withFieldResult(
-                headerA, FieldResult.Builder()
+                headerA,
+                FieldResult.Builder()
                     .withValue("2")
                     .withStatus(Status.Executed)
                     .build()
             )
             .withFieldResult(
-                headerB, FieldResult.Builder()
+                headerB,
+                FieldResult.Builder()
                     .withValue("3")
                     .withStatus(Status.Disabled("Disabled test"))
                     .build()
             )
             .withFieldResult(
-                headerAPlusB, FieldResult.Builder()
+                headerAPlusB,
+                FieldResult.Builder()
                     .withValue("6")
                     .withStatus(Status.Failed(mockk(relaxed = true)))
                     .build()
@@ -72,19 +74,22 @@ internal class JsonReportRendererTest {
 
         val rowResult2 = RowResult.Builder().withRow(row2)
             .withFieldResult(
-                headerA, FieldResult.Builder()
+                headerA,
+                FieldResult.Builder()
                     .withValue("5")
                     .withStatus(Status.Skipped)
                     .build()
             )
             .withFieldResult(
-                headerB, FieldResult.Builder()
+                headerB,
+                FieldResult.Builder()
                     .withValue("6")
                     .withStatus(Status.Manual)
                     .build()
             )
             .withFieldResult(
-                headerAPlusB, FieldResult.Builder()
+                headerAPlusB,
+                FieldResult.Builder()
                     .withValue("11")
                     .withStatus(Status.Exception(mockk(relaxed = true)))
                     .build()
@@ -99,6 +104,7 @@ internal class JsonReportRendererTest {
             .withStatus(Status.Executed)
 
         val documentResult = DocumentResult.Builder()
+            .withDocumentClass(JsonReportRendererTest::class.java)
             .withStatus(Status.Executed)
             .withResult(decisionTableResult.build())
             .build()
@@ -160,7 +166,7 @@ internal class JsonReportRendererTest {
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Failed(mockk())).build()
         val stepResultF = StepResult.Builder().withValue("F").withStatus(Status.Exception(mockk())).build()
 
-        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
+        val documentResult = DocumentResult.Builder().withDocumentClass(JsonReportRendererTest::class.java).withStatus(Status.Executed).withResult(
             ScenarioResult.Builder()
                 .withStep(stepResultA)
                 .withStep(stepResultB)

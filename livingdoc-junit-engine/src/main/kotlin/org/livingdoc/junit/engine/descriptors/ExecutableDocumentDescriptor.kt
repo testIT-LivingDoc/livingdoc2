@@ -8,7 +8,8 @@ import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
-import org.livingdoc.api.disabled.Disabled
+import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.junit.engine.LivingDocContext
@@ -16,15 +17,15 @@ import org.livingdoc.reports.ReportsManager
 
 class ExecutableDocumentDescriptor(
     uniqueId: UniqueId,
-    private val documentClass: Class<*>
-) : AbstractTestDescriptor(uniqueId, documentClass.name, ClassSource.from(documentClass)), Node<LivingDocContext> {
+    private val result: DocumentResult
+) : AbstractTestDescriptor(uniqueId, result.documentClass.name, ClassSource.from(result.documentClass)),
+    Node<LivingDocContext> {
 
     override fun getType() = Type.CONTAINER
 
     override fun mayRegisterTests() = true
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: DynamicTestExecutor): LivingDocContext {
-        val result = context.livingDoc.execute(documentClass)
         val reportsManager = ReportsManager.from(context.livingDoc.configProvider)
         reportsManager.generateReports(result)
 
@@ -49,11 +50,10 @@ class ExecutableDocumentDescriptor(
     }
 
     override fun shouldBeSkipped(context: LivingDocContext?): Node.SkipResult {
-        if (documentClass.isAnnotationPresent(Disabled::class.java)) {
-            return skip(documentClass.getAnnotation(Disabled::class.java).value)
+        return when (val status = result.documentStatus) {
+            is Status.Disabled -> skip(status.reason)
+            else -> doNotSkip()
         }
-
-        return doNotSkip()
     }
 
     private fun tableUniqueId(index: Int) = uniqueId.append("table", "$index")
