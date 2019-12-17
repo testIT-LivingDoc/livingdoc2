@@ -10,8 +10,6 @@ import java.util.*
  */
 open class ColorConverter : TypeConverter<String> {
 
-    private val hexRegexString = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\$"
-
     private val prop: Properties = Properties()
 
     init {
@@ -35,63 +33,82 @@ open class ColorConverter : TypeConverter<String> {
      * @return A lower case hex color value as a string.
      */
     override fun convert(value: String?, element: AnnotatedElement?, documentClass: Class<*>?): String {
-
         if (value.isNullOrEmpty()) {
             throw ColorFormatException(value)
         }
 
         val lowerCaseAndTrimmedValue = value.toLowerCase().trim().replace(" ", "")
 
-        val hexPattern = hexRegexString.toPattern()
-        val hexMatcher = hexPattern.matcher(lowerCaseAndTrimmedValue)
-
-        if (hexMatcher.matches()) {
-
-            if (lowerCaseAndTrimmedValue.removePrefix("#").length == 3) {
-                var removedPrefixedVal = lowerCaseAndTrimmedValue.removePrefix("#")
-                var result = "#"
-
-                for (letter: Char in removedPrefixedVal) {
-                    result += letter.toString() + letter.toString()
-                }
-
-                return result
+        return when {
+            isHexColor(lowerCaseAndTrimmedValue) -> {
+                parseHexColor(lowerCaseAndTrimmedValue)
             }
-
-            return lowerCaseAndTrimmedValue
-        } else if (lowerCaseAndTrimmedValue.startsWith("rgb(") && value.endsWith(")")) {
-            val splittedColorValues: List<String> =
-                lowerCaseAndTrimmedValue.substring(4, lowerCaseAndTrimmedValue.length - 1).split(",")
-            var colorHexValue = "#"
-
-            if (splittedColorValues.size != 3) {
-                throw ColorFormatException(lowerCaseAndTrimmedValue)
-            } else {
-
-                for (colorValue in splittedColorValues) {
-                    val colorValueInt =
-                        try {
-                            colorValue.toInt()
-                        } catch (nfe: NumberFormatException) {
-                            throw ColorFormatException(lowerCaseAndTrimmedValue)
-                        }
-
-                    if (colorValueInt in 0..255) {
-                        var hexString = Integer.toHexString(colorValueInt)
-                        if (hexString.length == 1) {
-                            hexString = "0$hexString"
-                        }
-                        colorHexValue += hexString
-                    } else {
-                        throw ColorFormatException(lowerCaseAndTrimmedValue)
-                    }
-                }
-                return colorHexValue.toLowerCase()
+            isRgbColor(lowerCaseAndTrimmedValue) -> {
+                parseRgbColor(lowerCaseAndTrimmedValue)
             }
-        } else {
-            return prop.getProperty(lowerCaseAndTrimmedValue)?.toLowerCase() ?: throw ColorFormatException(
-                lowerCaseAndTrimmedValue
-            )
+            else -> {
+                lookupColorByName(lowerCaseAndTrimmedValue)
+            }
         }
+    }
+
+    private fun isHexColor(color: String): Boolean {
+        return color.matches(Companion.hexColorRegex)
+    }
+
+    private fun parseHexColor(hexColor: String): String {
+        if (hexColor.removePrefix("#").length == 3) {
+            return hexColor
+        }
+
+        var removedPrefixedVal = hexColor.removePrefix("#")
+        var result = "#"
+
+        for (letter: Char in removedPrefixedVal) {
+            result += letter.toString() + letter.toString()
+        }
+
+        return result
+    }
+
+    private fun isRgbColor(color: String) =
+        color.startsWith("rgb(") && color.endsWith(")")
+
+    private fun parseRgbColor(rgbColor: String): String {
+        val rgbValues: List<String> =
+            rgbColor.removeSurrounding("rgb(", ")").split(",")
+
+        if (rgbValues.size != 3) {
+            throw ColorFormatException(rgbColor)
+        }
+
+        var colorHexValue = "#"
+        for (colorValue in rgbValues) {
+            val colorValueInt =
+                try {
+                    colorValue.toInt()
+                } catch (nfe: NumberFormatException) {
+                    throw ColorFormatException(rgbColor)
+                }
+
+            if (colorValueInt in 0..255) {
+                var hexString = Integer.toHexString(colorValueInt)
+                if (hexString.length == 1) {
+                    hexString = "0$hexString"
+                }
+                colorHexValue += hexString
+            } else {
+                throw ColorFormatException(rgbColor)
+            }
+        }
+        return colorHexValue.toLowerCase()
+    }
+
+    private fun lookupColorByName(colorName: String): String {
+        return prop.getProperty(colorName)?.toLowerCase() ?: throw ColorFormatException(colorName)
+    }
+
+    companion object {
+        private val hexColorRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\$".toRegex()
     }
 }
