@@ -1,36 +1,20 @@
 package org.livingdoc.engine
 
-import org.livingdoc.api.After
-import org.livingdoc.api.Before
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
-import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
 internal class DocumentFixtureModel(
     private val documentClass: Class<*>
-) {
-    val beforeMethods: List<Method>
-    val afterMethods: List<Method>
+) : ScopedFixtureModel(documentClass) {
 
     val decisionTableFixtures: List<DecisionTableFixtureWrapper>
     val scenarioFixtures: List<ScenarioFixtureWrapper>
 
     init {
-        val beforeMethods = mutableListOf<Method>()
-        val afterMethods = mutableListOf<Method>()
-
-        documentClass.declaredMethods.forEach { method ->
-            if (method.isAnnotationPresent(Before::class.java)) beforeMethods.add(method)
-            if (method.isAnnotationPresent(After::class.java)) afterMethods.add(method)
-        }
-
-        this.beforeMethods = beforeMethods.sortedBy { it.name }
-        this.afterMethods = afterMethods.sortedBy { it.name }
-
         decisionTableFixtures = getFixtures(documentClass, DecisionTableFixture::class).map {
             DecisionTableFixtureWrapper(it)
         }
