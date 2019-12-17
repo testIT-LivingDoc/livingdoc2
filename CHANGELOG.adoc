@@ -20,6 +20,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add manual test annotation to markdown and HTML documents so the test will not be executed by junit but appear in the reports as manually executed
 - Add possibility to specify a confluence document version
 - Exceptions as expected output can be specified in the Examples with the keyword "error"
+- Add converter to convert colors
 
 === Changed
 
