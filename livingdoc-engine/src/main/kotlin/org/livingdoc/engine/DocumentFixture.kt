@@ -20,7 +20,8 @@ internal class DocumentFixture(
 
         val builder = DocumentResult.Builder()
         if (documentClass.isAnnotationPresent(Disabled::class.java)) {
-            return builder.withStatus(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value)).build()
+            return builder.withDocumentClass(documentClass)
+                .withStatus(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value)).build()
         }
 
         val document = loadDocument()

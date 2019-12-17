@@ -9,7 +9,6 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector
 import org.junit.platform.engine.discovery.PackageSelector
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine
 import org.livingdoc.junit.engine.descriptors.EngineDescriptor
-import org.livingdoc.junit.engine.descriptors.ExecutableDocumentDescriptor
 import org.livingdoc.junit.engine.discovery.ClassSelectorHandler
 import org.livingdoc.junit.engine.discovery.ClasspathRootSelectorHandler
 import org.livingdoc.junit.engine.discovery.PackageSelectorHandler
@@ -60,20 +59,7 @@ class LivingDocTestEngine : HierarchicalTestEngine<LivingDocContext>() {
     }
 
     private fun buildEngineDescriptor(engineId: UniqueId, documentClasses: LinkedHashSet<Class<*>>): EngineDescriptor {
-        val engineDescriptor = EngineDescriptor(engineId)
-        documentClasses
-                .map { toDocumentDescriptor(engineId, it) }
-                .forEach { engineDescriptor.addChild(it) }
-        return engineDescriptor
-    }
-
-    private fun toDocumentDescriptor(uniqueEngineId: UniqueId, documentClass: Class<*>): ExecutableDocumentDescriptor {
-        val uniqueDocumentId = uniqueId(uniqueEngineId, documentClass)
-        return ExecutableDocumentDescriptor(uniqueDocumentId, documentClass)
-    }
-
-    private fun uniqueId(uniqueId: UniqueId, documentClass: Class<*>): UniqueId {
-        return uniqueId.append("documentClass", documentClass.name)
+        return EngineDescriptor(engineId, documentClasses.toList())
     }
 
     override fun createExecutionContext(request: ExecutionRequest): LivingDocContext {

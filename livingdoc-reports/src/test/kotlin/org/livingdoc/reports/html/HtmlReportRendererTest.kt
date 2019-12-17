@@ -50,19 +50,22 @@ internal class HtmlReportRendererTest {
 
         val rowResult1 = RowResult.Builder().withRow(row1)
             .withFieldResult(
-                headerA, FieldResult.Builder()
+                headerA,
+                FieldResult.Builder()
                     .withValue("2")
                     .withStatus(Status.Executed)
                     .build()
             )
             .withFieldResult(
-                headerB, FieldResult.Builder()
+                headerB,
+                FieldResult.Builder()
                     .withValue("3")
                     .withStatus(Status.Disabled("Disabled test"))
                     .build()
             )
             .withFieldResult(
-                headerAPlusB, FieldResult.Builder()
+                headerAPlusB,
+                FieldResult.Builder()
                     .withValue("6")
                     .withStatus(Status.Failed(mockk(relaxed = true)))
                     .build()
@@ -71,19 +74,22 @@ internal class HtmlReportRendererTest {
 
         val rowResult2 = RowResult.Builder().withRow(row2)
             .withFieldResult(
-                headerA, FieldResult.Builder()
+                headerA,
+                FieldResult.Builder()
                     .withValue("5")
                     .withStatus(Status.Skipped)
                     .build()
             )
             .withFieldResult(
-                headerB, FieldResult.Builder()
+                headerB,
+                FieldResult.Builder()
                     .withValue("6")
                     .withStatus(Status.Manual)
                     .build()
             )
             .withFieldResult(
-                headerAPlusB, FieldResult.Builder()
+                headerAPlusB,
+                FieldResult.Builder()
                     .withValue("11")
                     .withStatus(Status.Exception(mockk(relaxed = true)))
                     .build()
@@ -98,6 +104,7 @@ internal class HtmlReportRendererTest {
             .withStatus(Status.Executed)
 
         val documentResult = DocumentResult.Builder()
+            .withDocumentClass(HtmlReportRendererTest::class.java)
             .withStatus(Status.Executed)
             .withResult(decisionTableResult.build())
             .build()
@@ -165,25 +172,28 @@ internal class HtmlReportRendererTest {
         val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
 
-        val documentResult = DocumentResult.Builder().withStatus(Status.Executed).withResult(
-            ScenarioResult.Builder()
-                .withStep(stepResultA)
-                .withStep(stepResultB)
-                .withStep(stepResultC)
-                .withStep(stepResultD)
-                .withStep(stepResultE)
-                .withStatus(Status.Executed)
-                .withScenario(
-                    Scenario(
-                        listOf(
-                            Step("A"), Step("B"), Step("C"),
-                            Step("D"), Step("E")
+        val documentResult = DocumentResult.Builder()
+            .withDocumentClass(HtmlReportRendererTest::class.java)
+            .withStatus(Status.Executed)
+            .withResult(
+                ScenarioResult.Builder()
+                    .withStep(stepResultA)
+                    .withStep(stepResultB)
+                    .withStep(stepResultC)
+                    .withStep(stepResultD)
+                    .withStep(stepResultE)
+                    .withStatus(Status.Executed)
+                    .withScenario(
+                        Scenario(
+                            listOf(
+                                Step("A"), Step("B"), Step("C"),
+                                Step("D"), Step("E")
+                            )
                         )
                     )
-                )
-                .withFixture(NoFixtureWrapper())
-                .build()
-        ).build()
+                    .withFixture(NoFixtureWrapper())
+                    .build()
+            ).build()
 
         val renderResult = cut.render(documentResult)
 

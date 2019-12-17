@@ -14,7 +14,7 @@ internal class DocumentExecution(
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
 ) {
     private val documentFixtureModel: DocumentFixtureModel = DocumentFixtureModel(documentClass)
-    private val builder = DocumentResult.Builder().withStatus(Status.Executed)
+    private val builder = DocumentResult.Builder().withDocumentClass(documentClass).withStatus(Status.Executed)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(documentClass)
     private val fixture: Any = documentClass.getDeclaredConstructor().newInstance()
 
