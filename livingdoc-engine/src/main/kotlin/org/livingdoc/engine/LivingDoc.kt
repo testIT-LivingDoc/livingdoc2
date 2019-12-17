@@ -27,7 +27,7 @@ class LivingDoc(
     }
 
     @Throws(ExecutionException::class)
-    fun execute(documentClass: Class<*>): DocumentResult {
+    private fun execute(documentClass: Class<*>): DocumentResult {
         return DocumentFixture(documentClass, repositoryManager,
                 decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
     }

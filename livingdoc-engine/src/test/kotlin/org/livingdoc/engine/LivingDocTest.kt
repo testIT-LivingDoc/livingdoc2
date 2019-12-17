@@ -16,8 +16,11 @@ internal class LivingDocTest {
         val cut = LivingDoc(configProviderMock, repoManagerMock)
         val documentClass = DisabledExecutableDocument::class.java
 
-        val result = cut.execute(documentClass)
+        val results = cut.execute(listOf(documentClass))
 
+        assertThat(results).hasSize(1)
+
+        val result = results[0]
         assertThat(result.documentStatus).isInstanceOf(Status.Disabled::class.java)
         assertThat((result.documentStatus as Status.Disabled).reason).isEqualTo("Skip this test document")
     }
