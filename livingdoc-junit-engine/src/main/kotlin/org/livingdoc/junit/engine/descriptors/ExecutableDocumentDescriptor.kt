@@ -8,7 +8,7 @@ import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult

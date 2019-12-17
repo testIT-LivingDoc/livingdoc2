@@ -1,7 +1,7 @@
 package org.livingdoc.reports.json
 
 import com.beust.klaxon.JsonObject
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.documents.DocumentResult
 
 import com.beust.klaxon.json
 import org.livingdoc.config.YamlUtils

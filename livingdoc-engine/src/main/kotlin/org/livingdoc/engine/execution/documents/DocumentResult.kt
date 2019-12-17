@@ -1,5 +1,6 @@
-package org.livingdoc.engine.execution
+package org.livingdoc.engine.execution.documents
 
+import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 
 data class DocumentResult private constructor(

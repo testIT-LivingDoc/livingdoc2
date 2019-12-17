@@ -1,8 +1,9 @@
-package org.livingdoc.engine
+package org.livingdoc.engine.execution.documents
 
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
+import org.livingdoc.engine.execution.ScopedFixtureModel
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import kotlin.reflect.KClass

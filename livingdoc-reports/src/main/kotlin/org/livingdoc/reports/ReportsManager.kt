@@ -1,7 +1,7 @@
 package org.livingdoc.reports
 
 import org.livingdoc.config.ConfigProvider
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.reports.config.ReportDefinition
 import org.livingdoc.reports.config.ReportsConfig
 import org.livingdoc.reports.spi.Format

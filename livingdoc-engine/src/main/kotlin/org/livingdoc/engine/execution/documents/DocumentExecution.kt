@@ -1,6 +1,7 @@
-package org.livingdoc.engine
+package org.livingdoc.engine.execution.documents
 
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.DecisionTableToFixtureMatcher
+import org.livingdoc.engine.ScenarioToFixtureMatcher
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.repositories.Document

@@ -1,7 +1,9 @@
-package org.livingdoc.engine
+package org.livingdoc.engine.execution.groups
 
 import org.livingdoc.api.documents.Group
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.DecisionTableToFixtureMatcher
+import org.livingdoc.engine.ScenarioToFixtureMatcher
+import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.repositories.RepositoryManager
 
 internal class GroupFixture(

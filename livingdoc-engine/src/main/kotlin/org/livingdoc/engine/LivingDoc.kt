@@ -3,8 +3,11 @@ package org.livingdoc.engine
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.Group
 import org.livingdoc.config.ConfigProvider
-import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
+import org.livingdoc.engine.execution.documents.DocumentFixture
+import org.livingdoc.engine.execution.documents.DocumentResult
+import org.livingdoc.engine.execution.groups.GroupFixture
+import org.livingdoc.engine.execution.groups.ImplicitGroup
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 
@@ -52,6 +55,3 @@ class LivingDoc(
             decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
     }
 }
-
-@Group
-private class ImplicitGroup
