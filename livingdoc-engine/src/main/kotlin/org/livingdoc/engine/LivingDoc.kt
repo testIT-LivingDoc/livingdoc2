@@ -1,6 +1,7 @@
 package org.livingdoc.engine
 
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.documents.Group
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.DocumentResult
 import org.livingdoc.engine.execution.ExecutionException
@@ -23,12 +24,32 @@ class LivingDoc(
 ) {
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
-        return documentClasses.map { documentClass -> execute(documentClass) }
+        return documentClasses.groupBy { documentClass ->
+            documentClass.declaringClass?.takeIf { declaringClass ->
+                declaringClass.getAnnotation(Group::class.java) != null
+            }
+        }.flatMap { (groupClass, documentClasses) ->
+            when (groupClass) {
+                null -> documentClasses.map { documentClass -> executeDocument(documentClass) }
+                else -> executeGroup(groupClass, documentClasses)
+            }
+        }
     }
 
     @Throws(ExecutionException::class)
-    private fun execute(documentClass: Class<*>): DocumentResult {
+    private fun executeGroup(groupClass: Class<*>, documentClasses: List<Class<*>>): List<DocumentResult> {
+        return GroupFixture(
+            groupClass,
+            documentClasses,
+            repositoryManager,
+            decisionTableToFixtureMatcher,
+            scenarioToFixtureMatcher
+        ).execute()
+    }
+
+    @Throws(ExecutionException::class)
+    private fun executeDocument(documentClass: Class<*>): DocumentResult {
         return DocumentFixture(documentClass, repositoryManager,
-                decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
+            decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
     }
 }
