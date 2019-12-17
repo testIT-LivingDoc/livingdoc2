@@ -23,7 +23,7 @@ internal class GroupFixture(
         ).execute()
     }
 
-    val groupAnnotation: Group?
+    private val groupAnnotation: Group?
         get() = groupClass.getAnnotation(Group::class.java)
 
     private fun validate() {

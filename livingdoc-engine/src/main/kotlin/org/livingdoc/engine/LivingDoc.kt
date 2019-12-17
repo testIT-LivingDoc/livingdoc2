@@ -18,7 +18,8 @@ import org.livingdoc.repositories.config.RepositoryConfiguration
  */
 class LivingDoc(
     val configProvider: ConfigProvider = ConfigProvider.load(),
-    val repositoryManager: RepositoryManager = RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
+    private val repositoryManager: RepositoryManager =
+        RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
@@ -26,13 +27,11 @@ class LivingDoc(
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
         return documentClasses.groupBy { documentClass ->
             documentClass.declaringClass?.takeIf { declaringClass ->
-                declaringClass.getAnnotation(Group::class.java) != null
-            }
+                // TODO Clarify whether this check is needed
+                declaringClass.isAnnotationPresent(Group::class.java)
+            } ?: ImplicitGroup::class.java
         }.flatMap { (groupClass, documentClasses) ->
-            when (groupClass) {
-                null -> documentClasses.map { documentClass -> executeDocument(documentClass) }
-                else -> executeGroup(groupClass, documentClasses)
-            }
+            executeGroup(groupClass, documentClasses)
         }
     }
 
@@ -53,3 +52,6 @@ class LivingDoc(
             decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
     }
 }
+
+@Group
+private class ImplicitGroup
