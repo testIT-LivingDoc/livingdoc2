@@ -159,28 +159,6 @@ internal class ScenarioExecution(
         return Status.Failed(e)
     }
 
-    companion object {
-        /**
-         * Invokes the given function and returns the status as a result
-         *
-         * @param function A kotlin function with no return value
-         * @return [Status.Executed] if the function was executed successfully
-         * [Status.Exception] otherwise
-         */
-        private fun invokeExpectingException(function: () -> Unit): Status {
-            return try {
-                function.invoke()
-                Status.Executed
-            } catch (e: AssertionError) {
-                Status.Failed(e)
-            } catch (e: ExpectedException) {
-                Status.Executed
-            } catch (e: Exception) {
-                Status.Exception(e)
-            }
-        }
-    }
-
     internal class MalformedScenarioFixtureException(fixtureClass: Class<*>, errors: List<String>) : RuntimeException(
         "The fixture class <$fixtureClass> is malformed: \n${errors.joinToString(
             separator = "\n",
