@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Disabled is used to signal that the annotated test class or test method is currently disabled and should not be
+ * Disabled is used to signal that the annotated test class is currently disabled and should not be
  * executed.
  */
 @Target(ElementType.TYPE)
