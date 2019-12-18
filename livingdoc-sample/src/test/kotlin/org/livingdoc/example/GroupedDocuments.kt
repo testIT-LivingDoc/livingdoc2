@@ -11,10 +11,6 @@ import org.livingdoc.api.fixtures.scenarios.Step
 
 @Group
 class GroupedDocuments {
-    @Before
-    fun setUp() {
-    }
-
     @ExecutableDocument("local://TestTexts.md")
     class Group1 {
         @ScenarioFixture
@@ -75,7 +71,17 @@ class GroupedDocuments {
         }
     }
 
-    @After
-    fun cleanUp() {
+    companion object {
+        @JvmStatic
+        @Before
+        fun setUp() {
+            println("Before group of documents")
+        }
+
+        @JvmStatic
+        @After
+        fun cleanUp() {
+            println("After group of documents")
+        }
     }
 }

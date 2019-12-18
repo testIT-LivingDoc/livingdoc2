@@ -4,6 +4,7 @@ import org.livingdoc.api.After
 import org.livingdoc.api.Before
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
+import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.documents.DocumentFixture
 import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
@@ -15,7 +16,7 @@ import org.livingdoc.repositories.RepositoryManager
  * @see GroupFixture
  */
 internal class GroupExecution(
-    groupClass: Class<*>,
+    private val groupClass: Class<*>,
     private val documentClasses: List<Class<*>>,
     private val repositoryManager: RepositoryManager,
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
@@ -31,11 +32,23 @@ internal class GroupExecution(
      * @return a list of [DocumentResults][DocumentResult], one for each [DocumentFixture] in the [GroupFixture].
      */
     fun execute(): List<DocumentResult> {
+        assertFixtureIsDefinedCorrectly()
         executeBeforeMethods()
         val results = executeDocuments()
         executeAfterMethods()
 
         return results
+    }
+
+    /**
+     * assertFixtureIsDefinedCorrectly checks that the [GroupFixture] is defined correctly
+     */
+    private fun assertFixtureIsDefinedCorrectly() {
+        val errors = GroupFixtureChecker.check(groupFixtureModel)
+
+        if (errors.isNotEmpty()) {
+            throw MalformedFixtureException(groupClass, errors)
+        }
     }
 
     /**
