@@ -1,12 +1,9 @@
 package org.livingdoc.engine.execution.documents
 
+import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.DecisionTableToFixtureMatcher
-import org.livingdoc.engine.ScenarioToFixtureMatcher
-import org.livingdoc.repositories.Document
-import org.livingdoc.repositories.model.TestData
 
 class DocumentExecutionTest {
     @BeforeEach
@@ -18,9 +15,9 @@ class DocumentExecutionTest {
     fun `test life cycle of simple document`() {
         DocumentExecution(
             LifeCycleFixture::class.java,
-            Document(listOf<TestData>()),
-            DecisionTableToFixtureMatcher(),
-            ScenarioToFixtureMatcher()
+            mockk(relaxed = true),
+            mockk(relaxed = true),
+            mockk(relaxed = true)
         ).execute()
 
         val fixture = LifeCycleFixture.callback
