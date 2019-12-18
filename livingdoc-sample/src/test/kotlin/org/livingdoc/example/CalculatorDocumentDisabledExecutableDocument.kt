@@ -18,7 +18,12 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 @ExecutableDocument("local://Calculator.html")
 class CalculatorDocumentDisabledExecutableDocument {
 
-    /* TODO can these fixtures be deleted? There should be no reason to keep them when the document is disabled. */
+    /**
+     * This [DecisionTableFixture] demonstrates that the [Disabled] annotation from above works and you are able to disable the document even if it contains fixtures.
+     * Otherwise this would not be tested.
+     * @see DecisionTableFixture
+     */
+
 
     @DecisionTableFixture
     class CalculatorDecisionTableFixture {
