@@ -4,6 +4,9 @@ import org.livingdoc.api.After
 import org.livingdoc.api.Before
 import java.lang.reflect.Method
 
+/**
+ * ScopedFixtureModel represents a fixture that can have [Before] and [After] methods
+ */
 internal open class ScopedFixtureModel(
     private val fixtureClass: Class<*>
 ) {
