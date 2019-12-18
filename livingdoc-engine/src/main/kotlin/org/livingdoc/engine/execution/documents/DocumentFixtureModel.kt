@@ -8,6 +8,12 @@ import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtu
 import org.livingdoc.engine.execution.examples.scenarios.ScenarioFixtureWrapper
 import kotlin.reflect.KClass
 
+/**
+ * A DocumentFixtureModel is a representation of the glue code necessary to execute a [DocumentFixture]
+ *
+ * @see DocumentFixture
+ * @see DocumentExecution
+ */
 internal class DocumentFixtureModel(
     private val documentClass: Class<*>
 ) : ScopedFixtureModel(documentClass) {
@@ -16,21 +22,27 @@ internal class DocumentFixtureModel(
     val scenarioFixtures: List<ScenarioFixtureWrapper>
 
     init {
-        decisionTableFixtures = getFixtures(documentClass, DecisionTableFixture::class).map {
+        decisionTableFixtures = getFixtures(DecisionTableFixture::class).map {
             DecisionTableFixtureWrapper(it)
         }
 
-        scenarioFixtures = getFixtures(documentClass, ScenarioFixture::class).map {
+        scenarioFixtures = getFixtures(ScenarioFixture::class).map {
             ScenarioFixtureWrapper(it)
         }
     }
 
-    private fun getFixtures(document: Class<*>, annotationClass: KClass<out Annotation>): List<Class<*>> {
-        val declaredInside = document.declaredClasses
-                .filter { it.isAnnotationPresent(annotationClass.java) }
-        val fromAnnotation = document.getAnnotation(ExecutableDocument::class.java)!!.fixtureClasses
-                .map { it.java }
-                .filter { it.isAnnotationPresent(annotationClass.java) }
+    /**
+     * GetFixtures loads all candidate classes with a given annotation
+     *
+     * @param annotationClass the annotation class to filter for
+     * @return a list of fixture classes that have the specified annotation present
+     */
+    private fun getFixtures(annotationClass: KClass<out Annotation>): List<Class<*>> {
+        val declaredInside = documentClass.declaredClasses
+            .filter { it.isAnnotationPresent(annotationClass.java) }
+        val fromAnnotation = documentClass.getAnnotation(ExecutableDocument::class.java)!!.fixtureClasses
+            .map { it.java }
+            .filter { it.isAnnotationPresent(annotationClass.java) }
         return declaredInside + fromAnnotation
     }
 }

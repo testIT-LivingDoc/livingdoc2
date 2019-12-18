@@ -8,6 +8,10 @@ import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
 
+/**
+ * A DocumentFixture performs the binding between the actual LivingDoc document and the glue code to load and parse that
+ * document
+ */
 internal class DocumentFixture(
     private val documentClass: Class<*>,
     private val repositoryManager: RepositoryManager,
@@ -16,6 +20,11 @@ internal class DocumentFixture(
 ) {
     private val documentIdentifier: DocumentIdentifier = DocumentIdentifier.of(this)
 
+    /**
+     * Execute runs the executable document described by this DocumentFixture
+     *
+     * @return a [DocumentResult] for this execution
+     */
     fun execute(): DocumentResult {
         validate()
 
@@ -34,6 +43,9 @@ internal class DocumentFixture(
     val executableDocumentAnnotation: ExecutableDocument?
         get() = documentClass.getAnnotation(ExecutableDocument::class.java)
 
+    /**
+     * Validate ensures that this instance represents a valid [DocumentFixture].
+     */
     private fun validate() {
         if (executableDocumentAnnotation == null) {
             throw IllegalArgumentException(
@@ -42,6 +54,11 @@ internal class DocumentFixture(
         }
     }
 
+    /**
+     * LoadDocument loads the [Document] from the configured repositories.
+     *
+     * @return the loaded [Document]
+     */
     private fun loadDocument(): Document {
         return with(documentIdentifier) {
             repositoryManager.getRepository(repository).getDocument(id)
