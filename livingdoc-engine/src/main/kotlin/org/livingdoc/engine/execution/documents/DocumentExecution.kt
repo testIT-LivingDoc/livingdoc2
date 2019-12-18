@@ -1,9 +1,10 @@
 package org.livingdoc.engine.execution.documents
 
-import org.livingdoc.api.Before
 import org.livingdoc.api.After
+import org.livingdoc.api.Before
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
+import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.repositories.Document
@@ -22,7 +23,7 @@ internal class DocumentExecution(
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
 ) {
     private val documentFixtureModel: DocumentFixtureModel = DocumentFixtureModel(documentClass)
-    private val builder = DocumentResult.Builder().withDocumentClass(documentClass).withStatus(Status.Executed)
+    private val builder = DocumentResult.Builder().withDocumentClass(documentClass)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(documentClass)
     private val fixture: Any = documentClass.getDeclaredConstructor().newInstance()
 
@@ -32,10 +33,28 @@ internal class DocumentExecution(
      * @return a [DocumentResult] describing the outcome of this DocumentExecution
      */
     fun execute(): DocumentResult {
-        executeBeforeMethods()
-        executeFixtures()
-        executeAfterMethods()
+        try {
+            assertFixtureIsDefinedCorrectly()
+            executeBeforeMethods()
+            executeFixtures()
+            executeAfterMethods()
+            builder.withStatus(Status.Executed)
+        } catch (e: MalformedFixtureException) {
+            builder.withStatus(Status.Exception(e))
+        }
+
         return builder.build()
+    }
+
+    /**
+     * assertFixtureIsDefinedCorrectly checks that the [DocumentFixture] is defined correctly
+     */
+    private fun assertFixtureIsDefinedCorrectly() {
+        val errors = DocumentFixtureChecker.check(documentFixtureModel)
+
+        if (errors.isNotEmpty()) {
+            throw MalformedFixtureException(documentClass, errors)
+        }
     }
 
     /**
@@ -56,13 +75,13 @@ internal class DocumentExecution(
             when (element) {
                 is DecisionTable -> {
                     decisionTableToFixtureMatcher
-                            .findMatchingFixture(element, documentFixtureModel.decisionTableFixtures)
-                            .execute(element)
+                        .findMatchingFixture(element, documentFixtureModel.decisionTableFixtures)
+                        .execute(element)
                 }
                 is Scenario -> {
                     scenarioToFixtureMatcher
-                            .findMatchingFixture(element, documentFixtureModel.scenarioFixtures)
-                            .execute(element)
+                        .findMatchingFixture(element, documentFixtureModel.scenarioFixtures)
+                        .execute(element)
                 }
                 else -> null
             }
