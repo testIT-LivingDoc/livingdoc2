@@ -63,7 +63,7 @@ open class ColorConverter : TypeConverter<String> {
             return null
         }
 
-        var removedPrefixedVal = hexColor.removePrefix("#")
+        val removedPrefixedVal = hexColor.removePrefix("#")
         var result = "#"
 
         for (letter: Char in removedPrefixedVal) {
@@ -107,7 +107,7 @@ open class ColorConverter : TypeConverter<String> {
                 throw ColorFormatException(rgbColor)
             }
 
-            var hexString = Integer.toHexString(colorValueInt.toInt())
+            var hexString = Integer.toHexString(colorValueInt)
             if (hexString.length == 1) {
                 hexString = "0$hexString"
             }
