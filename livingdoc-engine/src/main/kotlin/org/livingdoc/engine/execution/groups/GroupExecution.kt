@@ -24,7 +24,6 @@ internal class GroupExecution(
 ) {
     private val groupFixtureModel: GroupFixtureModel = GroupFixtureModel(groupClass)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(groupClass)
-    private val fixture: Any = groupClass.getDeclaredConstructor().newInstance()
 
     /**
      * Executes performs the actual execution of the [GroupFixture]
@@ -58,11 +57,11 @@ internal class GroupExecution(
      * @see GroupFixture
      */
     private fun executeBeforeMethods() {
-        groupFixtureModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, fixture) }
+        groupFixtureModel.beforeMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
     /**
-     * ExecuteDocuments runs all [DocumentFixtures][DocumentFixture] containde in the group.
+     * ExecuteDocuments runs all [DocumentFixtures][DocumentFixture] contained in the group.
      *
      * @return a list of [DocumentResults][DocumentResult], one for each [DocumentFixture] in the [GroupFixture].
      */
@@ -84,6 +83,6 @@ internal class GroupExecution(
      * @see GroupFixture
      */
     private fun executeAfterMethods() {
-        groupFixtureModel.afterMethods.forEach { method -> methodInvoker.invoke(method, fixture) }
+        groupFixtureModel.afterMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 }

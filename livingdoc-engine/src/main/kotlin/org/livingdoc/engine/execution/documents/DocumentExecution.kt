@@ -25,7 +25,6 @@ internal class DocumentExecution(
     private val documentFixtureModel: DocumentFixtureModel = DocumentFixtureModel(documentClass)
     private val builder = DocumentResult.Builder().withDocumentClass(documentClass)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(documentClass)
-    private val fixture: Any = documentClass.getDeclaredConstructor().newInstance()
 
     /**
      * Execute performs the actual execution
@@ -64,7 +63,7 @@ internal class DocumentExecution(
      * @see DocumentFixture
      */
     private fun executeBeforeMethods() {
-        documentFixtureModel.beforeMethods.forEach { method -> methodInvoker.invoke(method, fixture) }
+        documentFixtureModel.beforeMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
     /**
@@ -95,6 +94,6 @@ internal class DocumentExecution(
      * @see DocumentFixture
      */
     private fun executeAfterMethods() {
-        documentFixtureModel.afterMethods.forEach { method -> methodInvoker.invoke(method, fixture) }
+        documentFixtureModel.afterMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 }
