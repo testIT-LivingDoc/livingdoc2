@@ -1,10 +1,10 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
+import org.livingdoc.api.After
+import org.livingdoc.api.Before
 import org.livingdoc.api.fixtures.decisiontables.AfterRow
-import org.livingdoc.api.fixtures.decisiontables.AfterTable
 import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
-import org.livingdoc.api.fixtures.decisiontables.BeforeTable
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.Input
 import org.livingdoc.engine.execution.checkThatMethodsAreNonStatic
@@ -75,15 +75,15 @@ internal object DecisionTableFixtureChecker {
 
     private fun beforeTableMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeTableMethods, BeforeTable::class.java))
-        errors.addAll(elements = checkThatMethodsAreStatic(model.beforeTableMethods, BeforeTable::class.java))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeMethods, Before::class.java))
+        errors.addAll(elements = checkThatMethodsAreStatic(model.beforeMethods, Before::class.java))
         return errors
     }
 
     private fun afterTableMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterTableMethods, AfterTable::class.java))
-        errors.addAll(elements = checkThatMethodsAreStatic(model.afterTableMethods, AfterTable::class.java))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterMethods, After::class.java))
+        errors.addAll(elements = checkThatMethodsAreStatic(model.afterMethods, After::class.java))
         return errors
     }
 

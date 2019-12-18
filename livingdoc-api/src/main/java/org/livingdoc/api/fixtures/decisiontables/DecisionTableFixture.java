@@ -1,5 +1,8 @@
 package org.livingdoc.api.fixtures.decisiontables;
 
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -16,8 +19,8 @@ import java.lang.annotation.Target;
  * LivingDoc will evaluate the fixture class for consistency when it is first loaded. Only decision table related annotations
  * can be used within a decision table fixture!
  *
- * @see BeforeTable
- * @see AfterTable
+ * @see Before
+ * @see After
  * @see BeforeRow
  * @see AfterRow
  * @see BeforeFirstCheck
