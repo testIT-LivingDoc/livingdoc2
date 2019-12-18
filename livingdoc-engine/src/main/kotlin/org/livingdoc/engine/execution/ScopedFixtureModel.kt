@@ -10,8 +10,11 @@ import java.lang.reflect.Method
 internal open class ScopedFixtureModel(
     private val fixtureClass: Class<*>
 ) {
-    val beforeMethods: List<Method>
-        get() = fixtureClass.methods.filter { method -> method.isAnnotationPresent(Before::class.java) }
-    val afterMethods: List<Method>
-        get() = fixtureClass.methods.filter { method -> method.isAnnotationPresent(After::class.java) }
+    val beforeMethods: List<Method> = fixtureClass.declaredMethods.filter { method ->
+        method.isAnnotationPresent(Before::class.java)
+    }.sortedBy { method -> method.name }
+
+    val afterMethods: List<Method> = fixtureClass.declaredMethods.filter { method ->
+        method.isAnnotationPresent(After::class.java)
+    }.sortedBy { method -> method.name }
 }
