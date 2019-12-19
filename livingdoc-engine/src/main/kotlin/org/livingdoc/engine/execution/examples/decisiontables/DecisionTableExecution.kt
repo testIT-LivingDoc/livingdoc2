@@ -205,7 +205,7 @@ internal class DecisionTableExecution(
     }
 
     private fun invokeBeforeTableMethods() {
-        fixtureModel.beforeTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
+        fixtureModel.beforeMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
     private fun invokeBeforeRowMethods(fixture: Any) {
@@ -221,7 +221,7 @@ internal class DecisionTableExecution(
     }
 
     private fun invokeAfterTableMethods() {
-        fixtureModel.afterTableMethods.forEach { method -> methodInvoker.invokeStatic(method) }
+        fixtureModel.afterMethods.forEach { method -> methodInvoker.invokeStatic(method) }
     }
 
     private fun filter(row: Row, headers: Set<Header>): Map<Header, Field> {

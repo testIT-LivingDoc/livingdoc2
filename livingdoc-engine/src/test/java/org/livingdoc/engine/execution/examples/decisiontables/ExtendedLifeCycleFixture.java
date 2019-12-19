@@ -1,5 +1,7 @@
 package org.livingdoc.engine.execution.examples.decisiontables;
 
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
 import org.livingdoc.api.fixtures.decisiontables.*;
 
 import static org.livingdoc.engine.MockkExtKt.clearJMockk;
@@ -10,12 +12,12 @@ public class ExtendedLifeCycleFixture {
 
     public static Callback callback = mockkJClass(Callback.class);
 
-    @BeforeTable
+    @Before
     static void beforeTable1() {
         callback.beforeTable1();
     }
 
-    @BeforeTable
+    @Before
     static void beforeTable2() {
         callback.beforeTable2();
     }
@@ -60,12 +62,12 @@ public class ExtendedLifeCycleFixture {
         callback.afterRow2();
     }
 
-    @AfterTable
+    @After
     static void afterTable1() {
         callback.afterTable1();
     }
 
-    @AfterTable
+    @After
     static void afterTable2() {
         callback.afterTable2();
     }

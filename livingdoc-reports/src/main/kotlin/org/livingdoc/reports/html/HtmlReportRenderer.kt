@@ -1,7 +1,7 @@
 package org.livingdoc.reports.html
 
 import org.livingdoc.config.YamlUtils
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult

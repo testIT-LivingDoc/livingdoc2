@@ -21,6 +21,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add possibility to specify a confluence document version
 - Exceptions as expected output can be specified in the Examples with the keyword "error"
 - Add converter to convert colors
+- A `@Group` annotation that can be used to group `@ExecutableDocument` classes
 
 === Changed
 

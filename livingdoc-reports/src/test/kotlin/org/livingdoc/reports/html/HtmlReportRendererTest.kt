@@ -3,7 +3,7 @@ package org.livingdoc.reports.html
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult

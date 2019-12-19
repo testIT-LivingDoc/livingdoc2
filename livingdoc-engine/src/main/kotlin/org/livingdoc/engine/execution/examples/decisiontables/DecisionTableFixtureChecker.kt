@@ -1,19 +1,20 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
+import org.livingdoc.api.After
+import org.livingdoc.api.Before
 import org.livingdoc.api.fixtures.decisiontables.AfterRow
-import org.livingdoc.api.fixtures.decisiontables.AfterTable
 import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
-import org.livingdoc.api.fixtures.decisiontables.BeforeTable
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.engine.execution.checkThatMethodsAreNonStatic
+import org.livingdoc.engine.execution.checkThatMethodsAreStatic
+import org.livingdoc.engine.execution.checkThatMethodsHaveExactlyOneParameter
+import org.livingdoc.engine.execution.checkThatMethodsHaveNoParameters
 import java.lang.reflect.AnnotatedElement
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
 internal object DecisionTableFixtureChecker {
-
     fun check(model: DecisionTableFixtureModel): List<String> {
         return mutableListOf<String>().apply {
 
@@ -74,29 +75,29 @@ internal object DecisionTableFixtureChecker {
 
     private fun beforeTableMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeTableMethods, BeforeTable::class))
-        errors.addAll(elements = checkThatMethodsAreStatic(model.beforeTableMethods, BeforeTable::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeMethods, Before::class.java))
+        errors.addAll(elements = checkThatMethodsAreStatic(model.beforeMethods, Before::class.java))
         return errors
     }
 
     private fun afterTableMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterTableMethods, AfterTable::class))
-        errors.addAll(elements = checkThatMethodsAreStatic(model.afterTableMethods, AfterTable::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterMethods, After::class.java))
+        errors.addAll(elements = checkThatMethodsAreStatic(model.afterMethods, After::class.java))
         return errors
     }
 
     private fun beforeRowMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeRowMethods, BeforeRow::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeRowMethods, BeforeRow::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeRowMethods, BeforeRow::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeRowMethods, BeforeRow::class.java))
         return errors
     }
 
     private fun afterRowMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterRowMethods, AfterRow::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.afterRowMethods, AfterRow::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterRowMethods, AfterRow::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.afterRowMethods, AfterRow::class.java))
         return errors
     }
 
@@ -105,61 +106,24 @@ internal object DecisionTableFixtureChecker {
         errors.addAll(
             elements = checkThatMethodsHaveNoParameters(
                 model.beforeFirstCheckMethods,
-                BeforeFirstCheck::class
+                BeforeFirstCheck::class.java
             )
         )
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeFirstCheckMethods, BeforeFirstCheck::class))
+        errors.addAll(checkThatMethodsAreNonStatic(model.beforeFirstCheckMethods, BeforeFirstCheck::class.java))
         return errors
     }
 
     private fun inputMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveExactlyOneParameter(model.inputMethods, Input::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.inputMethods, Input::class))
+        errors.addAll(elements = checkThatMethodsHaveExactlyOneParameter(model.inputMethods, Input::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.inputMethods, Input::class.java))
         return errors
     }
 
     private fun checkMethodsHaveValidSignature(model: DecisionTableFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveExactlyOneParameter(model.checkMethods, Check::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.checkMethods, Check::class))
+        errors.addAll(elements = checkThatMethodsHaveExactlyOneParameter(model.checkMethods, Check::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.checkMethods, Check::class.java))
         return errors
-    }
-
-    private fun checkThatMethodsHaveNoParameters(
-        methods: Collection<Method>,
-        annotationClass: KClass<*>
-    ): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { it.parameterCount > 0 }
-            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
-    }
-
-    private fun checkThatMethodsHaveExactlyOneParameter(
-        methods: Collection<Method>,
-        annotationClass: KClass<*>
-    ): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { it.parameterCount != 1 }
-            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must have exactly 1!" }
-    }
-
-    private fun checkThatMethodsAreStatic(methods: Collection<Method>, annotationClass: KClass<*>): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { !Modifier.isStatic(it.modifiers) }
-            .map { "@$annotationName method <$it> must be static!" }
-    }
-
-    private fun checkThatMethodsAreNonStatic(
-        methods: Collection<Method>,
-        annotationClass: KClass<*>
-    ): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { Modifier.isStatic(it.modifiers) }
-            .map { "@$annotationName method <$it> must not be static!" }
     }
 }
