@@ -5,7 +5,6 @@ import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
-import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
