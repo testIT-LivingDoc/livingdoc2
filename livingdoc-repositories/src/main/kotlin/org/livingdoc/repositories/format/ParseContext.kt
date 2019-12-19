@@ -1,4 +1,4 @@
-package org.livingdoc.repositories.file
+package org.livingdoc.repositories.format
 
 /**
  * A context class used during parsing of documents
