@@ -30,7 +30,6 @@ class LivingDoc(
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
         return documentClasses.groupBy { documentClass ->
             documentClass.declaringClass?.takeIf { declaringClass ->
-                // TODO Clarify whether this check is needed
                 declaringClass.isAnnotationPresent(Group::class.java)
             } ?: ImplicitGroup::class.java
         }.flatMap { (groupClass, documentClasses) ->
