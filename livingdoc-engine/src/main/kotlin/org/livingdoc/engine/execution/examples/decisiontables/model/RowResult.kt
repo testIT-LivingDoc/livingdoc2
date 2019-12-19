@@ -3,20 +3,15 @@ package org.livingdoc.engine.execution.examples.decisiontables.model
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import java.lang.reflect.Method
-import java.util.*
-import kotlin.collections.HashMap
 
 data class RowResult private constructor(
     val headerToField: Map<Header, FieldResult>,
-    val status: Status = Status.Unknown,
-    val fixtureMethod: Optional<Method>
+    val status: Status = Status.Unknown
 ) {
     class Builder {
         private var row: Row? = null
         private val fieldResults: MutableMap<Header, FieldResult> = HashMap()
         private lateinit var status: Status
-        private var fixtureMethod: Method? = null
 
         /**
          * Sets the [FieldResult] for a given field in this row
@@ -44,14 +39,6 @@ data class RowResult private constructor(
          */
         fun withStatus(status: Status): Builder {
             this.status = status
-            return this
-        }
-
-        /**
-         * Sets or overrides the [Method] that the built [RowResult] refers to
-         */
-        fun withFixtureMethod(method: Method): Builder {
-            this.fixtureMethod = method
             return this
         }
 
@@ -131,7 +118,7 @@ data class RowResult private constructor(
             }
 
             // Build result
-            return RowResult(fieldResults, status, Optional.ofNullable(this.fixtureMethod))
+            return RowResult(fieldResults, status)
         }
     }
 }

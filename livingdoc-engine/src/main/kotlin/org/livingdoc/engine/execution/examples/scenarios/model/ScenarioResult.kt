@@ -4,20 +4,19 @@ import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
-import java.util.*
 
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
     val fixture: Fixture<Scenario>,
-    val fixtureSource: Optional<Class<*>>,
+    val fixtureSource: Class<*>?,
     val scenario: Scenario
 ) : TestDataResult<Scenario> {
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
         private var fixture: Fixture<Scenario>? = null
-        private var fixtureSource = Optional.empty<Class<*>>()
+        private var fixtureSource: Class<*>? = null
         private var scenario: Scenario? = null
 
         /**
@@ -61,7 +60,7 @@ data class ScenarioResult private constructor(
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
-            this.fixtureSource = Optional.of(fixtureSource)
+            this.fixtureSource = fixtureSource
             return this
         }
 

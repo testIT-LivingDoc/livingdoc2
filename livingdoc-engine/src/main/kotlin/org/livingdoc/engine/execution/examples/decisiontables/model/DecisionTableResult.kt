@@ -6,14 +6,13 @@ import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import java.util.*
 
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
     val status: Status = Status.Unknown,
     val fixture: Fixture<DecisionTable>?,
-    val fixtureSource: Optional<Class<*>>,
+    val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {
 
@@ -21,7 +20,7 @@ data class DecisionTableResult private constructor(
         private val rows = mutableListOf<RowResult>()
         private lateinit var status: Status
         private var fixture: Fixture<DecisionTable>? = null
-        private var fixtureSource = Optional.empty<Class<*>>()
+        private var fixtureSource: Class<*>? = null
         private var decisionTable: DecisionTable? = null
 
         /**
@@ -96,7 +95,7 @@ data class DecisionTableResult private constructor(
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
-            this.fixtureSource = Optional.of(fixtureSource)
+            this.fixtureSource = fixtureSource
             return this
         }
 

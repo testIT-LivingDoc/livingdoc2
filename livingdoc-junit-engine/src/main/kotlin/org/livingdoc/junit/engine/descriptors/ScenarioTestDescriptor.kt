@@ -14,7 +14,7 @@ import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.junit.engine.LivingDocContext
 
-class ScenarioTestDescriptor(
+class ScenarioTestDescriptor private constructor(
     uniqueId: UniqueId,
     displayName: String,
     private val scenarioResult: ScenarioResult,
@@ -29,7 +29,7 @@ class ScenarioTestDescriptor(
                 stepUniqueId(index),
                 stepDisplayName(stepResult),
                 stepResult,
-                stepResult.fixtureMethod.map { MethodSource.from(it) }.orElse(null)
+                stepResult.fixtureMethod?.let { MethodSource.from(it) }
             )
         }.onEach { it.setParent(this) }.forEach { dynamicTestExecutor.execute(it) }
         return context
@@ -49,12 +49,16 @@ class ScenarioTestDescriptor(
     }
 
     companion object {
+        /**
+         * Create a new [ScenarioTestDescriptor] from the [uniqueId] and with the given [index] representing the
+         * [result].
+         */
         fun from(uniqueId: UniqueId, index: Int, result: ScenarioResult): ScenarioTestDescriptor {
             return ScenarioTestDescriptor(
                 scenarioUniqueId(uniqueId, index),
                 scenarioDisplayName(index),
                 result,
-                result.fixtureSource.map { ClassSource.from(it) }.orElse(null)
+                result.fixtureSource?.let { ClassSource.from(it) }
             )
         }
 

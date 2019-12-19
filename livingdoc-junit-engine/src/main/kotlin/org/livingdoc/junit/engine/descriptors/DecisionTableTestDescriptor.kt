@@ -16,7 +16,7 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.junit.engine.LivingDocContext
 import org.livingdoc.repositories.model.decisiontable.Header
 
-class DecisionTableTestDescriptor(
+class DecisionTableTestDescriptor private constructor(
     uniqueId: UniqueId,
     displayName: String,
     private val tableResult: DecisionTableResult,
@@ -46,12 +46,15 @@ class DecisionTableTestDescriptor(
     }
 
     companion object {
+        /**
+         * Create a new [DecisionTableTestDescriptor] from the [uniqueId] and the [index] representing the [result].
+         */
         fun from(uniqueId: UniqueId, index: Int, result: DecisionTableResult): DecisionTableTestDescriptor {
             return DecisionTableTestDescriptor(
                 tableUniqueId(uniqueId, index),
                 tableDisplayName(index),
                 result,
-                result.fixtureSource.map { ClassSource.from(it) }.orElse(null)
+                result.fixtureSource?.let { ClassSource.from(it) }
             )
         }
 
@@ -76,7 +79,7 @@ class DecisionTableTestDescriptor(
                     fieldUniqueId(header),
                     fieldDisplayName(header, fieldResult),
                     fieldResult,
-                    fieldResult.method.map { MethodSource.from(it) }.orElse(null)
+                    fieldResult.method?.let { MethodSource.from(it) }
                 )
             }.onEach { it.setParent(this) }.forEach { dynamicTestExecutor.execute(it) }
             return context

@@ -3,17 +3,16 @@ package org.livingdoc.engine.execution.examples.decisiontables.model
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import java.lang.reflect.Method
-import java.util.*
 
 data class FieldResult private constructor(
     val value: String,
     val status: Status,
-    val method: Optional<Method>
+    val method: Method?
 ) {
     class Builder {
         private lateinit var value: String
         private lateinit var status: Status
-        private var method = Optional.empty<Method>()
+        private var method: Method? = null
 
         /**
          * Sets or overrides the value of a [DecisionTable] row that the built [FieldResult] refers to
@@ -37,7 +36,7 @@ data class FieldResult private constructor(
          * Sets or overrides the [check method][method] for the built [FieldResult]
          */
         fun withCheckMethod(method: Method): Builder {
-            this.method = Optional.of(method)
+            this.method = method
             return this
         }
 
