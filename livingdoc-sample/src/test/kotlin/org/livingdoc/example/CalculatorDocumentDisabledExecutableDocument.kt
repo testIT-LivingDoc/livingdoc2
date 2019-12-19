@@ -24,7 +24,6 @@ class CalculatorDocumentDisabledExecutableDocument {
      * @see DecisionTableFixture
      */
 
-
     @DecisionTableFixture
     class CalculatorDecisionTableFixture {
 
