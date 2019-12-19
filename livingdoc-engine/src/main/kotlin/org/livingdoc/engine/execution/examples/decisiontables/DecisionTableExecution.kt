@@ -15,6 +15,7 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
+import java.lang.reflect.Method
 
 internal class DecisionTableExecution(
     private val fixtureClass: Class<*>,
@@ -23,7 +24,8 @@ internal class DecisionTableExecution(
 ) {
 
     private val fixtureModel = DecisionTableFixtureModel(fixtureClass)
-    private val decisionTableResult = DecisionTableResult.Builder().withDecisionTable(decisionTable)
+    private val decisionTableResult =
+        DecisionTableResult.Builder().withDecisionTable(decisionTable).withFixtureSource(fixtureClass)
 
     private val fieldInjector = FixtureFieldInjector(document)
     private val methodInvoker = FixtureMethodInvoker(document)
@@ -169,7 +171,9 @@ internal class DecisionTableExecution(
 
     private fun executeCheck(fixture: Any, header: Header, tableField: Field, fieldResult: FieldResult.Builder) {
         try {
-            doExecuteCheck(fixture, header, tableField)
+            val method = fixtureModel.getCheckMethod(header.name)!!
+            fieldResult.withCheckMethod(method)
+            doExecuteCheck(fixture, method, tableField)
             this.handleSuccessfulExecution(fieldResult, tableField)
         } catch (e: AssertionError) {
             this.handleAssertionError(fieldResult, tableField, e)
@@ -180,8 +184,7 @@ internal class DecisionTableExecution(
         }
     }
 
-    private fun doExecuteCheck(fixture: Any, header: Header, tableField: Field) {
-        val method = fixtureModel.getCheckMethod(header.name)!!
+    private fun doExecuteCheck(fixture: Any, method: Method, tableField: Field) {
         methodInvoker.invoke(method, fixture, arrayOf(tableField.value))
     }
 

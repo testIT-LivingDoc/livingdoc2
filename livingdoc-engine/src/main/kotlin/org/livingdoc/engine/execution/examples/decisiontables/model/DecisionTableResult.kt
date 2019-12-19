@@ -6,13 +6,14 @@ import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import kotlin.IllegalArgumentException
+import java.util.*
 
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
     val status: Status = Status.Unknown,
     val fixture: Fixture<DecisionTable>?,
+    val fixtureSource: Optional<Class<*>>,
     val decisionTable: DecisionTable
 ) : TestDataResult {
 
@@ -20,6 +21,7 @@ data class DecisionTableResult private constructor(
         private val rows = mutableListOf<RowResult>()
         private lateinit var status: Status
         private var fixture: Fixture<DecisionTable>? = null
+        private var fixtureSource = Optional.empty<Class<*>>()
         private var decisionTable: DecisionTable? = null
 
         /**
@@ -90,6 +92,15 @@ data class DecisionTableResult private constructor(
         }
 
         /**
+         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * This value is optional.
+         */
+        fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            this.fixtureSource = Optional.of(fixtureSource)
+            return this
+        }
+
+        /**
          * Sets or overrides the [DecisionTable] that the built [DecisionTableResult] refers to
          */
         fun withDecisionTable(decisionTable: DecisionTable): Builder {
@@ -133,7 +144,7 @@ data class DecisionTableResult private constructor(
             }
 
             // Build the result
-            return DecisionTableResult(headers, rows, status, fixture, decisionTable)
+            return DecisionTableResult(headers, rows, status, fixture, fixtureSource, decisionTable)
         }
     }
 }

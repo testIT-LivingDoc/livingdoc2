@@ -1,8 +1,11 @@
 package org.livingdoc.junit.engine.descriptors
 
 import org.junit.platform.engine.TestDescriptor
+import org.junit.platform.engine.TestSource
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
+import org.junit.platform.engine.support.descriptor.ClassSource
+import org.junit.platform.engine.support.descriptor.MethodSource
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
@@ -14,17 +17,21 @@ import org.livingdoc.junit.engine.LivingDocContext
 class ScenarioTestDescriptor(
     uniqueId: UniqueId,
     displayName: String,
-    private val scenarioResult: ScenarioResult
-) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
+    private val scenarioResult: ScenarioResult,
+    testSource: TestSource?
+) : AbstractTestDescriptor(uniqueId, displayName, testSource), Node<LivingDocContext> {
 
     override fun getType() = TestDescriptor.Type.CONTAINER
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
-        scenarioResult.steps.forEachIndexed { index, stepResult ->
-            val descriptor = StepTestDescriptor(stepUniqueId(index), stepDisplayName(stepResult), stepResult)
-                .also { it.setParent(this) }
-            dynamicTestExecutor.execute(descriptor)
-        }
+        scenarioResult.steps.mapIndexed { index, stepResult ->
+            StepTestDescriptor(
+                stepUniqueId(index),
+                stepDisplayName(stepResult),
+                stepResult,
+                stepResult.fixtureMethod.map { MethodSource.from(it) }.orElse(null)
+            )
+        }.onEach { it.setParent(this) }.forEach { dynamicTestExecutor.execute(it) }
         return context
     }
 
@@ -41,11 +48,26 @@ class ScenarioTestDescriptor(
         }
     }
 
+    companion object {
+        fun from(uniqueId: UniqueId, index: Int, result: ScenarioResult): ScenarioTestDescriptor {
+            return ScenarioTestDescriptor(
+                scenarioUniqueId(uniqueId, index),
+                scenarioDisplayName(index),
+                result,
+                result.fixtureSource.map { ClassSource.from(it) }.orElse(null)
+            )
+        }
+
+        private fun scenarioUniqueId(uniqueId: UniqueId, index: Int) = uniqueId.append("scenario", "$index")
+        private fun scenarioDisplayName(index: Int) = "Scenario #${index + 1}"
+    }
+
     class StepTestDescriptor(
         uniqueId: UniqueId,
         displayName: String,
-        private val stepResult: StepResult
-    ) : AbstractTestDescriptor(uniqueId, displayName), Node<LivingDocContext> {
+        private val stepResult: StepResult,
+        testSource: TestSource?
+    ) : AbstractTestDescriptor(uniqueId, displayName, testSource), Node<LivingDocContext> {
 
         override fun getType() = TestDescriptor.Type.TEST
 
@@ -53,8 +75,7 @@ class ScenarioTestDescriptor(
             context: LivingDocContext,
             dynamicTestExecutor: Node.DynamicTestExecutor
         ): LivingDocContext {
-            val result = stepResult.status
-            when (result) {
+            when (val result = stepResult.status) {
                 is Status.Failed -> throw result.reason
                 is Status.Exception -> throw result.exception
             }

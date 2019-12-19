@@ -4,17 +4,20 @@ import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
+import java.util.*
 
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
     val fixture: Fixture<Scenario>?,
+    val fixtureSource: Optional<Class<*>>,
     val scenario: Scenario
 ) : TestDataResult {
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
         private var fixture: Fixture<Scenario>? = null
+        private var fixtureSource = Optional.empty<Class<*>>()
         private var scenario: Scenario? = null
 
         /**
@@ -50,6 +53,15 @@ data class ScenarioResult private constructor(
          */
         fun withFixture(fixture: Fixture<Scenario>): Builder {
             this.fixture = fixture
+            return this
+        }
+
+        /**
+         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * This value is optional.
+         */
+        fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            this.fixtureSource = Optional.of(fixtureSource)
             return this
         }
 
@@ -112,17 +124,16 @@ data class ScenarioResult private constructor(
                             " does not match the expected number (${scenario.steps.size})"
                 )
             }
-            scenario.steps.forEach {
-                val step = it
-                if (steps.filter {
+            scenario.steps.forEach { step ->
+                if (steps.none {
                         it.value == step.value && it.status != Status.Unknown
-                    }.isEmpty()) {
+                    }) {
                     throw IllegalStateException("Not all scenario steps are contained in the result")
                 }
             }
 
             // Build result
-            return ScenarioResult(steps, status, fixture, scenario)
+            return ScenarioResult(steps, status, fixture, fixtureSource, scenario)
         }
     }
 }

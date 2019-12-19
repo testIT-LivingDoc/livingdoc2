@@ -22,7 +22,7 @@ internal class ScenarioExecution(
 ) {
 
     private val fixtureModel = ScenarioFixtureModel(fixtureClass)
-    private val scenarioResultBuilder = ScenarioResult.Builder().withScenario(scenario)
+    private val scenarioResultBuilder = ScenarioResult.Builder().withScenario(scenario).withFixtureSource(fixtureClass)
     private val methodInvoker = FixtureMethodInvoker(document)
 
     /**
@@ -99,7 +99,7 @@ internal class ScenarioExecution(
             .toTypedArray()
         stepResultBuilder.withStatus(
             invokeExpectingException(method, fixture, parameterList)
-        )
+        ).withFixtureMethod(method)
     }
 
     private fun getParameterName(parameter: Parameter): String {
