@@ -14,5 +14,5 @@ interface Fixture<T : TestData> {
      * @param testData A test data instance that can be mapped to the fixture
      * @return A TestDataResult for the execution
      */
-    fun execute(testData: T): TestDataResult
+    fun execute(testData: T): TestDataResult<T>
 }

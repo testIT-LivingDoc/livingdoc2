@@ -9,10 +9,10 @@ import java.util.*
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
-    val fixture: Fixture<Scenario>?,
+    val fixture: Fixture<Scenario>,
     val fixtureSource: Optional<Class<*>>,
     val scenario: Scenario
-) : TestDataResult {
+) : TestDataResult<Scenario> {
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
@@ -95,9 +95,8 @@ data class ScenarioResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [ScenarioResult]
          */
         fun build(): ScenarioResult {
-            // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
-            // ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
+                ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
 
             val scenario =
                 this.scenario ?: throw IllegalStateException("Cannot build ScenarioResult without a scenario")

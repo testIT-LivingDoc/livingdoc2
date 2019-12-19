@@ -21,9 +21,9 @@ internal class ScenarioExecutionTest {
     fun disabledScenarioExecute() {
         val scenarioMock = mockkJClass(Scenario::class.java)
         val fixtureClass = DisabledScenarioDocument.DisabledScenarioFixture::class.java
-        val cut = ScenarioExecution(fixtureClass, scenarioMock, null)
+        val cut = ScenarioFixtureWrapper(fixtureClass)
 
-        val result = cut.execute().status
+        val result = cut.execute(scenarioMock).status
 
         Assertions.assertThat(result).isInstanceOf(Status.Disabled::class.java)
         Assertions.assertThat((result as Status.Disabled).reason).isEqualTo("Disabled ScenarioFixture")
@@ -277,7 +277,7 @@ internal class ScenarioExecutionTest {
                 val result = execute().status as Status.Exception
 
                 Assertions.assertThat(result.exception)
-                    .isInstanceOf(ScenarioExecution.AfterMethodExecutionException::class.java)
+                    .isInstanceOf(ScenarioFixtureWrapper.AfterMethodExecutionException::class.java)
                 Assertions.assertThat(result.exception.suppressed).containsExactlyInAnyOrder(exception1, exception2)
             }
 
@@ -304,6 +304,6 @@ internal class ScenarioExecutionTest {
     }
 
     private fun executeScenario(scenario: Scenario, fixtureClass: Class<*>): ScenarioResult {
-        return ScenarioExecution(fixtureClass, scenario, null).execute()
+        return ScenarioFixtureWrapper(fixtureClass).execute(scenario)
     }
 }

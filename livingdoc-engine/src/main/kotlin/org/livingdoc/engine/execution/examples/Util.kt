@@ -1,17 +1,21 @@
 package org.livingdoc.engine.execution.examples
 
 @Suppress("TooGenericExceptionCaught")
-fun executeWithBeforeAndAfter(before: () -> Unit, body: () -> Unit, after: () -> Unit) {
+fun <T> executeWithBeforeAndAfter(before: () -> Unit, body: () -> T, after: () -> Unit): T {
     var exception: Throwable? = null
-    try {
-        before.invoke()
-        body.invoke()
-    } catch (e: Throwable) {
-        exception = e
-    } finally {
-        runAfter(after, exception)
-    }
+    val value =
+        try {
+            before.invoke()
+            body.invoke()
+        } catch (e: Throwable) {
+            exception = e
+            null
+        } finally {
+            runAfter(after, exception)
+        }
+    return value ?: throw IllegalStateException()
 }
+
 @Suppress("TooGenericExceptionCaught")
 private fun runAfter(after: () -> Unit, exception: Throwable?) {
     var originalException = exception

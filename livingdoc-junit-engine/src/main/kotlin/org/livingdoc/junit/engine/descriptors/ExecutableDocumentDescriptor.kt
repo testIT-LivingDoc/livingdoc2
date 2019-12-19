@@ -16,6 +16,7 @@ import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTabl
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.junit.engine.LivingDocContext
 import org.livingdoc.reports.ReportsManager
+import org.livingdoc.repositories.model.TestData
 
 class ExecutableDocumentDescriptor(
     uniqueId: UniqueId,
@@ -31,7 +32,7 @@ class ExecutableDocumentDescriptor(
         val reportsManager = ReportsManager.from(context.livingDoc.configProvider)
         reportsManager.generateReports(result)
 
-        result.results.mapIndexed<TestDataResult, TestDescriptor> { index, exampleResult ->
+        result.results.mapIndexed<TestDataResult<TestData>, TestDescriptor> { index, exampleResult ->
             when (exampleResult) {
                 is DecisionTableResult -> DecisionTableTestDescriptor.from(uniqueId, index, exampleResult)
                 is ScenarioResult -> ScenarioTestDescriptor.from(uniqueId, index, exampleResult)

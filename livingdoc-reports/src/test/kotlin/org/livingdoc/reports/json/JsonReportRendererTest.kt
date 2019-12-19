@@ -5,10 +5,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
+import org.livingdoc.engine.execution.examples.scenarios.ScenarioNoFixture
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
@@ -102,6 +102,7 @@ internal class JsonReportRendererTest {
             .withRow(rowResult1.build())
             .withRow(rowResult2.build())
             .withStatus(Status.Executed)
+            .withFixture(mockk())
 
         val documentResult = DocumentResult.Builder()
             .withDocumentClass(JsonReportRendererTest::class.java)
@@ -183,7 +184,7 @@ internal class JsonReportRendererTest {
                         )
                     )
                 )
-                .withFixture(NoFixtureWrapper())
+                .withFixture(ScenarioNoFixture())
                 .build()
         ).build()
 

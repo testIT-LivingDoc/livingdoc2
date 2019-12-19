@@ -1,3 +1,3 @@
 package org.livingdoc.engine.execution.examples
 
-interface TestDataResult
+interface TestDataResult<out T>

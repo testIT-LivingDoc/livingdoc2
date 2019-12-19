@@ -15,7 +15,7 @@ data class DecisionTableResult private constructor(
     val fixture: Fixture<DecisionTable>?,
     val fixtureSource: Optional<Class<*>>,
     val decisionTable: DecisionTable
-) : TestDataResult {
+) : TestDataResult<DecisionTable> {
 
     class Builder {
         private val rows = mutableListOf<RowResult>()
@@ -115,10 +115,8 @@ data class DecisionTableResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [DecisionTableResult]
          */
         fun build(): DecisionTableResult {
-
-            // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
-            // ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
+                ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
 
             val decisionTable = this.decisionTable
                 ?: throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
