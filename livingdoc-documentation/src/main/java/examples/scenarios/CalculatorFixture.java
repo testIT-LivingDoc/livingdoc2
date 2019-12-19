@@ -7,6 +7,11 @@ import org.livingdoc.api.After;
 import org.livingdoc.api.Before;
 import org.livingdoc.api.fixtures.scenarios.*;
 
+/**
+ * This example demonstrates a scenario fixture and its annotation possibilty. Other than in the sample
+ * we have no executable document.
+ */
+
 @ScenarioFixture("Calculator")
 public class CalculatorFixture {
 

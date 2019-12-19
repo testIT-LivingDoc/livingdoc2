@@ -9,6 +9,10 @@ import org.livingdoc.api.fixtures.decisiontables.Input;
 
 import implementations.Calculator;
 
+/**
+ * This example demonstrates a decisiontable fixture and its annotation possibilty. Other than in the sample
+ * we have no executable document.
+ */
 
 @DecisionTableFixture(value ="Calculator", parallel = true)
 public class CalculatorFixture {
