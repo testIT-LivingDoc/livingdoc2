@@ -15,7 +15,6 @@ dependencies {
 	runtimeOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 	implementation(project(":livingdoc-config"))
 	implementation(project(":livingdoc-repositories"))
-	implementation(project(":livingdoc-repository-file"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
