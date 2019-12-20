@@ -9,7 +9,7 @@ import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 
-internal class DecisionTableNoFixtureExecutionTest {
+internal class DecisionTableNoFixtureTest {
 
     @Test
     fun manualDecisionTableExecute() {
@@ -27,8 +27,8 @@ internal class DecisionTableNoFixtureExecutionTest {
             TestDataDescription("MANUAL Test1", true)
         )
 
-        val cut = DecisionTableNoFixtureExecution(decisionTableMock, null)
-        val result = cut.execute().status
+        val cut = DecisionTableNoFixture()
+        val result = cut.execute(decisionTableMock).status
 
         Assertions.assertThat(result).isInstanceOf(Status.Manual::class.java)
     }

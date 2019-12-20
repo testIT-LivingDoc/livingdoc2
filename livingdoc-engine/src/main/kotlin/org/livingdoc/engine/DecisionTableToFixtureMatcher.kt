@@ -1,8 +1,8 @@
 package org.livingdoc.engine
 
-import org.livingdoc.engine.execution.examples.NoFixtureWrapper
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureModel
 import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableFixtureWrapper
+import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableNoFixture
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
@@ -16,7 +16,7 @@ class DecisionTableToFixtureMatcher {
         fixtures: List<DecisionTableFixtureWrapper>
     ): Fixture<DecisionTable> {
         if (decisionTable.description.isManual) {
-            return NoFixtureWrapper()
+            return DecisionTableNoFixture()
         }
 
         val headerNames = decisionTable.headers.map { it.name }

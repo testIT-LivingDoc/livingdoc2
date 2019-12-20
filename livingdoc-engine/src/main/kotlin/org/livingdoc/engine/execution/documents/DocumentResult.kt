@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.documents
 
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.TestDataResult
+import org.livingdoc.repositories.model.TestData
 
 /**
  * A DocumentResult is the result obtained from a single [DocumentExecution].
@@ -11,7 +12,7 @@ import org.livingdoc.engine.execution.examples.TestDataResult
 data class DocumentResult private constructor(
     val documentClass: Class<*>,
     val documentStatus: Status,
-    val results: List<TestDataResult>
+    val results: List<TestDataResult<out TestData>>
 ) {
     /**
      * Builder can be used to build a [DocumentResult].
@@ -19,7 +20,7 @@ data class DocumentResult private constructor(
     class Builder {
         private lateinit var documentClass: Class<*>
         private lateinit var status: Status
-        private var results: MutableList<TestDataResult> = mutableListOf()
+        private var results: MutableList<TestDataResult<out TestData>> = mutableListOf()
 
         /**
          * WithDocumentClass sets the document class for which to build the [DocumentResult].
@@ -49,9 +50,9 @@ data class DocumentResult private constructor(
          * WithResult adds a new [TestDataResult] to the results for this execution.
          *
          * @param result the [TestDataResult] to add
-         * @param a Builder instance containing the new result
+         * @return a Builder instance containing the new result
          */
-        fun withResult(result: TestDataResult): Builder {
+        fun withResult(result: TestDataResult<out TestData>): Builder {
             results.add(result)
 
             return this

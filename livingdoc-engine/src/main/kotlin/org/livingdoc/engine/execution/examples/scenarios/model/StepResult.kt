@@ -3,12 +3,11 @@ package org.livingdoc.engine.execution.examples.scenarios.model
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import java.lang.reflect.Method
-import java.util.*
 
 data class StepResult private constructor(
     val value: String,
     val status: Status,
-    val fixtureMethod: Optional<Method>
+    val fixtureMethod: Method?
 ) {
     class Builder {
         private lateinit var status: Status
@@ -58,7 +57,7 @@ data class StepResult private constructor(
                 throw IllegalStateException("Cannot build StepResult with unknown status")
             }
 
-            return StepResult(this.value, this.status, Optional.ofNullable(this.fixtureMethod))
+            return StepResult(this.value, this.status, this.fixtureMethod)
         }
     }
 }

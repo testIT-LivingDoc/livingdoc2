@@ -8,13 +8,15 @@ import org.livingdoc.repositories.model.scenario.Scenario
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
-    val fixture: Fixture<Scenario>?,
+    val fixture: Fixture<Scenario>,
+    val fixtureSource: Class<*>?,
     val scenario: Scenario
-) : TestDataResult {
+) : TestDataResult<Scenario> {
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
         private var fixture: Fixture<Scenario>? = null
+        private var fixtureSource: Class<*>? = null
         private var scenario: Scenario? = null
 
         /**
@@ -54,6 +56,15 @@ data class ScenarioResult private constructor(
         }
 
         /**
+         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * This value is optional.
+         */
+        fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            this.fixtureSource = fixtureSource
+            return this
+        }
+
+        /**
          * Sets or overrides the [Scenario] that the built [ScenarioResult] refers to
          */
         fun withScenario(scenario: Scenario): Builder {
@@ -83,9 +94,8 @@ data class ScenarioResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [ScenarioResult]
          */
         fun build(): ScenarioResult {
-            // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
-            // ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
+                ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
 
             val scenario =
                 this.scenario ?: throw IllegalStateException("Cannot build ScenarioResult without a scenario")
@@ -112,17 +122,16 @@ data class ScenarioResult private constructor(
                             " does not match the expected number (${scenario.steps.size})"
                 )
             }
-            scenario.steps.forEach {
-                val step = it
-                if (steps.filter {
+            scenario.steps.forEach { step ->
+                if (steps.none {
                         it.value == step.value && it.status != Status.Unknown
-                    }.isEmpty()) {
+                    }) {
                     throw IllegalStateException("Not all scenario steps are contained in the result")
                 }
             }
 
             // Build result
-            return ScenarioResult(steps, status, fixture, scenario)
+            return ScenarioResult(steps, status, fixture, fixtureSource, scenario)
         }
     }
 }

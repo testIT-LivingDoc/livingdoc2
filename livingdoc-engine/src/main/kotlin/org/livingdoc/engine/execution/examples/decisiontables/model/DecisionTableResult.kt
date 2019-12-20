@@ -6,20 +6,21 @@ import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import kotlin.IllegalArgumentException
 
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
     val status: Status = Status.Unknown,
     val fixture: Fixture<DecisionTable>?,
+    val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
-) : TestDataResult {
+) : TestDataResult<DecisionTable> {
 
     class Builder {
         private val rows = mutableListOf<RowResult>()
         private lateinit var status: Status
         private var fixture: Fixture<DecisionTable>? = null
+        private var fixtureSource: Class<*>? = null
         private var decisionTable: DecisionTable? = null
 
         /**
@@ -90,6 +91,15 @@ data class DecisionTableResult private constructor(
         }
 
         /**
+         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * This value is optional.
+         */
+        fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            this.fixtureSource = fixtureSource
+            return this
+        }
+
+        /**
          * Sets or overrides the [DecisionTable] that the built [DecisionTableResult] refers to
          */
         fun withDecisionTable(decisionTable: DecisionTable): Builder {
@@ -104,10 +114,8 @@ data class DecisionTableResult private constructor(
          * @throws IllegalStateException If the builder is missing data to build a [DecisionTableResult]
          */
         fun build(): DecisionTableResult {
-
-            // TODO Can't add this check until execution is part of fixture class
             val fixture = this.fixture
-            // ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
+                ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
 
             val decisionTable = this.decisionTable
                 ?: throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
@@ -133,7 +141,7 @@ data class DecisionTableResult private constructor(
             }
 
             // Build the result
-            return DecisionTableResult(headers, rows, status, fixture, decisionTable)
+            return DecisionTableResult(headers, rows, status, fixture, fixtureSource, decisionTable)
         }
     }
 }

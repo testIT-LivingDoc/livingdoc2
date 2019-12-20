@@ -16,7 +16,7 @@ import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 
-internal class DecisionTableExecutionTest {
+internal class DecisionTableFixtureWrapperTest {
 
     @BeforeEach
     fun reset() {
@@ -28,9 +28,9 @@ internal class DecisionTableExecutionTest {
     fun disabledDecisionTableExecute() {
         val decisionTableMock = mockkJClass(DecisionTable::class.java)
         val fixtureClass = DisabledDecisionTableDocument.DisabledDecisionTableFixture::class.java
-        val cut = DecisionTableExecution(fixtureClass, decisionTableMock, null)
+        val cut = DecisionTableFixtureWrapper(fixtureClass)
 
-        val result = cut.execute().status
+        val result = cut.execute(decisionTableMock).status
 
         Assertions.assertThat(result).isInstanceOf(Status.Disabled::class.java)
         Assertions.assertThat((result as Status.Disabled).reason).isEqualTo("Disabled DecisionTableFixture")
@@ -78,7 +78,7 @@ internal class DecisionTableExecutionTest {
 
         val exception = (tableResult as Status.Exception).exception
         Assertions.assertThat(exception)
-            .isInstanceOf(DecisionTableExecution.MalformedDecisionTableFixtureException::class.java)
+            .isInstanceOf(DecisionTableFixtureWrapper.MalformedDecisionTableFixtureException::class.java)
     }
 
     @Test
@@ -96,7 +96,7 @@ internal class DecisionTableExecutionTest {
         Assertions.assertThat(tableResult).isInstanceOf(Status.Exception::class.java)
 
         val exception = (tableResult as Status.Exception).exception
-        Assertions.assertThat(exception).isInstanceOf(DecisionTableExecution.UnmappedHeaderException::class.java)
+        Assertions.assertThat(exception).isInstanceOf(DecisionTableFixtureWrapper.UnmappedHeaderException::class.java)
         Assertions.assertThat(exception).hasMessageContaining("- unknown")
 
         val fixture = LifeCycleFixture.callback
@@ -620,7 +620,7 @@ internal class DecisionTableExecutionTest {
 
         private fun execute(vararg rows: Row): DecisionTableResult {
             val decisionTable = DecisionTable(headers, rows.asList())
-            return DecisionTableExecution(LifeCycleFixture::class.java, decisionTable, null).execute()
+            return DecisionTableFixtureWrapper(LifeCycleFixture::class.java).execute(decisionTable)
         }
     }
 
@@ -691,6 +691,6 @@ internal class DecisionTableExecutionTest {
     }
 
     private fun executeDecisionTable(decisionTable: DecisionTable, fixtureClass: Class<*>): DecisionTableResult {
-        return DecisionTableExecution(fixtureClass, decisionTable, null).execute()
+        return DecisionTableFixtureWrapper(fixtureClass).execute(decisionTable)
     }
 }

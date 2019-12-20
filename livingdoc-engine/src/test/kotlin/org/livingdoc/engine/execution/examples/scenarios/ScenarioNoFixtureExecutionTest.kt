@@ -21,9 +21,8 @@ internal class ScenarioNoFixtureExecutionTest {
             TestDataDescription("MANUAL Test1", true)
         )
 
-        val cut = ScenarioNoFixtureExecution(scenarioMock, null)
-        val result = cut.execute().status
-
+        val cut = ScenarioNoFixture()
+        val result = cut.execute(scenarioMock).status
         Assertions.assertThat(result).isInstanceOf(Status.Manual::class.java)
     }
 }

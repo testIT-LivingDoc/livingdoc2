@@ -1,5 +1,6 @@
 package org.livingdoc.junit.engine.descriptors
 
+import org.junit.platform.engine.TestDescriptor
 import org.junit.platform.engine.TestDescriptor.Type
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor
@@ -10,10 +11,12 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
 import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.Status
+import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.junit.engine.LivingDocContext
 import org.livingdoc.reports.ReportsManager
+import org.livingdoc.repositories.model.TestData
 
 class ExecutableDocumentDescriptor(
     uniqueId: UniqueId,
@@ -29,22 +32,13 @@ class ExecutableDocumentDescriptor(
         val reportsManager = ReportsManager.from(context.livingDoc.configProvider)
         reportsManager.generateReports(result)
 
-        result.results.forEachIndexed { index, exampleResult ->
+        result.results.mapIndexed<TestDataResult<TestData>, TestDescriptor> { index, exampleResult ->
             when (exampleResult) {
-                is DecisionTableResult -> {
-                    val descriptor =
-                        DecisionTableTestDescriptor(tableUniqueId(index), tableDisplayName(index), exampleResult)
-                            .also { it.setParent(this) }
-                    dynamicTestExecutor.execute(descriptor)
-                }
-                is ScenarioResult -> {
-                    val descriptor =
-                        ScenarioTestDescriptor(scenarioUniqueId(index), scenarioDisplayName(index), exampleResult)
-                            .also { it.setParent(this) }
-                    dynamicTestExecutor.execute(descriptor)
-                }
+                is DecisionTableResult -> DecisionTableTestDescriptor.from(uniqueId, index, exampleResult)
+                is ScenarioResult -> ScenarioTestDescriptor.from(uniqueId, index, exampleResult)
+                else -> throw IllegalArgumentException("Unknown Result Type $exampleResult")
             }
-        }
+        }.onEach { it.setParent(this) }.forEach { dynamicTestExecutor.execute(it) }
 
         return context
     }
@@ -55,10 +49,4 @@ class ExecutableDocumentDescriptor(
             else -> doNotSkip()
         }
     }
-
-    private fun tableUniqueId(index: Int) = uniqueId.append("table", "$index")
-    private fun tableDisplayName(index: Int) = "Table #${index + 1}"
-
-    private fun scenarioUniqueId(index: Int) = uniqueId.append("scenario", "$index")
-    private fun scenarioDisplayName(index: Int) = "Scenario #${index + 1}"
 }

@@ -22,6 +22,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Exceptions as expected output can be specified in the Examples with the keyword "error"
 - Add converter to convert colors
 - A `@Group` annotation that can be used to group `@ExecutableDocument` classes
+- Navigation from Junit Test results to Fixture code
 
 === Changed
 

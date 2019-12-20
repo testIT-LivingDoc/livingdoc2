@@ -2,24 +2,24 @@ package org.livingdoc.engine.execution.examples.scenarios
 
 import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
+import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
 
-internal class ScenarioNoFixtureExecution(
-    private val scenario: Scenario,
-    document: Any?
-) {
+class ScenarioNoFixture : Fixture<Scenario> {
     /**
-     * Executes the configured [Scenario] without a [ScenarioFixtureModel].
+     * Executes the given test data as a manual test
      *
      * Does not throw any kind of exception.
      * Exceptional state of the execution is packaged inside the [ScenarioResult] in
      * the form of different status objects.
+     *
+     * @param testData Test data of the corresponding type
      */
-    fun execute(): ScenarioResult {
+    override fun execute(testData: Scenario): ScenarioResult {
         val resultBuilder = ScenarioResult.Builder()
-            .withScenario(scenario)
+            .withScenario(testData).withFixture(this).withFixtureSource(this.javaClass)
 
-        if (scenario.description.isManual) {
+        if (testData.description.isManual) {
             resultBuilder.withStatus(Status.Manual)
         }
 
