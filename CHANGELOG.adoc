@@ -15,7 +15,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Confluence Document Repository to load Examples from Confluence
 - Annotation to disable documents and fixtures
 - Test Reports can be configured in the `livingdoc.yml`
-- Test Reports in JSON format
+- Test Reports in pretty-printed JSON format
 - Custom Test Report formats can be added and used via Java SPI
 - Add manual test annotation to markdown and HTML documents so the test will not be executed by junit but appear in the reports as manually executed
 - Add possibility to specify a confluence document version

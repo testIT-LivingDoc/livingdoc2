@@ -42,9 +42,12 @@ The default value is `livingdoc/reports/html`.
 
 ==== Configuration
 .outputDir
-The directory where the HTML Reports are save.
+The directory where the JSON Reports are save.
 The default value is `livingdoc/reports/json`.
 
+.prettyPrinted
+Specific if the JSON Report should be pretty-printed.
+The default value is `true`.
 
 == Create Custom Report Formats
 This documentation is for developer which want to implement own Report Formats.
