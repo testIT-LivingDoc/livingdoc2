@@ -20,7 +20,7 @@ import org.livingdoc.repositories.model.scenario.Step
 
 internal class JsonReportRendererTest {
 
-    val cut = JsonReportRenderer()
+    private val cut = JsonReportRenderer()
 
     @Test
     fun `decisionTableResult is rendered correctly`() {
@@ -110,8 +110,9 @@ internal class JsonReportRendererTest {
             .withResult(decisionTableResult.build())
             .build()
 
-        val renderResult = cut.render(documentResult)
+        val renderResult = cut.render(documentResult, false)
 
+        assertThat(renderResult).hasLineCount(1)
         assertThat(renderResult).isEqualToIgnoringWhitespace(
             """
                 {
@@ -152,7 +153,51 @@ internal class JsonReportRendererTest {
                         "status": "executed"
                     }]
                 }
-                """
+                """.trimIndent()
+        )
+
+        val renderResultPretty = cut.render(documentResult, true)
+        assertThat(renderResultPretty).isEqualToNormalizingNewlines(
+            """
+                {
+                  "results": [{
+                    "rows": [{
+                      "fields": {
+                        "a": {
+                          "value": "2",
+                          "status": "executed"
+                        },
+                        "b": {
+                          "value": "3",
+                          "status": "disabled"
+                        },
+                        "a + b = ?": {
+                          "value": "6",
+                          "status": "failed"
+                        }
+                      },
+                      "status": "executed"
+                    }, {
+                      "fields": {
+                        "a": {
+                          "value": "5",
+                          "status": "skipped"
+                        },
+                        "b": {
+                          "value": "6",
+                          "status": "manual"
+                        },
+                        "a + b = ?": {
+                          "value": "11",
+                          "status": "exception"
+                        }
+                      },
+                      "status": "executed"
+                    }],
+                    "status": "executed"
+                  }]
+                }
+                """.trimIndent()
         )
     }
 
@@ -167,29 +212,31 @@ internal class JsonReportRendererTest {
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Failed(mockk())).build()
         val stepResultF = StepResult.Builder().withValue("F").withStatus(Status.Exception(mockk())).build()
 
-        val documentResult = DocumentResult.Builder().withDocumentClass(JsonReportRendererTest::class.java).withStatus(Status.Executed).withResult(
-            ScenarioResult.Builder()
-                .withStep(stepResultA)
-                .withStep(stepResultB)
-                .withStep(stepResultC)
-                .withStep(stepResultD)
-                .withStep(stepResultE)
-                .withStep(stepResultF)
-                .withStatus(Status.Executed)
-                .withScenario(
-                    Scenario(
-                        listOf(
-                            Step("A"), Step("B"), Step("C"),
-                            Step("D"), Step("E"), Step("F")
+        val documentResult =
+            DocumentResult.Builder().withDocumentClass(JsonReportRendererTest::class.java).withStatus(Status.Executed)
+                .withResult(
+                    ScenarioResult.Builder()
+                        .withStep(stepResultA)
+                        .withStep(stepResultB)
+                        .withStep(stepResultC)
+                        .withStep(stepResultD)
+                        .withStep(stepResultE)
+                        .withStep(stepResultF)
+                        .withStatus(Status.Executed)
+                        .withScenario(
+                            Scenario(
+                                listOf(
+                                    Step("A"), Step("B"), Step("C"),
+                                    Step("D"), Step("E"), Step("F")
+                                )
+                            )
                         )
-                    )
-                )
-                .withFixture(ScenarioNoFixture())
-                .build()
-        ).build()
+                        .withFixture(ScenarioNoFixture())
+                        .build()
+                ).build()
 
-        val renderResult = cut.render(documentResult)
-
+        val renderResult = cut.render(documentResult, false)
+        assertThat(renderResult).hasLineCount(1)
         assertThat(renderResult).isEqualToIgnoringWhitespace(
             """
                 {
@@ -210,7 +257,31 @@ internal class JsonReportRendererTest {
                         "status": "executed"
                     }]
                 }
-                """
+                """.trimIndent()
+        )
+        val renderResultPretty = cut.render(documentResult, true)
+
+        assertThat(renderResultPretty).isEqualToNormalizingNewlines(
+            """
+                {
+                  "results": [{
+                    "steps": [{
+                      "A": "executed"
+                    }, {
+                      "B": "disabled"
+                    }, {
+                      "C": "manual"
+                    }, {
+                      "D": "skipped"
+                    }, {
+                      "E": "failed"
+                    }, {
+                      "F": "exception"
+                    }],
+                    "status": "executed"
+                  }]
+                }
+                """.trimIndent()
         )
     }
 }
