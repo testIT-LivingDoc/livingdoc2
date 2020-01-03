@@ -18,7 +18,10 @@ class HtmlReportRenderer : ReportRenderer {
     override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
         val html = render(documentResult)
-        ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(html, UUID.randomUUID().toString())
+        ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(
+            html,
+            "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+        )
     }
 
     fun render(documentResult: DocumentResult): String {

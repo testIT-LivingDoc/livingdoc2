@@ -19,12 +19,14 @@ class JsonReportRenderer : ReportRenderer {
     override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
         val jsonConfig = YamlUtils.toObject(config, JsonReportConfig::class)
 
-        val json = render(documentResult)
-        // TODO get unique name for reports
-        ReportWriter(jsonConfig.outputDir, fileExtension = "json").writeToFile(json, UUID.randomUUID().toString())
+        val json = render(documentResult, jsonConfig.prettyPrinted)
+        ReportWriter(jsonConfig.outputDir, fileExtension = "json").writeToFile(
+            json,
+            "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+        )
     }
 
-    fun render(documentResult: DocumentResult): String {
+    fun render(documentResult: DocumentResult, prettyPrinted: Boolean): String {
         val exampleResults = json {
             obj("results" to array(documentResult.results.map {
                 when (it) {
@@ -35,7 +37,7 @@ class JsonReportRenderer : ReportRenderer {
             }))
         }
 
-        return exampleResults.toJsonString()
+        return exampleResults.toJsonString(prettyPrinted)
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): JsonObject {
