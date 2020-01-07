@@ -4,8 +4,8 @@ import org.livingdoc.api.documents.Group
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
 import org.livingdoc.engine.execution.documents.DocumentFixture
-import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.repositories.RepositoryManager
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * A GroupFixture represents a class containing a number of [DocumentFixtures][DocumentFixture] which will be executed

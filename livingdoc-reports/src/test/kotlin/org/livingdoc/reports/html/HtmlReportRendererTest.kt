@@ -3,20 +3,19 @@ package org.livingdoc.reports.html
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.documents.DocumentResult
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
-import org.livingdoc.engine.execution.examples.scenarios.ScenarioNoFixture
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
-import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
+import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
+import org.livingdoc.results.examples.decisiontables.FieldResult
+import org.livingdoc.results.examples.decisiontables.RowResult
+import org.livingdoc.results.examples.scenarios.ScenarioResult
+import org.livingdoc.results.examples.scenarios.StepResult
 
 internal class HtmlReportRendererTest {
 
@@ -102,7 +101,6 @@ internal class HtmlReportRendererTest {
             .withRow(rowResult1.build())
             .withRow(rowResult2.build())
             .withStatus(Status.Executed)
-            .withFixture(mockk())
 
         val documentResult = DocumentResult.Builder()
             .withDocumentClass(HtmlReportRendererTest::class.java)
@@ -192,7 +190,6 @@ internal class HtmlReportRendererTest {
                             )
                         )
                     )
-                    .withFixture(ScenarioNoFixture())
                     .build()
             ).build()
 

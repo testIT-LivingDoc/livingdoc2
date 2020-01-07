@@ -36,7 +36,7 @@ internal class RegMatching(
 
     private fun getCost(): Pair<Float, Float> {
         start()
-        val cons = considerVarLength()
+        considerVarLength()
         return Pair(operationNumber, considerVarLength() + operationNumber.toFloat())
     }
 
@@ -98,7 +98,7 @@ internal class RegMatching(
      *@return List of variables matched to the string
      */
     private fun matchStrings(): List<String> {
-        var matched = emptyList<String>()
+        val matched: List<String>
 
         val matchedResult = reggedText.find(testText)
 
@@ -127,7 +127,7 @@ internal class RegMatching(
      * @return rebuilt template string
      */
     private fun reconstructVars(templateS: String, variables: Map<String, Int>): String {
-        var s = templateS.split(" ")
+        val s = templateS.split(" ")
         var reconString = ""
         var counter = 0
         s.forEach {
@@ -153,9 +153,9 @@ internal class RegMatching(
      * @return the variables and their position in the template string
      */
     private fun prepareTemplateString(templateS: String): Pair<String, Map<String, Int>> {
-        var s = templateS.split(" ")
+        val s = templateS.split(" ")
         var reconString = ""
-        var variableLocations = mutableMapOf<String, Int>()
+        val variableLocations = mutableMapOf<String, Int>()
         var iterat = 0
         s.forEach {
 
@@ -182,7 +182,7 @@ internal class RegMatching(
      */
     private fun filterString(string: String): String {
         var outstring = ""
-        var tokens = string.split(" ")
+        val tokens = string.split(" ")
 
         for (i in 0..tokens.size - 1) {
             if (!checkIfVar(tokens[i])) {
@@ -201,7 +201,6 @@ internal class RegMatching(
     /**
      * function to consider the length of each variable
      * cost is added if variable length is too high
-     * @param variables the list of variables
      * @return the increase of cost
      */
     private fun considerVarLength(): Float {
@@ -274,7 +273,7 @@ internal class RegMatching(
     private fun prepareTemplateToRegex(stemmedsentence: String, variables: Map<String, Int>): Regex {
         val vari = variables
 
-        var preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
+        val preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
 
         val templateTxt = tokenizetemplateText(ininterntext = preppedTemplate)
         var textTemp = ""
@@ -282,7 +281,7 @@ internal class RegMatching(
             textTemp += it + " "
         }
         textTemp = StemmerHandler.cutLast(textTemp).toString()
-        var regexText = textTemp.toRegex()
+        val regexText = textTemp.toRegex()
 
         return regexText
     }
@@ -290,7 +289,7 @@ internal class RegMatching(
     /**
      * check if a variable is in a string
      *
-     * @param the string to be checked
+     * @param st string to be checked
      * @return if it is a variable
      */
     private fun checkIfVar(st: String): Boolean {

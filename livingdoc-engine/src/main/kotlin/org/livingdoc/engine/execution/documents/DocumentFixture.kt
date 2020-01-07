@@ -4,9 +4,10 @@ import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
-import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
+import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * A DocumentFixture performs the binding between the actual LivingDoc document and the glue code to load and parse that

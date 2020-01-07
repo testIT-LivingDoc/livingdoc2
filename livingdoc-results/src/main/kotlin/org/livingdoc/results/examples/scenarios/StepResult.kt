@@ -1,7 +1,6 @@
-package org.livingdoc.engine.execution.examples.scenarios.model
+package org.livingdoc.results.examples.scenarios
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
+import org.livingdoc.results.Status
 import java.lang.reflect.Method
 
 data class StepResult private constructor(

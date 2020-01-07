@@ -34,7 +34,11 @@ class FixtureMethodInvoker(
         try {
             return doInvokeStatic(method, arguments)
         } catch (e: Exception) {
-            throw StaticFixtureMethodInvocationException(method, method.declaringClass, e)
+            throw StaticFixtureMethodInvocationException(
+                method,
+                method.declaringClass,
+                e
+            )
         }
     }
 
@@ -75,13 +79,24 @@ class FixtureMethodInvoker(
         } catch (e: Exception) {
             when {
                 arguments.contains(ExampleSyntax.EXCEPTION) && e is java.lang.IllegalArgumentException -> {
-                    throw ExpectedOutputIsNotNullableException(method, fixture)
+                    throw ExpectedOutputIsNotNullableException(
+                        method,
+                        fixture
+                    )
                 }
                 arguments.contains(ExampleSyntax.EXCEPTION) -> {
-                    throw ExpectedException(method, fixture, e)
+                    throw ExpectedException(
+                        method,
+                        fixture,
+                        e
+                    )
                 }
                 else -> {
-                    throw FixtureMethodInvocationException(method, fixture, e)
+                    throw FixtureMethodInvocationException(
+                        method,
+                        fixture,
+                        e
+                    )
                 }
             }
         }
@@ -101,7 +116,10 @@ class FixtureMethodInvoker(
         val numberOfArguments = arguments.size
         val numberOfMethodParameters = methodParameters.size
         if (numberOfArguments != numberOfMethodParameters) {
-            throw MismatchedNumberOfArgumentsException(numberOfArguments, numberOfMethodParameters)
+            throw MismatchedNumberOfArgumentsException(
+                numberOfArguments,
+                numberOfMethodParameters
+            )
         }
     }
 
@@ -126,7 +144,9 @@ class FixtureMethodInvoker(
 
         val documentClass = document?.javaClass
         val typeConverter = TypeConverters.findTypeConverter(methodParameter, documentClass)
-            ?: throw NoTypeConverterFoundException(methodParameter)
+            ?: throw NoTypeConverterFoundException(
+                methodParameter
+            )
         return typeConverter.convert(argument, methodParameter, documentClass)
     }
 

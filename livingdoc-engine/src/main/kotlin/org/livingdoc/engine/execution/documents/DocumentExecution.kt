@@ -5,11 +5,12 @@ import org.livingdoc.api.Before
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
 import org.livingdoc.engine.execution.MalformedFixtureException
-import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * A DocumentExecution represents a single execution of a [DocumentFixture].

@@ -1,14 +1,12 @@
-package org.livingdoc.engine.execution.examples.scenarios.model
+package org.livingdoc.results.examples.scenarios
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.TestDataResult
-import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.results.Status
+import org.livingdoc.results.TestDataResult
 
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
     val status: Status,
-    val fixture: Fixture<Scenario>,
     val fixtureSource: Class<*>?,
     val scenario: Scenario
 ) : TestDataResult<Scenario> {
@@ -18,7 +16,6 @@ data class ScenarioResult private constructor(
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
-        private var fixture: Fixture<Scenario>? = null
         private var fixtureSource: Class<*>? = null
         private var scenario: Scenario? = null
 
@@ -45,7 +42,7 @@ data class ScenarioResult private constructor(
         /**
          * Sets the [StepResult] for a step in the given [Scenario]
          *
-         * @param step A sucessfully built [StepResult]
+         * @param step A successfully built [StepResult]
          */
         fun withStep(step: StepResult): Builder {
             checkFinalized()
@@ -59,15 +56,6 @@ data class ScenarioResult private constructor(
                     status = Status.Exception(step.status.exception)
                 }
             }
-            return this
-        }
-
-        /**
-         * Sets or overrides the [Fixture] that the built [ScenarioResult] refers to
-         */
-        fun withFixture(fixture: Fixture<Scenario>): Builder {
-            checkFinalized()
-            this.fixture = fixture
             return this
         }
 
@@ -118,9 +106,6 @@ data class ScenarioResult private constructor(
             // Finalize this builder. No further changes are allowed
             this.finalized = true
 
-            val fixture = this.fixture
-                ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
-
             val scenario =
                 this.scenario ?: throw IllegalStateException("Cannot build ScenarioResult without a scenario")
 
@@ -155,7 +140,12 @@ data class ScenarioResult private constructor(
             }
 
             // Build result
-            return ScenarioResult(steps, status, fixture, fixtureSource, scenario)
+            return ScenarioResult(
+                steps,
+                status,
+                fixtureSource,
+                scenario
+            )
         }
     }
 }

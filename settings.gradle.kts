@@ -32,6 +32,7 @@ include(
 	"livingdoc-repository-file",
 	"livingdoc-repository-rest",
 	"livingdoc-repository-confluence",
+	"livingdoc-results",
 	"livingdoc-sample"
 )
 

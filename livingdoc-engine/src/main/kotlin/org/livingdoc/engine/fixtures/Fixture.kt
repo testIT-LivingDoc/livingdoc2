@@ -1,7 +1,7 @@
 package org.livingdoc.engine.fixtures
 
-import org.livingdoc.engine.execution.examples.TestDataResult
 import org.livingdoc.repositories.model.TestData
+import org.livingdoc.results.TestDataResult
 
 /**
  * This interface is the basis for all specialized fixture classes.

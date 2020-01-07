@@ -1,11 +1,11 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
+import org.livingdoc.results.examples.decisiontables.FieldResult
+import org.livingdoc.results.examples.decisiontables.RowResult
 
 internal class DecisionTableNoFixture : Fixture<DecisionTable> {
     /**
@@ -16,7 +16,7 @@ internal class DecisionTableNoFixture : Fixture<DecisionTable> {
      * the form of different status objects.
      */
     override fun execute(testData: DecisionTable): DecisionTableResult {
-        val result = DecisionTableResult.Builder().withDecisionTable(testData).withFixture(this)
+        val result = DecisionTableResult.Builder().withDecisionTable(testData)
             .withFixtureSource(this.javaClass)
 
         if (testData.description.isManual) {

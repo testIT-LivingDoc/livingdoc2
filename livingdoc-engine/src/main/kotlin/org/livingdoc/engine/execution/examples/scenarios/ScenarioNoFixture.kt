@@ -1,9 +1,9 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.scenario.Scenario
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 class ScenarioNoFixture : Fixture<Scenario> {
     /**
@@ -17,7 +17,7 @@ class ScenarioNoFixture : Fixture<Scenario> {
      */
     override fun execute(testData: Scenario): ScenarioResult {
         val resultBuilder = ScenarioResult.Builder()
-            .withScenario(testData).withFixture(this).withFixtureSource(this.javaClass)
+            .withScenario(testData).withFixtureSource(this.javaClass)
 
         if (testData.description.isManual) {
             resultBuilder.withStatus(Status.Manual)

@@ -24,7 +24,7 @@ class RegMatchingTest {
 
     @ParameterizedTest()
     @MethodSource("valueProvider")
-    fun `long input with mismatch`(step: String, cost: Float) {
+    fun `long input with mismatch`(step: String) {
         val template = "adding {a} and {b} equals {c}"
         val sp = StepTemplate.parse(template)
         val regm = RegMatching(sp, step, 3.0f)

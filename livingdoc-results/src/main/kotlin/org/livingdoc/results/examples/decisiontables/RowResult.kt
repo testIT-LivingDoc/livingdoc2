@@ -1,8 +1,8 @@
-package org.livingdoc.engine.execution.examples.decisiontables.model
+package org.livingdoc.results.examples.decisiontables
 
-import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
+import org.livingdoc.results.Status
 
 data class RowResult private constructor(
     val headerToField: Map<Header, FieldResult>,

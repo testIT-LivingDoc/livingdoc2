@@ -1,19 +1,20 @@
 plugins {
-	`kotlin-project-config`
+    `kotlin-project-config`
 }
 
 dependencies {
-	implementation(project(":livingdoc-api"))
-	api(project(":livingdoc-config"))
-	implementation(project(":livingdoc-converters"))
-	api(project(":livingdoc-repositories"))
+    implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
+    implementation(project(":livingdoc-api"))
+    implementation(project(":livingdoc-converters"))
+    implementation(project(":livingdoc-results"))
 
-	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
+    api(project(":livingdoc-config"))
+    api(project(":livingdoc-repositories"))
 
-	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
-	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
+    testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
+    testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 }
 
 tasks.compileTestJava {
-	options.compilerArgs.add("-parameters")
+    options.compilerArgs.add("-parameters")
 }

@@ -4,11 +4,11 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.Group
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.ExecutionException
-import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.execution.groups.GroupFixture
 import org.livingdoc.engine.execution.groups.ImplicitGroup
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * Executes the given document class and returns the [DocumentResult]. The document's class must be annotated

@@ -8,12 +8,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.engine.mockkJClass
 import org.livingdoc.engine.resources.DisabledScenarioDocument
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 internal class ScenarioExecutionTest {
 
