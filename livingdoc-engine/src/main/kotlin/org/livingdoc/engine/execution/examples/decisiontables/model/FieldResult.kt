@@ -17,7 +17,6 @@ data class FieldResult private constructor(
         private lateinit var status: Status
         private var method: Method? = null
 
-        // This is used to finalize the builder when it is build avoiding further updates
         private var finalized = false
 
         private fun checkFinalized() {

@@ -17,7 +17,6 @@ data class StepResult private constructor(
         private lateinit var value: String
         private var fixtureMethod: Method? = null
 
-        // This is used to finalize the builder when it is build avoiding further updates
         private var finalized = false
 
         private fun checkFinalized() {

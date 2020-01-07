@@ -22,7 +22,6 @@ data class ScenarioResult private constructor(
         private var fixtureSource: Class<*>? = null
         private var scenario: Scenario? = null
 
-        // This is used to finalize the builder when it is build avoiding further updates
         private var finalized = false
 
         private fun checkFinalized() {
@@ -49,6 +48,8 @@ data class ScenarioResult private constructor(
          * @param step A sucessfully built [StepResult]
          */
         fun withStep(step: StepResult): Builder {
+            checkFinalized()
+
             steps.add(step)
             when (step.status) {
                 is Status.Failed -> {

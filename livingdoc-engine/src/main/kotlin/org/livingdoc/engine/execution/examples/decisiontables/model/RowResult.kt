@@ -16,7 +16,6 @@ data class RowResult private constructor(
         private val fieldResults: MutableMap<Header, FieldResult> = HashMap()
         private lateinit var status: Status
 
-        // This is used to finalize the builder when it is build avoiding further updates
         private var finalized = false
 
         private fun checkFinalized() {
@@ -33,6 +32,8 @@ data class RowResult private constructor(
          * @param field The given [FieldResult]
          */
         fun withFieldResult(header: Header, field: FieldResult): Builder {
+            checkFinalized()
+
             this.fieldResults[header] = field
             when (field.status) {
                 is Status.Exception -> {

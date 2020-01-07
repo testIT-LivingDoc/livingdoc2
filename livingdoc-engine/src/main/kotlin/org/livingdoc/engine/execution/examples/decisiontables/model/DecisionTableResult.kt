@@ -25,7 +25,6 @@ data class DecisionTableResult private constructor(
         private var fixtureSource: Class<*>? = null
         private var decisionTable: DecisionTable? = null
 
-        // This is used to finalize the builder when it is build avoiding further updates
         private var finalized = false
 
         private fun checkFinalized() {
