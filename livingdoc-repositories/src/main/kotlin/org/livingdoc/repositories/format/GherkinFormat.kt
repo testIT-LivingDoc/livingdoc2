@@ -11,13 +11,18 @@ import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
 import java.io.InputStream
 
+/**
+ * GherkinFormat supports parsing [Documents][Document] described using Gherkin.
+ */
 class GherkinFormat : DocumentFormat {
+    private val id = IdGenerator.Incrementing()
+
     override fun canHandle(fileExtension: String): Boolean {
         return fileExtension == "feature"
     }
 
     override fun parse(stream: InputStream): Document {
-        val gherkin = Parser(GherkinDocumentBuilder(IdGenerator.Incrementing())).parse(stream.reader())
+        val gherkin = Parser(GherkinDocumentBuilder(id)).parse(stream.reader())
 
         return Document(with(gherkin.feature) {
             childrenList.mapNotNull {

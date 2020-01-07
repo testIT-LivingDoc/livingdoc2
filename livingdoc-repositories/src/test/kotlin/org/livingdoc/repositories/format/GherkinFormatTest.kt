@@ -1,13 +1,12 @@
 package org.livingdoc.repositories.format
 
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Condition
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class GherkinFormatTest {
-    private val cut: DocumentFormat = GherkinFormat();
+    private val cut: DocumentFormat = GherkinFormat()
 
     @Test
     fun `cannot handle html files`() {
