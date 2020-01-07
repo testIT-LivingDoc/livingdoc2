@@ -289,7 +289,7 @@ internal class RegMatching(
     /**
      * check if a variable is in a string
      *
-     * @param st string to be checked
+     * @param st the string to be checked
      * @return if it is a variable
      */
     private fun checkIfVar(st: String): Boolean {
