@@ -10,7 +10,7 @@ data class StepResult private constructor(
     val fixtureMethod: Method?
 ) {
     /**
-     * A builder class for [StepResult] objects
+     * A not threadsafe builder class for [StepResult] objects
      */
     class Builder {
         private lateinit var status: Status

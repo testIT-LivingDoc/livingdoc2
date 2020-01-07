@@ -16,7 +16,7 @@ data class DecisionTableResult private constructor(
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {
     /**
-     * A builder class for [DecisionTableResult] objects
+     * A not threadsafe builder class for [DecisionTableResult] objects
      */
     class Builder {
         private val rows = mutableListOf<RowResult>()

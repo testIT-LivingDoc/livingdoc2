@@ -13,7 +13,7 @@ data class ScenarioResult private constructor(
     val scenario: Scenario
 ) : TestDataResult<Scenario> {
     /**
-     * A builder class for [ScenarioResult] objects
+     * A not threadsafe builder class for [ScenarioResult] objects
      */
     class Builder {
         private lateinit var status: Status

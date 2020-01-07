@@ -10,7 +10,7 @@ data class FieldResult private constructor(
     val method: Method?
 ) {
     /**
-     * A builder class for [FieldResult] objects
+     * A not threadsafe builder class for [FieldResult] objects
      */
     class Builder {
         private lateinit var value: String

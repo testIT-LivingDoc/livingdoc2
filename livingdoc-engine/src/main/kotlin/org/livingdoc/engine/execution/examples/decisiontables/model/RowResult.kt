@@ -9,7 +9,7 @@ data class RowResult private constructor(
     val status: Status = Status.Unknown
 ) {
     /**
-     * A builder class for [RowResult] objects
+     * A not threadsafe builder class for [RowResult] objects
      */
     class Builder {
         private var row: Row? = null
