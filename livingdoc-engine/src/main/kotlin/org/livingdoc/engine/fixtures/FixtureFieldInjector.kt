@@ -31,7 +31,11 @@ class FixtureFieldInjector(
         try {
             doInject(field, fixture, value)
         } catch (e: Exception) {
-            throw FixtureFieldInjectionException(field, fixture, e)
+            throw FixtureFieldInjectionException(
+                field,
+                fixture,
+                e
+            )
         }
     }
 
@@ -46,7 +50,9 @@ class FixtureFieldInjector(
     private fun convert(value: String, field: Field): Any {
         val documentClass = document?.javaClass
         val typeConverter = TypeConverters.findTypeConverter(field, documentClass)
-                ?: throw NoTypeConverterFoundException(field)
+                ?: throw NoTypeConverterFoundException(
+                    field
+                )
         return typeConverter.convert(value, field, documentClass)
     }
 

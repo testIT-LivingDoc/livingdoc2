@@ -3,9 +3,9 @@ package org.livingdoc.engine
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.config.ConfigProvider
-import org.livingdoc.engine.execution.Status
 import org.livingdoc.engine.resources.DisabledExecutableDocument
 import org.livingdoc.repositories.RepositoryManager
+import org.livingdoc.results.Status
 
 internal class LivingDocTest {
 

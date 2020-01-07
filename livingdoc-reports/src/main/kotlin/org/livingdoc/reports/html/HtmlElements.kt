@@ -1,10 +1,10 @@
 package org.livingdoc.reports.html
 
 import org.jsoup.nodes.Element
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
-import org.livingdoc.engine.execution.examples.scenarios.model.StepResult
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.decisiontables.RowResult
+import org.livingdoc.results.examples.scenarios.StepResult
 import java.io.PrintWriter
 import java.io.StringWriter
 

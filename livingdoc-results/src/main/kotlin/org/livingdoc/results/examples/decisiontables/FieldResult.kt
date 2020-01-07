@@ -1,7 +1,7 @@
-package org.livingdoc.engine.execution.examples.decisiontables.model
+package org.livingdoc.results.examples.decisiontables
 
-import org.livingdoc.engine.execution.Status
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
+import org.livingdoc.results.Status
 import java.lang.reflect.Method
 
 data class FieldResult private constructor(

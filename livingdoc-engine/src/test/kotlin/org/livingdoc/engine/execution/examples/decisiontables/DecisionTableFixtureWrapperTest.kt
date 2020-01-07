@@ -7,14 +7,14 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
 import org.livingdoc.engine.mockkJClass
 import org.livingdoc.engine.resources.DisabledDecisionTableDocument
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 
 internal class DecisionTableFixtureWrapperTest {
 

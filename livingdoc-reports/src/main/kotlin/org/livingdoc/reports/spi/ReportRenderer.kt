@@ -1,6 +1,6 @@
 package org.livingdoc.reports.spi
 
-import org.livingdoc.engine.execution.documents.DocumentResult
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * The Service Provider Interface that must be implemented by all report renderers. Every [ReportRenderer] must also be

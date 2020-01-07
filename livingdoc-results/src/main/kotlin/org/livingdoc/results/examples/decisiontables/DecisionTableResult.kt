@@ -1,17 +1,15 @@
-package org.livingdoc.engine.execution.examples.decisiontables.model
+package org.livingdoc.results.examples.decisiontables
 
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.TestDataResult
-import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
+import org.livingdoc.results.Status
+import org.livingdoc.results.TestDataResult
 
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
     val status: Status = Status.Unknown,
-    val fixture: Fixture<DecisionTable>?,
     val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {
@@ -21,7 +19,6 @@ data class DecisionTableResult private constructor(
     class Builder {
         private val rows = mutableListOf<RowResult>()
         private lateinit var status: Status
-        private var fixture: Fixture<DecisionTable>? = null
         private var fixtureSource: Class<*>? = null
         private var decisionTable: DecisionTable? = null
 
@@ -96,16 +93,7 @@ data class DecisionTableResult private constructor(
         }
 
         /**
-         * Sets or overrides the [Fixture] that the built [DecisionTableResult] refers to
-         */
-        fun withFixture(fixture: Fixture<DecisionTable>): Builder {
-            checkFinalized()
-            this.fixture = fixture
-            return this
-        }
-
-        /**
-         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * Sets or overrides the [fixtureSource] that defines the implementation of Fixture.
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
@@ -135,9 +123,6 @@ data class DecisionTableResult private constructor(
             // Finalize this builder. No further changes are allowed
             this.finalized = true
 
-            val fixture = this.fixture
-                ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
-
             val decisionTable = this.decisionTable
                 ?: throw IllegalStateException("Cant't build DecisionTableResult without a decisionTable")
 
@@ -162,7 +147,13 @@ data class DecisionTableResult private constructor(
             }
 
             // Build the result
-            return DecisionTableResult(headers, rows, status, fixture, fixtureSource, decisionTable)
+            return DecisionTableResult(
+                headers,
+                rows,
+                status,
+                fixtureSource,
+                decisionTable
+            )
         }
     }
 }

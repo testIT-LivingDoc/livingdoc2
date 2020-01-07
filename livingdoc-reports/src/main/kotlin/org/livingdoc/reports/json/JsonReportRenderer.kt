@@ -1,16 +1,16 @@
 package org.livingdoc.reports.json
 
 import com.beust.klaxon.JsonObject
-import org.livingdoc.engine.execution.documents.DocumentResult
 
 import com.beust.klaxon.json
 import org.livingdoc.config.YamlUtils
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
-import org.livingdoc.engine.execution.examples.scenarios.model.ScenarioResult
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
+import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
+import org.livingdoc.results.examples.scenarios.ScenarioResult
 import java.util.*
 
 @Format("json")

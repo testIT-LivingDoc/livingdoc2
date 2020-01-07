@@ -6,9 +6,9 @@ import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
 import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.documents.DocumentFixture
-import org.livingdoc.engine.execution.documents.DocumentResult
 import org.livingdoc.engine.fixtures.FixtureMethodInvoker
 import org.livingdoc.repositories.RepositoryManager
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * A GroupExecution represents a single execution of a [GroupFixture].

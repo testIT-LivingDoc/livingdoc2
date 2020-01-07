@@ -9,12 +9,12 @@ import org.junit.platform.engine.support.descriptor.MethodSource
 import org.junit.platform.engine.support.hierarchical.Node
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
-import org.livingdoc.engine.execution.Status
-import org.livingdoc.engine.execution.examples.decisiontables.model.DecisionTableResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.FieldResult
-import org.livingdoc.engine.execution.examples.decisiontables.model.RowResult
 import org.livingdoc.junit.engine.LivingDocContext
 import org.livingdoc.repositories.model.decisiontable.Header
+import org.livingdoc.results.Status
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
+import org.livingdoc.results.examples.decisiontables.FieldResult
+import org.livingdoc.results.examples.decisiontables.RowResult
 
 class DecisionTableTestDescriptor private constructor(
     uniqueId: UniqueId,
