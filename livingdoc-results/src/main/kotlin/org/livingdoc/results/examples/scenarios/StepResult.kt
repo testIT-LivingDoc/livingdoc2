@@ -1,6 +1,7 @@
 package org.livingdoc.results.examples.scenarios
 
 import org.livingdoc.results.Status
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import java.lang.reflect.Method
 
 data class StepResult private constructor(
@@ -37,7 +38,7 @@ data class StepResult private constructor(
         }
 
         /**
-         * Sets or overrides the value of a scenario step that the built DecisionTableResult refers to
+         * Sets or overrides the value of a scenario step that the built [DecisionTableResult] refers to
          */
         fun withValue(value: String): Builder {
             checkFinalized()
