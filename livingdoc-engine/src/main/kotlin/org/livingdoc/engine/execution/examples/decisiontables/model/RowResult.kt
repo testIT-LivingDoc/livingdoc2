@@ -8,10 +8,23 @@ data class RowResult private constructor(
     val headerToField: Map<Header, FieldResult>,
     val status: Status = Status.Unknown
 ) {
+    /**
+     * A builder class for [RowResult] objects
+     */
     class Builder {
         private var row: Row? = null
         private val fieldResults: MutableMap<Header, FieldResult> = HashMap()
         private lateinit var status: Status
+
+        // This is used to finalize the builder when it is build avoiding further updates
+        private var finalized = false
+
+        private fun checkFinalized() {
+            if (this.finalized)
+                throw IllegalStateException(
+                    "This RowResult.Builder has already been finalized and can't be altered anymore."
+                )
+        }
 
         /**
          * Sets the [FieldResult] for a given field in this row
@@ -38,6 +51,7 @@ data class RowResult private constructor(
          * @param status Can be any [Status] except [Status.Unknown]
          */
         fun withStatus(status: Status): Builder {
+            checkFinalized()
             this.status = status
             return this
         }
@@ -46,6 +60,7 @@ data class RowResult private constructor(
          * Sets or overrides the [Row] that the built [RowResult] refers to
          */
         fun withRow(row: Row): Builder {
+            checkFinalized()
             this.row = row
             return this
         }
@@ -54,6 +69,8 @@ data class RowResult private constructor(
          * Marks all fields that have no result yet with [Status.Skipped]
          */
         fun withUnassignedFieldsSkipped(): Builder {
+            checkFinalized()
+
             val row = this.row ?: throw IllegalStateException(
                 "Cannot determine unmatched fields. A Row needs to be assigned to the builder first."
             )
@@ -76,10 +93,15 @@ data class RowResult private constructor(
         /**
          * Build an immutable [RowResult]
          *
+         * WARNING: The builder will be finalized and can not be altered after calling this function
+         *
          * @returns A new [RowResult] with the data from this builder
          * @throws IllegalStateException If the builder is missing data to build a [RowResult]
          */
         fun build(): RowResult {
+            // Finalize this builder. No further changes are allowed
+            this.finalized = true
+
             // Read headers
             val row = this.row ?: throw IllegalStateException(
                 "Cannot build RowResult without a Row to match. Cannot determine required headers"

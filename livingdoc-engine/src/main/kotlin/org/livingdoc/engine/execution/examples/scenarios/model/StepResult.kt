@@ -9,10 +9,23 @@ data class StepResult private constructor(
     val status: Status,
     val fixtureMethod: Method?
 ) {
+    /**
+     * A builder class for [StepResult] objects
+     */
     class Builder {
         private lateinit var status: Status
         private lateinit var value: String
         private var fixtureMethod: Method? = null
+
+        // This is used to finalize the builder when it is build avoiding further updates
+        private var finalized = false
+
+        private fun checkFinalized() {
+            if (this.finalized)
+                throw IllegalStateException(
+                    "This StepResult.Builder has already been finalized and can't be altered anymore."
+                )
+        }
 
         /**
          * Sets or overrides the status for the built [StepResult]
@@ -20,6 +33,7 @@ data class StepResult private constructor(
          * @param status Can be any [Status] except [Status.Unknown]
          */
         fun withStatus(status: Status): Builder {
+            checkFinalized()
             this.status = status
             return this
         }
@@ -28,6 +42,7 @@ data class StepResult private constructor(
          * Sets or overrides the value of a scenario step that the built [DecisionTableResult] refers to
          */
         fun withValue(value: String): Builder {
+            checkFinalized()
             this.value = value
             return this
         }
@@ -36,6 +51,7 @@ data class StepResult private constructor(
          * Sets or overrides the [Method] that the built [StepResult] refers to
          */
         fun withFixtureMethod(fixtureMethod: Method): Builder {
+            checkFinalized()
             this.fixtureMethod = fixtureMethod
             return this
         }
@@ -43,21 +59,31 @@ data class StepResult private constructor(
         /**
          * Build an immutable [StepResult]
          *
+         * WARNING: The builder will be finalized and can not be altered after calling this function
+         *
          * @returns A new [StepResult] with the data from this builder
          * @throws IllegalStateException If the builder is missing data to build a [StepResult]
          */
         fun build(): StepResult {
+            // Finalize this builder. No further changes are allowed
+            this.finalized = true
+
             // Check value
             if (!this::value.isInitialized) {
                 throw IllegalStateException("Cannot build StepResult with unknown value")
             }
+            val value = this.value
 
             // Check status
             if (!this::status.isInitialized) {
                 throw IllegalStateException("Cannot build StepResult with unknown status")
             }
+            val status = this.status
 
-            return StepResult(this.value, this.status, this.fixtureMethod)
+            // Check fixture method
+            val fixtureMethod = this.fixtureMethod
+
+            return StepResult(value, status, fixtureMethod)
         }
     }
 }

@@ -12,6 +12,9 @@ data class ScenarioResult private constructor(
     val fixtureSource: Class<*>?,
     val scenario: Scenario
 ) : TestDataResult<Scenario> {
+    /**
+     * A builder class for [ScenarioResult] objects
+     */
     class Builder {
         private lateinit var status: Status
         private var steps = mutableListOf<StepResult>()
@@ -19,12 +22,23 @@ data class ScenarioResult private constructor(
         private var fixtureSource: Class<*>? = null
         private var scenario: Scenario? = null
 
+        // This is used to finalize the builder when it is build avoiding further updates
+        private var finalized = false
+
+        private fun checkFinalized() {
+            if (this.finalized)
+                throw IllegalStateException(
+                    "This ScenarioResult.Builder has already been finalized and can't be altered anymore."
+                )
+        }
+
         /**
          * Sets or overrides the status for the built [ScenarioResult]
          *
          * @param status Can be any [Status] except [Status.Unknown]
          */
         fun withStatus(status: Status): Builder {
+            checkFinalized()
             this.status = status
             return this
         }
@@ -51,6 +65,7 @@ data class ScenarioResult private constructor(
          * Sets or overrides the [Fixture] that the built [ScenarioResult] refers to
          */
         fun withFixture(fixture: Fixture<Scenario>): Builder {
+            checkFinalized()
             this.fixture = fixture
             return this
         }
@@ -60,6 +75,7 @@ data class ScenarioResult private constructor(
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            checkFinalized()
             this.fixtureSource = fixtureSource
             return this
         }
@@ -68,6 +84,7 @@ data class ScenarioResult private constructor(
          * Sets or overrides the [Scenario] that the built [ScenarioResult] refers to
          */
         fun withScenario(scenario: Scenario): Builder {
+            checkFinalized()
             this.scenario = scenario
             return this
         }
@@ -76,6 +93,7 @@ data class ScenarioResult private constructor(
          * Marks all steps that have no result yet with [Status.Skipped]
          */
         fun withUnassignedSkipped(): Builder {
+            checkFinalized()
             this.scenario!!.steps.forEach {
                 withStep(
                     StepResult.Builder()
@@ -90,10 +108,15 @@ data class ScenarioResult private constructor(
         /**
          * Build an immutable [ScenarioResult]
          *
+         * WARNING: The builder will be finalized and can not be altered after calling this function
+         *
          * @returns A new [ScenarioResult] with the data from this builder
          * @throws IllegalStateException If the builder is missing data to build a [ScenarioResult]
          */
         fun build(): ScenarioResult {
+            // Finalize this builder. No further changes are allowed
+            this.finalized = true
+
             val fixture = this.fixture
                 ?: throw IllegalStateException("Cant't build ScenarioResult without a fixture")
 
