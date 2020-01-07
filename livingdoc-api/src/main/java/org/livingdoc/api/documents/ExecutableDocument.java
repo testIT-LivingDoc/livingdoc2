@@ -7,7 +7,15 @@ import java.lang.annotation.Target;
 
 import org.junit.platform.commons.annotation.Testable;
 
-
+/**
+ * This annotation is used to mark a class as an executable document. The Living Doc engine looks for this annotation to
+ * find the documents that should be executed. The annotated class can contain {@link org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture}
+ * and {@link org.livingdoc.api.fixtures.scenarios.ScenarioFixture}s. The executed contents are referenced as a parameter
+ * of the annotation.
+ *
+ * An ExecutableDocument can be grouped by using the {@link Group} annotation.
+ * An ExecutableDocument can be disabled by using the {@link org.livingdoc.api.disabled.Disabled} annotation.
+ */
 @Testable
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
