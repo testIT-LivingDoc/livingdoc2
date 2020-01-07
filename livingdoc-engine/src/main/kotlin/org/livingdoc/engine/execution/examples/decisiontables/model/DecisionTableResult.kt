@@ -15,7 +15,9 @@ data class DecisionTableResult private constructor(
     val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {
-
+    /**
+     * A not threadsafe builder class for [DecisionTableResult] objects
+     */
     class Builder {
         private val rows = mutableListOf<RowResult>()
         private lateinit var status: Status
@@ -23,12 +25,22 @@ data class DecisionTableResult private constructor(
         private var fixtureSource: Class<*>? = null
         private var decisionTable: DecisionTable? = null
 
+        private var finalized = false
+
+        private fun checkFinalized() {
+            if (this.finalized)
+                throw IllegalStateException(
+                    "This DecisionTableResult.Builder has already been finalized and can't be altered anymore."
+                )
+        }
+
         /**
          * Sets the [RowResult] for a row in the given [DecisionTable]
          *
          * @param row A sucessfully built [RowResult]
          */
         fun withRow(row: RowResult): Builder {
+            checkFinalized()
             this.rows.add(row)
             when (row.status) {
                 is Status.Exception -> {
@@ -45,6 +57,7 @@ data class DecisionTableResult private constructor(
          * Marks all rows that have no result yet with [Status.Skipped]
          */
         fun withUnassignedRowsSkipped(): Builder {
+            checkFinalized()
             val decisionTable = this.decisionTable ?: throw IllegalStateException(
                 "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
             )
@@ -60,7 +73,6 @@ data class DecisionTableResult private constructor(
                             .build()
                     )
                 }
-
             return this
         }
 
@@ -78,6 +90,7 @@ data class DecisionTableResult private constructor(
          * @param status Can be any [Status] except [Status.Unknown]
          */
         fun withStatus(status: Status): Builder {
+            checkFinalized()
             this.status = status
             return this
         }
@@ -86,6 +99,7 @@ data class DecisionTableResult private constructor(
          * Sets or overrides the [Fixture] that the built [DecisionTableResult] refers to
          */
         fun withFixture(fixture: Fixture<DecisionTable>): Builder {
+            checkFinalized()
             this.fixture = fixture
             return this
         }
@@ -95,6 +109,7 @@ data class DecisionTableResult private constructor(
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
+            checkFinalized()
             this.fixtureSource = fixtureSource
             return this
         }
@@ -103,6 +118,7 @@ data class DecisionTableResult private constructor(
          * Sets or overrides the [DecisionTable] that the built [DecisionTableResult] refers to
          */
         fun withDecisionTable(decisionTable: DecisionTable): Builder {
+            checkFinalized()
             this.decisionTable = decisionTable
             return this
         }
@@ -110,10 +126,15 @@ data class DecisionTableResult private constructor(
         /**
          * Build an immutable [DecisionTableResult]
          *
+         * WARNING: The builder will be finalized and can not be altered after calling this function
+         *
          * @returns A new [DecisionTableResult] with the data from this builder
          * @throws IllegalStateException If the builder is missing data to build a [DecisionTableResult]
          */
         fun build(): DecisionTableResult {
+            // Finalize this builder. No further changes are allowed
+            this.finalized = true
+
             val fixture = this.fixture
                 ?: throw IllegalStateException("Cant't build DecisionTableResult without a fixture")
 
