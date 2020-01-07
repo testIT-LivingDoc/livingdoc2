@@ -13,6 +13,7 @@ object Versions {
     val jsoup = "1.11.2"
     val flexmark = "0.28.32"
     val klaxon = "5.0.1"
+    val gherkin = "9.0.0"
 
     //Test
     val junitPlatform = "1.5.2"
