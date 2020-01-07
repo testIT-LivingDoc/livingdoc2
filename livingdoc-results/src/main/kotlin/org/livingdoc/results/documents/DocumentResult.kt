@@ -5,9 +5,7 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
 
 /**
- * A DocumentResult is the result obtained from a single [DocumentExecution].
- *
- * @see DocumentExecution
+ * A DocumentResult is the result obtained from a single DocumentExecution.
  */
 data class DocumentResult private constructor(
     val documentClass: Class<*>,

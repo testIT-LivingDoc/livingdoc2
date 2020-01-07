@@ -37,7 +37,7 @@ data class StepResult private constructor(
         }
 
         /**
-         * Sets or overrides the value of a scenario step that the built [DecisionTableResult] refers to
+         * Sets or overrides the value of a scenario step that the built DecisionTableResult refers to
          */
         fun withValue(value: String): Builder {
             checkFinalized()

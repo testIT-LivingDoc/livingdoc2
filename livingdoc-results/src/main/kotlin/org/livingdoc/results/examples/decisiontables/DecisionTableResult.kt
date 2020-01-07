@@ -93,7 +93,7 @@ data class DecisionTableResult private constructor(
         }
 
         /**
-         * Sets or overrides the [fixtureSource] that defines the implementation of [Fixture].
+         * Sets or overrides the [fixtureSource] that defines the implementation of Fixture.
          * This value is optional.
          */
         fun withFixtureSource(fixtureSource: Class<*>): Builder {
