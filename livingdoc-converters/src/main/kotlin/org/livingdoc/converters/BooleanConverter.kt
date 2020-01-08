@@ -10,8 +10,8 @@ import org.livingdoc.api.conversion.TypeConverter
 open class BooleanConverter : TypeConverter<Boolean> {
 
     /**
-     * This function converts the given parameter value with "true" or "false" to a boolean. If the content is not one of
-     * these two values, the function throws a Conversion exception.
+     * This function converts the given parameter value with "true" or "false" to a boolean. If the content is not one
+     * of these two values, the function throws a Conversion exception.
      *
      * @param value the String that should have "true" or "false" as a content
      * @return the boolean value of the given String

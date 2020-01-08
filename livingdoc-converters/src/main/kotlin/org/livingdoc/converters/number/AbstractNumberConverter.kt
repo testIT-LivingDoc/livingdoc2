@@ -19,8 +19,8 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
     abstract val upperBound: T?
 
     /**
-     * This function takes the given value as a string, parses it to BigDecimal and calls the convertToTarget Method that
-     * is implemented by the actual Converters.
+     * This function takes the given value as a string, parses it to BigDecimal and calls the convertToTarget method
+     * that is implemented by the actual Converters.
      */
     @Throws(ConversionException::class)
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
