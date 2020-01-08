@@ -35,7 +35,6 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
         }
     }
 
-
     /**
      * This function returns the float representation of the given BigDecimal value.
      *

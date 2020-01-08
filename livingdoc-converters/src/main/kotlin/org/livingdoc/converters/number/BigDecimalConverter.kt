@@ -10,7 +10,6 @@ open class BigDecimalConverter : AbstractNumberConverter<BigDecimal>() {
     override val lowerBound: BigDecimal? = null
     override val upperBound: BigDecimal? = null
 
-
     /**
      * This function returns the given BigDecimal value.
      *

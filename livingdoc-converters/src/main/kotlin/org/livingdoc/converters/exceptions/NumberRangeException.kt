@@ -4,9 +4,9 @@ import org.livingdoc.api.conversion.ConversionException
 
 /**
  * This Exception is used whenever the given value is not in the required range.
- * @param   value the value that doesn't match
- * @param   min the lower bound of the range
- * @param   max the upper bound of the range
+ * @param value the value that doesn't match
+ * @param min the lower bound of the range
+ * @param max the upper bound of the range
  */
 class NumberRangeException(
     value: Number,

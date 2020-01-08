@@ -2,7 +2,6 @@ package org.livingdoc.converters.number
 
 import java.math.BigDecimal
 
-
 /**
  * This converter converts a BigDecimal to a Byte
  */
