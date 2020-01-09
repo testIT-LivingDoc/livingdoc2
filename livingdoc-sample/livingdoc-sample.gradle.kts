@@ -7,6 +7,7 @@ dependencies {
 	testRuntime(project(":livingdoc-repository-file"))
 
 	testImplementation(project(":livingdoc-api"))
+	testImplementation(project(":livingdoc-converters"))
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 }
