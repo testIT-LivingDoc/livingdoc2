@@ -14,7 +14,7 @@ internal class GherkinFormatTest {
     private val cut: DocumentFormat = GherkinFormat()
 
     @ParameterizedTest
-    @ValueSource(strings = [".txt", ".html", ".md"])
+    @ValueSource(strings = ["txt", "html", "md"])
     @MethodSource("generateRandomStrings")
     fun `cannot handle other files`(format: String) {
         assertThat(cut.canHandle(format)).isFalse()
