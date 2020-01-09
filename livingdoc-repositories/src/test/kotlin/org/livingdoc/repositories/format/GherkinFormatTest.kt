@@ -2,20 +2,22 @@ package org.livingdoc.repositories.format
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.livingdoc.repositories.DocumentFormat
 import org.livingdoc.repositories.model.scenario.Scenario
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 internal class GherkinFormatTest {
     private val cut: DocumentFormat = GherkinFormat()
 
-    @Test
-    fun `cannot handle html files`() {
-        assertThat(cut.canHandle("html")).isFalse()
-    }
-
-    @Test
-    fun `cannot handle markdown files`() {
-        assertThat(cut.canHandle("md")).isFalse()
+    @ParameterizedTest
+    @ValueSource(strings = [".txt", ".html", ".md"])
+    @MethodSource("generateRandomStrings")
+    fun `cannot handle other files`(format: String) {
+        assertThat(cut.canHandle(format)).isFalse()
     }
 
     @Test
@@ -105,6 +107,24 @@ internal class GherkinFormatTest {
                     }
                 }
             }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun generateRandomStrings(): List<String> {
+            return (0..999).map {
+                generateRandomString(it)
+            }
+        }
+
+        private fun generateRandomString(seed: Int): String {
+            val secondSeed = Random(seed).nextInt()
+
+            val random = Random(secondSeed)
+            val length = random.nextInt(3..10)
+
+            return random.nextBytes(length).toString(Charsets.UTF_8)
         }
     }
 }
