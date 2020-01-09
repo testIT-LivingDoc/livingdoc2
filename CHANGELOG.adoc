@@ -24,6 +24,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add converter to convert json to typed objects
 - A `@Group` annotation that can be used to group `@ExecutableDocument` classes
 - Navigation from Junit Test results to Fixture code
+- Support for specifying scenarios with Gherkin
 
 === Changed
 
