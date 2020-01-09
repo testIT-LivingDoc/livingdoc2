@@ -6,6 +6,7 @@ dependencies {
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.vladsch.flexmark:flexmark:${Versions.flexmark}")
 	implementation("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
+	implementation("io.cucumber:gherkin:${Versions.gherkin}")
 	implementation(project(":livingdoc-config"))
 
 	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
