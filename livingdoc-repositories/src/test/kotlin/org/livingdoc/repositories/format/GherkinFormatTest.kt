@@ -114,17 +114,19 @@ internal class GherkinFormatTest {
         @JvmStatic
         fun generateRandomStrings(): List<String> {
             return (0..999).map {
-                generateRandomString(it)
+                generateRandomString()
             }
         }
 
-        private fun generateRandomString(seed: Int): String {
-            val secondSeed = Random(seed).nextInt()
+        private fun generateRandomString(): String {
+            val length = Random.nextInt(3..10)
 
-            val random = Random(secondSeed)
-            val length = random.nextInt(3..10)
+            var result: String
+            do {
+                result = Random.nextBytes(length).toString(Charsets.UTF_8)
+            } while (result == "feature")
 
-            return random.nextBytes(length).toString(Charsets.UTF_8)
+            return result
         }
     }
 }
