@@ -4,6 +4,7 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.Group
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.execution.ExecutionException
+import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.groups.GroupFixture
 import org.livingdoc.engine.execution.groups.ImplicitGroup
 import org.livingdoc.repositories.RepositoryManager
@@ -36,9 +37,7 @@ class LivingDoc(
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
         return documentClasses.groupBy { documentClass ->
-            documentClass.declaringClass?.takeIf { declaringClass ->
-                declaringClass.isAnnotationPresent(Group::class.java)
-            } ?: ImplicitGroup::class.java
+            extractGroup(documentClass)
         }.flatMap { (groupClass, documentClasses) ->
             executeGroup(groupClass, documentClasses)
         }
@@ -63,5 +62,26 @@ class LivingDoc(
             decisionTableToFixtureMatcher,
             scenarioToFixtureMatcher
         ).execute()
+    }
+
+    private fun extractGroup(documentClass: Class<*>): Class<*> {
+        val declaringGroup = documentClass.declaringClass?.takeIf { declaringClass ->
+            declaringClass.isAnnotationPresent(Group::class.java)
+        }
+
+        val annotationGroup =
+            documentClass.getAnnotation(ExecutableDocument::class.java).group.java.takeIf { annotationClass ->
+                annotationClass.isAnnotationPresent(Group::class.java)
+            }
+
+        if (declaringGroup != null && annotationGroup != null && declaringGroup != annotationGroup)
+            throw MalformedFixtureException(
+                documentClass, listOf(
+                    "Ambiguous group definition: declared inside ${declaringGroup.name}, " +
+                            "annotation specifies ${annotationGroup.name}"
+                )
+            )
+
+        return declaringGroup ?: annotationGroup ?: ImplicitGroup::class.java
     }
 }
