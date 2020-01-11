@@ -14,5 +14,15 @@ import org.junit.platform.commons.annotation.Testable;
 public @interface ExecutableDocument {
     String value();
 
+    /**
+     * The {@link Group} that this ExecutableDocument belongs too.
+     * <p>
+     * Note that if this class is nested inside a group it is an error to specify this attribute to be different from
+     * the parent class
+     *
+     * @see Group
+     */
+    Class<?> group() default Object.class;
+
     Class<?>[] fixtureClasses() default {};
 }
