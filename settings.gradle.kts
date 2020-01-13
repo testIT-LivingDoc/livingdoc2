@@ -26,6 +26,7 @@ include(
 	"livingdoc-converters",
 	"livingdoc-documentation",
 	"livingdoc-engine",
+	"livingdoc-extensions-api",
 	"livingdoc-junit-engine",
 	"livingdoc-reports",
 	"livingdoc-repositories",
@@ -33,7 +34,8 @@ include(
 	"livingdoc-repository-rest",
 	"livingdoc-repository-confluence",
 	"livingdoc-results",
-	"livingdoc-sample"
+	"livingdoc-sample",
+	"livingdoc-testdata"
 )
 
 rootProject.children.forEach { project ->

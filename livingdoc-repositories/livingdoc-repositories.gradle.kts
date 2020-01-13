@@ -8,6 +8,9 @@ dependencies {
 	implementation("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
 	implementation("io.cucumber:gherkin:${Versions.gherkin}")
 	implementation(project(":livingdoc-config"))
+	implementation(project(":livingdoc-extensions-api"))
+	implementation(project(":livingdoc-results"))
+	implementation(project(":livingdoc-testdata"))
 
 	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
 	testCompile("org.assertj:assertj-core:${Versions.assertJ}")

@@ -28,7 +28,7 @@ class HtmlFormat : DocumentFormat {
         val streamContent = stream.readBytes().toString(Charset.defaultCharset())
         val document = Jsoup.parse(streamContent)
         val elements = parseRecursive(document.body(), ParseContext())
-        return HtmlDocument(elements, document)
+        return HtmlDocument(elements)
     }
 
     /**

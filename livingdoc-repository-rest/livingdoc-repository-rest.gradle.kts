@@ -6,6 +6,7 @@ dependencies {
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation("io.ktor:ktor-client-apache:1.2.5")
 	implementation(project(":livingdoc-config"))
+	implementation(project(":livingdoc-extensions-api"))
 	implementation(project(":livingdoc-repositories"))
 
 	testRuntimeOnly(project(":livingdoc-junit-engine"))
@@ -15,4 +16,5 @@ dependencies {
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 	testImplementation(project(":livingdoc-api"))
 	testImplementation(project(":livingdoc-repository-file"))
+	testImplementation(project(":livingdoc-testdata"))
 }

@@ -6,7 +6,9 @@ dependencies {
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-converters"))
+	implementation(project(":livingdoc-extensions-api"))
 	implementation(project(":livingdoc-results"))
+	implementation(project(":livingdoc-testdata"))
 
 	api(project(":livingdoc-config"))
 	api(project(":livingdoc-repositories"))
