@@ -1,10 +1,9 @@
-package org.livingdoc.results.examples.scenarios.org.livingdoc.results.examples.scenarios
+package org.livingdoc.results.examples.decisiontables
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.results.Status
-import org.livingdoc.results.examples.decisiontables.FieldResult
 import java.lang.reflect.Method
 
 internal class FieldResultBuilderTest {

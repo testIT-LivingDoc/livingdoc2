@@ -1,4 +1,4 @@
-package org.livingdoc.results.examples.scenarios.org.livingdoc.results.examples.scenarios
+package org.livingdoc.results.examples.scenarios
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -6,8 +6,6 @@ import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
 import org.livingdoc.results.Status
-import org.livingdoc.results.examples.scenarios.ScenarioResult
-import org.livingdoc.results.examples.scenarios.StepResult
 
 internal class ScenarioResultBuilderTest {
 
