@@ -7,7 +7,6 @@ import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.results.Status
-import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 internal class RowResultBuilderTest {
 
