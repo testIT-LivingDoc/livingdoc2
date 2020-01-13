@@ -12,7 +12,7 @@ internal class FieldResultBuilderTest {
     private val checkMethod: Method = (FixtureClass::class.java).methods[0]
 
     @Test
-    fun `test successful step result`() {
+    fun `test successful field result`() {
         val result = FieldResult.Builder()
             .withValue("a")
             .withCheckMethod(this.checkMethod)
@@ -25,7 +25,7 @@ internal class FieldResultBuilderTest {
     }
 
     @Test
-    fun `test step result with missing value`() {
+    fun `test field result with missing value`() {
         val builder = FieldResult.Builder()
             .withCheckMethod(this.checkMethod)
             .withStatus(Status.Executed)
@@ -36,7 +36,7 @@ internal class FieldResultBuilderTest {
     }
 
     @Test
-    fun `test step result with missing status`() {
+    fun `test field result with missing status`() {
         val builder = FieldResult.Builder()
             .withValue("a")
             .withCheckMethod(this.checkMethod)
@@ -47,7 +47,7 @@ internal class FieldResultBuilderTest {
     }
 
     @Test
-    fun `test step result with missing method`() {
+    fun `test field result with missing method`() {
         val result = FieldResult.Builder()
             .withValue("a")
             .withStatus(Status.Executed)
