@@ -1,27 +1,24 @@
 package org.livingdoc.repositories.rest
 
-import org.junit.jupiter.api.Test
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
-import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import io.ktor.client.HttpClient
-import org.assertj.core.api.Assertions
-
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
 internal class RESTRepositoryTest {
-    lateinit var wms: WireMockServer
-    val reponame = "Testing.html"
-    val rrf: RESTRepositoryFactory = RESTRepositoryFactory()
-    lateinit var testURL: String
-    val htmlFileName = "Testing.html"
+    private lateinit var wms: WireMockServer
+    private val repoName = "Testing.html"
+    private val rrf: RESTRepositoryFactory = RESTRepositoryFactory()
+    private lateinit var testURL: String
+    private val htmlFileName = "Testing.html"
 
     @BeforeEach
     fun startWM() {
@@ -30,7 +27,7 @@ internal class RESTRepositoryTest {
         wms.start()
         WireMock.configureFor("localhost", wms.port())
         wms.stubFor(
-            WireMock.get(WireMock.urlEqualTo("/$reponame")).willReturn(
+            WireMock.get(urlEqualTo("/$repoName")).willReturn(
                 WireMock.aResponse().withBodyFile(
                     htmlFileName
                 )
@@ -43,46 +40,46 @@ internal class RESTRepositoryTest {
     fun `Test file content - RESTRepository`() {
         val restrepoCfg = RESTRepositoryConfig()
         restrepoCfg.baseURL = testURL
-        val comparisonRepository = RESTRepository(reponame, restrepoCfg, HttpClient())
-        val document = comparisonRepository.getDocument(reponame)
+        val comparisonRepository = RESTRepository(repoName, restrepoCfg, HttpClient())
+        val document = comparisonRepository.getDocument(repoName)
         val scenario = document.elements[2] as Scenario
 
         // Scenario Testing
-        Assertions.assertThat(scenario).isInstanceOf(Scenario::class.java)
+        assertThat(scenario).isInstanceOf(Scenario::class.java)
 
-        Assertions.assertThat(scenario.steps).isNotNull
-        Assertions.assertThat(scenario.steps).hasSize(5)
-        Assertions.assertThat(scenario.steps[0].value).isEqualTo("First list item")
-        Assertions.assertThat(scenario.steps[1].value).isEqualTo("Second list item")
-        Assertions.assertThat(scenario.steps[2].value).isEqualTo("Third list item")
-        Assertions.assertThat(scenario.steps[3].value).isEqualTo("Fourth list item")
-        Assertions.assertThat(scenario.steps[4].value).isEqualTo("Fifth list item")
+        assertThat(scenario.steps).isNotNull
+        assertThat(scenario.steps).hasSize(5)
+        assertThat(scenario.steps[0].value).isEqualTo("First list item")
+        assertThat(scenario.steps[1].value).isEqualTo("Second list item")
+        assertThat(scenario.steps[2].value).isEqualTo("Third list item")
+        assertThat(scenario.steps[3].value).isEqualTo("Fourth list item")
+        assertThat(scenario.steps[4].value).isEqualTo("Fifth list item")
 
         // verification
-        wms.verify(WireMock.getRequestedFor(WireMock.urlEqualTo("/$reponame")))
+        wms.verify(getRequestedFor(urlEqualTo("/$repoName")))
     }
 
     @Test
     fun `Test content - RESTRepositoryFactory`() {
         val configData: Map<String, Any> =
             mutableMapOf<String, Any>("baseURL" to testURL)
-        val resultrepo = rrf.createRepository(reponame, configData)
-        val document = resultrepo.getDocument(reponame)
+        val resultrepo = rrf.createRepository(repoName, configData)
+        val document = resultrepo.getDocument(repoName)
 
         // table testing
         val decisionTable = document.elements[1] as DecisionTable
 
-        Assertions.assertThat(decisionTable).isInstanceOf(DecisionTable::class.java)
+        assertThat(decisionTable).isInstanceOf(DecisionTable::class.java)
 
-        Assertions.assertThat(decisionTable.headers).extracting("name")
+        assertThat(decisionTable.headers).extracting("name")
             .containsExactly("BankAccount", "Balance", "Lastlogin")
-        Assertions.assertThat(decisionTable.rows[0].headerToField.map { it.value.value })
+        assertThat(decisionTable.rows[0].headerToField.map { it.value.value })
             .containsExactly("104812731", "10293", "12.12.1212")
-        Assertions.assertThat(decisionTable.rows[1].headerToField.map { it.value.value })
+        assertThat(decisionTable.rows[1].headerToField.map { it.value.value })
             .containsExactly("1048121231", "95642", "12.11.1982a")
 
         // verification
-        wms.verify(WireMock.getRequestedFor(WireMock.urlEqualTo("/$reponame")))
+        wms.verify(getRequestedFor(urlEqualTo("/$repoName")))
     }
 
     /**
@@ -94,29 +91,29 @@ internal class RESTRepositoryTest {
         // testing factory
         val configData: Map<String, Any> =
             mutableMapOf<String, Any>("baseURL" to testURL)
-        val resultrepo = rrf.createRepository(reponame, configData)
+        val resultRepo = rrf.createRepository(repoName, configData)
         // testing create Repository
-        Assertions.assertThat(rrf.createRepository(reponame, configData))
+        assertThat(rrf.createRepository(repoName, configData))
             .isInstanceOf(RESTRepository::class.java).isNotNull
-        val doc1 = resultrepo.getDocument(reponame)
+        val doc1 = resultRepo.getDocument(repoName)
 
         // manually created repository
-        val restrepoCfg = RESTRepositoryConfig()
-        restrepoCfg.baseURL = testURL
-        val comparisonRepository = RESTRepository(reponame, restrepoCfg)
-        Assertions.assertThat(RESTRepository(reponame, restrepoCfg))
+        val restRepoCfg = RESTRepositoryConfig()
+        restRepoCfg.baseURL = testURL
+        val comparisonRepository = RESTRepository(repoName, restRepoCfg)
+        assertThat(RESTRepository(repoName, restRepoCfg))
             .isInstanceOf(RESTRepository::class.java).isNotNull
-        val doc2 = comparisonRepository.getDocument(reponame)
+        val doc2 = comparisonRepository.getDocument(repoName)
 
         // comparison test of the two documents
-        Assertions.assertThat(doc1.elements[0] as DecisionTable).isEqualTo(doc2.elements[0] as DecisionTable)
-        Assertions.assertThat(doc1.elements[1] as DecisionTable).isEqualTo(doc2.elements[1] as DecisionTable)
-        Assertions.assertThat(doc1.elements[2] as Scenario).isEqualTo(doc2.elements[2] as Scenario)
-        Assertions.assertThat(resultrepo.getDocument(reponame).elements.size)
-            .isEqualTo(comparisonRepository.getDocument(reponame).elements.size)
+        assertThat(doc1.elements[0] as DecisionTable).isEqualTo(doc2.elements[0] as DecisionTable)
+        assertThat(doc1.elements[1] as DecisionTable).isEqualTo(doc2.elements[1] as DecisionTable)
+        assertThat(doc1.elements[2] as Scenario).isEqualTo(doc2.elements[2] as Scenario)
+        assertThat(resultRepo.getDocument(repoName).elements.size)
+            .isEqualTo(comparisonRepository.getDocument(repoName).elements.size)
 
         // verification
-        wms.verify(WireMock.getRequestedFor(WireMock.urlEqualTo("/$reponame")))
+        wms.verify(getRequestedFor(urlEqualTo("/$repoName")))
     }
 
     @Test
@@ -128,7 +125,6 @@ internal class RESTRepositoryTest {
         cfg.baseURL = "http://localhost:${wms.port()}/"
         val cut = RESTRepository("test", cfg)
         val documentURL = "/Testing.html"
-        val hostedHtmlFile = "Testing.html"
 
         // getting document and running asserts
         val doc = cut.getDocument(documentURL)

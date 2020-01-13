@@ -25,13 +25,15 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-config"),
 		project(":livingdoc-converters"),
 		project(":livingdoc-engine"),
+		project(":livingdoc-extensions-api"),
 		project(":livingdoc-junit-engine"),
 		project(":livingdoc-reports"),
 		project(":livingdoc-repositories"),
 		project(":livingdoc-repository-file"),
 		project(":livingdoc-repository-rest"),
 		project(":livingdoc-repository-confluence"),
-		project(":livingdoc-results")
+		project(":livingdoc-results"),
+		project(":livingdoc-testdata")
 	)
 )
 
