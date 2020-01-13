@@ -75,6 +75,20 @@ internal class ScenarioResultBuilderTest {
     }
 
     @Test
+    fun `test scenario with wrong steps`() {
+        val builder = ScenarioResult.Builder()
+            .withScenario(scenarioWithSteps)
+            .withFixtureSource(fixtureClass)
+            .withStatus(Status.Executed)
+            .withStep(StepResult.Builder().withValue("a").withStatus(Status.Executed).build())
+            .withStep(StepResult.Builder().withValue("c").withStatus(Status.Executed).build())
+
+        assertThrows<IllegalStateException> {
+            builder.build()
+        }
+    }
+
+    @Test
     fun `test with unassigned skipped`() {
         val result = ScenarioResult.Builder()
             .withScenario(scenarioWithSteps)
@@ -89,6 +103,30 @@ internal class ScenarioResultBuilderTest {
         assertThat(result.steps).hasSize(2)
         assertThat(result.steps[0].status).isEqualTo(Status.Skipped)
         assertThat(result.steps[1].status).isEqualTo(Status.Skipped)
+    }
+
+    @Test
+    fun `test scenario without scenario`() {
+        val builder = ScenarioResult.Builder()
+            .withFixtureSource(fixtureClass)
+            .withStatus(Status.Executed)
+
+        assertThrows<IllegalStateException> {
+            builder.build()
+        }
+    }
+
+    @Test
+    fun `test scenario without status`() {
+        val builder = ScenarioResult.Builder()
+            .withScenario(scenarioWithSteps)
+            .withFixtureSource(fixtureClass)
+            .withStep(StepResult.Builder().withValue("a").withStatus(Status.Executed).build())
+            .withStep(StepResult.Builder().withValue("b").withStatus(Status.Executed).build())
+
+        assertThrows<IllegalStateException> {
+            builder.build()
+        }
     }
 
     @Test
@@ -116,6 +154,19 @@ internal class ScenarioResultBuilderTest {
         assertThrows<IllegalStateException> {
             builder.withStep(StepResult.Builder().withValue("c").withStatus(Status.Executed).build())
         }
+    }
+
+    @Test
+    fun `test auto generate step results for manual test`() {
+        val builder = ScenarioResult.Builder()
+            .withScenario(scenarioWithSteps)
+            .withFixtureSource(fixtureClass)
+            .withStatus(Status.Manual)
+            .build()
+
+        assertThat(builder.status).isEqualTo(Status.Manual)
+        assertThat(builder.steps[0].status).isEqualTo(Status.Manual)
+        assertThat(builder.steps[1].status).isEqualTo(Status.Manual)
     }
 
     class FixtureClass
