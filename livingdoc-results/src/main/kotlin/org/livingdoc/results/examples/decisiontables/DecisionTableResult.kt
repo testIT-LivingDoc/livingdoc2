@@ -60,7 +60,7 @@ data class DecisionTableResult private constructor(
             )
 
             decisionTable.rows
-                .filter { findMatchingRowResult(it) == null }
+                .filter { findMatchingRowResult(it, this.rows) == null }
                 .forEach {
                     this.withRow(
                         RowResult.Builder()
@@ -73,10 +73,10 @@ data class DecisionTableResult private constructor(
             return this
         }
 
-        private fun findMatchingRowResult(row: Row): RowResult? {
-            return this.rows.firstOrNull {
-                it.headerToField.none {
-                    it.value.value != row.headerToField[it.key]?.value
+        private fun findMatchingRowResult(row: Row, rowResults: List<RowResult>): RowResult? {
+            return rowResults.firstOrNull {
+                it.headerToField.none { (header, field) ->
+                    row.headerToField[header]?.value != field.value
                 }
             }
         }
@@ -128,18 +128,31 @@ data class DecisionTableResult private constructor(
 
             // Check status
             if (!this::status.isInitialized) {
-                throw IllegalArgumentException("Cannot build DecisionTableResult with unknown status")
+                throw IllegalStateException("Cannot build DecisionTableResult with unknown status")
             }
             val status = this.status
             val rows = if (status is Status.Manual || status is Status.Disabled)
                 decisionTable.rows.map {
                     RowResult.Builder()
                         .withRow(it)
-                        .withStatus(this.status)
+                        .withStatus(status)
                         .build()
-                }.toMutableList()
+                }.toList()
             else
                 this.rows
+
+            // Check rows
+            if (rows.size != decisionTable.rows.size) {
+                throw IllegalStateException(
+                    "Cannot build ScenarioResult. The number of step results (${rows.size})" +
+                            " does not match the expected number (${decisionTable.rows.size})"
+                )
+            }
+            decisionTable.rows.forEach { row ->
+                if (findMatchingRowResult(row, rows) == null) {
+                    throw IllegalStateException("Not all decision table rows are contained in the result")
+                }
+            }
 
             // Get headers
             val headers = decisionTable.headers.map { (name) ->
