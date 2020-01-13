@@ -119,7 +119,7 @@ data class RowResult private constructor(
             val fieldResults = if (status is Status.Manual || status is Status.Disabled)
                 headers.map {
                     it to FieldResult.Builder()
-                        .withValue(it.name)
+                        .withValue(row.headerToField[it]?.value!!)
                         .withStatus(this.status)
                         .build()
                 }.toMap()
