@@ -1,6 +1,6 @@
 package org.livingdoc.results.examples.scenarios
 
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.model.scenario.Scenario
