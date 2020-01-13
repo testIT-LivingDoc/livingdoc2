@@ -37,8 +37,6 @@ internal class ScenarioResultBuilderTest {
             .build()
 
         assertThat(result.scenario).isEqualTo(scenarioWithSteps)
-        assertThat(result.fixtureSource).isEqualTo(fixtureClass)
-        assertThat(result.status).isEqualTo(Status.Executed)
         assertThat(result.steps).hasSize(2)
         assertThat(result.steps[0].status).isEqualTo(Status.Executed)
         assertThat(result.steps[1].status).isEqualTo(Status.Executed)
