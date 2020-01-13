@@ -156,15 +156,15 @@ internal class ScenarioResultBuilderTest {
 
     @Test
     fun `test auto generate step results for manual test`() {
-        val builder = ScenarioResult.Builder()
+        val result = ScenarioResult.Builder()
             .withScenario(scenarioWithSteps)
             .withFixtureSource(fixtureClass)
             .withStatus(Status.Manual)
             .build()
 
-        assertThat(builder.status).isEqualTo(Status.Manual)
-        assertThat(builder.steps[0].status).isEqualTo(Status.Manual)
-        assertThat(builder.steps[1].status).isEqualTo(Status.Manual)
+        assertThat(result.status).isEqualTo(Status.Manual)
+        assertThat(result.steps[0].status).isEqualTo(Status.Manual)
+        assertThat(result.steps[1].status).isEqualTo(Status.Manual)
     }
 
     class FixtureClass
