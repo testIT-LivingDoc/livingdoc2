@@ -8,6 +8,6 @@ import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 class DisabledDecisionTableDocument {
 
     @Disabled("Disabled DecisionTableFixture")
-    @DecisionTableFixture
+    @DecisionTableFixture(parallel = false)
     class DisabledDecisionTableFixture
 }

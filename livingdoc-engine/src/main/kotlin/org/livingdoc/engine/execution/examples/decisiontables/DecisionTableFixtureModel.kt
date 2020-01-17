@@ -4,6 +4,7 @@ import org.livingdoc.api.fixtures.decisiontables.AfterRow
 import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
+import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
 import org.livingdoc.engine.execution.ScopedFixtureModel
 import java.lang.reflect.Field
@@ -13,6 +14,8 @@ import kotlin.reflect.KClass
 internal class DecisionTableFixtureModel(
     val fixtureClass: Class<*>
 ) : ScopedFixtureModel(fixtureClass) {
+
+    val parallelExecution: Boolean = fixtureClass.getAnnotation(DecisionTableFixture::class.java)?.parallel ?: false
 
     val beforeRowMethods: List<Method>
     val afterRowMethods: List<Method>

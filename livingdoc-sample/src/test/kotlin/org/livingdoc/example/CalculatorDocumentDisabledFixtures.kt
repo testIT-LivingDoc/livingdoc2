@@ -63,7 +63,7 @@ class CalculatorDocumentDisabledFixtures {
     }
 
     @Disabled("Disabled DecisionTableFixture")
-    @DecisionTableFixture
+    @DecisionTableFixture(parallel = true)
     class DisabledCalculatorDecisionTableFixture {
 
         @Input("a")

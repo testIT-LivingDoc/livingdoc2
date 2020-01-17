@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import io.mockk.every
 import io.mockk.verify
+import io.mockk.verifyOrder
 import io.mockk.verifySequence
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -34,6 +35,43 @@ internal class DecisionTableFixtureWrapperTest {
 
         Assertions.assertThat(result).isInstanceOf(Status.Disabled::class.java)
         Assertions.assertThat((result as Status.Disabled).reason).isEqualTo("Disabled DecisionTableFixture")
+    }
+
+    @Test
+    fun `life cycle of simple parallel fixture`() {
+        val input = Header("input")
+        val check = Header("check")
+        val headers = arrayListOf(input, check)
+
+        val row1 = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
+        val row2 = Row(mapOf(input to Field("r2i"), check to Field("r2c")))
+        val rows = arrayListOf(row1, row2)
+
+        val resultTable = executeDecisionTable(DecisionTable(headers, rows), LifeCycleFixtureParallel::class.java)
+        Assertions.assertThat(resultTable.status).isInstanceOf(Status.Executed::class.java)
+
+        val fixture = LifeCycleFixtureParallel.callback
+        verifyOrder {
+            fixture.beforeTable()
+            fixture.beforeRow()
+            fixture.afterTable()
+        }
+
+        verifyOrder {
+            fixture.beforeRow()
+            fixture.input("r1i")
+            fixture.beforeFirstCheck()
+            fixture.check("r1c")
+            fixture.afterRow()
+        }
+
+        verifyOrder {
+            fixture.beforeRow()
+            fixture.input("r2i")
+            fixture.beforeFirstCheck()
+            fixture.check("r2c")
+            fixture.afterRow()
+        }
     }
 
     @Test
