@@ -14,7 +14,7 @@ import org.livingdoc.api.fixtures.scenarios.Step
 @ExecutableDocument("local://Calculator.md")
 class CalculatorDocumentMd {
 
-    @DecisionTableFixture
+    @DecisionTableFixture(parallel = true)
     class CalculatorDecisionTableFixture {
 
         private lateinit var sut: Calculator

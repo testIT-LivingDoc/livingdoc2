@@ -77,7 +77,7 @@ internal object ScenarioFixtureChecker {
     ): Collection<String> {
         return stepTemplateToMethod
             .filter { (stepTemplate, method) ->
-                stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount
+                stepTemplate.fragments.filterIsInstance<Variable>().count() != method.parameterCount
             }
             .map { (stepTemplate, method) ->
                 "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'"
@@ -87,10 +87,14 @@ internal object ScenarioFixtureChecker {
     @Suppress("MaximumLineLength")
     private fun checkThatMethodParametersAreNamed(methods: Collection<Method>): Collection<String> {
         return methods
-            .filter { it.parameters.any { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) } }
+            .filter { method ->
+                method.parameters.any {
+                    !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java)
+                }
+            }
             .map { method ->
                 "Method <$method> has a parameter without a name! " +
-                        "Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag"
+                        "Either add @${Binding::class.java.simpleName} annotation or compile with '-parameters' flag"
             }
     }
 }

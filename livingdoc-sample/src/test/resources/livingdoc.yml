@@ -12,3 +12,4 @@ reports:
     format: "json"
     config:
       outputDir: "build/livingdoc/reports/json/"
+

@@ -9,7 +9,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 
 @ExecutableDocument("local://CalculatorManual.html")
 class CalculatorDocumentHtmlManual {
-    @DecisionTableFixture
+    @DecisionTableFixture(parallel = false)
     class CalculatorDecisionTableFixture {
 
         private lateinit var sut: Calculator

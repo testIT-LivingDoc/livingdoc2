@@ -16,6 +16,7 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.decisiontables.FieldResult
 import org.livingdoc.results.examples.decisiontables.RowResult
 import java.lang.reflect.Method
+import kotlin.streams.toList
 
 /**
  * Obviously wraps a decision table fixture
@@ -85,7 +86,7 @@ class DecisionTableFixtureWrapper(
     }
 
     private fun executeTableWithBeforeAndAfter(decisionTable: DecisionTable): List<RowResult> {
-        return executeWithBeforeAndAfter<List<RowResult>>(
+        return executeWithBeforeAndAfter(
             before = { invokeBeforeTableMethods() },
             body = { executeTable(decisionTable) },
             after = { invokeAfterTableMethods() }
@@ -96,7 +97,7 @@ class DecisionTableFixtureWrapper(
         val inputHeaders = filterHeaders(decisionTable) { (name) -> fixtureModel.isInputAlias(name) }
         val checkHeaders = filterHeaders(decisionTable) { (name) -> fixtureModel.isCheckAlias(name) }
 
-        return decisionTable.rows.map { row ->
+        val executeRow = { row: Row ->
             val rowResult = RowResult.Builder()
                 .withRow(row)
             try {
@@ -110,6 +111,12 @@ class DecisionTableFixtureWrapper(
 
             rowResult.withUnassignedFieldsSkipped()
             rowResult.build()
+        }
+
+        return if (fixtureModel.parallelExecution) {
+            decisionTable.rows.parallelStream().map(executeRow).toList()
+        } else {
+            decisionTable.rows.map(executeRow)
         }
     }
 

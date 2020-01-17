@@ -10,7 +10,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input;
 import implementations.Calculator;
 
 
-@DecisionTableFixture("Calculator")
+@DecisionTableFixture(value ="Calculator", parallel = true)
 public class CalculatorFixture {
 
     Calculator sut = new Calculator();

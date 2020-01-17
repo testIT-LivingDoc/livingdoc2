@@ -7,7 +7,7 @@ import org.livingdoc.api.fixtures.decisiontables.*;
 import static org.livingdoc.engine.MockkExtKt.clearJMockk;
 import static org.livingdoc.engine.MockkExtKt.mockkJClass;
 
-
+@DecisionTableFixture
 public class ExtendedLifeCycleFixture {
 
     public static Callback callback = mockkJClass(Callback.class);
