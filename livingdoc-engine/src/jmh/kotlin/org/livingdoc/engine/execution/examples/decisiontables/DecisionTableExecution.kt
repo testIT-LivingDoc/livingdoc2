@@ -51,13 +51,32 @@ open class DecisionTableExecutionBenchmarks {
     }
 
     @Benchmark
-    fun simpleDecisionTableBenchmark(): DecisionTableResult {
-        return DecisionTableFixtureWrapper(DecisionTableSequential::class.java).execute(table)
+    fun sequentialDecisionTableBenchmark(): DecisionTableResult {
+        return DecisionTableFixtureWrapper(SequentialDecisionTable::class.java).execute(table)
+    }
+
+    @Benchmark
+    fun parallelDecisionTableBenchmark(): DecisionTableResult {
+        return DecisionTableFixtureWrapper(ParallelDecisionTable::class.java).execute(table)
     }
 }
 
 @DecisionTableFixture
-class DecisionTableSequential {
+class SequentialDecisionTable {
+    @Input("a")
+    var a: Long = 0
+
+    @Input("b")
+    var b: Long = 0
+
+    @Check("a + b = ?")
+    fun `sum is correct`(expected: Long) {
+        Assertions.assertThat(a + b).isEqualTo(expected)
+    }
+}
+
+@DecisionTableFixture(parallel = true)
+class ParallelDecisionTable {
     @Input("a")
     var a: Long = 0
 
