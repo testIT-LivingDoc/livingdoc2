@@ -14,17 +14,20 @@ import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Fork
 import org.openjdk.jmh.annotations.Level
 import org.openjdk.jmh.annotations.Mode
+import org.openjdk.jmh.annotations.OutputTimeUnit
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 @BenchmarkMode(Mode.AverageTime)
 @Fork(1)
 @State(Scope.Thread)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 open class DecisionTableExecutionBenchmarks {
     lateinit var table: DecisionTable
-    
+
     @Setup(Level.Iteration)
     fun generateRandomTestTable() {
         val headers = listOf(Header("a"), Header("b"), Header("a + b = ?"))
