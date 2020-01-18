@@ -15,6 +15,7 @@ import org.openjdk.jmh.annotations.Fork
 import org.openjdk.jmh.annotations.Level
 import org.openjdk.jmh.annotations.Mode
 import org.openjdk.jmh.annotations.OutputTimeUnit
+import org.openjdk.jmh.annotations.Param
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
@@ -28,11 +29,14 @@ import kotlin.random.Random
 open class DecisionTableExecutionBenchmarks {
     lateinit var table: DecisionTable
 
+    @Param("1", "10", "100", "1000")
+    var tableSize: Int = 0
+
     @Setup(Level.Iteration)
     fun generateRandomTestTable() {
         val headers = listOf(Header("a"), Header("b"), Header("a + b = ?"))
 
-        val rows = (0..9_999).map {
+        val rows = (0 until tableSize).map {
             val a = Random.nextLong(Long.MAX_VALUE)
             val b = Random.nextLong(Long.MAX_VALUE - a)
             val result = a + b
