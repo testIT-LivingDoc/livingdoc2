@@ -34,7 +34,9 @@ data class DecisionTableResult private constructor(
         /**
          * Sets the [RowResult] for a row in the given [DecisionTable]
          *
-         * @param row A sucessfully built [RowResult]
+         * **NOTE** The row results must be added in the same order in which they are defined in the decision table.
+         *
+         * @param row A successfully built [RowResult]
          */
         fun withRow(row: RowResult): Builder {
             checkFinalized()
@@ -59,8 +61,7 @@ data class DecisionTableResult private constructor(
                 "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
             )
 
-            decisionTable.rows
-                .filter { findMatchingRowResult(it, this.rows) == null }
+            decisionTable.rows.subList(this.rows.size, decisionTable.rows.size)
                 .forEach {
                     this.withRow(
                         RowResult.Builder()
@@ -73,11 +74,9 @@ data class DecisionTableResult private constructor(
             return this
         }
 
-        private fun findMatchingRowResult(row: Row, rowResults: List<RowResult>): RowResult? {
-            return rowResults.firstOrNull {
-                it.headerToField.none { (header, field) ->
-                    row.headerToField[header]?.value != field.value
-                }
+        private fun matchesRowResult(row: Row, result: RowResult): Boolean {
+            return row.headerToField.all { (header, field) ->
+                result.headerToField[header]?.value == field.value
             }
         }
 
@@ -144,14 +143,15 @@ data class DecisionTableResult private constructor(
             // Check rows
             if (rows.size != decisionTable.rows.size) {
                 throw IllegalStateException(
-                    "Cannot build ScenarioResult. The number of step results (${rows.size})" +
+                    "Cannot build DecisionTableResult. The number of row results (${rows.size})" +
                             " does not match the expected number (${decisionTable.rows.size})"
                 )
             }
-            decisionTable.rows.forEach { row ->
-                if (findMatchingRowResult(row, rows) == null) {
-                    throw IllegalStateException("Not all decision table rows are contained in the result")
-                }
+
+            if (decisionTable.rows.zip(rows).any { (row, result) ->
+                    !matchesRowResult(row, result)
+                }) {
+                throw IllegalStateException("Not all decision table rows are contained in the result")
             }
 
             // Get headers
