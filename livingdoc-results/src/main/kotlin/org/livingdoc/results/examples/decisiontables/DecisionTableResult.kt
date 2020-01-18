@@ -59,8 +59,7 @@ data class DecisionTableResult private constructor(
                 "Cannot determine unmatched rows. A DecisionTable needs to be assigned to the builder first."
             )
 
-            decisionTable.rows
-                .filter { findMatchingRowResult(it, this.rows) == null }
+            decisionTable.rows.subList(this.rows.size, decisionTable.rows.size)
                 .forEach {
                     this.withRow(
                         RowResult.Builder()
@@ -73,11 +72,9 @@ data class DecisionTableResult private constructor(
             return this
         }
 
-        private fun findMatchingRowResult(row: Row, rowResults: List<RowResult>): RowResult? {
-            return rowResults.firstOrNull {
-                it.headerToField.none { (header, field) ->
-                    row.headerToField[header]?.value != field.value
-                }
+        private fun matchesRowResult(row: Row, result: RowResult): Boolean {
+            return row.headerToField.all { (header, field) ->
+                result.headerToField[header]?.value == field.value
             }
         }
 
@@ -148,8 +145,9 @@ data class DecisionTableResult private constructor(
                             " does not match the expected number (${decisionTable.rows.size})"
                 )
             }
-            decisionTable.rows.forEach { row ->
-                if (findMatchingRowResult(row, rows) == null) {
+
+            decisionTable.rows.zip(rows).forEach { (row, result) ->
+                if (!matchesRowResult(row, result)) {
                     throw IllegalStateException("Not all decision table rows are contained in the result")
                 }
             }
