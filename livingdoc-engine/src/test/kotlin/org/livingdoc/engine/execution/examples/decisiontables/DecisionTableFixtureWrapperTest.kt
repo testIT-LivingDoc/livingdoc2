@@ -22,6 +22,7 @@ internal class DecisionTableFixtureWrapperTest {
     @BeforeEach
     fun reset() {
         LifeCycleFixture.reset()
+        LifeCycleFixtureParallel.reset()
         ExtendedLifeCycleFixture.reset()
     }
 
@@ -199,6 +200,80 @@ internal class DecisionTableFixtureWrapperTest {
             val row = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
             val decisionTable = DecisionTable(headers, listOf(row))
             return executeDecisionTable(decisionTable, ExtendedLifeCycleFixture::class.java)
+        }
+    }
+
+    @Nested
+    inner class `exceptional behaviour - parallel` {
+
+        val input = Header("input")
+        val check = Header("check")
+        val headers = arrayListOf(input, check)
+
+        val row = Row(mapOf(input to Field("r1i"), check to Field("r1c")))
+        val anotherRow = Row(mapOf(input to Field("r2i"), check to Field("r2c")))
+
+        val callback = LifeCycleFixtureParallel.callback!!
+
+        @Test
+        fun `exception in one row does not effect execution of another`() {
+            val exception = IllegalStateException()
+            every { callback.input("r1i") } throws exception
+
+            execute(row, anotherRow)
+
+            verifyOrder {
+                callback.beforeTable()
+                callback.beforeRow()
+                callback.afterTable()
+            }
+
+            verifyOrder {
+                callback.beforeRow()
+                callback.input("r1i")
+                callback.afterRow()
+            }
+
+            verifyOrder {
+                callback.beforeRow()
+                callback.input("r2i")
+                callback.beforeFirstCheck()
+                callback.check("r2c")
+                callback.afterRow()
+            }
+        }
+
+        @Test
+        fun `assertion error in one row does not effect execution of another`() {
+            val exception = AssertionError()
+            every { callback.input("r1i") } throws exception
+
+            execute(row, anotherRow)
+
+            verifyOrder {
+                callback.beforeTable()
+                callback.beforeRow()
+                callback.afterTable()
+            }
+
+            verifyOrder {
+                callback.beforeRow()
+                callback.input("r1i")
+                callback.afterRow()
+            }
+
+            verifyOrder {
+                callback.beforeRow()
+                callback.input("r2i")
+                callback.beforeFirstCheck()
+                callback.check("r2c")
+                callback.afterRow()
+            }
+        }
+
+        private fun execute(vararg rows: Row): DecisionTableResult {
+            val decisionTable = DecisionTable(headers, rows.asList())
+            return DecisionTableFixtureWrapper(LifeCycleFixtureParallel::class.java).execute(decisionTable)
         }
     }
 
