@@ -11,12 +11,20 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
+/**
+ * This class represents a Decision Table Fixture
+ */
 internal class DecisionTableFixtureModel(
     val fixtureClass: Class<*>
 ) : ScopedFixtureModel(fixtureClass) {
-
+    /**
+     * Can the steps of this fixture be executed in parallel
+     */
     val parallelExecution: Boolean = fixtureClass.getAnnotation(DecisionTableFixture::class.java)?.parallel ?: false
 
+    /**
+     * Lists of methods
+     */
     val beforeRowMethods: List<Method>
     val afterRowMethods: List<Method>
     val beforeFirstCheckMethods: List<Method>
