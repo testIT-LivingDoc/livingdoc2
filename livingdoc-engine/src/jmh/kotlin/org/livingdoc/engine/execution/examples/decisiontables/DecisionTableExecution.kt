@@ -29,7 +29,7 @@ import kotlin.random.Random
 open class DecisionTableExecutionBenchmarks {
     lateinit var table: DecisionTable
 
-    @Param("1", "10", "100", "1000")
+    @Param("1", "10", "100", "1000", "10000", "100000", "1000000")
     var tableSize: Int = 0
 
     @Setup(Level.Iteration)
