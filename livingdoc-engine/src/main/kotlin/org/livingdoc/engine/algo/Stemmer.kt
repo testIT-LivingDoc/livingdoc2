@@ -18,7 +18,6 @@ package org.livingdoc.engine.algo
  * by calling one of the various stem(something) methods.
  */
 @Suppress(
-
     "ComplexMethod",
     "LongMethod",
     "ReturnCount",
@@ -26,8 +25,11 @@ package org.livingdoc.engine.algo
 )
 class Stemmer {
 
+    /**
+     * Unit of size whereby b is increased.
+     */
     companion object IncNumber {
-        val INC = 50
+        const val INC = 50
     }
 
     /**
@@ -36,17 +38,24 @@ class Stemmer {
      * to determine the length of the result.
      */
     private var resultBuffer: CharArray
-        private set
-    private var i: Int
     /**
      * Returns the length of the word resulting from the stemming process.
      */
-    /* offset into b */
     private var resultLength: Int
-        private set
-    /* offset to end of stemmed word */
+    /**
+     * Offset into b.
+     */
+    private var i: Int
+
     private var j = 0
     private var k = 0
+
+    init {
+        resultBuffer = CharArray(INC)
+        i = 0
+        resultLength = 0
+    }
+
     /**
      * Add a character to the word being stemmed.  When you are finished
      * adding characters, you can call stem(void) to stem the word.
@@ -60,7 +69,8 @@ class Stemmer {
         resultBuffer[i++] = ch
     }
 
-    /** Adds wLen characters to the word being stemmed contained in a portion
+    /**
+     * Adds wLen characters to the word being stemmed contained in a portion
      * of a char[] array. This is like repeated calls of add(char ch), but
      * faster.
      */
@@ -82,7 +92,9 @@ class Stemmer {
         return String(resultBuffer, 0, resultLength)
     }
 
-    /* cons(i) is true <=> b[i] is a consonant. */
+    /**
+     * cons(i) is true <=> b[i] is a consonant.
+     */
     private fun cons(i: Int): Boolean {
         return when (resultBuffer[i]) {
             'a', 'e', 'i', 'o', 'u' -> false
@@ -91,16 +103,18 @@ class Stemmer {
         }
     }
 
-    /* m() measures the number of consonant sequences between 0 and j. if c is
-      a consonant sequence and v a vowel sequence, and <..> indicates arbitrary
-      presence,
-
-         <c><v>       gives 0
-         <c>vc<v>     gives 1
-         <c>vcvc<v>   gives 2
-         <c>vcvcvc<v> gives 3
-         ....
-   */
+    /**
+     * m() measures the number of consonant sequences between 0 and j.
+     *
+     * if c is a consonant sequence and v a vowel sequence, and <..> indicates
+     * arbitrary presence,
+     *
+     * <c><v>       gives 0
+     * <c>vc<v>     gives 1
+     * <c>vcvc<v>   gives 2
+     * <c>vcvcvc<v> gives 3
+     * ....
+     */
     private fun m(): Int {
         var n = 0
         var i = 0
@@ -127,10 +141,11 @@ class Stemmer {
         }
     }
 
-    /* vowelinstem() is true <=> 0,...j contains a vowel */
-    private fun vowelinstem(): Boolean {
-        var i: Int
-        i = 0
+    /**
+     * vowelInStem is true <=> 0,...j contains a vowel
+     */
+    private fun vowelInStem(): Boolean {
+        var i = 0
         while (i <= j) {
             if (!cons(i)) return true
             i++
@@ -138,20 +153,22 @@ class Stemmer {
         return false
     }
 
-    /* doublec(j) is true <=> j,(j-1) contain a double consonant. */
-    private fun doublec(j: Int): Boolean {
+    /**
+     * doubleConsonant is true <=> j,(j-1) contains a double consonant.
+     */
+    private fun doubleConsonant(j: Int): Boolean {
         if (j < 1) return false
         return if (resultBuffer[j] != resultBuffer[j - 1]) false else cons(j)
     }
 
-    /* cvc(i) is true <=> i-2,i-1,i has the form consonant - vowel - consonant
-      and also if the second c is not w,x or y. this is used when trying to
-      restore an e at the end of a short word. e.g.
-
-         cav(e), lov(e), hop(e), crim(e), but
-         snow, box, tray.
-
-   */
+    /**
+     * cvc(i) is true <=> i-2,i-1,i has the form consonant - vowel - consonant
+     * and also if the second c is not w,x or y. this is used when trying to
+     * restore an e at the end of a short word. e.g.
+     *
+     * cav(e), lov(e), hop(e), crim(e), but
+     * snow, box, tray.
+     */
     private fun cvc(i: Int): Boolean {
         if (i < 2 || !cons(i) || cons(i - 1) || !cons(i - 2)) return false
         run {
@@ -161,6 +178,9 @@ class Stemmer {
         return true
     }
 
+    /**
+     * Returns whether we are at the final character of our input-string [resultBuffer].
+     */
     private fun ends(s: String): Boolean {
         val l = s.length
         val o = k - l + 1
@@ -170,55 +190,60 @@ class Stemmer {
         return true
     }
 
-    /* setto(s) sets (j+1),...k to the characters in the string s, readjusting
-      k. */
-    private fun setto(s: String) {
+    /**
+     * setTo(s) sets (j+1),...k to the characters in the string s, readjusting k.
+     */
+    private fun setTo(s: String) {
         val l = s.length
         val o = j + 1
         for (i in 0 until l) resultBuffer[o + i] = s[i]
         k = j + l
     }
 
-    /* r(s) is used further down. */
+    /**
+     *  r(s) is used further down.
+     */
     private fun r(s: String) {
-        if (m() > 0) setto(s)
+        if (m() > 0) setTo(s)
     }
 
-    /* step1() gets rid of plurals and -ed or -ing. e.g.
-
-          caresses  ->  caress
-          ponies    ->  poni
-          ties      ->  ti
-          caress    ->  caress
-          cats      ->  cat
-
-          feed      ->  feed
-          agreed    ->  agree
-          disabled  ->  disable
-
-          matting   ->  mat
-          mating    ->  mate
-          meeting   ->  meet
-          milling   ->  mill
-          messing   ->  mess
-
-          meetings  ->  meet
-
-   */
+    /**
+     *  step1() gets rid of plurals and -ed or -ing. e.g.
+     *
+     * caresses  ->  caress
+     * ponies    ->  poni
+     * ties      ->  ti
+     * caress    ->  caress
+     * cats      ->  cat
+     *
+     * feed      ->  feed
+     * agreed    ->  agree
+     * disabled  ->  disable
+     *
+     * matting   ->  mat
+     * mating    ->  mate
+     * meeting   ->  meet
+     * milling   ->  mill
+     * messing   ->  mess
+     *
+     * meetings  ->  meet
+     */
     private fun step1() {
         if (resultBuffer[k] == 's') {
-            if (ends("sses")) k -= 2
-            else if (ends("ies")) setto("i")
-            else if (resultBuffer[k - 1] != 's') k--
+            when {
+                ends("sses") -> k -= 2
+                ends("ies") -> setTo("i")
+                resultBuffer[k - 1] != 's' -> k--
+            }
         }
         if (ends("eed")) {
             if (m() > 0) k--
-        } else if ((ends("ed") || ends("ing")) && vowelinstem()) {
+        } else if ((ends("ed") || ends("ing")) && vowelInStem()) {
             k = j
-            if (ends("at")) setto("ate")
-            else if (ends("bl")) setto("ble")
-            else if (ends("iz")) setto("ize")
-            else if (doublec(
+            if (ends("at")) setTo("ate")
+            else if (ends("bl")) setTo("ble")
+            else if (ends("iz")) setTo("ize")
+            else if (doubleConsonant(
                     k
                 )
             ) {
@@ -227,18 +252,21 @@ class Stemmer {
                     val ch = resultBuffer[k].toInt()
                     if (ch == 'l'.toInt() || ch == 's'.toInt() || ch == 'z'.toInt()) k++
                 }
-            } else if (m() == 1 && cvc(k)) setto("e")
+            } else if (m() == 1 && cvc(k)) setTo("e")
         }
     }
 
-    /* step2() turns terminal y to i when there is another vowel in the stem. */
+    /**
+     * step2 turns terminal y to i when there is another vowel in the stem.
+     */
     private fun step2() {
-        if (ends("y") && vowelinstem()) resultBuffer[k] = 'i'
+        if (ends("y") && vowelInStem()) resultBuffer[k] = 'i'
     }
 
-    /* step3() maps double suffices to single ones. so -ization ( = -ize plus
-      -ation) maps to -ize etc. note that the string before the suffix must give
-      m() > 0. */
+    /** step3 maps double suffices to single ones. so -ization ( = -ize plus
+     * -ation) maps to -ize etc. note that the string before the suffix must give
+     * m() > 0.
+     */
     private fun step3() {
         if (k == 0) return /* For Bug 1 */
         when (resultBuffer[k - 1]) {
@@ -320,7 +348,9 @@ class Stemmer {
         }
     }
 
-    /* step4() deals with -ic-, -full, -ness etc. similar strategy to step3. */
+    /**
+     * step4 deals with -ic-, -full, -ness etc. similar strategy to step3.
+     */
     private fun step4() {
         when (resultBuffer[k]) {
             'e' -> {
@@ -351,7 +381,9 @@ class Stemmer {
         }
     }
 
-    /* step5() takes off -ant, -ence etc., in context <c>vcvc<v>. */
+    /**
+     * step5 takes off -ant, -ence etc., in context <c>vcvc<v>.
+     */
     private fun step5() {
         if (k == 0) return /* for Bug 1 */
         when (resultBuffer[k - 1]) {
@@ -386,7 +418,8 @@ class Stemmer {
             }
             'o' -> {
                 if (ends("ion") && j >= 0 &&
-                    (resultBuffer[j] == 's' || resultBuffer[j] == 't'))
+                    (resultBuffer[j] == 's' || resultBuffer[j] == 't')
+                )
                 /* j >= 0 fixes Bug 2 */ if (ends("ou"))
                     return
             }
@@ -416,17 +449,20 @@ class Stemmer {
         if (m() > 1) k = j
     }
 
-    /* step6() removes a final -e if m() > 1. */
+    /**
+     * step6 removes a final -e if m() > 1.
+     */
     private fun step6() {
         j = k
         if (resultBuffer[k] == 'e') {
             val a = m()
             if (a > 1 || a == 1 && !cvc(k - 1)) k--
         }
-        if (resultBuffer[k] == 'l' && doublec(k) && m() > 1) k--
+        if (resultBuffer[k] == 'l' && doubleConsonant(k) && m() > 1) k--
     }
 
-    /** Stem the word placed into the Stemmer buffer through calls to add().
+    /**
+     * Stem the word placed into the Stemmer buffer through calls to add().
      * Returns true if the stemming process resulted in a word different
      * from the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
@@ -443,12 +479,5 @@ class Stemmer {
         }
         resultLength = k + 1
         i = 0
-    }
-
-    /* unit of size whereby b is increased */
-    init {
-        resultBuffer = CharArray(INC)
-        i = 0
-        resultLength = 0
     }
 }
