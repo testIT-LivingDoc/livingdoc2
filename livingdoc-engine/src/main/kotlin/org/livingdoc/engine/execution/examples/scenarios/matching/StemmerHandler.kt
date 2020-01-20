@@ -28,7 +28,7 @@ object StemmerHandler {
     }
 
     /**
-     * stem algorithm initialisaation point
+     * stem algorithm initialisation point
      *
      * @param input the string to be looked at
      * @return The sentence stem
