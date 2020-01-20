@@ -12,7 +12,6 @@ import org.livingdoc.repositories.model.scenario.Scenario
  */
 class ScenarioToFixtureMatcher {
 
-    
     fun findMatchingFixture(scenario: Scenario, fixtures: List<ScenarioFixtureWrapper>): Fixture<Scenario> {
         if (scenario.description.isManual) {
             return ScenarioNoFixture()
