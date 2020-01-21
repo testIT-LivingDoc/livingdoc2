@@ -10,7 +10,7 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * The cost consists of the number of operations on the step/the template.
  * Additionally length of the strings in each variable is also considered into the cost.
  *
- * If the template and the step can be matched initally,
+ * If the template and the step can be matched initially,
  * the cost only considers the length of the strings in each variable.
  * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
  *
@@ -56,7 +56,7 @@ internal class RegMatching(
     fun isMisaligned() = totalCost.first >= maxNumberOfOperations
 
     /**
-     * startpoint of the Regex algorithm to match sentences
+     * starting point of the Regex algorithm to match sentences
      */
     private fun start() {
         match()
@@ -147,7 +147,7 @@ internal class RegMatching(
     }
 
     /**
-     * preparation of the template stirng for stemming
+     * preparation of the template string for stemming
      * @param templateS the template string ot be prepared
      * @return the variables and their position in the template string
      */
@@ -300,7 +300,7 @@ internal class RegMatching(
     private var mainstring = ""
     /**
      * getting the variables and creating the regex by replacing the "{variable}"
-     * with regexes.
+     * with the regular expressions (regexes).
      * (return value not used, only for debug reasons)
      * @return a the template split into a list of strings with variables replaced by regexes
      *
@@ -371,7 +371,7 @@ internal class RegMatching(
      * simple counter method to count number of brackets
      * preparation for the variable check afterwards
      *
-     * @param input the string to be checked as chararray
+     * @param input the string to be checked as charArray
      * @return number of brackets found, -1 if the string is not a variable
      */
     private fun countBrackets(input: CharArray): Int {

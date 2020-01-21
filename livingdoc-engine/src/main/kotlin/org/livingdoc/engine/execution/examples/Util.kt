@@ -24,9 +24,9 @@ fun <T> executeWithBeforeAndAfter(before: () -> Unit, body: () -> T, after: () -
 }
 
 /**
- *  This function handles the execution of the after hook. It manages occuring exceptions too.
+ *  This function handles the execution of the after hook. It manages occurring exceptions too.
  *  @param after the after hook that should be executed
- *  @param exception a possibly occured exception in the before or main function
+ *  @param exception a possibly occurred exception in the before or main function
  */
 @Suppress("TooGenericExceptionCaught")
 private fun runAfter(after: () -> Unit, exception: Throwable?) {
