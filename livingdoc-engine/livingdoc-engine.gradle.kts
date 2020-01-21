@@ -23,5 +23,9 @@ tasks.compileTestJava {
 }
 
 jmh {
+	benchmarkMode = listOf("AverageTime", "SampleTime")
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
+	fork = 1
+	timeUnit = "ms"
+
 }
