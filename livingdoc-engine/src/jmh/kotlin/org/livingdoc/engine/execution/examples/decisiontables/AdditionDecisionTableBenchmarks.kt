@@ -46,10 +46,6 @@ open class AdditionDecisionTableBenchmarks {
     }
 
     @Benchmark
-    fun baseline() {
-    }
-
-    @Benchmark
     fun sequentialAddition(): DecisionTableResult {
         return DecisionTableFixtureWrapper(SequentialAddition::class.java).execute(table)
     }
