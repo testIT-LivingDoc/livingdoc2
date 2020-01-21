@@ -73,7 +73,11 @@ data class FieldResult private constructor(
 
             if (!this::value.isInitialized)
                 throw IllegalStateException("Cannot build FieldResult without a value")
-            val value = this.value
+
+            var value = this.value
+            if (status is Status.ReportActualResult) {
+                value = status.actualResult
+            }
 
             return FieldResult(value, status, method)
         }

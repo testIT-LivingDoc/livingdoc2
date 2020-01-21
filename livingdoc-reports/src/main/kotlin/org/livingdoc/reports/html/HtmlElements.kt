@@ -182,6 +182,7 @@ private fun determineCssClassForBackgroundColor(status: Status): String {
         Status.Manual -> "background-manual"
         Status.Skipped -> "background-skipped"
         Status.Unknown -> "background-unknown"
+        is Status.ReportActualResult -> "background-report-result"
         is Status.Failed -> "background-failed"
         is Status.Exception -> "background-exception"
     }

@@ -1,12 +1,11 @@
 package org.livingdoc.reports.json
 
 import com.beust.klaxon.JsonObject
-
 import com.beust.klaxon.json
 import org.livingdoc.config.YamlUtils
-import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
+import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
@@ -79,6 +78,7 @@ class JsonReportRenderer : ReportRenderer {
             Status.Manual -> "manual"
             Status.Skipped -> "skipped"
             Status.Unknown -> "unknown"
+            is Status.ReportActualResult -> "report-actual-result"
             is Status.Failed -> "failed"
             is Status.Exception -> "exception"
         }

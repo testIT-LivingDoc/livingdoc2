@@ -262,6 +262,11 @@ class DecisionTableFixtureWrapper(
     }
 
     private fun handleAssertionError(fieldResult: FieldResult.Builder, tableField: Field, e: AssertionError) {
+        if (tableField.value.isEmpty()) {
+            fieldResult.withStatus(Status.ReportActualResult(e.localizedMessage))
+            return
+        }
+
         if (tableField.value == ExampleSyntax.EXCEPTION) {
             fieldResult.withStatus(Status.Failed(NoExpectedExceptionThrownException()))
             return

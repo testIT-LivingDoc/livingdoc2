@@ -138,7 +138,7 @@ class FixtureMethodInvoker(
     }
 
     private fun convert(argument: String, methodParameter: Parameter): Any? {
-        if (argument == ExampleSyntax.EXCEPTION) {
+        if (argument == ExampleSyntax.EXCEPTION || argument.isEmpty()) {
             return null
         }
 

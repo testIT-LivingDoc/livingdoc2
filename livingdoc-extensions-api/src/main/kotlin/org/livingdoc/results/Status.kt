@@ -20,6 +20,9 @@ sealed class Status {
     /** A validation failed with an assertion error. */
     data class Failed(val reason: AssertionError) : Status()
 
+    /** The actual result is reported but not compared to an expected result */
+    data class ReportActualResult(val actualResult: String = "") : Status()
+
     /** An unexpected exception occurred. */
     data class Exception(val exception: Throwable) : Status()
 }

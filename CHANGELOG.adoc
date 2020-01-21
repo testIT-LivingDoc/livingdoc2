@@ -26,6 +26,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Navigation from Junit Test results to Fixture code
 - Support for specifying scenarios with Gherkin
 - Added the possibility to execute the rows of a DecisionTableFixture in parallel, with the introduction of a a newly added parameter to the `@DecisionTableFixture` annotation. so that it is possible to specify if the rows should be executed in parallel (default is serial)
+- Add the option to leave cells in a DecisionTable empty to only report the result
 
 === Changed
 

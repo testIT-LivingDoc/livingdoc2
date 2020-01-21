@@ -76,7 +76,8 @@ data class DecisionTableResult private constructor(
 
         private fun matchesRowResult(row: Row, result: RowResult): Boolean {
             return row.headerToField.all { (header, field) ->
-                result.headerToField[header]?.value == field.value
+                result.headerToField[header]?.value == field.value ||
+                        result.headerToField[header]?.status is Status.ReportActualResult
             }
         }
 
