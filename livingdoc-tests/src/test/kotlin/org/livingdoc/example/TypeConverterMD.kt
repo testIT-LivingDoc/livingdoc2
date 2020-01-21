@@ -1,8 +1,8 @@
 package org.livingdoc.example
 
 import org.assertj.core.api.Assertions.assertThat
-import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.conversion.Converter
+import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step

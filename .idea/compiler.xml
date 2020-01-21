@@ -28,8 +28,8 @@
       <module name="livingdoc.livingdoc-repository-rest.test" target="1.8" />
       <module name="livingdoc.livingdoc-results.main" target="1.8" />
       <module name="livingdoc.livingdoc-results.test" target="1.8" />
-      <module name="livingdoc.livingdoc-sample.main" target="1.8" />
-      <module name="livingdoc.livingdoc-sample.test" target="1.8" />
+      <module name="livingdoc.livingdoc-tests.main" target="1.8" />
+      <module name="livingdoc.livingdoc-tests.test" target="1.8" />
       <module name="livingdoc.main" target="1.8" />
       <module name="livingdoc.test" target="1.8" />
     </bytecodeTargetLevel>

@@ -84,7 +84,7 @@ The engine is the heart of the project.
 It contains the logic of how the repository contents are handled and used.
 Each of the repository components defines its own approach to receiving data.
 For example, via local files or REST.
-There is also an link:livingdoc-sample/[sample project].
+There is also a link:livingdoc-tests/[test project].
 It contains a first starting point if you want to see some executable fixtures.
 
 
