@@ -1,5 +1,6 @@
 plugins {
 	`kotlin-project-config`
+	id("me.champeau.gradle.jmh").version("0.5.0")
 }
 
 dependencies {
@@ -19,4 +20,12 @@ dependencies {
 
 tasks.compileTestJava {
 	options.compilerArgs.add("-parameters")
+}
+
+jmh {
+	benchmarkMode = listOf("AverageTime", "SampleTime")
+	duplicateClassesStrategy = DuplicatesStrategy.WARN
+	fork = 1
+	timeUnit = "ms"
+
 }

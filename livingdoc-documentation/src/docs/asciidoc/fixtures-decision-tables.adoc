@@ -259,3 +259,48 @@ void deleteTestData() {
 ----
 include::{moduleBase}/src/main/java/examples/decisiontables/CalculatorFixture.java[]
 ----
+
+==== Benchmarks
+
+The following tables lists some benchmark results.
+The benchmarks were run on an i5-5200U with 8GB of RAM.
+
+.Benchmark Results
+[cols="3*<,>"]
+|===
+| Benchmark
+| Execution Mode
+| Number of Rows
+| Average Time (ms)
+
+| Simple Operation
+| sequential
+| 1,000
+| 13.111
+
+| Simple Operation
+| sequential
+| 1,000,000
+| 14456.335
+
+| Simple Operation
+| parallel
+| 1,000
+| 5.456
+
+| Simple Operation
+| parallel
+| 1,000,000
+| 8900.850
+
+| Expensive Operation
+| sequential
+| 10
+| 7987.379
+
+| Expensive Operation
+| parallel
+| 10
+| 4845.735
+
+|===
