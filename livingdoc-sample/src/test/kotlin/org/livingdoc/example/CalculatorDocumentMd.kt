@@ -11,6 +11,11 @@ import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 
+/**
+ * [ExecutableDocuments][ExecutableDocument] can also be specified in Markdown
+ *
+ * @see ExecutableDocument
+ */
 @ExecutableDocument("local://Calculator.md")
 class CalculatorDocumentMd {
 

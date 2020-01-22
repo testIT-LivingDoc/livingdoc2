@@ -9,8 +9,15 @@ import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
 
+/**
+ * The AbstractTemporalConverter is the abstraction of the time converters.
+ */
 abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
 
+    /**
+     * This function takes the given value as a string, retrieves the formater for the annotated element
+     * and calls the parse function which calls the function that is implemented by the actual Converters.
+     */
     @Throws(ValueFormatException::class, MalformedFormatException::class)
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
         val formatter = getDateTimeFormatter(element)

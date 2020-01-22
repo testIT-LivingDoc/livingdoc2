@@ -16,6 +16,11 @@ import org.livingdoc.repositories.model.scenario.Step
 import java.io.InputStream
 import java.nio.charset.Charset
 
+/**
+ * HtmlFormat implements HTML as a [DocumentFormat].
+ *
+ * @see DocumentFormat
+ */
 class HtmlFormat : DocumentFormat {
 
     private val supportedFileExtensions = setOf("html", "htm")

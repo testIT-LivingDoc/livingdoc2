@@ -10,7 +10,7 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * The cost consists of the number of operations on the step/the template.
  * Additionally length of the strings in each variable is also considered into the cost.
  *
- * If the template and the step can be matched initally,
+ * If the template and the step can be matched initially,
  * the cost only considers the length of the strings in each variable.
  * Else there will be stemmer algorithm and replacement of the a/an applied to both step and template strings.
  *
@@ -37,7 +37,7 @@ internal class RegMatching(
     private fun getCost(): Pair<Float, Float> {
         start()
         considerVarLength()
-        return Pair(operationNumber, considerVarLength() + operationNumber.toFloat())
+        return Pair(operationNumber, considerVarLength() + operationNumber)
     }
 
     /**
@@ -56,7 +56,7 @@ internal class RegMatching(
     fun isMisaligned() = totalCost.first >= maxNumberOfOperations
 
     /**
-     * startpoint of the Regex algorithm to match sentences
+     * starting point of the Regex algorithm to match sentences
      */
     private fun start() {
         match()
@@ -79,14 +79,13 @@ internal class RegMatching(
      * matching method of the algorithm
      */
     private fun match() {
-        tokenizetemplateText()
+        tokenizeTemplateText()
         reggedText = preparedtemplatetext.toRegex()
         val output = matchStrings()
-        if (!output.isEmpty()) {
-            val x = output
+        if (output.isNotEmpty()) {
             var counter = 0
             templatetextTokenized.forEach {
-                templatetextTokenized[it.key] = x[counter]
+                templatetextTokenized[it.key] = output[counter]
                 counter++
             }
         }
@@ -106,7 +105,7 @@ internal class RegMatching(
             val rematchResult = rematch()
 
             val mr = rematchResult.first
-            if (!mr.isEmpty()) {
+            if (mr.isNotEmpty()) {
                 operationNumber += rematchResult.second
                 matched = mr
             } else {
@@ -139,7 +138,7 @@ internal class RegMatching(
                 }
             }
             if (!replaced) {
-                reconString += it + " "
+                reconString += "$it "
             }
             counter++
         }
@@ -148,7 +147,7 @@ internal class RegMatching(
     }
 
     /**
-     * preparation of the template stirng for stemming
+     * preparation of the template string for stemming
      * @param templateS the template string ot be prepared
      * @return the variables and their position in the template string
      */
@@ -161,9 +160,9 @@ internal class RegMatching(
 
             if (checkIfVar(it)) {
                 reconString += "word "
-                variableLocations.put(it, iterat)
+                variableLocations[it] = iterat
             } else {
-                reconString += it + " "
+                reconString += "$it "
             }
             iterat++
         }
@@ -184,14 +183,14 @@ internal class RegMatching(
         var outstring = ""
         val tokens = string.split(" ")
 
-        for (i in 0..tokens.size - 1) {
-            if (!checkIfVar(tokens[i])) {
-                if (tokens[i].equals("a") || tokens[i].equals("an"))
-                    outstring += "a "
+        for (i in tokens.indices) {
+            outstring += if (!checkIfVar(tokens[i])) {
+                if (tokens[i] == "a" || tokens[i] == "an")
+                    "a "
                 else
-                    outstring += tokens[i] + " "
+                    tokens[i] + " "
             } else
-                outstring += tokens[i] + " "
+                tokens[i] + " "
         }
         outstring = StemmerHandler.cutLast(outstring).toString()
 
@@ -258,32 +257,31 @@ internal class RegMatching(
         // a rematch has to be made
         //
 
-        if (matchresult != null)
-            return Pair(matchresult.destructured.toList(), matchingcost)
-        else return Pair(emptyList(), maxNumberOfOperations)
+        return if (matchresult != null)
+            Pair(matchresult.destructured.toList(), matchingcost)
+        else Pair(emptyList(), maxNumberOfOperations)
     }
 
     /**
      * extracted method for readability
      * turns a text and its variables to a regex
-     * @param stemmedsentence sentence from stemmer without variables
+     * @param stemmedSentence sentence from stemmer without variables
      * @param variables variables alongside their location in the string
      * @return a regex to start comparisons
      */
-    private fun prepareTemplateToRegex(stemmedsentence: String, variables: Map<String, Int>): Regex {
-        val vari = variables
+    private fun prepareTemplateToRegex(stemmedSentence: String, variables: Map<String, Int>): Regex {
+        val vars = variables
 
-        val preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
+        val preppedTemplate = reconstructVars(templateS = stemmedSentence, variables = vars)
 
-        val templateTxt = tokenizetemplateText(ininterntext = preppedTemplate)
+        val templateTxt = tokenizeTemplateText(ininterntext = preppedTemplate)
         var textTemp = ""
         templateTxt.forEach {
-            textTemp += it + " "
+            textTemp += "$it "
         }
         textTemp = StemmerHandler.cutLast(textTemp).toString()
-        val regexText = textTemp.toRegex()
 
-        return regexText
+        return textTemp.toRegex()
     }
 
     /**
@@ -302,12 +300,12 @@ internal class RegMatching(
     private var mainstring = ""
     /**
      * getting the variables and creating the regex by replacing the "{variable}"
-     * with regexes.
+     * with the regular expressions (regexes).
      * (return value not used, only for debug reasons)
      * @return a the template split into a list of strings with variables replaced by regexes
      *
      */
-    private fun tokenizetemplateText(ininterntext: String = templatetext): List<String> {
+    private fun tokenizeTemplateText(ininterntext: String = templatetext): List<String> {
         val interntext = ininterntext.split(" ").toMutableList()
         var interncounter = 0
         preparedtemplatetext = templatetext
@@ -317,10 +315,10 @@ internal class RegMatching(
                 val bracketcount = countBrackets(variable.toCharArray())
 
                 checkVar(variable, bracketcount)
-                variable = variable.replace(beforeconc + "{", "")
-                variable = variable.replace("}" + afterconc, "")
+                variable = variable.replace("$beforeconc{", "")
+                variable = variable.replace("}$afterconc", "")
 
-                templatetextTokenized.put(variable, "")
+                templatetextTokenized[variable] = ""
                 preparedtemplatetext = preparedtemplatetext.replace(outer, beforeconc + regularExpression + afterconc)
                 interntext[interncounter] = beforeconc + regularExpression + afterconc
             }
@@ -334,12 +332,12 @@ internal class RegMatching(
      * builder for the regex
      *
      * @param variable the input variable the be checked
-     * @param bracketcount the number of brackets counted in before
+     * @param bracketCount the number of brackets counted in before
      *
      */
-    private fun checkVar(variable: String, bracketcount: Int) {
-        var open: Int = bracketcount
-        var closed: Int = bracketcount
+    private fun checkVar(variable: String, bracketCount: Int) {
+        var open: Int = bracketCount
+        var closed: Int = bracketCount
 
         var afterstring = false
         var beforestring = true
@@ -349,7 +347,7 @@ internal class RegMatching(
             if (afterstring)
                 afterconc += it
 
-            if (it.equals('}')) {
+            if (it == '}') {
                 if (closed == 1)
                     afterstring = true
                 closed--
@@ -360,7 +358,7 @@ internal class RegMatching(
                 mainstring += it
 
             // the before string
-            if (it.equals('{')) {
+            if (it == '{') {
                 open--
                 beforestring = false
             }
@@ -373,17 +371,17 @@ internal class RegMatching(
      * simple counter method to count number of brackets
      * preparation for the variable check afterwards
      *
-     * @param input the string to be checked as chararray
+     * @param input the string to be checked as charArray
      * @return number of brackets found, -1 if the string is not a variable
      */
     private fun countBrackets(input: CharArray): Int {
         var opencount = 0
         var closecount = 0
         input.forEach {
-            if (it.equals('{')) {
+            if (it == '{') {
                 opencount++
             }
-            if (it.equals('}')) {
+            if (it == '}') {
                 closecount++
             }
         }

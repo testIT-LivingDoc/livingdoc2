@@ -4,6 +4,11 @@ import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
 import org.livingdoc.repositories.format.DocumentFormatManager
 
+/**
+ * A FileRepository is a [DocumentRepository] in a locally mounted filesystem.
+ *
+ * @see DocumentRepository
+ */
 class FileRepository(
     private val name: String,
     private val config: FileRepositoryConfig,

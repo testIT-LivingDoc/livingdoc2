@@ -21,14 +21,14 @@ object StemmerHandler {
      */
     fun cutLast(string: String): String? {
         var str = string
-        if (str.length > 0 && str[str.length - 1] == ' ') {
+        if (str.isNotEmpty() && str[str.length - 1] == ' ') {
             str = str.substring(0, str.length - 1)
         }
         return str
     }
 
     /**
-     * stem algorithm initialisaation point
+     * stem algorithm initialisation point
      *
      * @param input the string to be looked at
      * @return The sentence stem
@@ -39,10 +39,9 @@ object StemmerHandler {
         val s = Stemmer()
         var collector = ""
 
-        var `in` = input
-        var splittedin = `in`.split(" ")
-        splittedin.forEach {
-            var iit = it + ' '
+        val splitIn = input.split(" ")
+        splitIn.forEach {
+            val iit = "$it "
             var iteration = 0
             while (true) {
                 try {
@@ -64,9 +63,8 @@ object StemmerHandler {
                                 /* s.add(w, j); */
                                 s.stem()
 
-                                val u: String
                                 /* and now, to test toString() : */
-                                u = s.toString()
+                                val u: String = s.toString()
                                 /* to test getResultBuffer(), getResultLength() : */
                                 /* u = new String(s.getResultBuffer(), 0, s.getResultLength()); */
                                 collector += u

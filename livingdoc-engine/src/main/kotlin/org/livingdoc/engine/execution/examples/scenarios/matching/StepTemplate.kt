@@ -14,7 +14,7 @@ internal class StepTemplate(
 ) {
 
     init {
-        assert(!fragments.isEmpty())
+        assert(fragments.isNotEmpty())
         assertAlternatingSequenceOfFragments()
     }
 

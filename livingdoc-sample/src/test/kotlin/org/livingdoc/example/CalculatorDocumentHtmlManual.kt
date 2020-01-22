@@ -7,8 +7,25 @@ import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
 
+/**
+ * This [ExecutableDocument] demonstrates the manual test feature of LivingDoc
+ *
+ * The CalculatorManual.html file contains the text "MANUAL" in a heading.
+ * All examples following this heading and up to the next heading are marked as manual and not executed.
+ *
+ * @see ExecutableDocument
+ */
 @ExecutableDocument("local://CalculatorManual.html")
 class CalculatorDocumentHtmlManual {
+
+    /**
+     * An [ExecutableDocument] can contain examples that will be executed by LivingDoc alongside manual examples.
+     *
+     * Check [CalculatorDocumentHtml] for examples on how to implement fixtures.
+     *
+     * @see ExecutableDocument
+     * @see DecisionTableFixture
+     */
     @DecisionTableFixture(parallel = false)
     class CalculatorDecisionTableFixture {
 

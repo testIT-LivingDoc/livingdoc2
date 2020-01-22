@@ -3,6 +3,9 @@ package org.livingdoc.converters.time
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * This converter parses a String to the time format with offset from UTC
+ */
 open class OffsetDateTimeConverter : AbstractTemporalConverter<OffsetDateTime>() {
 
     override fun defaultFormatter(): DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME

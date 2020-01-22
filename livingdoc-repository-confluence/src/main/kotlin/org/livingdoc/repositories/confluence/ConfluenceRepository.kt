@@ -74,7 +74,7 @@ class ConfluenceRepository(
     }
 
     /**
-     * Reads the DocumentId and the Page Version from an documentIdentifieer and returns it.
+     * Reads the DocumentId and the Page Version from an documentIdentifier and returns it.
      *
      * @param documentIdentifier The raw DocumentIdentifier containing ID and Version
      * @return A Pair containing the Confluence Page ID and the Page Version

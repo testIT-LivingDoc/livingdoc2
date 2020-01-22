@@ -8,9 +8,21 @@ import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
 
+/**
+ * This [ExecutableDocument] demonstrates the [Disabled] annotation. It will not be run during the LivingDoc test execution. Instead its state will be recorded as `Disabled`
+ *
+ * @see Disabled
+ * @see ExecutableDocument
+ */
 @Disabled("Skip this document")
 @ExecutableDocument("local://Calculator.html")
 class CalculatorDocumentDisabledExecutableDocument {
+
+    /**
+     * This [DecisionTableFixture] demonstrates that the [Disabled] annotation from above works and you are able to disable the document even if it contains fixtures.
+     * Otherwise this would not be tested.
+     * @see DecisionTableFixture
+     */
 
     @DecisionTableFixture
     class CalculatorDecisionTableFixture {

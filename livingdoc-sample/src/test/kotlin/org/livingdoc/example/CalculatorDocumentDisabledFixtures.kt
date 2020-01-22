@@ -10,9 +10,21 @@ import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 
+/**
+ * This [ExecutableDocument] demonstrates the [Disabled] annotation on some of its fixtures.
+ *
+ * @see Disabled
+ * @see ExecutableDocument
+ */
 @ExecutableDocument("local://Calculator.md")
 class CalculatorDocumentDisabledFixtures {
 
+    /**
+     * This [ScenarioFixture] is marked as [Disabled]. It will not be run during the LivingDoc test execution. Instead its state will be recorded as `Disabled`.
+     *
+     * @see Disabled
+     * @see ScenarioFixture
+     */
     @Disabled("Disabled ScenarioFixture")
     @ScenarioFixture
     class DisabledCalculatorScenarioFixture {
@@ -62,6 +74,12 @@ class CalculatorDocumentDisabledFixtures {
         }
     }
 
+    /**
+     * This [DecisionTableFixture] is marked as [Disabled]. It will not be run during the LivingDoc test execution. Instead its state will be recorded as `Disabled`.
+     *
+     * @see Disabled
+     * @see DecisionTableFixture
+     */
     @Disabled("Disabled DecisionTableFixture")
     @DecisionTableFixture(parallel = true)
     class DisabledCalculatorDecisionTableFixture {

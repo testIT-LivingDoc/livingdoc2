@@ -7,10 +7,16 @@ import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 
 /**
- * Default matcher to find the right fixture classes for a given list of tables.
+ * Default matcher to find the right fixture classes in a given list of FixtureWrappers.
  */
 class DecisionTableToFixtureMatcher {
 
+    /**
+     * This function returns the matching fixture for a Decision Table
+     * @param decisionTable The table for which a matching fixture is needed
+     * @param fixtures A list of fixture wrappers that is searched through
+     * @return the matching Fixture
+     */
     fun findMatchingFixture(
         decisionTable: DecisionTable,
         fixtures: List<DecisionTableFixtureWrapper>
@@ -37,6 +43,9 @@ class DecisionTableToFixtureMatcher {
         return matchingFixtures.firstOrNull() ?: throw NoMatchingFixturesException(headerNames, fixtures)
     }
 
+    /**
+     * This exception is thrown whenever there are more than one matching fixture for a Decision Table
+     */
     class MultipleMatchingFixturesException(
         headerNames: List<String>,
         matchingFixtures: List<DecisionTableFixtureWrapper>
@@ -44,6 +53,9 @@ class DecisionTableToFixtureMatcher {
             "${headerNames.map { "'$it'" }}. Matching fixtures found: $matchingFixtures"
     )
 
+    /**
+     * This exception is thrown whenever there is no matching fixture for a Decision Table
+     */
     class NoMatchingFixturesException(headerNames: List<String>, fixtures: List<DecisionTableFixtureWrapper>) :
         RuntimeException("Could not find any fixture matching the Decision Table's headers " +
                 "${headerNames.map { "'$it'" }}. Available fixtures: $fixtures"
