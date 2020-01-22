@@ -14,7 +14,7 @@ import org.livingdoc.converters.exceptions.ValueFormatException
  */
 abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
 
-   /**
+    /**
      * This function takes the given value as a string, retrieves the formater for the annotated element
      * and calls the parse function which calls the function that is implemented by the actual Converters.
      */
