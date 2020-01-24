@@ -37,13 +37,13 @@ val livingdocKotlinProjects by extra(
 	)
 )
 
-val livingdocSampleProjects by extra(
+val livingdocTestProjects by extra(
 	listOf(
-		project(":livingdoc-sample")
+		project(":livingdoc-tests")
 	)
 )
 
-val kotlinProjects by extra(livingdocKotlinProjects + livingdocSampleProjects)
+val kotlinProjects by extra(livingdocKotlinProjects + livingdocTestProjects)
 
 allprojects {
 	apply(plugin = "idea")
