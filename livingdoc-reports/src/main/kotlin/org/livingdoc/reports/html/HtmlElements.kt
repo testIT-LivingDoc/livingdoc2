@@ -90,33 +90,36 @@ fun HtmlTable.rows(rows: List<RowResult>) {
     rows.forEach { (headerToField, rowResult) ->
 
         val newRow = Element("tr")
-        headerToField.values.forEach { (value, cellResult) ->
-            newRow.appendChild(
-                Element("td").apply {
-                    setStyleClasses(
-                        HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
-                        determineCssClassForBackgroundColor(cellResult)
-                    )
+        headerToField.values.forEach { (value, cellStatus) ->
+            newRow.appendChild(Element("td").apply {
+                setStyleClasses(
+                    HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX,
+                    determineCssClassForBackgroundColor(cellStatus)
+                )
 
+                appendChild(
+                    Element("span").apply {
+                        setStyleClasses(HtmlReportTemplate.CSS_CLASS_RESULT_VALUE)
+                        html(getReportString(value, cellStatus))
+                    })
+
+                if (cellStatus is Status.Failed || cellStatus is Status.Exception) {
                     appendChild(
-                        Element("span").apply {
-                            setStyleClasses(HtmlReportTemplate.CSS_CLASS_RESULT_VALUE)
-                            html(value)
-                        })
-
-                    if (cellResult is Status.Failed || cellResult is Status.Exception) {
-                        appendChild(
-                            createFailedPopupLink(
-                                htmlTable.renderContext,
-                                cellResult
-                            )
+                        createFailedPopupLink(
+                            htmlTable.renderContext,
+                            cellStatus
                         )
-                    }
-                })
+                    )
+                }
+            })
         }
         appendCellToDisplayFailedRowIfNecessary(newRow, rowResult)
         table.appendChild(newRow)
     }
+}
+
+private fun getReportString(value: String, cellStatus: Status): String {
+    return if (cellStatus is Status.ReportActualResult) cellStatus.actualResult else value
 }
 
 private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Status): Element {
