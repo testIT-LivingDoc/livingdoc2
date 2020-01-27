@@ -5,7 +5,8 @@ package org.livingdoc.repositories.format
  * It helps mapping a headline to all following test cases
  */
 data class ParseContext(
-    val headline: String? = null
+    val headline: String? = null,
+    val descriptiveText: String = ""
 ) {
     /**
      * Checks whether the current [ParseContext] indicates a manual test

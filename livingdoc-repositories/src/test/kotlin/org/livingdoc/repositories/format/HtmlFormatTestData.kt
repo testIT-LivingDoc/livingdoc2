@@ -265,4 +265,19 @@ object HtmlFormatTestData {
     </body>
     </html>
     """.byteInputStream()
+
+    fun getHtmlDescriptionText() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+        <p>This is a descriptive text.</p>
+        <ol>
+            <li>First list item</li>
+            <li>Second list item</li>
+        </ol>
+        <p>This is another descriptive text.</p>
+    </body>
+    </html>
+    """.byteInputStream()
 }

@@ -49,21 +49,42 @@ class HtmlFormat : DocumentFormat {
     private fun parseRecursive(root: Element, rootContext: ParseContext): List<TestData> {
         var context = rootContext
 
-        return root.children().flatMap {
+        val elementQueue: MutableList<Element> = emptyList<Element>().toMutableList()
+
+        val testDataList: MutableList<TestData> = emptyList<TestData>().toMutableList()
+
+        root.children().forEach {
             when (it.tagName()) {
                 "h1", "h2", "h3", "h4", "h5", "h6" -> {
-                    context = ParseContext(it.text())
-                    emptyList()
+                    testDataList.addAll(elementQueue.flatMap {
+                        parseTestData(it, context)
+                    })
+                    elementQueue.clear()
+                    context = context.copy(headline = it.text())
                 }
-                "table" -> {
-                    parseTable(it, context)
+                "p", "span" -> {
+                    context = context.copy(descriptiveText = context.descriptiveText + it.text() + "\n")
                 }
-                "ul", "ol" -> {
-                    parseRecursive(it, context) +
-                            parseList(it, context)
-                }
-                else -> parseRecursive(it, context)
+                else -> elementQueue.add(it)
             }
+        }
+
+        testDataList.addAll(elementQueue.flatMap {
+            parseTestData(it, context)
+        })
+
+        return testDataList
+    }
+
+    private fun parseTestData(element: Element, context: ParseContext): List<TestData> {
+        return when (element.tagName()) {
+            "table" -> {
+                parseTable(element, context)
+            }
+            "ul", "ol" -> {
+                parseRecursive(element, context) + parseList(element, context)
+            }
+            else -> parseRecursive(element, context)
         }
     }
 
@@ -87,15 +108,17 @@ class HtmlFormat : DocumentFormat {
         val tableRows = table.getElementsByTag("tr")
         val headers = extractHeadersFromFirstRow(tableRows)
         val dataRows = parseDataRow(headers, tableRows)
-        return DecisionTable(headers, dataRows, TestDataDescription(context.headline, context.isManual()))
+        return DecisionTable(
+            headers, dataRows, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim())
+        )
     }
 
     private fun extractHeadersFromFirstRow(tableRows: Elements): List<Header> {
         val firstRowContainingHeaders = tableRows[0]
         val headers = firstRowContainingHeaders.children()
-                .filter(::isHeaderOrDataCell)
-                .map(Element::text)
-                .map(::Header).toList()
+            .filter(::isHeaderOrDataCell)
+            .map(Element::text)
+            .map(::Header).toList()
 
         if (headers.size != headers.distinct().size) {
             throw ParseException("Headers must contains only unique values: $headers")
@@ -110,8 +133,8 @@ class HtmlFormat : DocumentFormat {
 
             if (headers.size != dataCells.size) {
                 throw ParseException(
-                        "Header count must match the data cell count in data row ${rowIndex + 1}. " +
-                                "Headers: ${headers.map(Header::name)}, DataCells: $dataCells"
+                    "Header count must match the data cell count in data row ${rowIndex + 1}. " +
+                            "Headers: ${headers.map(Header::name)}, DataCells: $dataCells"
                 )
             }
 
@@ -145,7 +168,13 @@ class HtmlFormat : DocumentFormat {
         verifyZeroNestedLists(htmlList)
 
         val listItemElements = htmlList.getElementsByTag("li")
-        return Scenario(parseListItems(listItemElements), TestDataDescription(context.headline, context.isManual()))
+        return Scenario(
+            parseListItems(listItemElements),
+            TestDataDescription(
+                context.headline, context.isManual(),
+                context.descriptiveText.trim()
+            )
+        )
     }
 
     private fun parseListItems(listItemElements: Elements): List<Step> {

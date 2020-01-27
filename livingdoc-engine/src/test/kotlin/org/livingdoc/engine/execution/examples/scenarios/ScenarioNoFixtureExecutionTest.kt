@@ -18,7 +18,7 @@ internal class ScenarioNoFixtureExecutionTest {
 
         val scenarioMock = Scenario(
             steps,
-            TestDataDescription("MANUAL Test1", true)
+            TestDataDescription("MANUAL Test1", true, "")
         )
 
         val cut = ScenarioNoFixture()

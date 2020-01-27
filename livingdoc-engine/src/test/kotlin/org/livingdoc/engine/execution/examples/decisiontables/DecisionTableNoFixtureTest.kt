@@ -24,7 +24,7 @@ internal class DecisionTableNoFixtureTest {
         val decisionTableMock = DecisionTable(
             headers,
             rows,
-            TestDataDescription("MANUAL Test1", true)
+            TestDataDescription("MANUAL Test1", true, "")
         )
 
         val cut = DecisionTableNoFixture()

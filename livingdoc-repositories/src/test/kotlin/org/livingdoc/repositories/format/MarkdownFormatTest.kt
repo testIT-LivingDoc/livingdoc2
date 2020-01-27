@@ -296,4 +296,20 @@ internal class MarkdownFormatTest {
 
         assertThat(document.elements[0].description.isManual).isFalse()
     }
+
+    @Test
+    fun `descriptive text is parsed`() {
+        val document = MarkdownFormat().parse(
+            """
+                    This is a descriptive text
+
+                    - Hello world
+                    - Hello Moon
+
+                    This is another descriptive text
+                """.trimIndent().byteInputStream()
+        )
+
+        assertThat(document.elements[0].description.descriptiveText).isEqualToIgnoringWhitespace("This is a descriptive text\nThis is another descriptive text")
+    }
 }

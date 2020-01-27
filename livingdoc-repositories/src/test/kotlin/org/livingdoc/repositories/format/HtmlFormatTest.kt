@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.ParseException
+import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlDescriptionText
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlManualList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedOrderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedUnorderedList
@@ -173,5 +174,11 @@ class HtmlFormatTest {
         val htmlDocument = cut.parse(getHtmlWithOrderedList())
 
         assertThat(htmlDocument.elements[0].description.isManual).isFalse()
+    }
+
+    @Test fun `descriptive text is parsed`() {
+        val htmlDocument = cut.parse(getHtmlDescriptionText())
+
+        assertThat(htmlDocument.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
     }
 }

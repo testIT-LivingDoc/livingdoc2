@@ -35,7 +35,7 @@ class GherkinFormat : DocumentFormat {
                     Step(step.text)
                 }
 
-                Scenario(steps, TestDataDescription(scenario.name, false))
+                Scenario(steps, TestDataDescription(scenario.name, false, scenario.description.trim()))
             }
         })
     }
