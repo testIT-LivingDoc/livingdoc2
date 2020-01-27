@@ -61,7 +61,9 @@ class MarkdownFormat : DocumentFormat {
                     context = ParseContext(node.text.toString())
                 }
                 is Paragraph ->
-                    context = context.copy(descriptiveText = context.descriptiveText + node.getContentChars().toString() + "\n")
+                    context = context.copy(
+                        descriptiveText = context.descriptiveText + node.getContentChars().toString() + "\n"
+                    )
                 is ListBlock, is TableBlock ->
                     nodeQueue.add(node)
             }
@@ -117,7 +119,9 @@ class MarkdownFormat : DocumentFormat {
             }
             Step(text.toString())
         }
-        return Scenario(textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
+        return Scenario(
+            textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim())
+        )
     }
 
     private fun TableBlock.toScenario(context: ParseContext): Scenario {
@@ -133,7 +137,9 @@ class MarkdownFormat : DocumentFormat {
             textItems.add(Step((row.children.first() as TableCell).text.toString()))
         }
 
-        return Scenario(textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
+        return Scenario(
+            textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim())
+        )
     }
 
     private fun TableBlock.toDecisionTable(context: ParseContext): DecisionTable {
@@ -160,7 +166,9 @@ class MarkdownFormat : DocumentFormat {
             Row(map)
         }
 
-        return DecisionTable(headers, rows, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
+        return DecisionTable(
+            headers, rows, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim())
+        )
     }
 
     private inline fun <reified U> Iterable<*>.verifyElementType(errorCallBack: (Any) -> Unit) {
