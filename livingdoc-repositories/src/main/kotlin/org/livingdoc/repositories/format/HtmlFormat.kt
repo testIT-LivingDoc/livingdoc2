@@ -82,7 +82,7 @@ class HtmlFormat : DocumentFormat {
                 parseTable(element, context)
             }
             "ul", "ol" -> {
-                parseList(element, context) + parseRecursive(element, context)
+                parseRecursive(element, context) + parseList(element, context)
             }
             else -> parseRecursive(element, context)
         }
