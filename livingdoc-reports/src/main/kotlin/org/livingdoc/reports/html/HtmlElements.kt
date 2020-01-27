@@ -20,6 +20,14 @@ class HtmlError(val number: Int, val message: String, val stacktrace: String)
 
 interface HtmlResult
 
+class HtmlTitle(value: String) : HtmlResult {
+    private val title = Element("h2").apply { html(value) }
+
+    override fun toString(): String {
+        return title.toString()
+    }
+}
+
 class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) :
     HtmlResult {
     val table = Element("table")
