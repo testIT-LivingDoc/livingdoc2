@@ -266,7 +266,6 @@ object HtmlFormatTestData {
     </html>
     """.byteInputStream()
 
-
     fun getHtmlDescriptionText() =
         """
     <!DOCTYPE html>

@@ -49,15 +49,15 @@ class HtmlFormat : DocumentFormat {
     private fun parseRecursive(root: Element, rootContext: ParseContext): List<TestData> {
         var context = rootContext
 
-        val elementQueue : MutableList<Element> = emptyList<Element>().toMutableList()
+        val elementQueue: MutableList<Element> = emptyList<Element>().toMutableList()
 
-        val testDataList : MutableList<TestData> = emptyList<TestData>().toMutableList()
+        val testDataList: MutableList<TestData> = emptyList<TestData>().toMutableList()
 
         root.children().forEach {
             when (it.tagName()) {
                 "h1", "h2", "h3", "h4", "h5", "h6" -> {
                     testDataList.addAll(elementQueue.flatMap {
-                        parseTestData(it,context)
+                        parseTestData(it, context)
                     })
                     elementQueue.clear()
                     context = context.copy(headline = it.text())
@@ -70,14 +70,14 @@ class HtmlFormat : DocumentFormat {
         }
 
         testDataList.addAll(elementQueue.flatMap {
-            parseTestData(it,context)
+            parseTestData(it, context)
         })
 
         return testDataList
     }
 
-    private fun parseTestData(element: Element, context: ParseContext) : List<TestData> {
-        return when(element.tagName()) {
+    private fun parseTestData(element: Element, context: ParseContext): List<TestData> {
+        return when (element.tagName()) {
             "table" -> {
                 parseTable(element, context)
             }
@@ -86,7 +86,6 @@ class HtmlFormat : DocumentFormat {
             }
             else -> parseRecursive(element, context)
         }
-
     }
 
     /**

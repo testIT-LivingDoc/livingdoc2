@@ -51,7 +51,6 @@ class MarkdownFormat : DocumentFormat {
 
         val nodeQueue = mutableListOf<Node>()
 
-
         this.children.toList().forEach { node ->
             when (node) {
                 is Heading -> {
@@ -75,7 +74,7 @@ class MarkdownFormat : DocumentFormat {
         return testDataList
     }
 
-    private fun Node.parseTestData(context: ParseContext) : TestData {
+    private fun Node.parseTestData(context: ParseContext): TestData {
         return when (this) {
             is ListBlock -> this.toScenario(context)
             is TableBlock -> {
@@ -87,7 +86,6 @@ class MarkdownFormat : DocumentFormat {
                 }
             }
             else -> throw IllegalArgumentException("Unexpected node type. Can not parse test data!")
-
         }
     }
 
