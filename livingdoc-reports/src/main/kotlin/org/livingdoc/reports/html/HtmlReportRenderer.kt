@@ -42,10 +42,13 @@ class HtmlReportRenderer : ReportRenderer {
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
         val (headers, rows, tableResult) = decisionTableResult
         val name = decisionTableResult.decisionTable.description.name
-        val desc = decisionTableResult.decisionTable.description.name
+        val desc = decisionTableResult.decisionTable.description.descriptiveText
 
         return listOf(
             title(name),
+            description {
+                paragraphs(desc.split("\n"))
+            },
             table(renderContext, tableResult, headers.size) {
                 headers(headers)
                 rows(rows)
@@ -55,10 +58,13 @@ class HtmlReportRenderer : ReportRenderer {
 
     private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlResult?> {
         val name = scenarioResult.scenario.description.name
-        val desc = scenarioResult.scenario.description.name
+        val desc = scenarioResult.scenario.description.descriptiveText
 
         return listOf(
             title(name),
+            description {
+                paragraphs(desc.split("\n"))
+            },
             list {
                 steps(scenarioResult.steps)
             }
@@ -67,6 +73,12 @@ class HtmlReportRenderer : ReportRenderer {
 
     private fun title(value: String?): HtmlTitle? {
         return if (value != null) HtmlTitle(value) else null
+    }
+
+    private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
+        val htmlDescription = HtmlDescription()
+        htmlDescription.block()
+        return htmlDescription
     }
 
     private fun table(

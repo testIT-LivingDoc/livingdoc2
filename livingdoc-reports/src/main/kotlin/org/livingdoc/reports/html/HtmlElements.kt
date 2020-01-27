@@ -28,6 +28,29 @@ class HtmlTitle(value: String) : HtmlResult {
     }
 }
 
+class HtmlDescription : HtmlResult {
+    val description = Element("div")
+
+    override fun toString(): String {
+        val descriptionString = description.toString()
+        if (descriptionString != "<div></div>")
+            return description.toString()
+        else
+            return ""
+    }
+}
+
+fun HtmlDescription.paragraphs(paragraphs: List<String>) {
+    paragraphs.forEach { paragraph ->
+        if (paragraph.isNotEmpty())
+            description.appendChild(
+                Element("p").apply {
+                    html(paragraph)
+                }
+            )
+    }
+}
+
 class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) :
     HtmlResult {
     val table = Element("table")
