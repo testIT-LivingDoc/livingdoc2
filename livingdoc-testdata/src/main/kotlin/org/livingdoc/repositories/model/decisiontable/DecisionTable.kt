@@ -10,5 +10,5 @@ import org.livingdoc.repositories.model.TestDataDescription
 data class DecisionTable(
     val headers: List<Header>,
     val rows: List<Row>,
-    override val description: TestDataDescription = TestDataDescription(null, false)
+    override val description: TestDataDescription = TestDataDescription(null, false, "")
 ) : TestData

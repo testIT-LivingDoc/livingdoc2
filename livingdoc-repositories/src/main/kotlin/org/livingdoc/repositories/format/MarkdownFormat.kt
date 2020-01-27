@@ -46,26 +46,49 @@ class MarkdownFormat : DocumentFormat {
     }
 
     private fun Node.mapToNodes(rootContext: ParseContext): List<TestData> {
-        val examples = mutableListOf<TestData>()
+        val testDataList = mutableListOf<TestData>()
         var context = rootContext
+
+        val nodeQueue = mutableListOf<Node>()
+
 
         this.children.toList().forEach { node ->
             when (node) {
-                is Heading ->
+                is Heading -> {
+                    testDataList.addAll(nodeQueue.map {
+                        it.parseTestData(context)
+                    })
+                    nodeQueue.clear()
                     context = ParseContext(node.text.toString())
-                is ListBlock -> examples.add(node.toScenario(context))
-                is TableBlock -> {
-                    val firstRow = node.firstChild.children.toList()[0]
-                    val numberOfColumns = firstRow.children.toList().size
-                    when (numberOfColumns > 1) {
-                        true -> examples.add(node.toDecisionTable(context))
-                        else -> examples.add(node.toScenario(context))
-                    }
                 }
+                is Paragraph ->
+                    context = context.copy(descriptiveText = context.descriptiveText + node.getContentChars().toString() + "\n")
+                is ListBlock, is TableBlock ->
+                    nodeQueue.add(node)
             }
         }
 
-        return examples
+        testDataList.addAll(nodeQueue.map {
+            it.parseTestData(context)
+        })
+
+        return testDataList
+    }
+
+    private fun Node.parseTestData(context: ParseContext) : TestData {
+        return when (this) {
+            is ListBlock -> this.toScenario(context)
+            is TableBlock -> {
+                val firstRow = this.firstChild.children.toList()[0]
+                val numberOfColumns = firstRow.children.toList().size
+                when (numberOfColumns > 1) {
+                    true -> this.toDecisionTable(context)
+                    else -> this.toScenario(context)
+                }
+            }
+            else -> throw IllegalArgumentException("Unexpected node type. Can not parse test data!")
+
+        }
     }
 
     private fun Node.getAllChildrenOfListItem(): List<Node> {
@@ -96,7 +119,7 @@ class MarkdownFormat : DocumentFormat {
             }
             Step(text.toString())
         }
-        return Scenario(textItems, TestDataDescription(context.headline, context.isManual()))
+        return Scenario(textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
     }
 
     private fun TableBlock.toScenario(context: ParseContext): Scenario {
@@ -112,7 +135,7 @@ class MarkdownFormat : DocumentFormat {
             textItems.add(Step((row.children.first() as TableCell).text.toString()))
         }
 
-        return Scenario(textItems, TestDataDescription(context.headline, context.isManual()))
+        return Scenario(textItems, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
     }
 
     private fun TableBlock.toDecisionTable(context: ParseContext): DecisionTable {
@@ -139,7 +162,7 @@ class MarkdownFormat : DocumentFormat {
             Row(map)
         }
 
-        return DecisionTable(headers, rows, TestDataDescription(context.headline, context.isManual()))
+        return DecisionTable(headers, rows, TestDataDescription(context.headline, context.isManual(), context.descriptiveText.trim()))
     }
 
     private inline fun <reified U> Iterable<*>.verifyElementType(errorCallBack: (Any) -> Unit) {

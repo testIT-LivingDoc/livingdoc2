@@ -5,5 +5,6 @@ package org.livingdoc.repositories.model
  */
 data class TestDataDescription(
     val name: String?,
-    val isManual: Boolean
+    val isManual: Boolean,
+    val descriptiveText: String
 )
