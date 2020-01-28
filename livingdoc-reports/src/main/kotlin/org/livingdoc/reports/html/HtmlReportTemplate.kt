@@ -15,6 +15,7 @@ class HtmlReportTemplate {
                 .background-manual {background-color: #ff8c00;}
                 .background-skipped {background-color: #9d9d9d;}
                 .background-unknown {background-color: white;}
+                .background-report-result {background-color: #458cff;}
                 .background-failed {background-color: #ff9b00;}
                 .background-exception {background-color: #ff0b00;}
                 .$CSS_CLASS_BORDER_BLACK_ONEPX {border: 1px solid black;}

@@ -41,10 +41,17 @@ internal class HtmlReportRendererTest {
                 headerAPlusB to Field("11")
             )
         )
+        val row3 = Row(
+            mapOf(
+                headerA to Field("2"),
+                headerB to Field("1"),
+                headerAPlusB to Field("")
+            )
+        )
 
         val decisionTable = DecisionTable(
             listOf(headerA, headerB, headerAPlusB),
-            listOf(row1, row2)
+            listOf(row1, row2, row3)
         )
 
         val rowResult1 = RowResult.Builder().withRow(row1)
@@ -95,11 +102,36 @@ internal class HtmlReportRendererTest {
             )
             .withStatus(Status.Executed)
 
+        val rowResult3 = RowResult.Builder().withRow(row3)
+            .withFieldResult(
+                headerA,
+                FieldResult.Builder()
+                    .withValue("2")
+                    .withStatus(Status.Executed)
+                    .build()
+            )
+            .withFieldResult(
+                headerB,
+                FieldResult.Builder()
+                    .withValue("1")
+                    .withStatus(Status.Executed)
+                    .build()
+            )
+            .withFieldResult(
+                headerAPlusB,
+                FieldResult.Builder()
+                    .withValue("")
+                    .withStatus(Status.ReportActualResult("3"))
+                    .build()
+            )
+            .withStatus(Status.Executed)
+
         val decisionTableResult = DecisionTableResult.Builder().withDecisionTable(decisionTable)
 
         decisionTableResult
             .withRow(rowResult1.build())
             .withRow(rowResult2.build())
+            .withRow(rowResult3.build())
             .withStatus(Status.Executed)
 
         val documentResult = DocumentResult.Builder()
@@ -133,6 +165,11 @@ internal class HtmlReportRendererTest {
                                 <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
                                 <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
                                 <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
+                             </tr>
+                             <tr>
+                                <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
+                                <td class="border-black-onepx background-executed"><span class="result-value">1</span></td>
+                                <td class="border-black-onepx background-report-result"><span class="result-value">3</span></td>
                              </tr>
                         </table>
 
