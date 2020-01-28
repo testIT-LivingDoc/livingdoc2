@@ -55,6 +55,9 @@ class HtmlFormat : DocumentFormat {
 
         root.children().forEach {
             when (it.tagName()) {
+                "div" -> {
+                    val test = true // context = context.copy( = context.descriptiveText + it.text() + "\n")
+                }
                 "h1", "h2", "h3", "h4", "h5", "h6" -> {
                     testDataList.addAll(elementQueue.flatMap {
                         parseTestData(it, context)
@@ -65,6 +68,7 @@ class HtmlFormat : DocumentFormat {
                 "p", "span" -> {
                     context = context.copy(descriptiveText = context.descriptiveText + it.text() + "\n")
                 }
+
                 else -> elementQueue.add(it)
             }
         }
