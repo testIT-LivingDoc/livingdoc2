@@ -1,9 +1,9 @@
 package org.livingdoc.reports.html
 
 import org.livingdoc.config.YamlUtils
-import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
+import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
@@ -24,33 +24,74 @@ class HtmlReportRenderer : ReportRenderer {
         )
     }
 
+    /**
+     * Create a html string from a [DocumentResult]
+     */
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
 
-        val htmlResults = exampleResult.map { result ->
+        val htmlResults = exampleResult.flatMap { result ->
             when (result) {
                 is DecisionTableResult -> handleDecisionTableResult(result)
                 is ScenarioResult -> handleScenarioResult(result)
                 else -> throw IllegalArgumentException("Unknown Result type.")
             }
-        }
+        }.filterNotNull()
 
         return HtmlReportTemplate()
             .renderTemplate(htmlResults, renderContext)
     }
 
-    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): HtmlTable {
+    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
         val (headers, rows, tableResult) = decisionTableResult
-        return table(renderContext, tableResult, headers.size) {
-            headers(headers)
-            rows(rows)
-        }
+        val name = decisionTableResult.decisionTable.description.name
+        val desc = decisionTableResult.decisionTable.description.descriptiveText
+
+        val htmlDescription = if (desc != "")
+            description {
+                paragraphs(desc.split("\n"))
+            }
+        else
+            null
+
+        return listOf(
+            title(name),
+            htmlDescription,
+            table(renderContext, tableResult, headers.size) {
+                headers(headers)
+                rows(rows)
+            }
+        )
     }
 
-    private fun handleScenarioResult(scenarioResult: ScenarioResult): HtmlList {
-        return list {
-            steps(scenarioResult.steps)
-        }
+    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlResult?> {
+        val name = scenarioResult.scenario.description.name
+        val desc = scenarioResult.scenario.description.descriptiveText
+
+        val htmlDescription = if (desc != "")
+            description {
+                paragraphs(desc.split("\n"))
+            }
+        else
+            null
+
+        return listOf(
+            title(name),
+            htmlDescription,
+            list {
+                steps(scenarioResult.steps)
+            }
+        )
+    }
+
+    private fun title(value: String?): HtmlTitle? {
+        return if (value != null) HtmlTitle(value) else null
+    }
+
+    private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
+        val htmlDescription = HtmlDescription()
+        htmlDescription.block()
+        return htmlDescription
     }
 
     private fun table(

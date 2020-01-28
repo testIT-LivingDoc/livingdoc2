@@ -25,6 +25,9 @@ class JsonReportRenderer : ReportRenderer {
         )
     }
 
+    /**
+     * Create a html string from a [DocumentResult]
+     */
     fun render(documentResult: DocumentResult, prettyPrinted: Boolean): String {
         val exampleResults = json {
             obj("results" to array(documentResult.results.map {
@@ -40,8 +43,13 @@ class JsonReportRenderer : ReportRenderer {
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): JsonObject {
+        val title = decisionTableResult.decisionTable.description.name
+        val desc = decisionTableResult.decisionTable.description.descriptiveText
+
         return json {
             obj(
+                "title" to title,
+                "description" to (if (desc == "") "" else array(desc.split("\n"))),
                 "rows" to array(decisionTableResult.rows.map {
                     obj(
                         "fields" to obj(it.headerToField.map { (header, fieldResult) ->
@@ -59,8 +67,13 @@ class JsonReportRenderer : ReportRenderer {
     }
 
     private fun handleScenarioResult(scenarioResult: ScenarioResult): JsonObject {
+        val title = scenarioResult.scenario.description.name
+        val desc = scenarioResult.scenario.description.descriptiveText
+
         return json {
             obj(
+                "title" to title,
+                "description" to (if (desc == "") "" else array(desc.split("\n"))),
                 "steps" to array(scenarioResult.steps.map {
                     obj(
                         it.value to handleResult(it.status)

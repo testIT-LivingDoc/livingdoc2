@@ -3,6 +3,7 @@ package org.livingdoc.reports.json
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -44,7 +45,8 @@ internal class JsonReportRendererTest {
 
         val decisionTable = DecisionTable(
             listOf(headerA, headerB, headerAPlusB),
-            listOf(row1, row2)
+            listOf(row1, row2),
+            TestDataDescription("Title", false, "descriptive text")
         )
 
         val rowResult1 = RowResult.Builder().withRow(row1)
@@ -115,6 +117,8 @@ internal class JsonReportRendererTest {
             """
                 {
                     "results": [{
+                        "title": "Title",
+                        "description": ["descriptive text"],
                         "rows": [{
                             "fields": {
                                 "a": {
@@ -159,6 +163,8 @@ internal class JsonReportRendererTest {
             """
                 {
                   "results": [{
+                    "title": "Title",
+                    "description": ["descriptive text"],
                     "rows": [{
                       "fields": {
                         "a": {
@@ -226,7 +232,8 @@ internal class JsonReportRendererTest {
                                 listOf(
                                     Step("A"), Step("B"), Step("C"),
                                     Step("D"), Step("E"), Step("F")
-                                )
+                                ),
+                                TestDataDescription(null, false, "")
                             )
                         )
                         .build()
@@ -238,6 +245,8 @@ internal class JsonReportRendererTest {
             """
                 {
                     "results": [{
+                        "title": null,
+                        "description": "",
                         "steps": [{
                             "A": "executed"
                         }, {
@@ -262,6 +271,8 @@ internal class JsonReportRendererTest {
             """
                 {
                   "results": [{
+                    "title": null,
+                    "description": "",
                     "steps": [{
                       "A": "executed"
                     }, {

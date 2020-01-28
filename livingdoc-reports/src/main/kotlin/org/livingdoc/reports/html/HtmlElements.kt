@@ -20,6 +20,38 @@ class HtmlError(val number: Int, val message: String, val stacktrace: String)
 
 interface HtmlResult
 
+class HtmlTitle(value: String) : HtmlResult {
+    private val title = Element("h2").apply { html(value) }
+
+    override fun toString(): String {
+        return title.toString()
+    }
+}
+
+class HtmlDescription : HtmlResult {
+    val description = Element("div")
+
+    override fun toString(): String {
+        return description.toString()
+    }
+}
+
+/**
+ * Adds the given paragraphs to the [HtmlDescription] element
+ *
+ * @param paragraphs A list of strings with each entry representing a paragraph
+ */
+fun HtmlDescription.paragraphs(paragraphs: List<String>) {
+    paragraphs.forEach { paragraph ->
+        if (paragraph.isNotEmpty())
+            description.appendChild(
+                Element("p").apply {
+                    html(paragraph)
+                }
+            )
+    }
+}
+
 class HtmlTable(val renderContext: HtmlRenderContext, val tableStatus: Status, val columnCount: Int) :
     HtmlResult {
     val table = Element("table")
