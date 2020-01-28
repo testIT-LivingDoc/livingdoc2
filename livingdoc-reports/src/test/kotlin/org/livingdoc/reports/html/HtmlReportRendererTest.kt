@@ -3,6 +3,7 @@ package org.livingdoc.reports.html
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -51,7 +52,8 @@ internal class HtmlReportRendererTest {
 
         val decisionTable = DecisionTable(
             listOf(headerA, headerB, headerAPlusB),
-            listOf(row1, row2, row3)
+            listOf(row1, row2, row3),
+            TestDataDescription("Title", false, "descriptive text")
         )
 
         val rowResult1 = RowResult.Builder().withRow(row1)
@@ -150,6 +152,10 @@ internal class HtmlReportRendererTest {
                         ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
+                        <h2>Title</h2>
+                        <div>
+                            <p>descriptive text</p>
+                        </div>
                         <table>
                             <tr>
                                <th class="border-black-onepx">a</th>
@@ -224,7 +230,8 @@ internal class HtmlReportRendererTest {
                             listOf(
                                 Step("A"), Step("B"), Step("C"),
                                 Step("D"), Step("E")
-                            )
+                            ),
+                            TestDataDescription("Title", false, "descriptive text")
                         )
                     )
                     .build()
@@ -240,6 +247,10 @@ internal class HtmlReportRendererTest {
                        ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
+                        <h2>Title</h2>
+                        <div>
+                            <p>descriptive text</p>
+                        </div>
                         <ul>
                             <li class="background-executed">A</li>
                             <li class="background-manual">B</li>
