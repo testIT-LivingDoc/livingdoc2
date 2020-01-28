@@ -36,6 +36,11 @@ class HtmlDescription : HtmlResult {
     }
 }
 
+/**
+ * Adds the given paragraphs to the [HtmlDescription] element
+ *
+ * @param paragraphs A list of strings with each entry representing a paragraph
+ */
 fun HtmlDescription.paragraphs(paragraphs: List<String>) {
     paragraphs.forEach { paragraph ->
         if (paragraph.isNotEmpty())

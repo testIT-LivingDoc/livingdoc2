@@ -24,6 +24,9 @@ class HtmlReportRenderer : ReportRenderer {
         )
     }
 
+    /**
+     * Create a html string from a [DocumentResult]
+     */
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
 
