@@ -44,11 +44,16 @@ class HtmlReportRenderer : ReportRenderer {
         val name = decisionTableResult.decisionTable.description.name
         val desc = decisionTableResult.decisionTable.description.descriptiveText
 
-        return listOf(
-            title(name),
+        val htmlDescription = if (desc != "")
             description {
                 paragraphs(desc.split("\n"))
-            },
+            }
+        else
+            null
+
+        return listOf(
+            title(name),
+            htmlDescription,
             table(renderContext, tableResult, headers.size) {
                 headers(headers)
                 rows(rows)
@@ -60,11 +65,16 @@ class HtmlReportRenderer : ReportRenderer {
         val name = scenarioResult.scenario.description.name
         val desc = scenarioResult.scenario.description.descriptiveText
 
-        return listOf(
-            title(name),
+        val htmlDescription = if (desc != "")
             description {
                 paragraphs(desc.split("\n"))
-            },
+            }
+        else
+            null
+
+        return listOf(
+            title(name),
+            htmlDescription,
             list {
                 steps(scenarioResult.steps)
             }

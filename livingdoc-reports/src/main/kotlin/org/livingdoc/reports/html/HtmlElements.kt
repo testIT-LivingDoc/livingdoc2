@@ -32,11 +32,7 @@ class HtmlDescription : HtmlResult {
     val description = Element("div")
 
     override fun toString(): String {
-        val descriptionString = description.toString()
-        if (descriptionString != "<div></div>")
-            return description.toString()
-        else
-            return ""
+        return description.toString()
     }
 }
 
