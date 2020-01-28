@@ -60,7 +60,7 @@ class HtmlFormat : DocumentFormat {
                         parseTestData(it, context)
                     })
                     elementQueue.clear()
-                    context = context.copy(headline = it.text())
+                    context = rootContext.copy(headline = it.text())
                 }
                 "p", "span" -> {
                     context = context.copy(descriptiveText = context.descriptiveText + it.text() + "\n")

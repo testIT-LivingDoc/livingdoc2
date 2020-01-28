@@ -12,8 +12,11 @@
       <module name="livingdoc.livingdoc-converters.test" target="11" />
       <module name="livingdoc.livingdoc-documentation.main" target="11" />
       <module name="livingdoc.livingdoc-documentation.test" target="11" />
+      <module name="livingdoc.livingdoc-engine.jmh" target="11" />
       <module name="livingdoc.livingdoc-engine.main" target="11" />
       <module name="livingdoc.livingdoc-engine.test" target="11" />
+      <module name="livingdoc.livingdoc-extensions-api.main" target="11" />
+      <module name="livingdoc.livingdoc-extensions-api.test" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.main" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.test" target="11" />
       <module name="livingdoc.livingdoc-reports.main" target="11" />
@@ -28,6 +31,8 @@
       <module name="livingdoc.livingdoc-repository-rest.test" target="11" />
       <module name="livingdoc.livingdoc-results.main" target="11" />
       <module name="livingdoc.livingdoc-results.test" target="11" />
+      <module name="livingdoc.livingdoc-testdata.main" target="11" />
+      <module name="livingdoc.livingdoc-testdata.test" target="11" />
       <module name="livingdoc.livingdoc-tests.main" target="11" />
       <module name="livingdoc.livingdoc-tests.test" target="11" />
       <module name="livingdoc.main" target="11" />
