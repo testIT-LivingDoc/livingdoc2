@@ -21,7 +21,6 @@ package org.livingdoc.engine.execution.examples.scenarios.matching
  * @param maxNumberOfOperations the maximum number of operations for the algorithm.
  *
  */
-@Suppress("NestedBlockDepth")
 internal class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
@@ -34,224 +33,217 @@ internal class RegMatching(
         getCost()
     }
 
-    private fun getCost(): Pair<Float, Float> {
-        start()
-        considerVarLength()
-        return Pair(operationNumber, considerVarLength() + operationNumber)
-    }
-
     /**
-     * variable matching
-     *
+     * container of result of the matching
+     */
+    private val matchoutput: Pair<Map<String, String>, Float> by lazy { match() }
+    /**
+     * matched variables
+     * if no match then emptyList
      */
     val variables: Map<String, String> by lazy {
         if (!isMisaligned()) getVars() else emptyMap()
     }
 
+    /**
+     * returns a map of variables to step values
+     */
     private fun getVars(): Map<String, String> {
-        return templatetextTokenized
+        return matchoutput.component1()
     }
 
-    // misalignment
-    fun isMisaligned() = totalCost.first >= maxNumberOfOperations
-
     /**
-     * starting point of the Regex algorithm to match sentences
+     * if the template is misaligned (cost is above the maximum tolerance)
      */
-    private fun start() {
-        match()
+    fun isMisaligned(): Boolean {
+        return totalCost.component1() >= maxNumberOfOperations
     }
 
-    // copy the input strings to local variables
-    private var templatetext = stepTemplate.toString()
-    private var testText = step
-
-    // containers to store global values
-    private lateinit var preparedtemplatetext: String
-    private lateinit var reggedText: Regex
-    private var operationNumber = 0.0f
-    private val regularExpression = "([\\w\\s\\.\\}\\{\\P{M}\\p{M}*]+)"
-
-    // variable to string matching container
-    private var templatetextTokenized: MutableMap<String, String> = mutableMapOf()
+    /**
+     * cost of matching
+     */
+    private fun getCost(): Pair<Float, Float> {
+        return Pair(matchoutput.component2(),
+            MatchingFunctions.considerVarLength(matchoutput.component1()) + matchoutput.component2())
+    }
 
     /**
-     * matching method of the algorithm
+     * executes the matching pipeline
+     *
+     * component1() the input strings are prepared
+     * an apple -> a apple
+     *
+     * from the steptemplate the variable names are extracted into variablesMap
+     * with null as value
+     * [variable, ""]
+     *
+     * the steptemplate is transformed into a regex string
+     * "making a {variable} outside." -> "making a (regex)outside."
+     *
+     * the regex string is used to match with the step
+     * "making a (regex)outside." match to "making a castle outside"
+     *
+     * output is a list in the same order as the variables list.
+     * these values usually contain an unwanted blank which is cut off in variablePostcalc()
+     *
+     * these values are added to the variablesMap and treated as output
+     *
+     * the operation number is the number of used operations on the string with exception of the
+     * base algorithm described in this function
+     *
+     * @return Pair consisting of the matched variable value and the operations count
      */
-    private fun match() {
-        tokenizeTemplateText()
-        reggedText = preparedtemplatetext.toRegex()
-        val output = matchStrings()
-        if (output.isNotEmpty()) {
-            var counter = 0
-            templatetextTokenized.forEach {
-                templatetextTokenized[it.key] = output[counter]
-                counter++
-            }
+    private fun match(): Pair<Map<String, String>, Float> {
+        var operationNumber = 0.0f
+
+        // copy the input strings to local variables
+        val templatetext = MatchingFunctions.filterString(stepTemplate.toString())
+        val testText = MatchingFunctions.filterString(step)
+
+        val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(templatetext)
+        val reggedText = regstring.toRegex()
+
+        // matching
+        val (output, increase) = matchStrings(testText, reggedText, templatetext)
+        operationNumber += increase
+        val filteredMap: List<String> = output.map { MatchingFunctions.variablevaluePostcalc(it) }
+
+        // mapping all outputs to the variables
+
+        if (filteredMap.size == variablesList.size) {
+            val variablesMap = variablesList.zip(filteredMap).toMap()
+            return Pair(variablesMap, operationNumber)
+        } else {
+            operationNumber = maxNumberOfOperations
+            return Pair(emptyMap(), operationNumber)
         }
     }
 
     /**
-     * string matching function with a certain tolerance for typos depending on the maximum tolerance
+     * matching function
+     *
+     * depending on whether the initial input suffices the matching with regex
+     * the operation number can be increased
+     *
+     * if no match can be found the output is an emptyList with the maximum cost
+     *
+     * @param testText the text to be matched with
+     * @param reggedText the regex string
+     * @param templatetext only needed if a match does not provide any result
+     *                      and is needed for a match in the next step
      *
      *@return List of variables matched to the string
      */
-    private fun matchStrings(): List<String> {
+    private fun matchStrings(testText: String, reggedText: Regex, templatetext: String): Pair<List<String>, Float> {
         val matched: List<String>
 
         val matchedResult = reggedText.find(testText)
+        var opIncrease = 0.0f
 
         if (matchedResult == null) {
-            val rematchResult = rematch()
+            val (rematchResult, numOp) = rematch(testText, templatetext)
 
-            val mr = rematchResult.first
-            if (mr.isNotEmpty()) {
-                operationNumber += rematchResult.second
-                matched = mr
+            if (!rematchResult.isEmpty()) {
+                opIncrease += numOp
+                matched = rematchResult
             } else {
-                operationNumber = maxNumberOfOperations
+                opIncrease = maxNumberOfOperations
                 matched = emptyList()
             }
-            return matched
+            return Pair(matched, opIncrease)
         } else {
             matched = matchedResult.destructured.toList()
-            return matched
+            return Pair(matched, opIncrease)
         }
     }
 
+    // Rematch with stemming, if already fit the template this should be not needed,
+    // since that case cannot be excluded porter stemmer is needed!
     /**
+     * Stemmer Algorithm postcalculation
      * reconstruct the Template with its variables
      * @param templateS the template string
      * @param variables the variables in their {} brackets and the position of them
      * @return rebuilt template string
      */
-    private fun reconstructVars(templateS: String, variables: Map<String, Int>): String {
-        val s = templateS.split(" ")
-        var reconString = ""
-        var counter = 0
-        s.forEach {
-            var replaced = false
-            variables.forEach { variable ->
-                if (variable.value == counter) {
-                    reconString += variable.key + " "
-                    replaced = true
-                }
-            }
-            if (!replaced) {
-                reconString += "$it "
-            }
-            counter++
-        }
-        reconString = StemmerHandler.cutLast(reconString).toString()
-        return reconString
+    private fun reconstructVars(templateS: String, variables: Map<Int, String>): String {
+        val splittedTemplateString = templateS.split(" ")
+
+        val reconStringout = splittedTemplateString.mapIndexed { index, string ->
+            if (variables.containsKey(index))
+                variables[index]
+            else
+                string
+        }.joinToString(" ")
+
+        return reconStringout
     }
 
     /**
-     * preparation of the template string for stemming
+     * Stemmer Algorithm preparation
+     * preparation of the template stirng for stemming
      * @param templateS the template string ot be prepared
      * @return the variables and their position in the template string
      */
-    private fun prepareTemplateString(templateS: String): Pair<String, Map<String, Int>> {
-        val s = templateS.split(" ")
-        var reconString = ""
-        val variableLocations = mutableMapOf<String, Int>()
-        var iterat = 0
-        s.forEach {
+    private fun prepareTemplateString(templateS: String): Pair<String, Map<Int, String>> {
+        val splittedTemplateString = templateS.split(" ")
+        val variableLocations = mutableMapOf<Int, String>()
 
-            if (checkIfVar(it)) {
-                reconString += "word "
-                variableLocations[it] = iterat
+        val outstring = splittedTemplateString.mapIndexed { index, string ->
+            if (MatchingFunctions.checkIfVar(string)) {
+                variableLocations.put(index, string)
+                "word"
             } else {
-                reconString += "$it "
+                string
             }
-            iterat++
-        }
-
-        reconString = StemmerHandler.cutLast(reconString).toString()
-
-        return Pair(reconString, variableLocations)
+        }.joinToString(" ")
+        return Pair(outstring, variableLocations)
     }
 
     /**
-     * syntax:
-     * preparation for stemmer algorithm
-     * increasing the cost of the matching
-     * @param string input string in our case it will be the step and the template
-     * @return string where a/an are changed to a
+     * extracted method for readability
+     * turns a text and its variables to a regex
+     * @param stemmedsentence sentence from stemmer without variables
+     * @param variables variables alongside their location in the string
+     * @return a regex to start comparisons
      */
-    private fun filterString(string: String): String {
-        var outstring = ""
-        val tokens = string.split(" ")
+    private fun prepareTemplateToRegex(stemmedsentence: String, variables: Map<Int, String>): Regex {
+        val vari = variables
 
-        for (i in tokens.indices) {
-            outstring += if (!checkIfVar(tokens[i])) {
-                if (tokens[i] == "a" || tokens[i] == "an")
-                    "a "
-                else
-                    tokens[i] + " "
-            } else
-                tokens[i] + " "
-        }
-        outstring = StemmerHandler.cutLast(outstring).toString()
+        val preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
 
-        return outstring
+        val (regexString) = MatchingFunctions.templateStepToRegexString(value = preppedTemplate)
+
+        val regexText = regexString.toRegex()
+
+        return regexText
     }
 
     /**
-     * function to consider the length of each variable
-     * cost is added if variable length is too high
-     * @return the increase of cost
+     * function to match again after stemming the words
+     *
+     * matching is according to the algorithm above but with stemmed forms
+     *
+     * @param testText the step
+     * @param templatetext the step template
+     * @return the list of matched strings to the variables and an increase in cost
      */
-    private fun considerVarLength(): Float {
-        var sum = 0.0f
-        templatetextTokenized.forEach {
-            sum += it.value.length / templatetextTokenized.size
-        }
-        return sum
-    }
-
-    /**
-     * the matching function start point if there is a non stem word
-     * @return the matched strings to the variables
-     */
-    private fun rematch(): Pair<List<String>, Float> {
+    private fun rematch(testText: String, templatetext: String): Pair<List<String>, Float> {
         var matchingcost = 0.0f
 
         // stepString
-        var preppedString = StemmerHandler.stemWords(testText)
-        var stepAsString = preppedString
+        val preppedString = StemmerHandler.stemWords(testText)
+        val stepAsString = preppedString
 
         // template string
-        var output = prepareTemplateString(templateS = templatetext)
-        var sentence = output.first
-        var stemmedsentence = StemmerHandler.stemWords(sentence)
+        val (sentence, variables) = prepareTemplateString(templateS = templatetext)
+        val stemmedsentence = StemmerHandler.stemWords(sentence)
 
         // regex matching
-        var regexText = prepareTemplateToRegex(stemmedsentence, output.second)
-        var matchresult = regexText.find(stepAsString)
+        val regexText = prepareTemplateToRegex(stemmedsentence, variables)
+        val matchresult = regexText.find(stepAsString)
 
         matchingcost++
-        if (matchresult == null) {
-            // matching cost increase since we used tw
-            matchingcost++
-
-            // step refinement
-            val stepToStemmed = filterString(testText)
-            preppedString = StemmerHandler.stemWords(stepToStemmed)
-            stepAsString = preppedString
-
-            // prepare the template string
-            val sentenceToStemmed = filterString(templatetext)
-
-            // now use refined string as input to stemmer
-            output = prepareTemplateString(templateS = sentenceToStemmed)
-            sentence = output.first
-            stemmedsentence = StemmerHandler.stemWords(sentence)
-
-            // regex matching
-            regexText = prepareTemplateToRegex(stemmedsentence, output.second)
-            matchresult = regexText.find(stepAsString)
-        }
 
         // extend here if more algorithm have to be applied to strings or if
         // a rematch has to be made
@@ -260,131 +252,5 @@ internal class RegMatching(
         return if (matchresult != null)
             Pair(matchresult.destructured.toList(), matchingcost)
         else Pair(emptyList(), maxNumberOfOperations)
-    }
-
-    /**
-     * extracted method for readability
-     * turns a text and its variables to a regex
-     * @param stemmedSentence sentence from stemmer without variables
-     * @param variables variables alongside their location in the string
-     * @return a regex to start comparisons
-     */
-    private fun prepareTemplateToRegex(stemmedSentence: String, variables: Map<String, Int>): Regex {
-        val vars = variables
-
-        val preppedTemplate = reconstructVars(templateS = stemmedSentence, variables = vars)
-
-        val templateTxt = tokenizeTemplateText(ininterntext = preppedTemplate)
-        var textTemp = ""
-        templateTxt.forEach {
-            textTemp += "$it "
-        }
-        textTemp = StemmerHandler.cutLast(textTemp).toString()
-
-        return textTemp.toRegex()
-    }
-
-    /**
-     * check if a variable is in a string
-     *
-     * @param st the string to be checked
-     * @return if it is a variable
-     */
-    private fun checkIfVar(st: String): Boolean {
-        return st.contains("{") && st.contains("}")
-    }
-
-    // variables for building the regex string
-    private var beforeconc = ""
-    private var afterconc = ""
-    private var mainstring = ""
-    /**
-     * getting the variables and creating the regex by replacing the "{variable}"
-     * with the regular expressions (regexes).
-     * (return value not used, only for debug reasons)
-     * @return a the template split into a list of strings with variables replaced by regexes
-     *
-     */
-    private fun tokenizeTemplateText(ininterntext: String = templatetext): List<String> {
-        val interntext = ininterntext.split(" ").toMutableList()
-        var interncounter = 0
-        preparedtemplatetext = templatetext
-        interntext.forEach { outer ->
-            if (checkIfVar(outer)) {
-                var variable = outer
-                val bracketcount = countBrackets(variable.toCharArray())
-
-                checkVar(variable, bracketcount)
-                variable = variable.replace("$beforeconc{", "")
-                variable = variable.replace("}$afterconc", "")
-
-                templatetextTokenized[variable] = ""
-                preparedtemplatetext = preparedtemplatetext.replace(outer, beforeconc + regularExpression + afterconc)
-                interntext[interncounter] = beforeconc + regularExpression + afterconc
-            }
-            interncounter++
-        }
-        return interntext
-    }
-
-    /**
-     * filter out the variable name and set the surrounding symbols around the regex
-     * builder for the regex
-     *
-     * @param variable the input variable the be checked
-     * @param bracketCount the number of brackets counted in before
-     *
-     */
-    private fun checkVar(variable: String, bracketCount: Int) {
-        var open: Int = bracketCount
-        var closed: Int = bracketCount
-
-        var afterstring = false
-        var beforestring = true
-
-        variable.forEach {
-            // order MUST NOT be changed
-            if (afterstring)
-                afterconc += it
-
-            if (it == '}') {
-                if (closed == 1)
-                    afterstring = true
-                closed--
-            }
-
-            // the main string
-            if (!beforestring && !afterstring)
-                mainstring += it
-
-            // the before string
-            if (it == '{') {
-                open--
-                beforestring = false
-            }
-            if (beforestring)
-                beforeconc += it
-        }
-    }
-
-    /**
-     * simple counter method to count number of brackets
-     * preparation for the variable check afterwards
-     *
-     * @param input the string to be checked as charArray
-     * @return number of brackets found, -1 if the string is not a variable
-     */
-    private fun countBrackets(input: CharArray): Int {
-        var opencount = 0
-        var closecount = 0
-        input.forEach {
-            if (it == '{') {
-                opencount++
-            }
-            if (it == '}') {
-                closecount++
-            }
-        }
-        return opencount
     }
 }
