@@ -15,18 +15,6 @@ import org.livingdoc.engine.algo.Stemmer
     "MagicNumber"
 )
 object StemmerHandler {
-
-    /**
-     * api function to make strings usable
-     */
-    fun cutLast(string: String): String? {
-        var str = string
-        if (str.isNotEmpty() && str[str.length - 1] == ' ') {
-            str = str.substring(0, str.length - 1)
-        }
-        return str
-    }
-
     /**
      * stem algorithm initialisation point
      *
@@ -37,12 +25,13 @@ object StemmerHandler {
 
         val w = CharArray(501)
         val s = Stemmer()
-        var collector = ""
+        val collector = StringBuffer()
 
-        val splitIn = input.split(" ")
-        splitIn.forEach {
-            val iit = "$it "
-            var iteration = 0
+        val `in` = input
+        val splittedin = `in`.split(" ")
+        splittedin.forEach {
+            var iit = it + ' '
+                var iteration = 0
             while (true) {
                 try {
                     var ch: Int = iit[iteration].toInt()
@@ -67,19 +56,18 @@ object StemmerHandler {
                                 val u: String = s.toString()
                                 /* to test getResultBuffer(), getResultLength() : */
                                 /* u = new String(s.getResultBuffer(), 0, s.getResultLength()); */
-                                collector += u
+                                collector.append(u)
                                 break
                             }
                         }
                     }
                     if (ch < 0) break
-
-                    collector += ch.toChar()
+                    collector.append(ch.toChar())
                 } catch (e: StringIndexOutOfBoundsException) {
                     break
                 }
             }
         }
-        return cutLast(collector).toString()
+        return collector.toString()
     }
 }
