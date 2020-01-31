@@ -27,3 +27,27 @@ internal fun multipleStepScenarioGherkin() =
             Then I get a valid Document containing the expected information
             But the Document is not modified
     """.trimIndent().byteInputStream()
+
+internal fun multipleStepScenarioInGermanGherkin() =
+    """
+        # language: de
+        Funktionalität: Funktionstest
+          Szenario: Test eines Szenarios
+            Gegeben sei ein funktionierender Gherkin-Parser
+            Und etwas Gherkin-Text
+            Wenn ich den Parser teste
+            Dann bekomme ich ein korrektes Dokument mit den erwarteten Informationen
+            Aber das Dokument ist nicht modifiziert
+    """.trimIndent().byteInputStream()
+
+internal fun multipleStepScenarioInEmojiGherkin() =
+    """
+        # language: em
+        📚: Funktionstest
+          📕: Test eines Szenarios
+            😐 ein funktionierender Gherkin-Parser
+            😂 etwas Gherkin-Text
+            🎬 ich den Parser teste
+            🙏 bekomme ich ein korrektes Dokument mit den erwarteten Informationen
+            😔 das Dokument ist nicht modifiziert
+    """.trimIndent().byteInputStream()

@@ -113,6 +113,73 @@ internal class GherkinFormatTest {
         }
     }
 
+    @Test
+    fun `can parse multiple steps in a german scenario`() {
+        val document = cut.parse(multipleStepScenarioInGermanGherkin())
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { testData ->
+            assertThat(testData.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test eines Szenarios")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(5)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("ein funktionierender Gherkin-Parser")
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("etwas Gherkin-Text")
+                    }
+                    assertThat(steps[2]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("ich den Parser teste")
+                    }
+                    assertThat(steps[3]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("bekomme ich ein korrektes Dokument mit den erwarteten " +
+                                "Informationen")
+                    }
+                    assertThat(steps[4]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("das Dokument ist nicht modifiziert")
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse multiple steps in a emoji scenario`() {
+        val document = cut.parse(multipleStepScenarioInEmojiGherkin())
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { testData ->
+            assertThat(testData.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test eines Szenarios")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(5)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("ein funktionierender Gherkin-Parser")
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("etwas Gherkin-Text")
+                    }
+                    assertThat(steps[2]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("ich den Parser teste")
+                    }
+                    assertThat(steps[3]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("bekomme ich ein korrektes Dokument mit den erwarteten " +
+                                "Informationen")
+                    }
+                    assertThat(steps[4]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("das Dokument ist nicht modifiziert")
+                    }
+                }
+            }
+        }
+    }
     companion object {
         @JvmStatic
         fun generateRandomStrings(): List<String> {
