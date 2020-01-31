@@ -37,7 +37,5 @@ class CalculatorGherkin {
         fun `check last result greater than`(@Binding("result") result: Float) {
             assertThat(lastResult).isGreaterThan(result)
         }
-
-
     }
 }
