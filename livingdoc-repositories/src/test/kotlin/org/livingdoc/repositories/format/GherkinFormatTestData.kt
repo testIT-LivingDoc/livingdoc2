@@ -25,4 +25,5 @@ internal fun multipleStepScenarioGherkin() =
             And some Gherkin text
             When I test the Gherkin parser
             Then I get a valid Document containing the expected information
+            But the Document is not modified
     """.trimIndent().byteInputStream()

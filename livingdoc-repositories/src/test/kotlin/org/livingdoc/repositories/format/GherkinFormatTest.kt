@@ -92,7 +92,7 @@ internal class GherkinFormatTest {
 
             assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
                 assertThat(scenario.steps).satisfies { steps ->
-                    assertThat(steps).hasSize(4)
+                    assertThat(steps).hasSize(5)
                     assertThat(steps[0]).satisfies { step ->
                         assertThat(step.value).isEqualTo("a working Gherkin parser")
                     }
@@ -104,6 +104,9 @@ internal class GherkinFormatTest {
                     }
                     assertThat(steps[3]).satisfies { step ->
                         assertThat(step.value).isEqualTo("I get a valid Document containing the expected information")
+                    }
+                    assertThat(steps[4]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("the Document is not modified")
                     }
                 }
             }
