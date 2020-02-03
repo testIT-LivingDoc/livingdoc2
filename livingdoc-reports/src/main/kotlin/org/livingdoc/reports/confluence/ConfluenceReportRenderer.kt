@@ -1,10 +1,18 @@
 package org.livingdoc.reports.confluence
 
+import com.atlassian.confluence.api.model.content.AttachmentUpload
+import com.atlassian.confluence.api.model.content.id.ContentId
+import com.atlassian.confluence.rest.client.RemoteAttachmentServiceImpl
+import com.atlassian.confluence.rest.client.RestClientFactory
+import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResourceProvider
+import com.google.common.util.concurrent.MoreExecutors
+import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.html.HtmlReportRenderer
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
+import java.io.File
 
 @Format("confluence")
 class ConfluenceReportRenderer : ReportRenderer {
@@ -15,6 +23,22 @@ class ConfluenceReportRenderer : ReportRenderer {
         // Upload report to confluence
         val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
 
-        TODO("Insert se code of se Sascha")
+        val authenticatedWebResourceProvider = AuthenticatedWebResourceProvider(
+            RestClientFactory.newClient(),
+            confluenceConfig.baseURL,
+            confluenceConfig.path
+        )
+        authenticatedWebResourceProvider.setAuthContext(confluenceConfig.username, confluenceConfig.password.toCharArray())
+
+        val testAnnotation = documentResult.documentClass.getAnnotation(ExecutableDocument::class.java).value.split("://")
+        val contentId = testAnnotation[1].toLong()
+
+        val contentFile = File(confluenceConfig.filename + ".html")
+        contentFile.createNewFile()
+        contentFile.writeText(html)
+
+        val attachment = RemoteAttachmentServiceImpl(authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService() )
+        val atUp = AttachmentUpload(contentFile, contentFile.name, "text/html", confluenceConfig.comment, confluenceConfig.minoredit)
+        attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
     }
 }
