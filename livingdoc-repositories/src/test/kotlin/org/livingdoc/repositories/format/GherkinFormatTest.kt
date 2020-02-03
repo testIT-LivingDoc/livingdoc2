@@ -180,6 +180,46 @@ internal class GherkinFormatTest {
             }
         }
     }
+
+    @Test
+    fun `can parse scenario outline`() {
+        val document = cut.parse(scenarioOutlineGherkin())
+
+        assertThat(document.elements).satisfies { elements ->
+            assertThat(elements).hasSize(2)
+            assertThat(elements[0]).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(3)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("there are 12 cucumbers")
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I eat 5 cucumbers")
+                    }
+                    assertThat(steps[2]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I should have 7 cucumbers")
+                    }
+                }
+                assertThat(scenario.description.name).isEqualTo("eating")
+            }
+            assertThat(elements[1]).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(3)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("there are 20 cucumbers")
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I eat 5 cucumbers")
+                    }
+                    assertThat(steps[2]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I should have 15 cucumbers")
+                    }
+                }
+                assertThat(scenario.description.name).isEqualTo("eating")
+            }
+        }
+    }
+
     companion object {
         @JvmStatic
         fun generateRandomStrings(): List<String> {

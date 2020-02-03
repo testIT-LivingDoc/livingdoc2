@@ -51,3 +51,17 @@ internal fun multipleStepScenarioInEmojiGherkin() =
             🙏 bekomme ich ein korrektes Dokument mit den erwarteten Informationen
             😔 das Dokument ist nicht modifiziert
     """.trimIndent().byteInputStream()
+
+internal fun scenarioOutlineGherkin() =
+    """
+        Feature: Test Feature
+          Scenario Outline: eating
+            Given there are <start> cucumbers
+            When I eat <eat> cucumbers
+            Then I should have <left> cucumbers
+
+            Examples:
+              | start | eat | left |
+              |    12 |   5 |    7 |
+              |    20 |   5 |   15 |
+    """.trimIndent().byteInputStream()
