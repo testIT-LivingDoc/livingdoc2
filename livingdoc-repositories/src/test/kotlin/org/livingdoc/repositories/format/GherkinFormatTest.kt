@@ -181,7 +181,6 @@ internal class GherkinFormatTest {
         }
     }
 
-
     @Test
     fun `can parse scenario outline`() {
         val document = cut.parse(scenarioOutlineGherkin())

@@ -35,7 +35,6 @@ class GherkinFormat : DocumentFormat {
 
         val pickles = PickleCompiler(id).compile(gherkin.build(), gherkin.uri)
 
-
         return Document(pickles.map { pickle ->
             val steps = pickle.stepsList.map { step ->
                 Step(step.text)
@@ -47,7 +46,6 @@ class GherkinFormat : DocumentFormat {
                 steps,
                 TestDataDescription(pickle.name, false, scenarioDescription.trimIndent().trim())
             )
-
         })
     }
 }
