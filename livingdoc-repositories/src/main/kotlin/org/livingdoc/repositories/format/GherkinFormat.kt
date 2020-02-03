@@ -1,6 +1,7 @@
 package org.livingdoc.repositories.format
 
 import com.beust.klaxon.Klaxon
+import com.beust.klaxon.json
 import io.cucumber.gherkin.GherkinDocumentBuilder
 import io.cucumber.gherkin.Parser
 import io.cucumber.gherkin.pickles.PickleCompiler
@@ -39,15 +40,17 @@ class GherkinFormat : DocumentFormat {
         return Document(pickles.map { pickle ->
             val steps = pickle.stepsList.map { step ->
 
-                val argument = when(step.argument.messageCase) {
+                val argument = when (step.argument.messageCase) {
                     Messages.PickleStepArgument.MessageCase.DOC_STRING -> step.argument.docString.content
-                    Messages.PickleStepArgument.MessageCase.DATA_TABLE -> Klaxon().toJsonString(step.argument.dataTable.rowsList.map {
-                        it.cellsList.map {
-                            it.value
-                        }
-                    })
+                    Messages.PickleStepArgument.MessageCase.DATA_TABLE -> Klaxon().toJsonString(DataTable(
+                        rows = step.argument.dataTable.rowsList.map {
+                            it.cellsList.map {
+                                it.value
+                            }
+                        }))
                     else -> ""
                 }
+
                 Step((step.text + " " + argument).trim())
             }
 
@@ -61,3 +64,7 @@ class GherkinFormat : DocumentFormat {
         })
     }
 }
+
+data class DataTable(
+    val rows: List<List<String>>
+)
