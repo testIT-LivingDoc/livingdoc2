@@ -1,5 +1,6 @@
 package org.livingdoc.repositories.format
 
+import com.beust.klaxon.Klaxon
 import io.cucumber.gherkin.GherkinDocumentBuilder
 import io.cucumber.gherkin.Parser
 import io.cucumber.gherkin.pickles.PickleCompiler
@@ -40,6 +41,11 @@ class GherkinFormat : DocumentFormat {
 
                 val argument = when(step.argument.messageCase) {
                     Messages.PickleStepArgument.MessageCase.DOC_STRING -> step.argument.docString.content
+                    Messages.PickleStepArgument.MessageCase.DATA_TABLE -> Klaxon().toJsonString(step.argument.dataTable.rowsList.map {
+                        it.cellsList.map {
+                            it.value
+                        }
+                    })
                     else -> ""
                 }
                 Step((step.text + " " + argument).trim())
