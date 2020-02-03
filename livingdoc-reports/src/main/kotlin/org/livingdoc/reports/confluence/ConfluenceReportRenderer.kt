@@ -28,17 +28,27 @@ class ConfluenceReportRenderer : ReportRenderer {
             confluenceConfig.baseURL,
             confluenceConfig.path
         )
-        authenticatedWebResourceProvider.setAuthContext(confluenceConfig.username, confluenceConfig.password.toCharArray())
+        authenticatedWebResourceProvider.setAuthContext(
+            confluenceConfig.username, confluenceConfig.password.toCharArray()
+        )
 
-        val testAnnotation = documentResult.documentClass.getAnnotation(ExecutableDocument::class.java).value.split("://")
+        val testAnnotation = documentResult.documentClass
+            .getAnnotation(ExecutableDocument::class.java).value.split("://")
         val contentId = testAnnotation[1].toLong()
 
-        val contentFile = File(confluenceConfig.filename + ".html")
+        val contentFile = File(confluenceConfig.environment + ".html")
         contentFile.createNewFile()
         contentFile.writeText(html)
 
-        val attachment = RemoteAttachmentServiceImpl(authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService() )
-        val atUp = AttachmentUpload(contentFile, contentFile.name, "text/html", confluenceConfig.comment, confluenceConfig.minoredit)
+        val attachment = RemoteAttachmentServiceImpl(
+            authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService()
+        )
+
+        val atUp = AttachmentUpload(
+            contentFile, contentFile.name, "text/html",
+            confluenceConfig.comment, confluenceConfig.minoredit
+        )
+
         attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
     }
 }

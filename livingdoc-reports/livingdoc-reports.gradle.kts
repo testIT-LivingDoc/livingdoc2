@@ -2,6 +2,12 @@ plugins {
 	`kotlin-project-config`
 }
 
+repositories {
+	maven {
+		url = uri("https://packages.atlassian.com/mvn/maven-external")
+	}
+}
+
 dependencies {
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.beust:klaxon:${Versions.klaxon}")

@@ -14,6 +14,6 @@ data class ConfluenceReportConfig(
     var username: String = "",
     var password: String = "",
     var comment: String = "",
-    var filename: String = "",
+    var environment: String = "",
     var minoredit: Boolean = false
 )
