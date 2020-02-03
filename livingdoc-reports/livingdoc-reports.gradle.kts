@@ -9,9 +9,13 @@ repositories {
 }
 
 dependencies {
+	implementation("org.codehaus.jackson:jackson-core-asl:1.9.13")
+	implementation("org.codehaus.jackson:jackson-mapper-asl:1.9.13")
+	implementation("org.codehaus.jackson:jackson-jaxrs:1.9.13")
+	implementation("org.codehaus.jackson:jackson-xc:1.9.13")
+	implementation("com.atlassian.confluence:confluence-rest-client:7.0.3")
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.beust:klaxon:${Versions.klaxon}")
-	implementation("com.atlassian.confluence:confluence-rest-client:7.0.3")
 	implementation(project(":livingdoc-config"))
 	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-extensions-api"))
