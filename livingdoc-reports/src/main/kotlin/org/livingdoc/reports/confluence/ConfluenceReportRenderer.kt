@@ -33,22 +33,22 @@ class ConfluenceReportRenderer : ReportRenderer {
         )
 
         val testAnnotation = documentResult.documentClass
-            .getAnnotation(ExecutableDocument::class.java).value.split("://")
-        val contentId = testAnnotation[1].toLong()
+            .getAnnotation(ExecutableDocument::class.java).value
+        // Extract the content id from the page link
+        val contentId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
 
-        val contentFile = File(confluenceConfig.environment + ".html")
-        contentFile.createNewFile()
+        // TODO better file name
+        val contentFile = File.createTempFile("report.html", null)
         contentFile.writeText(html)
+        contentFile.deleteOnExit()
 
         val attachment = RemoteAttachmentServiceImpl(
             authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService()
         )
-
         val atUp = AttachmentUpload(
             contentFile, contentFile.name, "text/html",
             confluenceConfig.comment, confluenceConfig.minoredit
         )
-
         attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
     }
 }
