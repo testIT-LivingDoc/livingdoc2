@@ -158,7 +158,7 @@ class HtmlFormatTest {
         assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
     }
 
-    @Test fun `manual test healine is parsed`() {
+    @Test fun `manual test headline is parsed`() {
         val htmlDocument = cut.parse(getHtmlManualList())
 
         assertThat(htmlDocument.elements[0].description.name).isEqualTo("MANUAL Test1")

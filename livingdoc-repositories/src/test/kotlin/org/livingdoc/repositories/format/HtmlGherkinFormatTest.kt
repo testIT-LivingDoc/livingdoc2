@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.ParseException
-import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlDescriptionText
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlManualList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedOrderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlOrderedListWithNestedUnorderedList
@@ -17,8 +16,11 @@ import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedLi
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedListContainsOnlyOneItem
 import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.emptyHtml
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkin2
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkinTableWithOnlyOneRow
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.htmlGherkinGiven
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.htmlGherkinThen
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -27,12 +29,37 @@ class HtmlGherkinFormatTest {
     private val cut = HtmlFormat()
 
     @Test
-    fun `tables with one row are ignored`() {
+    fun `empty html files are ignored`() {
+        val result = cut.parse(emptyHtml())
+        assertThat(result.elements).hasSize(0)
+    }
+
+    @Test
+    fun `when is detected`() {
         val result = cut.parse(getHtmlGherkinTableWithOnlyOneRow())
         assertThat(result.elements).hasSize(1)
     }
+
     @Test
-    fun `gherker tests`() {
+    fun `but is detected`() {
+        val result = cut.parse(getHtmlGherkinTableWithOnlyOneRow())
+        assertThat(result.elements).hasSize(1)
+    }
+
+    @Test
+    fun `Given is detected`() {
+        val result = cut.parse(htmlGherkinGiven())
+        assertThat(result.elements).hasSize(1)
+    }
+
+    @Test
+    fun `Then is detected`() {
+        val result = cut.parse(htmlGherkinThen())
+        assertThat(result.elements).hasSize(1)
+    }
+
+    @Test
+    fun `multiple features are detected`() {
         val result = cut.parse(getHtmlGherkin2())
         assertThat(result.elements).hasSize(2)
     }
@@ -69,16 +96,16 @@ class HtmlGherkinFormatTest {
         assertThat(documentNode.rows[1].headerToField).hasSize(3)
 
         assertThat(documentNode.rows[0].headerToField.map { it.key.name }).containsExactly(
-                "Firstname",
-                "Lastname",
-                "Age"
+            "Firstname",
+            "Lastname",
+            "Age"
         )
         assertThat(documentNode.rows[0].headerToField.map { it.value.value }).containsExactly("Jill", "Smith", "50")
 
         assertThat(documentNode.rows[1].headerToField.map { it.key.name }).containsExactly(
-                "Firstname",
-                "Lastname",
-                "Age"
+            "Firstname",
+            "Lastname",
+            "Age"
         )
         assertThat(documentNode.rows[1].headerToField.map { it.value.value }).containsExactly("Eve", "Jackson", "94")
     }
@@ -164,27 +191,24 @@ class HtmlGherkinFormatTest {
         assertThat(exception).hasMessageStartingWith("Nested lists within unordered or ordered lists are not supported:")
     }
 
-    @Test fun `manual test healine is parsed`() {
+    @Test
+    fun `manual test healine is parsed`() {
         val htmlDocument = cut.parse(getHtmlManualList())
 
         assertThat(htmlDocument.elements[0].description.name).isEqualTo("MANUAL Test1")
     }
 
-    @Test fun `manual test is marked as manual`() {
+    @Test
+    fun `manual test is marked as manual`() {
         val htmlDocument = cut.parse(getHtmlManualList())
 
         assertThat(htmlDocument.elements[0].description.isManual).isTrue()
     }
 
-    @Test fun `non-manual test is marked as non-manual`() {
+    @Test
+    fun `non-manual test is marked as non-manual`() {
         val htmlDocument = cut.parse(getHtmlWithOrderedList())
 
         assertThat(htmlDocument.elements[0].description.isManual).isFalse()
-    }
-
-    @Test fun `descriptive text is parsed`() {
-        val htmlDocument = cut.parse(getHtmlDescriptionText())
-
-        assertThat(htmlDocument.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
     }
 }
