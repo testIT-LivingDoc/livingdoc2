@@ -1,7 +1,6 @@
 package org.livingdoc.repositories.format
 
 import com.beust.klaxon.Klaxon
-import com.beust.klaxon.json
 import io.cucumber.gherkin.GherkinDocumentBuilder
 import io.cucumber.gherkin.Parser
 import io.cucumber.gherkin.pickles.PickleCompiler
