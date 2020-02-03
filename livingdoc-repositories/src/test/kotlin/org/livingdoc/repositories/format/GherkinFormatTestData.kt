@@ -65,3 +65,16 @@ internal fun scenarioOutlineGherkin() =
               |    12 |   5 |    7 |
               |    20 |   5 |   15 |
     """.trimIndent().byteInputStream()
+
+internal fun docStringGherkin() =
+    """
+        Feature: Test Feature
+          Scenario: Test Scenario
+            When I test the Gherkin parser with
+              ${'"'}""
+              Some Title, Eh?
+              ===============
+              Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+              ${'"'}""
+    """.trimIndent().byteInputStream()

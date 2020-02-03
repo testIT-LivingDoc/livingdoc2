@@ -220,6 +220,27 @@ internal class GherkinFormatTest {
         }
     }
 
+    @Test
+    fun `can parse doc string scenario`() {
+        val document = cut.parse(
+            docStringGherkin())
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { element ->
+            assertThat(element.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
+                    assertThat(step.value).isEqualTo("I test the Gherkin parser with Some Title, Eh?\n" +
+                            "===============\n" +
+                            "Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,\n" +
+                            "consectetur adipiscing elit.")
+                }
+            }
+        }
+    }
     companion object {
         @JvmStatic
         fun generateRandomStrings(): List<String> {

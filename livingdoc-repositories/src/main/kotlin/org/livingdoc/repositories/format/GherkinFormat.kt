@@ -37,8 +37,14 @@ class GherkinFormat : DocumentFormat {
 
         return Document(pickles.map { pickle ->
             val steps = pickle.stepsList.map { step ->
-                Step(step.text)
+
+                val argument = when(step.argument.messageCase) {
+                    Messages.PickleStepArgument.MessageCase.DOC_STRING -> step.argument.docString.content
+                    else -> ""
+                }
+                Step((step.text + " " + argument).trim())
             }
+
             val id = pickle.getAstNodeIds(0)
             val scenarioDescription = gherkin.feature.description + "\n\n" + descriptionMap[id]
 
