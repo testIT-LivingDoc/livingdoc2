@@ -8,11 +8,15 @@ import io.ktor.client.response.HttpResponse
 import kotlinx.coroutines.runBlocking
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
+import org.livingdoc.repositories.cache.CacheHelper
 import org.livingdoc.repositories.format.DocumentFormatManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+
 
 /**
  * This implementation of a DocumentRepository uses a remote HTTP server to get the Documents from.
@@ -29,18 +33,47 @@ class RESTRepository(
     private val log: Logger = LoggerFactory.getLogger(RESTRepository::class.java)
 
     override fun getDocument(documentIdentifier: String): Document {
-        val request =
-            runBlocking {
-                try {
-                    log.debug("Get Document from url {}", config.baseURL + documentIdentifier)
-                    client.get<HttpResponse>(config.baseURL + documentIdentifier).receive<InputStream>()
-                } catch (e: IOException) {
-                    throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
-                } catch (e: ClientRequestException) {
-                    throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        return when (config.cacheConfig.use) {
+            "always" -> getFromCache(documentIdentifier)
+            "noInternet" -> {
+                if (CacheHelper.hasActiveNetwork(config.baseURL)) {
+                    getFromRequest(documentIdentifier)
+                } else {
+                    getFromCache(documentIdentifier)
                 }
             }
+            "disabled" -> getFromRequest(documentIdentifier)
+            else -> throw InvalidCacheUseConfigurationException(config.cacheConfig.use)
+        }
+    }
 
-        return DocumentFormatManager.getFormat("html").parse(request)
+    private fun getFromRequest(documentIdentifier: String): Document {
+        val request = runBlocking {
+            try {
+                log.debug("Get Document from url {}", config.baseURL + documentIdentifier)
+                client.get<HttpResponse>(config.baseURL + documentIdentifier).receive<InputStream>()
+            } catch (e: IOException) {
+                throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+            } catch (e: ClientRequestException) {
+                throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+            }
+        }
+
+        // Request has to be cloned to be used twice
+        val baos = ByteArrayOutputStream()
+        request.transferTo(baos)
+
+        val cacheRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
+        CacheHelper.cacheInputStream(cacheRequest, "${config.cacheConfig.path}/$documentIdentifier")
+
+        val documentRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
+        return DocumentFormatManager.getFormat("html").parse(documentRequest)
+    }
+
+    private fun getFromCache(documentIdentifier: String): Document {
+        log.debug("Get Document from cache {}", documentIdentifier)
+
+        val documentStream = CacheHelper.getCacheInputStream("${config.cacheConfig.path}/$documentIdentifier")
+        return DocumentFormatManager.getFormat("html").parse(documentStream)
     }
 }
