@@ -17,6 +17,7 @@ import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithOrderedLi
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedList
 import org.livingdoc.repositories.format.HtmlFormatTestData.getHtmlWithUnorderedListContainsOnlyOneItem
 import org.livingdoc.repositories.format.HtmlFormatTestData.getValidHtml
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkin2
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkinTableWithOnlyOneRow
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
@@ -28,7 +29,12 @@ class HtmlGherkinFormatTest {
     @Test
     fun `tables with one row are ignored`() {
         val result = cut.parse(getHtmlGherkinTableWithOnlyOneRow())
-        assertThat(result.elements).hasSize(0)
+        assertThat(result.elements).hasSize(1)
+    }
+    @Test
+    fun `gherker tests`() {
+        val result = cut.parse(getHtmlGherkin2())
+        assertThat(result.elements).hasSize(2)
     }
 
     @Test

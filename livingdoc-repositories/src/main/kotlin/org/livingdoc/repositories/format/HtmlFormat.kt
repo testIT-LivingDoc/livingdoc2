@@ -1,5 +1,8 @@
 package org.livingdoc.repositories.format
 
+import io.cucumber.gherkin.GherkinDocumentBuilder
+import io.cucumber.gherkin.Parser
+import io.cucumber.messages.IdGenerator
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -55,9 +58,6 @@ class HtmlFormat : DocumentFormat {
 
         root.children().forEach {
             when (it.tagName()) {
-                "div" -> {
-                    val test = true // context = context.copy( = context.descriptiveText + it.text() + "\n")
-                }
                 "h1", "h2", "h3", "h4", "h5", "h6" -> {
                     testDataList.addAll(elementQueue.flatMap {
                         parseTestData(it, context)
@@ -80,6 +80,38 @@ class HtmlFormat : DocumentFormat {
         return testDataList
     }
 
+    private val id = IdGenerator.Incrementing()
+    /**
+     *
+     */
+    private fun createGherkin(gherkinInput: String): List<Scenario> {
+        val gherkin = Parser(GherkinDocumentBuilder(id)).parse(gherkinInput.reader())
+
+        println(gherkin)
+        val gherkinResult =
+            with(gherkin.feature) {
+                childrenList.mapNotNull {
+                    when (it.valueCase) {
+                        io.cucumber.messages.Messages.GherkinDocument.Feature.FeatureChild.ValueCase.SCENARIO ->
+                            it.scenario
+                        else -> null
+                    }
+                }.map { scenario ->
+                    val steps = scenario.stepsList.map { step ->
+                        Step(step.text)
+                    }
+                    Scenario(
+                        steps, TestDataDescription(
+                            scenario.name, false,
+                            scenario.description.trim()
+                        )
+                    )
+                }
+            }
+
+        return gherkinResult
+    }
+
     private fun parseTestData(element: Element, context: ParseContext): List<TestData> {
         return when (element.tagName()) {
             "table" -> {
@@ -88,7 +120,14 @@ class HtmlFormat : DocumentFormat {
             "ul", "ol" -> {
                 parseRecursive(element, context) + parseList(element, context)
             }
-            else -> parseRecursive(element, context)
+
+            "gherkin" -> {
+                createGherkin(element.text())
+            }
+
+            else -> {
+                parseRecursive(element, context)
+            }
         }
     }
 

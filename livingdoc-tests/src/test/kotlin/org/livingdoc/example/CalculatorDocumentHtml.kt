@@ -6,6 +6,9 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.fixtures.scenarios.Binding
+import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
+import org.livingdoc.api.fixtures.scenarios.Step
 
 /**
  * This [ExecutableDocument] tests the [Calculator] SUT using [DecisionTableFixtures][DecisionTableFixture].
@@ -15,6 +18,27 @@ import org.livingdoc.api.fixtures.decisiontables.Input
  */
 @ExecutableDocument("local://Calculator.html")
 class CalculatorDocumentHtml {
+
+    @ScenarioFixture
+    class CalculatorScenario {
+        private var lastResult: Float? = null
+        private lateinit var cut: Calculator
+
+        @Step("a calculator")
+        fun `initialize calculator`() {
+            cut = Calculator()
+        }
+
+        @Step("I add {lhs} and {rhs}")
+        fun `add two numbers`(@Binding("lhs") lhs: Float, @Binding("rhs") rhs: Float) {
+            lastResult = cut.sum(lhs, rhs)
+        }
+
+        @Step("I get {result}")
+        fun `check last result`(@Binding("result") result: Float) {
+            assertThat(lastResult).isEqualTo(result)
+        }
+    }
 
     /**
      * This [DecisionTableFixture] will be used to execute the first decision table in the document
