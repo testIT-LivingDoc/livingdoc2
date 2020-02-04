@@ -110,6 +110,30 @@ object HtmlGherkinFormatTestData {
     </html>
             """.byteInputStream()
 
+    fun getHtmlGherkinManualList() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+        <h2>MANUAL Test1</h2>
+        <ol>
+            <li>First list item</li>
+            <li>Second list item</li>
+        </ol>
+         <pre>
+        <gherkin>
+        Feature: Test Feature
+             Scenario: Test Scenario 1
+              Given a working Gherkin parser
+              And some Gherkin text
+              When I test the Gherkin parser
+               Then I get a valid Document containing the expected information
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
     fun getHtmlGherkinDescriptionText() =
         """
     <!DOCTYPE html>
@@ -121,6 +145,32 @@ object HtmlGherkinFormatTestData {
             <li>Second list item</li>
         </ol>
         <p>This is another descriptive text.</p>
+       <pre>
+        <gherkin>
+        Feature: Test Feature
+             Scenario: Test Scenario 1
+              Given a working Gherkin parser
+              And some Gherkin text
+              When I test the Gherkin parser
+               Then I get a valid Document containing the expected information
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
+    fun getHtmlGherkinSimple() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+      <pre>
+        <gherkin>
+          Feature: Test Feature
+             Scenario: Test Scenario
+                When I test the Gherkin parser
+        </gherkin>
+        </pre>
     </body>
     </html>
     """.byteInputStream()
