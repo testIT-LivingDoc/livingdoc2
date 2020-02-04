@@ -16,7 +16,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
-
+import java.nio.file.Paths
 
 /**
  * This implementation of a DocumentRepository uses a remote HTTP server to get the Documents from.
@@ -64,7 +64,7 @@ class RESTRepository(
         request.transferTo(baos)
 
         val cacheRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
-        CacheHelper.cacheInputStream(cacheRequest, "${config.cacheConfig.path}/$documentIdentifier")
+        CacheHelper.cacheInputStream(cacheRequest, Paths.get(config.cacheConfig.path, documentIdentifier))
 
         val documentRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
         return DocumentFormatManager.getFormat("html").parse(documentRequest)
@@ -73,7 +73,7 @@ class RESTRepository(
     private fun getFromCache(documentIdentifier: String): Document {
         log.debug("Get Document from cache {}", documentIdentifier)
 
-        val documentStream = CacheHelper.getCacheInputStream("${config.cacheConfig.path}/$documentIdentifier")
+        val documentStream = CacheHelper.getCacheInputStream(Paths.get(config.cacheConfig.path, documentIdentifier))
         return DocumentFormatManager.getFormat("html").parse(documentStream)
     }
 }

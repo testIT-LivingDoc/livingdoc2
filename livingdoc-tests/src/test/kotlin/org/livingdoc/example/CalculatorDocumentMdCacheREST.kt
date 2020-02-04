@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import org.assertj.core.api.Assertions.assertThat
 import org.livingdoc.api.After
 import org.livingdoc.api.Before
-import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.Group
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
