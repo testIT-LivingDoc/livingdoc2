@@ -174,4 +174,43 @@ object HtmlGherkinFormatTestData {
     </body>
     </html>
     """.byteInputStream()
+
+    fun getHtmlGherkinMultipleScenario() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+      <pre>
+        <gherkin>
+         Feature: Test Feature
+            Scenario: Test Scenario 1
+                When I test the Gherkin parser
+
+            Scenario: Test Scenario 2
+                When I test the Gherkin parser again
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
+    fun getHtmlGherkinMultipleSteps() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+      <pre>
+        <gherkin>
+          Feature: Test Feature
+            Scenario: Test Scenario 1
+                  Given a working Gherkin parser
+                  And some Gherkin text
+                  When I test the Gherkin parser
+                  Then I get a valid Document containing the expected information
+                  But the Document is not modified
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
 }

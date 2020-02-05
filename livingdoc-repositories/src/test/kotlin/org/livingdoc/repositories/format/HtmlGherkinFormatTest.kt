@@ -49,7 +49,8 @@ class HtmlGherkinFormatTest {
         assertThat(result.elements).hasSize(2)
     }
 
-    @Test fun `manual test headline is parsed before gherkin`() {
+    @Test
+    fun `manual test headline is parsed before gherkin`() {
         val htmlDocument = cut.parse(HtmlGherkinFormatTestData.getHtmlGherkinManualList())
 
         assertThat(htmlDocument.elements[0].description.name).isEqualTo("MANUAL Test1")
@@ -75,6 +76,70 @@ class HtmlGherkinFormatTest {
             assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
                 assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
                     assertThat(step.value).isEqualTo("I test the Gherkin parser")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse multiple scenarios from html`() {
+        val htmlDocument = cut.parse(HtmlGherkinFormatTestData.getHtmlGherkinMultipleScenario())
+
+        assertThat(htmlDocument.elements).hasSize(2)
+        assertThat(htmlDocument.elements[0]).satisfies { testData ->
+            assertThat(testData.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario 1")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
+                    assertThat(step.value).isEqualTo("I test the Gherkin parser")
+                }
+            }
+        }
+        assertThat(htmlDocument.elements[1]).satisfies { testData ->
+            assertThat(testData.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario 2")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
+                    assertThat(step.value).isEqualTo("I test the Gherkin parser again")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse multiple steps in a scenario from html`() {
+        val htmlDocument = cut.parse(HtmlGherkinFormatTestData.getHtmlGherkinMultipleSteps())
+
+        assertThat(htmlDocument.elements).hasOnlyOneElementSatisfying { testData ->
+            assertThat(testData.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario 1")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(testData).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(5)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("a working Gherkin parser")
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("some Gherkin text")
+                    }
+                    assertThat(steps[2]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I test the Gherkin parser")
+                    }
+                    assertThat(steps[3]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("I get a valid Document containing the expected information")
+                    }
+                    assertThat(steps[4]).satisfies { step ->
+                        assertThat(step.value).isEqualTo("the Document is not modified")
+                    }
                 }
             }
         }
