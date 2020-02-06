@@ -134,6 +134,46 @@ object HtmlGherkinFormatTestData {
     </html>
     """.byteInputStream()
 
+    fun headlineBetweenGherkin() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    <pre>
+        <gherkin>
+        <h2>MANUAL Test1</h2>
+         Feature: Test Feature
+             Scenario: Test Scenario 1
+              Given a working Gherkin parser
+              And some Gherkin text
+              When I test the Gherkin parser
+               Then I get a valid Document containing the expected information
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
+    fun headlineBetweenPre() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    <pre>
+      <h2>MANUAL Test1</h2>
+      <gherkin>
+         Feature: Test Feature
+             Scenario: Test Scenario 1
+              Given a working Gherkin parser
+              And some Gherkin text
+              When I test the Gherkin parser
+               Then I get a valid Document containing the expected information
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
     fun getHtmlGherkinDescriptionText() =
         """
     <!DOCTYPE html>

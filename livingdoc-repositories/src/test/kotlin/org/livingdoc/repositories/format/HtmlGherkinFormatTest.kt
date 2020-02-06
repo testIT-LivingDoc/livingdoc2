@@ -1,6 +1,7 @@
 package org.livingdoc.repositories.format
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.emptyHtml
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkin2
@@ -61,6 +62,20 @@ class HtmlGherkinFormatTest {
         val htmlDocument = cut.parse(HtmlGherkinFormatTestData.getHtmlGherkinDescriptionText())
 
         assertThat(htmlDocument.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
+    }
+
+    @Test
+    fun `exception if headline between gherkin tags`() {
+        Assertions.assertThrows(io.cucumber.gherkin.ParserException.CompositeParserException::class.java) {
+            cut.parse(HtmlGherkinFormatTestData.headlineBetweenGherkin())
+        }
+    }
+
+    @Test
+    fun `Ignores headline if headline between pre tags`() {
+        val htmlDocument = cut.parse(HtmlGherkinFormatTestData.headlineBetweenPre())
+
+        assertThat(htmlDocument.elements[0].description.name).isEqualTo("Test Scenario 1")
     }
 
     @Test
