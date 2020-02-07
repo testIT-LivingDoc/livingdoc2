@@ -17,6 +17,7 @@ import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.repositories.Document
+import org.livingdoc.repositories.cache.CacheHelper
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -45,6 +46,8 @@ class RestRepositoryIntegrationTest {
         private fun beforeCheck() {
             val restRepositoryConfig = RESTRepositoryConfig()
             restRepositoryConfig.baseURL = "$host:$port"
+            restRepositoryConfig.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
+
             cut = RESTRepository("", restRepositoryConfig)
 
             wms = WireMockServer(port)
