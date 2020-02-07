@@ -87,6 +87,8 @@ class HtmlFormat : DocumentFormat {
     private fun createGherkin(gherkinInput: String): List<Scenario> {
         val gherkin = Parser(GherkinDocumentBuilder(id)).parse(gherkinInput.reader())
 
+        // ware besser den gherkinparser an dieser Stelle wiederzuverwenden
+
         println(gherkin)
         val gherkinResult =
             with(gherkin.feature) {
