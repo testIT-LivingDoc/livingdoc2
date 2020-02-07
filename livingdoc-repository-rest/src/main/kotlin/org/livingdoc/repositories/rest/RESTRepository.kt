@@ -35,14 +35,14 @@ class RESTRepository(
         return when (config.cacheConfig.cachePolicy) {
             CacheHelper.CACHE_ALWAYS -> handleCacheAlways(documentIdentifier)
             CacheHelper.CACHE_ONCE -> handleCacheOnce(documentIdentifier)
-            CacheHelper.NO_CACHE -> getFromRequest(documentIdentifier)
+            CacheHelper.NO_CACHE -> handleNoCache(documentIdentifier)
             else -> throw InvalidCachePolicyException(config.cacheConfig.cachePolicy)
         }
     }
 
     private fun handleCacheAlways(documentIdentifier: String): Document {
         if (CacheHelper.hasActiveNetwork(config.baseURL)) {
-            return getFromRequest(documentIdentifier)
+            return getFromRequestAndCache(documentIdentifier)
         }
         return getFromCache(documentIdentifier)
     }
@@ -51,11 +51,22 @@ class RESTRepository(
         if (CacheHelper.isCached(Paths.get(config.cacheConfig.path, documentIdentifier))) {
             return getFromCache(documentIdentifier)
         }
-        return getFromRequest(documentIdentifier)
+
+        return getFromRequestAndCache(documentIdentifier)
     }
 
-    private fun getFromRequest(documentIdentifier: String): Document {
-        val request = runBlocking {
+    private fun handleNoCache(documentIdentifier: String): Document {
+        return DocumentFormatManager.getFormat("html").parse(getRequest(documentIdentifier))
+    }
+
+    private fun getFromRequestAndCache(documentIdentifier: String): Document {
+        val request = getRequest(documentIdentifier)
+        CacheHelper.cacheInputStream(request, Paths.get(config.cacheConfig.path, documentIdentifier))
+        return getFromCache(documentIdentifier)
+    }
+
+    private fun getRequest(documentIdentifier: String): InputStream {
+        return runBlocking {
             try {
                 log.debug("Get Document from url {}", config.baseURL + documentIdentifier)
                 client.get<HttpResponse>(config.baseURL + documentIdentifier).receive<InputStream>()
@@ -65,9 +76,6 @@ class RESTRepository(
                 throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
             }
         }
-
-        CacheHelper.cacheInputStream(request, Paths.get(config.cacheConfig.path, documentIdentifier))
-        return getFromCache(documentIdentifier)
     }
 
     private fun getFromCache(documentIdentifier: String): Document {

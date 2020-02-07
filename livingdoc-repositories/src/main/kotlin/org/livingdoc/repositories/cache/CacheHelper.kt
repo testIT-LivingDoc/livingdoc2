@@ -28,10 +28,12 @@ class CacheHelper {
 
         /**
          * Caches the given input stream to a file under the given path.
+         * The input stream is closed.
          */
         fun cacheInputStream(inputStream: InputStream, path: Path) {
             Files.createDirectories(path.parent)
             Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
+            inputStream.close()
         }
 
         /**
