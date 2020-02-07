@@ -1,7 +1,5 @@
 package org.livingdoc.repositories.cache
 
-import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.net.URLConnection
@@ -31,15 +29,14 @@ object CacheHelper {
      */
     fun cacheInputStream(inputStream: InputStream, path: Path) {
         Files.createDirectories(path.parent)
-        Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING)
-        inputStream.close()
+        inputStream.use { Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING) }
     }
 
     /**
      * Gets the cached object from the path and returns the input stream.
      */
     fun getCacheInputStream(path: Path): InputStream {
-        return FileInputStream(path.toString())
+        return Files.newInputStream(path)
     }
 
     /**
@@ -49,7 +46,7 @@ object CacheHelper {
      * @return true if there is a file. Otherwise false.
      */
     fun isCached(path: Path): Boolean {
-        return File(path.toString()).exists()
+        return Files.exists(path)
     }
 
     /**
