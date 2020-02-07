@@ -6,7 +6,6 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -20,7 +19,7 @@ class CacheHelperTest {
         val givenInputStream = testStreamString.byteInputStream()
         val givenPath = tempDir.resolve("testFilePath")
 
-        assertThat(givenPath.toFile()).doesNotExist()
+        assertThat(givenPath).doesNotExist()
 
         cut.cacheInputStream(givenInputStream, givenPath)
 
@@ -29,10 +28,10 @@ class CacheHelperTest {
     }
 
     @Test
-    fun `test reading from cached file`() {
-        val tmpFile = File.createTempFile("cachedFile", null)
+    fun `test reading from cached file`(@TempDir tempDir: Path) {
+        val tmpFile = Files.createTempFile(tempDir, "cachedFile", null)
 
-        val cachedInputStream = cut.getCacheInputStream(tmpFile.toPath())
+        val cachedInputStream = cut.getCacheInputStream(tmpFile)
         assertThat(cachedInputStream).isNotNull()
     }
 
