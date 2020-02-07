@@ -38,15 +38,15 @@ The baseURL of the endpoint to get the documents from. Has to have the format `p
 .cacheConfig
 The REST Repository supports caching of Documents. This might be helpful if you do not have internet at some later time.
 
-.Path
+.cacheConfig/path
 The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
 
-.cachePolicy
+.cacheConfig/cachePolicy
 The different cache policy options specify when to cache. The available options are:
 
-* `cacheAlways` = Always caches the retrieved Documents, i.e. keeps the cache up to date.
+* `cacheAlways` = Always gets the Documents from the endpoint and caches the retrieved Documents, i.e. keeps the cache up to date. This is the default value.
 * `noCache` = Never caches. If you do not have internet, you cannot retrieve Documents.
-* `cacheOnce` = Caches once and then uses this cache every time the tests are executed.
+* `cacheOnce` = Caches once and then uses this cache every time the tests are executed. If you do not have internet when there is no cache yet, an exception is thrown.
 
 The configuration can look similar to this:
 
@@ -95,9 +95,6 @@ repositories:
       path: "/"
       username: "livingdoc"
       password: "very good password"
-      cacheConfig:
-        path: "build/livingdoc/cache/"
-        cachePolicy: "cacheAlways"
 ----
 
 ==== Special Features
