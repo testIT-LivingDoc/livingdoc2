@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.livingdoc.repositories.cache.CacheHelper
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.scenario.Scenario
 
@@ -40,6 +41,7 @@ internal class RESTRepositoryTest {
     fun `Test file content - RESTRepository`() {
         val restrepoCfg = RESTRepositoryConfig()
         restrepoCfg.baseURL = testURL
+        restrepoCfg.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
         val comparisonRepository = RESTRepository(repoName, restrepoCfg, HttpClient())
         val document = comparisonRepository.getDocument(repoName)
         val scenario = document.elements[2] as Scenario
@@ -90,7 +92,10 @@ internal class RESTRepositoryTest {
 
         // testing factory
         val configData: Map<String, Any> =
-            mutableMapOf<String, Any>("baseURL" to testURL)
+            mutableMapOf<String, Any>(
+                "baseURL" to testURL,
+                "cacheConfig" to mutableMapOf<String, Any>("cachePolicy" to CacheHelper.NO_CACHE)
+            )
         val resultRepo = rrf.createRepository(repoName, configData)
         // testing create Repository
         assertThat(rrf.createRepository(repoName, configData))
@@ -100,6 +105,7 @@ internal class RESTRepositoryTest {
         // manually created repository
         val restRepoCfg = RESTRepositoryConfig()
         restRepoCfg.baseURL = testURL
+        restRepoCfg.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
         val comparisonRepository = RESTRepository(repoName, restRepoCfg)
         assertThat(RESTRepository(repoName, restRepoCfg))
             .isInstanceOf(RESTRepository::class.java).isNotNull
@@ -123,6 +129,7 @@ internal class RESTRepositoryTest {
         // configure variables
         val cfg = RESTRepositoryConfig()
         cfg.baseURL = "http://localhost:${wms.port()}/"
+        cfg.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
         val cut = RESTRepository("test", cfg)
         val documentURL = "/Testing.html"
 

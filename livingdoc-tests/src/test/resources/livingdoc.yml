@@ -3,6 +3,13 @@ repositories:
     factory: "org.livingdoc.repositories.file.FileRepositoryFactory"
     config:
       documentRoot: "src/test/docs"
+  - name: "rest"
+    factory: "org.livingdoc.repositories.rest.RESTRepositoryFactory"
+    config:
+      baseURL: "http://localhost:8080/"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheOnce"
 reports:
   - name: "default"
     format: "html"

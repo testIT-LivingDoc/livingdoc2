@@ -26,6 +26,43 @@ Each repository configuration has a `name` which is later used to reference this
 Each repository configuration also contains a `factory` which is the class file used as factory for the repository.
 Optionally a `config` can be specified to pass Document Repository specific parameters for the repository.
 
+=== REST Repository
+The REST Repository is used to get an Executable Document from an external HTTP endpoint.
+
+To use this repository use the factory: `org.livingdoc.repositories.rest.RESTRepositoryFactory`.
+
+==== Configuration
+.baseURL
+The baseURL of the endpoint to get the documents from. Has to have the format `protocol://host:port`
+
+.cacheConfig
+The REST Repository supports caching of Documents. This might be helpful if you do not have internet at some later time.
+
+.cacheConfig/path
+The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
+
+.cacheConfig/cachePolicy
+The different cache policy options specify when to cache. The available options are:
+
+* `cacheAlways` = Always gets the Documents from the endpoint and caches the retrieved Documents, i.e. keeps the cache up to date. This is the default value.
+* `noCache` = Never caches. If you do not have internet, you cannot retrieve Documents.
+* `cacheOnce` = Caches once and then uses this cache every time the tests are executed. If you do not have internet when there is no cache yet, an exception is thrown.
+
+The configuration can look similar to this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "rest"
+    factory: "org.livingdoc.repositories.rest.RESTRepositoryFactory"
+    config:
+      baseURL: "http://rest.example.com"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----
+
 === Confluence Repository
 The Confluence Repository uses the unique DocumentID of a confluence-page to identify the Executable Documents.
 To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html:[Confluence documentation].

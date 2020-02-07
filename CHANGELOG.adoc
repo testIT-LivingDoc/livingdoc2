@@ -28,6 +28,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Added the possibility to execute the rows of a DecisionTableFixture in parallel, with the introduction of a a newly added parameter to the `@DecisionTableFixture` annotation. so that it is possible to specify if the rows should be executed in parallel (default is serial)
 - Add the option to leave cells in a DecisionTable empty to only report the result
 - Test titles and descriptions now appear in the generated reports
+- Add caching of documents
 
 === Changed
 

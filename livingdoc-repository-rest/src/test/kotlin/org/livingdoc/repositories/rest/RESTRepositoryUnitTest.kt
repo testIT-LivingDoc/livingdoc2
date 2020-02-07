@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.Document
+import org.livingdoc.repositories.cache.CacheHelper
 
 class RESTRepositoryUnitTest {
     var testURL: String = "http://localhost/"
@@ -35,7 +36,9 @@ class RESTRepositoryUnitTest {
     @Test
     fun `exception is thrown if document could not be found`() {
 
-        val cut = RESTRepository("test", RESTRepositoryConfig())
+        val restRepoConfig = RESTRepositoryConfig()
+        restRepoConfig.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
+        val cut = RESTRepository("test", restRepoConfig)
         assertThrows<RESTDocumentNotFoundException> {
             cut.getDocument("foo-bar.html")
         }
@@ -50,6 +53,7 @@ class RESTRepositoryUnitTest {
 
         val restrepoCfg = RESTRepositoryConfig()
         restrepoCfg.baseURL = testURL
+        restrepoCfg.cacheConfig.cachePolicy = CacheHelper.NO_CACHE
         val comparisonRepository = RESTRepository(reponame, restrepoCfg, HttpClient())
 
         // test retrieval of document
@@ -63,7 +67,10 @@ class RESTRepositoryUnitTest {
         `setup wiremock to test getDocument`()
 
         val configData: Map<String, Any> =
-            mutableMapOf<String, Any>("baseURL" to testURL)
+            mutableMapOf<String, Any>(
+                "baseURL" to testURL,
+                "cacheConfig" to mutableMapOf<String, Any>("cachePolicy" to CacheHelper.NO_CACHE)
+            )
         val resultrepo = rrf.createRepository(reponame, configData)
         // val document = resultrepo.getDocument(reponame)
         Assertions.assertThat(resultrepo.getDocument(reponame))
