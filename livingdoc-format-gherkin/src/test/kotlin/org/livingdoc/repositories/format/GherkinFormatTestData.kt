@@ -65,3 +65,53 @@ internal fun scenarioOutlineGherkin() =
               |    12 |   5 |    7 |
               |    20 |   5 |   15 |
     """.trimIndent().byteInputStream()
+
+internal fun docStringGherkin() =
+    """
+        Feature: Test Feature
+          Scenario: Test Scenario
+            When I test the Gherkin parser with
+              ${'"'}""
+              Some Title, Eh?
+              ===============
+              Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+              ${'"'}""
+    """.trimIndent().byteInputStream()
+
+internal fun docStringAdvancedGherkin() =
+    """
+        Feature: Test Feature
+          Scenario: Test Scenario
+            When I test the Gherkin parser with
+              ${'"'}""
+              Some Title, Eh?
+              ===============
+              Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit.
+              ${'"'}""
+            Then I have some text
+    """.trimIndent().byteInputStream()
+
+internal fun dataTableGherkin() =
+    """
+        Feature: Test Feature
+          Scenario: Test Scenario
+            Given the following users exist:
+              | name   | email              | twitter         |
+              | Aslak  | aslak@cucumber.io  | @aslak_hellesoy |
+              | Julien | julien@cucumber.io | @jbpros         |
+              | Matt   | matt@cucumber.io   | @mattwynne      |
+    """.trimIndent().byteInputStream()
+
+internal fun dataTableAdvancedGherkin() =
+    """
+        Feature: Test Feature
+          Scenario: Test Scenario
+            Given the following users exist:
+              | name   | email              | twitter         |
+              | Aslak  | aslak@cucumber.io  | @aslak_hellesoy |
+              | Julien | julien@cucumber.io | @jbpros         |
+              | Matt   | matt@cucumber.io   | @mattwynne      |
+            Then I have a list of names
+    """.trimIndent().byteInputStream()

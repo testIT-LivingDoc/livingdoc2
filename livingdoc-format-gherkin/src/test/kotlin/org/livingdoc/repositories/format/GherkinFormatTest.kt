@@ -136,8 +136,10 @@ internal class GherkinFormatTest {
                         assertThat(step.value).isEqualTo("ich den Parser teste")
                     }
                     assertThat(steps[3]).satisfies { step ->
-                        assertThat(step.value).isEqualTo("bekomme ich ein korrektes Dokument mit den erwarteten " +
-                                "Informationen")
+                        assertThat(step.value).isEqualTo(
+                            "bekomme ich ein korrektes Dokument mit den erwarteten " +
+                                    "Informationen"
+                        )
                     }
                     assertThat(steps[4]).satisfies { step ->
                         assertThat(step.value).isEqualTo("das Dokument ist nicht modifiziert")
@@ -170,8 +172,10 @@ internal class GherkinFormatTest {
                         assertThat(step.value).isEqualTo("ich den Parser teste")
                     }
                     assertThat(steps[3]).satisfies { step ->
-                        assertThat(step.value).isEqualTo("bekomme ich ein korrektes Dokument mit den erwarteten " +
-                                "Informationen")
+                        assertThat(step.value).isEqualTo(
+                            "bekomme ich ein korrektes Dokument mit den erwarteten " +
+                                    "Informationen"
+                        )
                     }
                     assertThat(steps[4]).satisfies { step ->
                         assertThat(step.value).isEqualTo("das Dokument ist nicht modifiziert")
@@ -216,6 +220,122 @@ internal class GherkinFormatTest {
                     }
                 }
                 assertThat(scenario.description.name).isEqualTo("eating")
+            }
+        }
+    }
+
+    @Test
+    fun `can parse doc string scenario`() {
+        val document = cut.parse(
+            docStringGherkin()
+        )
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { element ->
+            assertThat(element.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
+                    assertThat(step.value).isEqualTo(
+                        "I test the Gherkin parser with Some Title, Eh?\n" +
+                                "===============\n" +
+                                "Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,\n" +
+                                "consectetur adipiscing elit."
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse advanced doc string scenario`() {
+        val document = cut.parse(
+            docStringAdvancedGherkin()
+        )
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { element ->
+            assertThat(element.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(2)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualTo(
+                            "I test the Gherkin parser with Some Title, Eh?\n" +
+                                    "===============\n" +
+                                    "Here is the first paragraph of my blog post. Lorem ipsum dolor sit amet,\n" +
+                                    "consectetur adipiscing elit."
+                        )
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo(
+                            "I have some text"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse data table scenario`() {
+        val document = cut.parse(
+            dataTableGherkin()
+        )
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { element ->
+            assertThat(element.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
+                    assertThat(step.value).isEqualToIgnoringWhitespace("the following users exist:" +
+                            " {\"rows\" : [[\"name\", \"email\", \"twitter\"]," +
+                            " [\"Aslak\", \"aslak@cucumber.io\", \"@aslak_hellesoy\"]," +
+                            " [\"Julien\", \"julien@cucumber.io\", \"@jbpros\"]," +
+                            " [\"Matt\", \"matt@cucumber.io\", \"@mattwynne\"]]}")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `can parse advanced data table scenario`() {
+        val document = cut.parse(
+            dataTableAdvancedGherkin()
+        )
+
+        assertThat(document.elements).hasOnlyOneElementSatisfying { element ->
+            assertThat(element.description).satisfies { description ->
+                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.isManual).isFalse()
+            }
+
+            assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
+                assertThat(scenario.steps).satisfies { steps ->
+                    assertThat(steps).hasSize(2)
+                    assertThat(steps[0]).satisfies { step ->
+                        assertThat(step.value).isEqualToIgnoringWhitespace(
+                            "the following users exist:" +
+                                    " {\"rows\" : [[\"name\", \"email\", \"twitter\"]," +
+                                    " [\"Aslak\", \"aslak@cucumber.io\", \"@aslak_hellesoy\"]," +
+                                    " [\"Julien\", \"julien@cucumber.io\", \"@jbpros\"]," +
+                                    " [\"Matt\", \"matt@cucumber.io\", \"@mattwynne\"]]}"
+                        )
+                    }
+                    assertThat(steps[1]).satisfies { step ->
+                        assertThat(step.value).isEqualTo(
+                            "I have a list of names"
+                        )
+                    }
+                }
             }
         }
     }

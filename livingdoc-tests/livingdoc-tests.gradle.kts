@@ -8,6 +8,7 @@ dependencies {
 
 	testImplementation(project(":livingdoc-api"))
 	testImplementation(project(":livingdoc-converters"))
+	testImplementation(project(":livingdoc-format-gherkin"))
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 }
