@@ -14,4 +14,6 @@ dependencies {
 
 	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
 	testCompile("org.assertj:assertj-core:${Versions.assertJ}")
+
+	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
 }
