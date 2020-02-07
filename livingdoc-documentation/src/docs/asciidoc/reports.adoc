@@ -69,7 +69,6 @@ config:
 * filename deafaults to `report.html`
 * path can usually be empty
 * comment defaults to `Report from [ISO-timestamp]`
-* environment can usually be empty
 
 == Create Custom Report Formats
 This documentation is for developer which want to implement own Report Formats.
