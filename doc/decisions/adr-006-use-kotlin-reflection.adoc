@@ -1,0 +1,31 @@
+= ADR 6: Use Kotlin Reflection
+
+== Context
+
+LivingDoc for JVM languages must access the jvm code at runtime to detect the Fixtures, inject context, invoke annotated methods and create instances.
+As LivingDoc uses Kotlin as main implementation language, the kotlin-reflection api should be used.
+The reflection api is a very low level api and should only be used by very few part in the LivingDoc.
+
+
+=== Alternatives
+
+Use the Java reflection api, as it is also able to be used with all jvm languages.
+The Java reflection api is not type and null safe.
+
+
+
+== Decision
+
+We will use the kotlin reflection api with extensions of the `kotlin.reflect.full` namespace.
+Kotlin reflection is used if access to jvm code is required at runtime.
+
+== Status
+
+Accepted.
+
+
+== Consequences
+
+* We will have a type safe reflections api
+* Better compatibility with kotlin code
+* All parts that use `kotlin.reflect.full` are only for jvm.

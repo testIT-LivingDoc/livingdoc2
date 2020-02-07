@@ -1,0 +1,34 @@
+= ADR 7: Use group document fixture structure
+
+== Context
+
+The LivingDoc tests should be structured so that the required functionality can be supported.
+This includes grouping, reusing and encapsulation of LivingDoc tests.
+The test are build around the ExecutableDocuments and so there is a one to one relation of an ExecutableDocument containing the Example and an document in LivingDoc containing the Fixtures for the Examples and describing the SUT.
+
+For reusability the Fixtures can be used by multiple documents.
+The documents can be group so they can share resources.
+A document can only be in one group.
+
+The Group is the toplevel element and can contain multiple documents, each document references multiple fixtures and a fixture can be referenced by multiple documents.
+
+For each document the ExecutableDocument is loaded and the Examples are matched with the Fixtures of the document.
+
+=== Alternatives
+
+More flexible structure, to allow an arbitrary hierarchy structure.
+This increase the complexity and makes it hard for extensions to work with all types of Fixtures.
+
+== Decision
+
+We will use the structure group, document, fixture.
+The Group is the toplevel element and can contain multiple documents, each document references multiple fixtures and a fixture can be referenced by multiple documents.
+
+== Status
+
+Accepted.
+
+
+== Consequences
+
+* The easy grouping, reusing and encapsulation of LivingDoc tests.
