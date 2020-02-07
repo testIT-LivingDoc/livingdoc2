@@ -28,5 +28,4 @@ jmh {
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 1
 	timeUnit = "ms"
-
 }
