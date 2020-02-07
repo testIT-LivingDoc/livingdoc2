@@ -61,7 +61,13 @@ class RESTRepository(
 
         // Request has to be cloned to be used twice
         val baos = ByteArrayOutputStream()
-        request.transferTo(baos)
+        val buffer = ByteArray(1024)
+        while (true) {
+            val bytesRead = request.read(buffer)
+            if (bytesRead == -1)
+                break
+            baos.write(buffer, 0, bytesRead)
+        }
 
         val cacheRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
         CacheHelper.cacheInputStream(cacheRequest, Paths.get(config.cacheConfig.path, documentIdentifier))
