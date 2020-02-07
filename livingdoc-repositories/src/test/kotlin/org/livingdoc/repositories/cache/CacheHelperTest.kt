@@ -6,10 +6,9 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.ByteArrayInputStream
 import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class CacheHelperTest {
 
@@ -17,14 +16,16 @@ class CacheHelperTest {
 
     @Test
     fun `test caching input stream`(@TempDir tempDir: Path) {
-        val givenInputStream = ByteArrayInputStream(ByteArray(12))
-        val givenPath = Paths.get(tempDir.toString(), "testFilePath")
+        val testStreamString = "testStream"
+        val givenInputStream = testStreamString.byteInputStream()
+        val givenPath = tempDir.resolve("testFilePath")
 
-        assertThat(File(givenPath.toString())).doesNotExist()
+        assertThat(givenPath.toFile()).doesNotExist()
 
         cut.cacheInputStream(givenInputStream, givenPath)
 
-        assertThat(File(givenPath.toString())).exists()
+        assertThat(givenPath).exists()
+        assertThat(givenPath).hasContent(testStreamString)
     }
 
     @Test
@@ -36,15 +37,15 @@ class CacheHelperTest {
     }
 
     @Test
-    fun `test checking existence of cached file`() {
-        val tmpFile = File.createTempFile("cachedFile", null)
+    fun `test checking existence of cached file`(@TempDir tempDir: Path) {
+        val tmpFile = Files.createTempFile(tempDir, "cachedFile", null)
 
-        assertThat(cut.isCached(tmpFile.toPath())).isTrue()
+        assertThat(cut.isCached(tmpFile)).isTrue()
     }
 
     @Test
     fun `test checking non-existence of cached file`(@TempDir tempDir: Path) {
-        assertThat(cut.isCached(Paths.get(tempDir.toString(), "thisfiledoesnotexist.xyz"))).isFalse()
+        assertThat(cut.isCached(tempDir.resolve("thisfiledoesnotexist.xyz"))).isFalse()
     }
 
     @Test
