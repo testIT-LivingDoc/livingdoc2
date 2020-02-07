@@ -68,7 +68,7 @@ class ConfluenceReportRenderer : ReportRenderer {
             .fetchCompletionStage()
             .toCompletableFuture()
             .get()
-            .get()
+            .orElseGet { null }
             ?.id
 
         //
