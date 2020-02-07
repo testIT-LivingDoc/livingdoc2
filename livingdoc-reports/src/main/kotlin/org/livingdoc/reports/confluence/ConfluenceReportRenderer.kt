@@ -42,12 +42,11 @@ class ConfluenceReportRenderer : ReportRenderer {
         // Extract the content id from the page link
         val contentId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
 
-        val file = Files.createTempDirectory("livingdoc-confluence-reports")
-        val contentFile = file.resolve(confluenceConfig.filename)
-        Files.write(contentFile, html.toByteArray( StandardCharsets.UTF_8))
+        val contentFile = Files.createTempFile(confluenceConfig.filename, null)
+        Files.write(contentFile, html.toByteArray(StandardCharsets.UTF_8))
 
         val comment = if (confluenceConfig.comment.isNotEmpty()) {
-            confluenceConfig.comment + " - " + ZonedDateTime.now().toString()
+            confluenceConfig.comment
         } else {
             "Report from " + ZonedDateTime.now().toString()
         }
@@ -71,11 +70,11 @@ class ConfluenceReportRenderer : ReportRenderer {
             .orElseGet { null }
             ?.id
 
-        //
         if (attachementId == null) {
-            // Add new attachement
+            // Add new attachment
             attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
         } else {
+            // Update existing attachment
             attachment.updateDataCompletionStage(attachementId, atUp)
         }
     }
