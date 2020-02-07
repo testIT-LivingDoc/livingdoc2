@@ -12,7 +12,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
  * Can be used to test if caching works for the rest api without internet.
  * Disabled because it fails if there is no cached file.
  */
-@ExecutableDocument("rest://Testing.html")
+@ExecutableDocument("rest://TestingCache.html")
 @Disabled
 class CalculatorDocumentMdRest {
 

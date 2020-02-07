@@ -33,7 +33,7 @@ class RESTRepository(
     private val log: Logger = LoggerFactory.getLogger(RESTRepository::class.java)
 
     override fun getDocument(documentIdentifier: String): Document {
-        return when (config.cacheConfig.use) {
+        return when (config.cacheConfig.`when`) {
             "always" -> getFromCache(documentIdentifier)
             "noInternet" -> {
                 if (CacheHelper.hasActiveNetwork(config.baseURL)) {
@@ -43,7 +43,7 @@ class RESTRepository(
                 }
             }
             "disabled" -> getFromRequest(documentIdentifier)
-            else -> throw InvalidCacheUseConfigurationException(config.cacheConfig.use)
+            else -> throw InvalidCacheUseConfigurationException(config.cacheConfig.`when`)
         }
     }
 

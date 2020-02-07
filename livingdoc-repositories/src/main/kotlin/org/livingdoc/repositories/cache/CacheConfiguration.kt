@@ -8,5 +8,5 @@ package org.livingdoc.repositories.cache
  */
 class CacheConfiguration(
     var path: String = "build/livingdoc/cache",
-    var use: String = "disabled"
+    var `when`: String = "disabled"
 )

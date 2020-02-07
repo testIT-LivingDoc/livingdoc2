@@ -9,7 +9,7 @@ repositories:
       baseURL: "http://localhost:8080/"
       cacheConfig:
         path: "build/livingdoc/cache/"
-        use: "noInternet"
+        when: "noInternet"
 reports:
   - name: "default"
     format: "html"

@@ -21,9 +21,9 @@ class RestGroup {
         // host has to be the same url as the "baseURL" in the config
         private var host: String = "localhost"
         private var port: Int = 8080
-        private var path: String = "/Testing.html"
+        private var path: String = "/TestingCache.html"
         // filePath is the file to return
-        private var filePath: String = "Testing.html"
+        private var filePath: String = "TestingCache.html"
 
         private var wms: WireMockServer = WireMockServer(port)
 
@@ -56,7 +56,7 @@ class RestGroup {
         }
     }
 
-    @ExecutableDocument("rest://Testing.html")
+    @ExecutableDocument("rest://TestingCache.html")
     class CalculatorDocumentMdRest {
 
         @DecisionTableFixture()
