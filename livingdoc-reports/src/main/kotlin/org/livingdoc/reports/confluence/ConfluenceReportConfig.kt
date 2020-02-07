@@ -9,11 +9,11 @@ package org.livingdoc.reports.confluence
  * @param password The password of the confluence user given by username.
  */
 data class ConfluenceReportConfig(
+    var filename: String = "report.html",
     var baseURL: String = "",
     var path: String = "",
     var username: String = "",
     var password: String = "",
     var comment: String = "",
-    var environment: String = "",
-    var minoredit: Boolean = false
+    var environment: String = ""
 )

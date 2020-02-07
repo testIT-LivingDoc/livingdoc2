@@ -12,10 +12,15 @@ import org.livingdoc.reports.html.HtmlReportRenderer
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
-import java.io.File
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.time.ZonedDateTime
+
+private const val MINOR_VERSION = false
 
 @Format("confluence")
 class ConfluenceReportRenderer : ReportRenderer {
+
     override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
         // Render html report
         val html = HtmlReportRenderer().render(documentResult)
@@ -37,18 +42,41 @@ class ConfluenceReportRenderer : ReportRenderer {
         // Extract the content id from the page link
         val contentId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
 
-        // TODO better file name
-        val contentFile = File.createTempFile("report.html", null)
-        contentFile.writeText(html)
-        contentFile.deleteOnExit()
+        val file = Files.createTempDirectory("livingdoc-confluence-reports")
+        val contentFile = file.resolve(confluenceConfig.filename)
+        Files.write(contentFile, html.toByteArray( StandardCharsets.UTF_8))
+
+        val comment = if (confluenceConfig.comment.isNotEmpty()) {
+            confluenceConfig.comment + " - " + ZonedDateTime.now().toString()
+        } else {
+            "Report from " + ZonedDateTime.now().toString()
+        }
 
         val attachment = RemoteAttachmentServiceImpl(
             authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService()
         )
         val atUp = AttachmentUpload(
-            contentFile, contentFile.name, "text/html",
-            confluenceConfig.comment, confluenceConfig.minoredit
+            contentFile.toFile(), confluenceConfig.filename, "text/html",
+            comment, MINOR_VERSION
         )
-        attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
+
+        // Look for already existing attachment
+        val attachementId = attachment
+            .find()
+            .withContainerId(ContentId.of(contentId))
+            .withFilename(confluenceConfig.filename)
+            .fetchCompletionStage()
+            .toCompletableFuture()
+            .get()
+            .get()
+            ?.id
+
+        //
+        if (attachementId == null) {
+            // Add new attachement
+            attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
+        } else {
+            attachment.updateDataCompletionStage(attachementId, atUp)
+        }
     }
 }
