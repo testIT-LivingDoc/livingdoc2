@@ -29,6 +29,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add the option to leave cells in a DecisionTable empty to only report the result
 - Test titles and descriptions now appear in the generated reports
 - Add caching of documents
+- Added support for html reports as attachments in confluence
 
 === Changed
 
