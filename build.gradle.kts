@@ -26,6 +26,7 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-converters"),
 		project(":livingdoc-engine"),
 		project(":livingdoc-extensions-api"),
+		project(":livingdoc-format-gherkin"),
 		project(":livingdoc-junit-engine"),
 		project(":livingdoc-reports"),
 		project(":livingdoc-repositories"),

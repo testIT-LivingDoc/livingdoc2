@@ -6,8 +6,6 @@ dependencies {
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.vladsch.flexmark:flexmark:${Versions.flexmark}")
 	implementation("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
-	implementation("io.cucumber:gherkin:${Versions.gherkin}")
-	implementation("com.beust:klaxon:${Versions.klaxon}")
 
 	implementation(project(":livingdoc-config"))
 	implementation(project(":livingdoc-extensions-api"))

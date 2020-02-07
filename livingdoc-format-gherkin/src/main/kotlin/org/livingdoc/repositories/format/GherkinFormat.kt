@@ -63,7 +63,3 @@ class GherkinFormat : DocumentFormat {
         })
     }
 }
-
-data class DataTable(
-    val rows: List<List<String>>
-)
