@@ -9,11 +9,10 @@ import kotlinx.coroutines.runBlocking
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
 import org.livingdoc.repositories.cache.CacheHelper
+import org.livingdoc.repositories.cache.InvalidCachePolicyException
 import org.livingdoc.repositories.format.DocumentFormatManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Paths
@@ -33,18 +32,26 @@ class RESTRepository(
     private val log: Logger = LoggerFactory.getLogger(RESTRepository::class.java)
 
     override fun getDocument(documentIdentifier: String): Document {
-        return when (config.cacheConfig.`when`) {
-            "always" -> getFromCache(documentIdentifier)
-            "noInternet" -> {
-                if (CacheHelper.hasActiveNetwork(config.baseURL)) {
-                    getFromRequest(documentIdentifier)
-                } else {
-                    getFromCache(documentIdentifier)
-                }
-            }
-            "disabled" -> getFromRequest(documentIdentifier)
-            else -> throw InvalidCacheUseConfigurationException(config.cacheConfig.`when`)
+        return when (config.cacheConfig.cachePolicy) {
+            CacheHelper.CACHE_ALWAYS -> handleCacheAlways(documentIdentifier)
+            CacheHelper.CACHE_ONCE -> handleCacheOnce(documentIdentifier)
+            CacheHelper.NO_CACHE -> getFromRequest(documentIdentifier)
+            else -> throw InvalidCachePolicyException(config.cacheConfig.cachePolicy)
         }
+    }
+
+    private fun handleCacheAlways(documentIdentifier: String): Document {
+        if (CacheHelper.hasActiveNetwork(config.baseURL)) {
+            return getFromRequest(documentIdentifier)
+        }
+        return getFromCache(documentIdentifier)
+    }
+
+    private fun handleCacheOnce(documentIdentifier: String): Document {
+        if (CacheHelper.isCached(Paths.get(config.cacheConfig.path, documentIdentifier))) {
+            return getFromCache(documentIdentifier)
+        }
+        return getFromRequest(documentIdentifier)
     }
 
     private fun getFromRequest(documentIdentifier: String): Document {
@@ -59,21 +66,8 @@ class RESTRepository(
             }
         }
 
-        // Request has to be cloned to be used twice
-        val baos = ByteArrayOutputStream()
-        val buffer = ByteArray(1024)
-        while (true) {
-            val bytesRead = request.read(buffer)
-            if (bytesRead == -1)
-                break
-            baos.write(buffer, 0, bytesRead)
-        }
-
-        val cacheRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
-        CacheHelper.cacheInputStream(cacheRequest, Paths.get(config.cacheConfig.path, documentIdentifier))
-
-        val documentRequest: InputStream = ByteArrayInputStream(baos.toByteArray())
-        return DocumentFormatManager.getFormat("html").parse(documentRequest)
+        CacheHelper.cacheInputStream(request, Paths.get(config.cacheConfig.path, documentIdentifier))
+        return getFromCache(documentIdentifier)
     }
 
     private fun getFromCache(documentIdentifier: String): Document {
