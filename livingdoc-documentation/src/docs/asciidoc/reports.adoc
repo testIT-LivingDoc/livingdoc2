@@ -8,6 +8,7 @@ Supported Report Formats:
 
 * HTML Report
 * Json Report
+* Confluence Report
 
 Configure the generation of Reports in the `living-doc.yaml` file.
 The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
@@ -63,7 +64,6 @@ config:
     username: "user"
     password: "password"
     comment: "Comment for the attachment"
-    environment: "Name of the confluence environment"
 ----
 
 * filename deafaults to `report.html`
