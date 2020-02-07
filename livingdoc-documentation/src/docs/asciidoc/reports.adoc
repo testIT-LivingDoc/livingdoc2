@@ -49,6 +49,28 @@ The default value is `livingdoc/reports/json`.
 Specify if the JSON Report should be pretty-printed.
 The default value is `true`.
 
+=== Confluence Reports
+
+Confluence reports are HTML reports that are automatically uploaded to the confluence pae of the example after the test execution.
+
+==== Configuration
+
+----
+config:
+    filename: "filename-for-the-report.html"
+    baseURL: "confluence base URL"
+    path: "confluence relative path"
+    username: "user"
+    password: "password"
+    comment: "Comment for the attachment"
+    environment: "Name of the confluence environment"
+----
+
+* filename deafaults to `report.html`
+* path can usually be empty
+* comment defaults to `Report from [ISO-timestamp]`
+* environment can usually be empty
+
 == Create Custom Report Formats
 This documentation is for developer which want to implement own Report Formats.
 
