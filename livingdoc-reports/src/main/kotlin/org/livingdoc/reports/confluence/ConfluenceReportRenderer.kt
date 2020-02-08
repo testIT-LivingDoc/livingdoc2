@@ -25,6 +25,11 @@ class ConfluenceReportRenderer : ReportRenderer {
         val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
         val repositoryName = extractRepositoryName(documentResult)
 
+        // Check for matching repository; only generate report on match
+        if (repositoryName != confluenceConfig.repositoryName) {
+            return
+        }
+
         // Render html report
         val html = HtmlReportRenderer().render(documentResult)
 
@@ -71,7 +76,7 @@ class ConfluenceReportRenderer : ReportRenderer {
         )
 
         // Look for already existing attachment
-        val attachementId = attachment
+        val attachmentId = attachment
             .find()
             .withContainerId(contentId)
             .withFilename(confluenceConfig.filename)
@@ -81,12 +86,12 @@ class ConfluenceReportRenderer : ReportRenderer {
             .orElseGet { null }
             ?.id
 
-        if (attachementId == null) {
+        if (attachmentId == null) {
             // Add new attachment
             attachment.addAttachmentsCompletionStage(contentId, listOf(atUp))
         } else {
             // Update existing attachment
-            attachment.updateDataCompletionStage(attachementId, atUp)
+            attachment.updateDataCompletionStage(attachmentId, atUp)
         }
     }
 
@@ -103,6 +108,6 @@ class ConfluenceReportRenderer : ReportRenderer {
         val testAnnotation = documentResult.documentClass
             .getAnnotation(ExecutableDocument::class.java).value
 
-        return Regex("^*(?<=://)").find(testAnnotation)!!.groupValues[0]
+        return Regex("^.*(?=://)").find(testAnnotation)!!.groupValues[0]
     }
 }
