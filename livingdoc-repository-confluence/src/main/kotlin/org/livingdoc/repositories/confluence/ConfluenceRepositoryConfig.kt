@@ -1,5 +1,7 @@
 package org.livingdoc.repositories.confluence
 
+import org.livingdoc.repositories.cache.CacheConfiguration
+
 /**
  * The configuration object for the Confluence Repository.
  *
@@ -12,5 +14,6 @@ class ConfluenceRepositoryConfig(
     var baseURL: String = "",
     var path: String = "",
     var username: String = "",
-    var password: String = ""
+    var password: String = "",
+    var cacheConfig: CacheConfiguration = CacheConfiguration()
 )

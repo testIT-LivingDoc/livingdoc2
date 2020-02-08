@@ -8,11 +8,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.livingdoc.repositories.cache.CacheConfiguration
+import org.livingdoc.repositories.cache.CacheHelper
 
 internal class ConfluenceRepositoryTest {
     @Test
     fun `exception is thrown if document could not be found`() {
-        val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("", "", "", ""))
+        val cacheConfig = CacheConfiguration("", CacheHelper.NO_CACHE)
+        val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("", "", "", "", cacheConfig))
         assertThrows<ConfluenceDocumentNotFoundException> {
             cut.getDocument("31642164")
         }
