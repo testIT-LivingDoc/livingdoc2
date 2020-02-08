@@ -100,8 +100,8 @@ class ConfluenceRepository(
 
     private fun getContentAndCache(documentIdentifier: String): Document {
         val content = getContent(documentIdentifier)
-        val contentStream = getContentValue(content)
         try {
+            val contentStream = getContentValue(content)
             CacheHelper.cacheInputStream(contentStream, Paths.get(config.cacheConfig.path, documentIdentifier))
         } catch (e: Exception) {
             throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
