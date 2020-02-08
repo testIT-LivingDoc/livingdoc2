@@ -123,6 +123,52 @@ internal class ConfluenceRepositoryTest {
         }
     }
 
+    @Test
+    fun `test cache policy always without internet`(@TempDir tempDir: Path) {
+        val tmpFile = Files.createTempFile(tempDir, "", null)
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    tmpFile.parent.toString(),
+                    CacheHelper.CACHE_ALWAYS
+                )
+            )
+        )
+
+        assertThat(tmpFile).exists()
+
+        assertDoesNotThrow {
+            cut.getDocument(tmpFile.fileName.toString())
+        }
+    }
+
+    @Test
+    fun `test cache policy no cache without internet`() {
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    "",
+                    CacheHelper.NO_CACHE
+                )
+            )
+        )
+
+        val documentIdentifier = "327693"
+        assertThrows<ConfluenceDocumentNotFoundException> {
+            cut.getDocument(documentIdentifier)
+        }
+    }
+
     @Disabled
     @Test
     fun `mocked server testing`() {
