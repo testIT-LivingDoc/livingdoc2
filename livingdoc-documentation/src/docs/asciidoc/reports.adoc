@@ -58,6 +58,7 @@ Confluence reports are HTML reports that are automatically uploaded to the confl
 
 ----
 config:
+    repositoryName: "repo-name"
     filename: "filename-for-the-report.html"
     baseURL: "confluence base URL"
     path: "confluence relative path"
@@ -66,7 +67,8 @@ config:
     comment: "Comment for the attachment"
 ----
 
-* filename deafaults to `report.html`
+* repositoryName sets for which repo the reports should be generated for. Must match the name given in this config
+* filename defaults to `report.html`
 * path can usually be empty
 * comment defaults to `Report from [ISO-timestamp]`
 
