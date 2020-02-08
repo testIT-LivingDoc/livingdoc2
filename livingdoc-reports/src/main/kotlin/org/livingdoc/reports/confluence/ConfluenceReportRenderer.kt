@@ -22,11 +22,27 @@ private const val MINOR_VERSION = false
 class ConfluenceReportRenderer : ReportRenderer {
 
     override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
+        val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
+        val repositoryName = extractRepositoryName(documentResult)
+
         // Render html report
         val html = HtmlReportRenderer().render(documentResult)
 
         // Upload report to confluence
-        val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
+
+        val contentId = extractContentId(documentResult)
+
+        uploadReport(html, contentId, confluenceConfig)
+    }
+
+    /**
+     * Uploads a report to a conflucne page as an attachment
+     *
+     * @param report The report text to upload
+     * @param contentId The [ContentId] of the page to attach the report to
+     * @param confluenceConfig A [ConfluenceReportConfig] containing further settings for the upload
+     */
+    fun uploadReport(report: String, contentId: ContentId, confluenceConfig: ConfluenceReportConfig) {
 
         val authenticatedWebResourceProvider = AuthenticatedWebResourceProvider(
             RestClientFactory.newClient(),
@@ -37,13 +53,8 @@ class ConfluenceReportRenderer : ReportRenderer {
             confluenceConfig.username, confluenceConfig.password.toCharArray()
         )
 
-        val testAnnotation = documentResult.documentClass
-            .getAnnotation(ExecutableDocument::class.java).value
-        // Extract the content id from the page link
-        val contentId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
-
         val contentFile = Files.createTempFile(confluenceConfig.filename, null)
-        Files.write(contentFile, html.toByteArray(StandardCharsets.UTF_8))
+        Files.write(contentFile, report.toByteArray(StandardCharsets.UTF_8))
 
         val comment = if (confluenceConfig.comment.isNotEmpty()) {
             confluenceConfig.comment
@@ -62,7 +73,7 @@ class ConfluenceReportRenderer : ReportRenderer {
         // Look for already existing attachment
         val attachementId = attachment
             .find()
-            .withContainerId(ContentId.of(contentId))
+            .withContainerId(contentId)
             .withFilename(confluenceConfig.filename)
             .fetchCompletionStage()
             .toCompletableFuture()
@@ -72,10 +83,26 @@ class ConfluenceReportRenderer : ReportRenderer {
 
         if (attachementId == null) {
             // Add new attachment
-            attachment.addAttachmentsCompletionStage(ContentId.of(contentId), listOf(atUp))
+            attachment.addAttachmentsCompletionStage(contentId, listOf(atUp))
         } else {
             // Update existing attachment
             attachment.updateDataCompletionStage(attachementId, atUp)
         }
+    }
+
+    private fun extractContentId(documentResult: DocumentResult): ContentId {
+        val testAnnotation = documentResult.documentClass
+            .getAnnotation(ExecutableDocument::class.java).value
+        // Extract the content id from the page link
+        val numId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
+
+        return ContentId.of(numId)
+    }
+
+    private fun extractRepositoryName(documentResult: DocumentResult): String {
+        val testAnnotation = documentResult.documentClass
+            .getAnnotation(ExecutableDocument::class.java).value
+
+        return Regex("^*(?<=://)").find(testAnnotation)!!.groupValues[0]
     }
 }
