@@ -61,7 +61,11 @@ class RESTRepository(
 
     private fun getFromRequestAndCache(documentIdentifier: String): Document {
         val request = getRequest(documentIdentifier)
-        CacheHelper.cacheInputStream(request, Paths.get(config.cacheConfig.path, documentIdentifier))
+        try {
+            CacheHelper.cacheInputStream(request, Paths.get(config.cacheConfig.path, documentIdentifier))
+        } catch (e: Exception) {
+            throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        }
         return getFromCache(documentIdentifier)
     }
 
@@ -80,8 +84,11 @@ class RESTRepository(
 
     private fun getFromCache(documentIdentifier: String): Document {
         log.debug("Get Document from cache {}", documentIdentifier)
-
-        val documentStream = CacheHelper.getCacheInputStream(Paths.get(config.cacheConfig.path, documentIdentifier))
-        return DocumentFormatManager.getFormat("html").parse(documentStream)
+        try {
+            val documentStream = CacheHelper.getCacheInputStream(Paths.get(config.cacheConfig.path, documentIdentifier))
+            return DocumentFormatManager.getFormat("html").parse(documentStream)
+        } catch (e: Exception) {
+            throw RESTDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        }
     }
 }

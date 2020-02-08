@@ -26,6 +26,8 @@ object CacheHelper {
     /**
      * Caches the given input stream to a file under the given path.
      * The input stream is closed.
+     *
+     * @throws java.io.IOException
      */
     fun cacheInputStream(inputStream: InputStream, path: Path) {
         Files.createDirectories(path.parent)
@@ -34,6 +36,8 @@ object CacheHelper {
 
     /**
      * Gets the cached object from the path and returns the input stream.
+     *
+     * @throws java.io.IOException
      */
     fun getCacheInputStream(path: Path): InputStream {
         return Files.newInputStream(path)
