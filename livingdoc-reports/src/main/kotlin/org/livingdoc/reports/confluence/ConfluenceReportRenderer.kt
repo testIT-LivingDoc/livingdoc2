@@ -12,6 +12,7 @@ import org.livingdoc.reports.html.HtmlReportRenderer
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
+import java.lang.IllegalArgumentException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.time.ZonedDateTime
@@ -95,19 +96,27 @@ class ConfluenceReportRenderer : ReportRenderer {
         }
     }
 
-    private fun extractContentId(documentResult: DocumentResult): ContentId {
-        val testAnnotation = documentResult.documentClass
-            .getAnnotation(ExecutableDocument::class.java).value
-        // Extract the content id from the page link
-        val numId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
+    internal fun extractContentId(documentResult: DocumentResult): ContentId {
+        try {
+            val testAnnotation = documentResult.documentClass
+                .getAnnotation(ExecutableDocument::class.java).value
+            // Extract the content id from the page link
+            val numId = Regex("(?<=://)[0-9]+").find(testAnnotation)!!.groupValues[0].toLong()
 
-        return ContentId.of(numId)
+            return ContentId.of(numId)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("No content id could be extracted form the given document")
+        }
     }
 
-    private fun extractRepositoryName(documentResult: DocumentResult): String {
-        val testAnnotation = documentResult.documentClass
-            .getAnnotation(ExecutableDocument::class.java).value
+    internal fun extractRepositoryName(documentResult: DocumentResult): String {
+        try {
+            val testAnnotation = documentResult.documentClass
+                .getAnnotation(ExecutableDocument::class.java).value
 
-        return Regex("^.*(?=://)").find(testAnnotation)!!.groupValues[0]
+            return Regex("^.*(?=://)").find(testAnnotation)!!.groupValues[0]
+        } catch (e: Exception) {
+            throw IllegalArgumentException("No repository name could be extracted form the given document")
+        }
     }
 }
