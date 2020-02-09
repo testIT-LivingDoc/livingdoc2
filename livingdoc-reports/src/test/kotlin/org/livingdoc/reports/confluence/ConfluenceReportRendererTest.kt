@@ -55,9 +55,9 @@ internal class ConfluenceReportRendererTest {
 }
 
 @ExecutableDocument("confluence-test://12345")
-class TestDocument1 {}
+class TestDocument1
 
 @ExecutableDocument("invalid")
-class TestDocument2 {}
+class TestDocument2
 
-class TestDocument3 {}
+class TestDocument3
