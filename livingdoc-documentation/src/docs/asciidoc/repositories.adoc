@@ -121,7 +121,7 @@ If the repository supports caching, you can add these parameters to the configur
 Make sure to check out the respective repository-documentation because every repository might tweak these parameters a little.
 
 .cacheConfig
-All configuration-parameters for caching are nested under the `cacheConfig` paramter.
+All configuration-parameters for caching are nested under the `cacheConfig` parameter.
 
 .cacheConfig/path
 The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
