@@ -13,7 +13,8 @@ Supported Report Formats:
 Configure the generation of Reports in the `living-doc.yaml` file.
 The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
 This file should be placed in the `src/test/resources` directory.
-[source, yaml]
+
+[source,yaml]
 ----
 reports:
   - name: "default-html"
@@ -21,6 +22,7 @@ reports:
     config:
       outputDir: "livingdoc/reports/html"
 ----
+
 `reports` is a list of different reports.
 Each report have a `name` as unique identifier.
 Each report also specifies the `format` of the generated Report.
@@ -32,9 +34,11 @@ If this property is not specified all reports that are configured are generated.
 For more information about the configuration see link:configuration.adoc[Configuration].
 
 === HTML Reports
+
 The HTML Report format is similar to the HTML Document format, with additional coloring to represent the Status of the execution.
 
 ==== Configuration
+
 .outputDir
 The directory where the HTML Reports are save.
 The default value is `livingdoc/reports/html`.
@@ -42,6 +46,7 @@ The default value is `livingdoc/reports/html`.
 === Json Reports
 
 ==== Configuration
+
 .outputDir
 The directory where the JSON Reports are save.
 The default value is `livingdoc/reports/json`.
@@ -56,23 +61,33 @@ Confluence reports are HTML reports that are automatically uploaded to the confl
 
 ==== Configuration
 
-----
-config:
-    repositoryName: "repo-name"
-    filename: "filename-for-the-report.html"
-    baseURL: "confluence base URL"
-    path: "confluence relative path"
-    username: "user"
-    password: "password"
-    comment: "Comment for the attachment"
-----
+.repositoryName
+Sets for which repo the reports should be generated for.
+Must match the name given in this config
 
-* repositoryName sets for which repo the reports should be generated for. Must match the name given in this config
-* filename defaults to `report.html`
-* path can usually be empty
-* comment defaults to `Report from [ISO-timestamp]`
+.filename
+The filename of the attachment in confluence.
+Defaults to `report.html`
+
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`.
+Can usually be left empty.
+
+.username
+The username of a confluence user with writing access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
+
+.comment
+Is added to the attachment upload as a comment.
+An empty comment defaults to `Report from [ISO-timestamp]`
 
 == Create Custom Report Formats
+
 This documentation is for developer which want to implement own Report Formats.
 
 To create a new Report Format, you must create a `ReportRenderer` that contains the logic for generating the reports.
@@ -85,6 +100,7 @@ The `render` method must not only generate the Reports but also store the Report
 A ReportRenderer must be annotated with `@Format` and the unique Format identifier must be passed as argument of the Annotation.
 In order to be discovered the Java SPI configuration file `META-INF/services/org.livingdoc.reports.spi.ReportRenderer` must be created.
 The content of the file is the fully qualified class name of your ReportRenderer implementation as:
+
 [source]
 ----
 org.livingdoc.reports.html.HtmlReportRenderer
