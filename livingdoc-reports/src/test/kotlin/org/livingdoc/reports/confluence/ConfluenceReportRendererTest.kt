@@ -1,9 +1,8 @@
 package org.livingdoc.reports.confluence
 
 import com.atlassian.confluence.api.model.content.id.ContentId
-import org.junit.jupiter.api.Test
-
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.results.Status
