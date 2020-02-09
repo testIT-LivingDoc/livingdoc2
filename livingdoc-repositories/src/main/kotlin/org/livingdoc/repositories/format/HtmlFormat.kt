@@ -1,8 +1,5 @@
 package org.livingdoc.repositories.format
 
-import io.cucumber.gherkin.GherkinDocumentBuilder
-import io.cucumber.gherkin.Parser
-import io.cucumber.messages.IdGenerator
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -16,6 +13,7 @@ import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.charset.Charset
 
@@ -80,40 +78,6 @@ class HtmlFormat : DocumentFormat {
         return testDataList
     }
 
-    private val id = IdGenerator.Incrementing()
-    /**
-     *
-     */
-    private fun createGherkin(gherkinInput: String): List<Scenario> {
-        val gherkin = Parser(GherkinDocumentBuilder(id)).parse(gherkinInput.reader())
-
-        // ware besser den gherkinparser an dieser Stelle wiederzuverwenden
-
-        println(gherkin)
-        val gherkinResult =
-            with(gherkin.feature) {
-                childrenList.mapNotNull {
-                    when (it.valueCase) {
-                        io.cucumber.messages.Messages.GherkinDocument.Feature.FeatureChild.ValueCase.SCENARIO ->
-                            it.scenario
-                        else -> null
-                    }
-                }.map { scenario ->
-                    val steps = scenario.stepsList.map { step ->
-                        Step(step.text)
-                    }
-                    Scenario(
-                        steps, TestDataDescription(
-                            scenario.name, false,
-                            scenario.description.trim()
-                        )
-                    )
-                }
-            }
-
-        return gherkinResult
-    }
-
     private fun parseTestData(element: Element, context: ParseContext): List<TestData> {
         return when (element.tagName()) {
             "table" -> {
@@ -123,14 +87,55 @@ class HtmlFormat : DocumentFormat {
                 parseRecursive(element, context) + parseList(element, context)
             }
 
-            "gherkin" -> {
-                createGherkin(element.text())
+            "pre" -> {
+                parseRecursive(element, context) + parseGherkin(element, context)
             }
 
             else -> {
                 parseRecursive(element, context)
             }
         }
+    }
+
+    private fun parseGherkin(element: Element, context: ParseContext): List<Scenario> {
+        val gherkinlist = mutableListOf<Scenario>()
+        if (element.children().isNotEmpty()) {
+
+            element.children().forEach {
+                if (it.tagName().equals("gherkin")) {
+                    gherkinlist.addAll(createGherkin(it.text(), context))
+                }
+            }
+        }
+        return gherkinlist
+    }
+
+    /**
+     *
+     */
+    private fun createGherkin(gherkinInput: String, context: ParseContext): List<Scenario> {
+
+        // pass to gherkin parser
+        val ghf = GherkinFormat()
+        val outdoc = ghf.parse(ByteArrayInputStream(gherkinInput.toByteArray(Charsets.UTF_8)))
+
+        // temporary output
+        // println(outdoc.elements)
+        val outscenario = mutableListOf<Scenario>()
+
+        // TODO refactor after discussion
+        outdoc.elements.forEach {
+            val name = it.description.name
+            if (it is Scenario) {
+                outscenario.add(
+                    Scenario(
+                        it.steps,
+                        TestDataDescription(name, context.isManual(), context.descriptiveText.trim())
+                    )
+                )
+            }
+        }
+        return outscenario
     }
 
     /**

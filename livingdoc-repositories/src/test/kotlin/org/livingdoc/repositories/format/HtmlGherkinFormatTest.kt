@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.emptyHtml
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getDescriptiveHtml
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkin2
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkinTableWithOnlyOneRow
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.htmlGherkinGiven
@@ -42,6 +43,12 @@ class HtmlGherkinFormatTest {
     fun `Then is detected`() {
         val result = cut.parse(htmlGherkinThen())
         assertThat(result.elements).hasSize(1)
+    }
+
+    @Test
+    fun `descriptive text is detected`() {
+        val result = cut.parse(getDescriptiveHtml())
+        assertThat(result.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
     }
 
     @Test
