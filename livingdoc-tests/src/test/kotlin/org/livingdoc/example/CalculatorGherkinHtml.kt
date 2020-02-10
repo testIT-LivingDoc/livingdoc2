@@ -7,7 +7,7 @@ import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 
 @ExecutableDocument("local://CalculatorGherkin.html")
-class CalculatorGherkinHTML {
+class CalculatorGherkinHtml {
     @ScenarioFixture
     class CalculatorScenario {
         private var lastResult: Float? = null
@@ -36,6 +36,37 @@ class CalculatorGherkinHTML {
         @Step("result is greater than {result}")
         fun `check last result greater than`(@Binding("result") result: Float) {
             assertThat(lastResult).isGreaterThan(result)
+        }
+    }
+    @ScenarioFixture
+    class CoffeMachineScenario {
+        private lateinit var cm: CoffeeMachine
+
+        @Step("there are {n} coffees left in the machine")
+        fun `left coffees`(@Binding("n") n: Int) {
+            cm = CoffeeMachine()
+            cm.setLeftCoffees(n)
+        }
+
+        @Step("I have deposited {n} dollar")
+        fun `deposited money`(@Binding("n") n: Float) {
+            cm.depositMoney(n)
+        }
+
+        @Step("I press the coffee button")
+        fun `press button`() {
+            cm.triggered = true
+        }
+
+        @Step("I should {not} be served a coffee")
+        fun `expected output`(
+            @Binding("not") not: String?
+        ) {
+            if (not.isNullOrBlank()) {
+                assertThat(cm.getCoffee()).isTrue()
+            } else {
+                assertThat(cm.getCoffee()).isFalse()
+            }
         }
     }
 }
