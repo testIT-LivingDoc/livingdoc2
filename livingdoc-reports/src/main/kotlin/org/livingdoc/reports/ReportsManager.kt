@@ -9,10 +9,18 @@ import org.livingdoc.results.documents.DocumentResult
 import java.util.*
 import kotlin.reflect.full.findAnnotation
 
+/**
+ *  Manages the generation of reports from [DocumentResults][DocumentResult]
+ */
 class ReportsManager(
     private val config: ReportsConfig,
     private val serviceLoader: ServiceLoader<ReportRenderer>
 ) {
+    /**
+     * Generate the reports for all given document results
+     *
+     * @param results A list of [DocumentResults][DocumentResult] for which reports should be generated
+     */
     fun generateReports(results: List<DocumentResult>) {
         val reports = getActivatedReports()
         for (report in reports) {
