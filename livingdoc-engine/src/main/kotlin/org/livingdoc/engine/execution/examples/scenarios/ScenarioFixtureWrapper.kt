@@ -37,29 +37,30 @@ class ScenarioFixtureWrapper(
         val scenarioResultBuilder =
             ScenarioResult.Builder().withScenario(testData).withFixtureSource(fixtureClass)
 
-        if (LivingDoc.failFastActivated) {
-            return scenarioResultBuilder.withStatus(
-                Status.Skipped
-            ).build()
+        when {
+            LivingDoc.failFastActivated -> {
+                scenarioResultBuilder.withStatus(Status.Skipped)
+            }
+            fixtureClass.isAnnotationPresent(Disabled::class.java) -> {
+                scenarioResultBuilder.withStatus(
+                    Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value)
+                )
+            }
+            else -> {
+                try {
+                    assertFixtureIsDefinedCorrectly()
+                    executeScenario(testData).forEach { scenarioResultBuilder.withStep(it) }
+                    scenarioResultBuilder.withStatus(Status.Executed)
+                } catch (e: Exception) {
+                    scenarioResultBuilder.withStatus(Status.Exception(e))
+                        .withUnassignedSkipped()
+                } catch (e: AssertionError) {
+                    scenarioResultBuilder.withStatus(Status.Exception(e))
+                        .withUnassignedSkipped()
+                }
+            }
         }
 
-        if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            return scenarioResultBuilder
-                .withStatus(Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value))
-                .build()
-        }
-
-        try {
-            assertFixtureIsDefinedCorrectly()
-            executeScenario(testData).forEach { scenarioResultBuilder.withStep(it) }
-            scenarioResultBuilder.withStatus(Status.Executed)
-        } catch (e: Exception) {
-            scenarioResultBuilder.withStatus(Status.Exception(e))
-                .withUnassignedSkipped()
-        } catch (e: AssertionError) {
-            scenarioResultBuilder.withStatus(Status.Exception(e))
-                .withUnassignedSkipped()
-        }
         return scenarioResultBuilder.build()
     }
 
