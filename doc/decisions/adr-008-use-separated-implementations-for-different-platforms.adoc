@@ -1,0 +1,42 @@
+= ADR 8: Use separated implementations for different platforms
+
+== Context
+
+LivingDoc should be usable on many platforms including JVM and JS.
+The platforms use very different technics to write tests and provide meta information in the code.
+There is no abstraction, that support all platforms and have all features needed by LivingDoc.
+
+Because LivingDoc is a framework is tries integrate into the existing tooling and code styles.
+This result in a strong coupling to the platform and code structure.
+It is not possible to decouple the business logic of LivingDoc from low level access to platform specific api, because the low level access is the business logic LivingDoc.
+
+Because of this no effort should be done to introduce an abstraction layer in the LivingDoc engine itself.
+Instead the engine implementation is completely platform specific.
+Only APIs and components called from the engine can be made reusable.
+
+=== Alternatives
+
+Hexagonal architecture splits the application in the pure business logic and the adapters.
+All dependencies and references go towards the business logic.
+The adapter implement interfaces defined and used by the business logic.
+This architecture requires context dependency injection.
+LivingDoc business logic is hard to separate and very platform dependent, so the biggest parts of the implementation are the adapters and the cdi handling.
+
+== Decision
+
+The implementations of livingdoc will be separated for all platforms.
+The reusability is established in an library like fashion.
+The platform specific code can call reusable platform independent code.
+Fixtures and Extensions api are platform specific, but there is also a platform independent Extensions api, that must be supported by all platforms.
+
+== Status
+
+Accepted.
+
+
+== Consequences
+
+* Less boilerplate code due to the platform abstraction
+* Less mapping between abstraction layers
+* Each platform can be implemented in the best fitting style
+* Cross platform extensions are supported

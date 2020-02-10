@@ -20,11 +20,11 @@ interface Extension {
         // optional
     }
 
-    fun onBeforeFixture(context: FixtureContext<*>) {
+    fun onBeforeFixture(context: FixtureContext) {
         // optional
     }
 
-    fun onAfterFixture(context: FixtureContext<*>) {
+    fun onAfterFixture(context: FixtureContext) {
         // optional
     }
 
@@ -35,6 +35,4 @@ interface Extension {
     fun onAfterGroup(context: GroupContext) {
         // optional
     }
-
-
 }

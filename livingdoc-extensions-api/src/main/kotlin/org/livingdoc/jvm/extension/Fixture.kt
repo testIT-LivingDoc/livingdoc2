@@ -1,6 +1,5 @@
-package org.livingdoc.engine
+package org.livingdoc.jvm.extension
 
-import org.livingdoc.jvm.extension.FixtureContext
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.results.TestDataResult
 
@@ -12,8 +11,8 @@ interface Fixture<T : TestData> {
     /**
      * Executes the fixture class with the give context
      *
-     * @param context The context with all information for an execution of tests
+     * @param testData The TestData which is the input for this test execution
      * @return A TestDataResult for the execution
      */
-    fun execute(context: FixtureContext<T>): TestDataResult<T>
+    fun execute(testData: T): TestDataResult<T>
 }

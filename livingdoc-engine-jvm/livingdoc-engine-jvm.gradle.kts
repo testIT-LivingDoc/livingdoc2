@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+	implementation(kotlin("reflect"))
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-converters"))
@@ -22,4 +23,8 @@ jmh {
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 1
 	timeUnit = "ms"
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+	kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.ExperimentalStdlibApi"
 }

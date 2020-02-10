@@ -14,3 +14,7 @@ dependencies {
 
 	api("org.junit.platform:junit-platform-engine:${Versions.junitPlatform}")
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+	kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.ExperimentalStdlibApi"
+}
