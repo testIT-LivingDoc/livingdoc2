@@ -8,8 +8,9 @@ import org.livingdoc.results.documents.DocumentResult
  */
 interface ReportRenderer {
     /**
-     * Renders the report with the specified [Format], [config] and [documentResult]. This function must also store the
-     * generated reports in the report specific location which can be configured with the [config] parameter.
+     * Renders the reports for all [documentResults][DocumentResult] with the specified [config]. This function must
+     * also store the generated reports in the report specific location which can be configured with the [config]
+     * parameter.
      */
-    fun render(documentResult: DocumentResult, config: Map<String, Any>)
+    fun render(documentResults: List<DocumentResult>, config: Map<String, Any>)
 }

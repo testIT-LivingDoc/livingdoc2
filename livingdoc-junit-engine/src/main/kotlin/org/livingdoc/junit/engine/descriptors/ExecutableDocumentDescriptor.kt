@@ -10,7 +10,6 @@ import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip
 import org.livingdoc.junit.engine.LivingDocContext
-import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
@@ -29,9 +28,6 @@ class ExecutableDocumentDescriptor(
     override fun mayRegisterTests() = true
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: DynamicTestExecutor): LivingDocContext {
-        val reportsManager = ReportsManager.from(context.livingDoc.configProvider)
-        reportsManager.generateReports(result)
-
         result.results.mapIndexed<TestDataResult<TestData>, TestDescriptor> { index, exampleResult ->
             when (exampleResult) {
                 is DecisionTableResult -> DecisionTableTestDescriptor.from(uniqueId, index, exampleResult)

@@ -15,13 +15,16 @@ class HtmlReportRenderer : ReportRenderer {
 
     private val renderContext = HtmlRenderContext()
 
-    override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
+    override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
-        val html = render(documentResult)
-        ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(
-            html,
-            "${documentResult.documentClass.name}-${UUID.randomUUID()}"
-        )
+
+        documentResults.forEach { documentResult ->
+            val html = render(documentResult)
+            ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(
+                html,
+                "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+            )
+        }
     }
 
     /**
