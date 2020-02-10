@@ -2,6 +2,7 @@ package org.livingdoc.example
 
 import org.assertj.core.api.Assertions.assertThat
 import org.livingdoc.api.Before
+import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.FailFast
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
@@ -17,6 +18,7 @@ import org.livingdoc.api.fixtures.scenarios.Step
  *
  * @see ExecutableDocument
  */
+@Disabled
 @FailFast(onExceptionTypes = [IllegalArgumentException::class])
 @ExecutableDocument("local://DividerFailFast.md")
 class DividerDocumentMdParallelFailFast {
