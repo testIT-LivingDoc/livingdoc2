@@ -27,8 +27,6 @@ class ReportsManager(
             val renderer = getReportRenderer(report.format)
             renderer.render(results, report.config)
         }
-        //  Avoids problems in case reports are generated multiple times (i.e. multiple testing framworks)
-        serviceLoader.reload()
     }
 
     private fun getActivatedReports(): List<ReportDefinition> {
