@@ -37,16 +37,7 @@ The baseURL of the endpoint to get the documents from. Has to have the format `p
 
 .cacheConfig
 The REST Repository supports caching of Documents. This might be helpful if you do not have internet at some later time.
-
-.cacheConfig/path
-The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
-
-.cacheConfig/cachePolicy
-The different cache policy options specify when to cache. The available options are:
-
-* `cacheAlways` = Always gets the Documents from the endpoint and caches the retrieved Documents, i.e. keeps the cache up to date. This is the default value.
-* `noCache` = Never caches. If you do not have internet, you cannot retrieve Documents.
-* `cacheOnce` = Caches once and then uses this cache every time the tests are executed. If you do not have internet when there is no cache yet, an exception is thrown.
+For information about caching, check out section <<caching>>
 
 The configuration can look similar to this:
 
@@ -82,6 +73,10 @@ The username of a confluence user with access to the Executable Documents.
 .password
 The password of the confluence user given by username.
 
+.cacheConfig
+The ConfluenceRepository supports caching of Documents.
+For information about caching, check out section <<caching>>
+
 The `livingdoc.yml` could look like this:
 
 .livingdoc.yml
@@ -95,6 +90,9 @@ repositories:
       path: "/"
       username: "livingdoc"
       password: "very good password"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
 ----
 
 ==== Special Features
@@ -110,3 +108,42 @@ For example, `@ExecutableDocument("confluence://123456789@3")` gets the page wit
 It is possible to delete a version from the Confluence page.
 By default, Confluence not only deletes the specific version, but also reduces each page version by one.
 Therefore, it is possible for your defined tests to point to the next version of the page.
+
+[#caching]
+=== Caching of Documents
+
+Some types of repositories support caching of documents.
+This is helpful if you want to continue testing but do not have internet or want to save your mobile data.
+
+==== Configuration for caching
+
+If the repository supports caching, you can add these parameters to the configuration to configure caching.
+Make sure to check out the respective repository-documentation because every repository might tweak these parameters a little.
+
+.cacheConfig
+All configuration-parameters for caching are nested under the `cacheConfig` parameter.
+
+.cacheConfig/path
+The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
+
+.cacheConfig/cachePolicy
+The different cache policy options specify when to cache. The available options are:
+
+* `cacheAlways` = Always gets the Documents from the endpoint and caches the retrieved Documents, i.e. keeps the cache up to date. This is the default value.
+* `noCache` = Never caches. If you do not have internet, you cannot retrieve Documents.
+* `cacheOnce` = Caches once and then uses this cache every time the tests are executed. If you do not have internet when there is no cache yet, an exception is thrown.
+
+The configuration for a repository with caching will look similar to this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "some-repository-name"
+    factory: "org.livingdoc.repositories.somerepository.SomeRepositoryFactory"
+    config:
+      someRepositoryParameter: "someRepositoryValue"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----

@@ -12,8 +12,13 @@ import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResou
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.DocumentRepository
+import org.livingdoc.repositories.cache.CacheHelper
+import org.livingdoc.repositories.cache.InvalidCachePolicyException
 import org.livingdoc.repositories.format.HtmlFormat
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
 import java.util.concurrent.ExecutionException
 
 /**
@@ -48,29 +53,32 @@ class ConfluenceRepository(
      * @param documentIdentifier the DocumentID of the confluence page
      */
     override fun getDocument(documentIdentifier: String): Document {
-        val content =
-            try {
-                val page = client.find(
-                    Expansion(
-                        Content.Expansions.BODY,
-                        Expansions(Expansion("storage", Expansions(Expansion("content"))))
-                    )
-                )
+        return when (config.cacheConfig.cachePolicy) {
+            CacheHelper.CACHE_ALWAYS -> handleCacheAlways(documentIdentifier)
+            CacheHelper.CACHE_ONCE -> handleCacheOnce(documentIdentifier)
+            CacheHelper.NO_CACHE -> handleNoCache(documentIdentifier)
+            else -> throw InvalidCachePolicyException(config.cacheConfig.cachePolicy)
+        }
+    }
 
-                val contentFetcher = if (documentIdentifier.contains(visioningSeparator)) {
-                    val docParams = getDocumentIdAndVersion(documentIdentifier)
-                    page.withIdAndVersion(ContentId.valueOf(docParams.documentId), docParams.documentVersion)
-                } else {
-                    page.withId(ContentId.valueOf(documentIdentifier))
-                }
+    private fun handleCacheAlways(documentIdentifier: String): Document {
+        if (CacheHelper.hasActiveNetwork(config.baseURL)) {
+            return getContentAndCache(documentIdentifier)
+        }
+        return getFromCache(documentIdentifier)
+    }
 
-                contentFetcher.fetchCompletionStage()
-                    .toCompletableFuture().get()
-                    .orElseThrow { ConfluenceDocumentNotFoundException(documentIdentifier, config.baseURL) }
-            } catch (e: ExecutionException) {
-                throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
-            }
-        return parse(content)
+    private fun handleCacheOnce(documentIdentifier: String): Document {
+        if (CacheHelper.isCached(Paths.get(config.cacheConfig.path, documentIdentifier))) {
+            return getFromCache(documentIdentifier)
+        }
+        return getContentAndCache(documentIdentifier)
+    }
+
+    private fun handleNoCache(documentIdentifier: String): Document {
+        val content = getContent(documentIdentifier)
+        val contentValue = getContentValue(content)
+        return parseContentValue(contentValue)
     }
 
     /**
@@ -90,15 +98,62 @@ class ConfluenceRepository(
         return ConfluenceIdentifier(docId, docVersion)
     }
 
-    /**
-     * Parse the [content] returned by the confluence client library into a Document of LivingDoc
-     */
-    private fun parse(content: Content): Document {
+    private fun getContentAndCache(documentIdentifier: String): Document {
+        val content = getContent(documentIdentifier)
+        try {
+            val contentStream = getContentValue(content)
+            CacheHelper.cacheInputStream(contentStream, Paths.get(config.cacheConfig.path, documentIdentifier))
+        } catch (e: Exception) {
+            throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        }
+        return getFromCache(documentIdentifier)
+    }
+
+    private fun getContent(documentIdentifier: String): Content {
+        return try {
+            val page = client.find(
+                Expansion(
+                    Content.Expansions.BODY,
+                    Expansions(Expansion("storage", Expansions(Expansion("content"))))
+                )
+            )
+
+            val contentFetcher = if (documentIdentifier.contains(visioningSeparator)) {
+                val docParams = getDocumentIdAndVersion(documentIdentifier)
+                page.withIdAndVersion(ContentId.valueOf(docParams.documentId), docParams.documentVersion)
+            } else {
+                page.withId(ContentId.valueOf(documentIdentifier))
+            }
+
+            contentFetcher.fetchCompletionStage()
+                .toCompletableFuture().get()
+                .orElseThrow { ConfluenceDocumentNotFoundException(documentIdentifier, config.baseURL) }
+        } catch (e: ExecutionException) {
+            throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        }
+    }
+
+    private fun getContentValue(content: Content): ByteArrayInputStream {
         val body = content.body[ContentRepresentation.STORAGE]
             ?: throw IllegalArgumentException("Content must contain the storage representation")
         val value = body.value
+        return value.byteInputStream(StandardCharsets.UTF_8)
+    }
 
-        val htmlFormat = HtmlFormat()
-        return htmlFormat.parse(value.byteInputStream(StandardCharsets.UTF_8))
+    private fun getFromCache(documentIdentifier: String): Document {
+        try {
+            val cacheInputStream =
+                CacheHelper.getCacheInputStream(Paths.get(config.cacheConfig.path, documentIdentifier))
+            return parseContentValue(cacheInputStream)
+        } catch (e: Exception) {
+            throw ConfluenceDocumentNotFoundException(e, documentIdentifier, config.baseURL)
+        }
+    }
+
+    /**
+     * Parses the [contentValue] returned by the confluence client library into a Document of LivingDoc
+     */
+    private fun parseContentValue(contentValue: InputStream): Document {
+        return HtmlFormat().parse(contentValue)
     }
 }

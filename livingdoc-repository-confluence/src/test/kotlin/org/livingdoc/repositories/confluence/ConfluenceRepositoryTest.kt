@@ -7,12 +7,20 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
+import org.livingdoc.repositories.cache.CacheConfiguration
+import org.livingdoc.repositories.cache.CacheHelper
+import org.livingdoc.repositories.cache.InvalidCachePolicyException
+import java.nio.file.Files
+import java.nio.file.Path
 
 internal class ConfluenceRepositoryTest {
     @Test
     fun `exception is thrown if document could not be found`() {
-        val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("", "", "", ""))
+        val cacheConfig = CacheConfiguration("", CacheHelper.NO_CACHE)
+        val cut = ConfluenceRepository("test", ConfluenceRepositoryConfig("", "", "", "", cacheConfig))
         assertThrows<ConfluenceDocumentNotFoundException> {
             cut.getDocument("31642164")
         }
@@ -44,6 +52,120 @@ internal class ConfluenceRepositoryTest {
         val documentIdentifierNoVersions = "327693"
         assertThrows<ConfluenceDocumentNotFoundException> {
             cut.getDocumentIdAndVersion(documentIdentifierNoVersions)
+        }
+    }
+
+    @Test
+    fun `test parsing document from cache`(@TempDir tempDir: Path) {
+        val tmpFile = Files.createTempFile(tempDir, "", null)
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    tmpFile.parent.toString(),
+                    CacheHelper.CACHE_ONCE
+                )
+            )
+        )
+
+        assertThat(tmpFile).exists()
+
+        assertDoesNotThrow {
+            cut.getDocument(tmpFile.fileName.toString())
+        }
+    }
+
+    @Test
+    fun `test thrown exception when getting non existent document from cache`() {
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    "",
+                    CacheHelper.CACHE_ALWAYS
+                )
+            )
+        )
+
+        val documentIdentifierNonExistent = "273933"
+        assertThrows<ConfluenceDocumentNotFoundException> {
+            cut.getDocument(documentIdentifierNonExistent)
+        }
+    }
+
+    @Test
+    fun `test thrown exception for invalid cache policy value`() {
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    "",
+                    "invalidCachePolicy"
+                )
+            )
+        )
+
+        val documentIdentifier = "273933"
+        assertThrows<InvalidCachePolicyException> {
+            cut.getDocument(documentIdentifier)
+        }
+    }
+
+    @Test
+    fun `test cache policy always without internet`(@TempDir tempDir: Path) {
+        val tmpFile = Files.createTempFile(tempDir, "", null)
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    tmpFile.parent.toString(),
+                    CacheHelper.CACHE_ALWAYS
+                )
+            )
+        )
+
+        assertThat(tmpFile).exists()
+
+        assertDoesNotThrow {
+            cut.getDocument(tmpFile.fileName.toString())
+        }
+    }
+
+    @Test
+    fun `test cache policy no cache without internet`() {
+        val cut = ConfluenceRepository(
+            "test",
+            ConfluenceRepositoryConfig(
+                "",
+                "",
+                "",
+                "",
+                CacheConfiguration(
+                    "",
+                    CacheHelper.NO_CACHE
+                )
+            )
+        )
+
+        val documentIdentifier = "327693"
+        assertThrows<ConfluenceDocumentNotFoundException> {
+            cut.getDocument(documentIdentifier)
         }
     }
 
