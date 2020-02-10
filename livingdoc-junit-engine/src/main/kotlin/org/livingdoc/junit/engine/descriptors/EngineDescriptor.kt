@@ -5,8 +5,9 @@ import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.support.descriptor.EngineDescriptor
 import org.junit.platform.engine.support.hierarchical.Node
 import org.livingdoc.junit.engine.LivingDocContext
+import kotlin.reflect.KClass
 
-class EngineDescriptor(uniqueId: UniqueId, private val documentClasses: List<Class<*>> = listOf()) :
+class EngineDescriptor(uniqueId: UniqueId, private val documentClasses: List<KClass<*>> = listOf()) :
     EngineDescriptor(uniqueId, "LivingDoc"), Node<LivingDocContext> {
     override fun getType() = TestDescriptor.Type.CONTAINER
 

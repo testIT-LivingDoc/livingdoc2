@@ -103,7 +103,7 @@ class LivingDocTestEngine : HierarchicalTestEngine<LivingDocContext>() {
     /* -_-_-_-_-_-_-_-_-_-_- */
 
     private fun buildEngineDescriptor(engineId: UniqueId, documentClasses: LinkedHashSet<Class<*>>): EngineDescriptor {
-        return EngineDescriptor(engineId, documentClasses.toList())
+        return EngineDescriptor(engineId, documentClasses.map { it.kotlin })
     }
 
     override fun createExecutionContext(request: ExecutionRequest): LivingDocContext {

@@ -1,4 +1,4 @@
-package org.livingdoc.extension
+package org.livingdoc.jvm.extension
 
 import kotlin.reflect.KClass
 

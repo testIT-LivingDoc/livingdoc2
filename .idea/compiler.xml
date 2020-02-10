@@ -12,6 +12,9 @@
       <module name="livingdoc.livingdoc-converters.test" target="11" />
       <module name="livingdoc.livingdoc-documentation.main" target="11" />
       <module name="livingdoc.livingdoc-documentation.test" target="11" />
+      <module name="livingdoc.livingdoc-engine-jvm.jmh" target="11" />
+      <module name="livingdoc.livingdoc-engine-jvm.main" target="11" />
+      <module name="livingdoc.livingdoc-engine-jvm.test" target="11" />
       <module name="livingdoc.livingdoc-engine.jmh" target="11" />
       <module name="livingdoc.livingdoc-engine.main" target="11" />
       <module name="livingdoc.livingdoc-engine.test" target="11" />
