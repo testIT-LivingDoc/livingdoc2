@@ -8,6 +8,7 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
+import java.nio.file.Paths
 import java.util.*
 
 @Format("html")
@@ -17,12 +18,13 @@ class HtmlReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
+        val outputFolder = Paths.get(htmlConfig.outputDir, UUID.randomUUID().toString()).toString()
 
         documentResults.forEach { documentResult ->
             val html = render(documentResult)
-            ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(
+            ReportWriter(outputFolder, fileExtension = "html").writeToFile(
                 html,
-                "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+                documentResult.documentClass.name
             )
         }
     }
@@ -43,6 +45,10 @@ class HtmlReportRenderer : ReportRenderer {
 
         return HtmlReportTemplate()
             .renderTemplate(htmlResults, renderContext)
+    }
+
+    fun renderAggregatedReport() {
+
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
