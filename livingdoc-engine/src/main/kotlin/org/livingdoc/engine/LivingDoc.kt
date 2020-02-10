@@ -7,6 +7,7 @@ import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.groups.GroupFixture
 import org.livingdoc.engine.execution.groups.ImplicitGroup
+import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.results.documents.DocumentResult
@@ -36,11 +37,21 @@ class LivingDoc(
      */
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
-        return documentClasses.groupBy { documentClass ->
+        // Execute documents
+        val documentResults = documentClasses.groupBy { documentClass ->
             extractGroup(documentClass)
         }.flatMap { (groupClass, documentClasses) ->
             executeGroup(groupClass, documentClasses)
         }
+
+        // Generate reports
+        val reportsManager = ReportsManager.from(configProvider)
+        documentResults.forEach {
+            reportsManager.generateReports(it)
+        }
+
+        // Return results for further processing
+        return documentResults
     }
 
     /**

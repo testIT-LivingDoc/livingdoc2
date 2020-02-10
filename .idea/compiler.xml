@@ -17,6 +17,8 @@
       <module name="livingdoc.livingdoc-engine.test" target="11" />
       <module name="livingdoc.livingdoc-extensions-api.main" target="11" />
       <module name="livingdoc.livingdoc-extensions-api.test" target="11" />
+      <module name="livingdoc.livingdoc-format-gherkin.main" target="11" />
+      <module name="livingdoc.livingdoc-format-gherkin.test" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.main" target="11" />
       <module name="livingdoc.livingdoc-junit-engine.test" target="11" />
       <module name="livingdoc.livingdoc-reports.main" target="11" />
