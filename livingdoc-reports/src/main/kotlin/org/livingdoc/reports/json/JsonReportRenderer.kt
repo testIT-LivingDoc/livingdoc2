@@ -15,14 +15,16 @@ import java.util.*
 @Format("json")
 class JsonReportRenderer : ReportRenderer {
 
-    override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
+    override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val jsonConfig = YamlUtils.toObject(config, JsonReportConfig::class)
 
-        val json = render(documentResult, jsonConfig.prettyPrinted)
-        ReportWriter(jsonConfig.outputDir, fileExtension = "json").writeToFile(
-            json,
-            "${documentResult.documentClass.name}-${UUID.randomUUID()}"
-        )
+        documentResults.forEach { documentResult ->
+            val json = render(documentResult, jsonConfig.prettyPrinted)
+            ReportWriter(jsonConfig.outputDir, fileExtension = "json").writeToFile(
+                json,
+                "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+            )
+        }
     }
 
     /**

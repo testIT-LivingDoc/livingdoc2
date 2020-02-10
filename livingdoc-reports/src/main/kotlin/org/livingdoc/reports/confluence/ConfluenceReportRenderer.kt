@@ -22,12 +22,19 @@ private const val MINOR_VERSION = false
 @Format("confluence")
 class ConfluenceReportRenderer : ReportRenderer {
 
-    override fun render(documentResult: DocumentResult, config: Map<String, Any>) {
+    override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
+
+        documentResults.forEach {
+            renderReport(it, confluenceConfig)
+        }
+    }
+
+    internal fun renderReport(documentResult: DocumentResult, config: ConfluenceReportConfig) {
         val repositoryName = extractRepositoryName(documentResult)
 
         // Check for matching repository; only generate report on match
-        if (repositoryName != confluenceConfig.repositoryName) {
+        if (repositoryName != config.repositoryName) {
             return
         }
 
@@ -38,7 +45,7 @@ class ConfluenceReportRenderer : ReportRenderer {
 
         val contentId = extractContentId(documentResult)
 
-        uploadReport(html, contentId, confluenceConfig)
+        uploadReport(html, contentId, config)
     }
 
     /**
@@ -46,24 +53,24 @@ class ConfluenceReportRenderer : ReportRenderer {
      *
      * @param report The report text to upload
      * @param contentId The [ContentId] of the page to attach the report to
-     * @param confluenceConfig A [ConfluenceReportConfig] containing further settings for the upload
+     * @param config A [ConfluenceReportConfig] containing further settings for the upload
      */
-    fun uploadReport(report: String, contentId: ContentId, confluenceConfig: ConfluenceReportConfig) {
+    internal fun uploadReport(report: String, contentId: ContentId, config: ConfluenceReportConfig) {
 
         val authenticatedWebResourceProvider = AuthenticatedWebResourceProvider(
             RestClientFactory.newClient(),
-            confluenceConfig.baseURL,
-            confluenceConfig.path
+            config.baseURL,
+            config.path
         )
         authenticatedWebResourceProvider.setAuthContext(
-            confluenceConfig.username, confluenceConfig.password.toCharArray()
+            config.username, config.password.toCharArray()
         )
 
-        val contentFile = Files.createTempFile(confluenceConfig.filename, null)
+        val contentFile = Files.createTempFile(config.filename, null)
         Files.write(contentFile, report.toByteArray(StandardCharsets.UTF_8))
 
-        val comment = if (confluenceConfig.comment.isNotEmpty()) {
-            confluenceConfig.comment
+        val comment = if (config.comment.isNotEmpty()) {
+            config.comment
         } else {
             "Report from " + ZonedDateTime.now().toString()
         }
@@ -72,7 +79,7 @@ class ConfluenceReportRenderer : ReportRenderer {
             authenticatedWebResourceProvider, MoreExecutors.newDirectExecutorService()
         )
         val atUp = AttachmentUpload(
-            contentFile.toFile(), confluenceConfig.filename, "text/html",
+            contentFile.toFile(), config.filename, "text/html",
             comment, MINOR_VERSION
         )
 
@@ -80,7 +87,7 @@ class ConfluenceReportRenderer : ReportRenderer {
         val attachmentId = attachment
             .find()
             .withContainerId(contentId)
-            .withFilename(confluenceConfig.filename)
+            .withFilename(config.filename)
             .fetchCompletionStage()
             .toCompletableFuture()
             .get()

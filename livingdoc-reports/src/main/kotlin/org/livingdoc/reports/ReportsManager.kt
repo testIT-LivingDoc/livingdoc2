@@ -24,10 +24,8 @@ class ReportsManager(
     fun generateReports(results: List<DocumentResult>) {
         val reports = getActivatedReports()
         for (report in reports) {
-            results.forEach { result ->
-                val renderer = getReportRenderer(report.format)
-                renderer.render(result, report.config)
-            }
+            val renderer = getReportRenderer(report.format)
+            renderer.render(results, report.config)
         }
         //  Avoids problems in case reports are generated multiple times (i.e. multiple testing framworks)
         serviceLoader.reload()
