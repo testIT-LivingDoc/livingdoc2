@@ -71,7 +71,8 @@ internal class GroupExecution(
                 documentClass,
                 repositoryManager,
                 decisionTableToFixtureMatcher,
-                scenarioToFixtureMatcher
+                scenarioToFixtureMatcher,
+                groupFixtureModel
             ).execute()
         }
     }

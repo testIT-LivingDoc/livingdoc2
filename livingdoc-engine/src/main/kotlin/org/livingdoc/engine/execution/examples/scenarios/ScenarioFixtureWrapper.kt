@@ -3,6 +3,7 @@ package org.livingdoc.engine.execution.examples.scenarios
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.api.fixtures.scenarios.Binding
+import org.livingdoc.engine.LivingDoc
 import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.Fixture
@@ -35,6 +36,12 @@ class ScenarioFixtureWrapper(
     override fun execute(testData: Scenario): ScenarioResult {
         val scenarioResultBuilder =
             ScenarioResult.Builder().withScenario(testData).withFixtureSource(fixtureClass)
+
+        if (LivingDoc.failFastActivated) {
+            return scenarioResultBuilder.withStatus(
+                Status.Skipped
+            ).build()
+        }
 
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
             return scenarioResultBuilder

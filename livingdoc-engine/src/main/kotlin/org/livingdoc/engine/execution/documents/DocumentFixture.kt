@@ -4,6 +4,7 @@ import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
+import org.livingdoc.engine.execution.groups.GroupFixtureModel
 import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
@@ -17,7 +18,8 @@ internal class DocumentFixture(
     private val documentClass: Class<*>,
     private val repositoryManager: RepositoryManager,
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher,
-    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher,
+    private val groupFixtureModel: GroupFixtureModel
 ) {
     private val documentIdentifier: DocumentIdentifier = DocumentIdentifier.of(this)
 
@@ -38,7 +40,7 @@ internal class DocumentFixture(
         val document = loadDocument()
 
         return DocumentExecution(documentClass, document,
-            decisionTableToFixtureMatcher, scenarioToFixtureMatcher).execute()
+            decisionTableToFixtureMatcher, scenarioToFixtureMatcher, groupFixtureModel).execute()
     }
 
     val executableDocumentAnnotation: ExecutableDocument?

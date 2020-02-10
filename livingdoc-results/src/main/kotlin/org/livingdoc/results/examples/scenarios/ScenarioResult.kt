@@ -6,7 +6,7 @@ import org.livingdoc.results.TestDataResult
 
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
-    val status: Status,
+    override val status: Status,
     val fixtureSource: Class<*>?,
     val scenario: Scenario
 ) : TestDataResult<Scenario> {
@@ -114,7 +114,7 @@ data class ScenarioResult private constructor(
                 throw IllegalStateException("Cannot build ScenarioResult with unknown status")
             }
             val status = this.status
-            val steps = if (status is Status.Manual || status is Status.Disabled)
+            val steps = if (status is Status.Manual || status is Status.Disabled || status is Status.Skipped)
                 scenario.steps.map {
                     StepResult.Builder()
                         .withStatus(this.status)

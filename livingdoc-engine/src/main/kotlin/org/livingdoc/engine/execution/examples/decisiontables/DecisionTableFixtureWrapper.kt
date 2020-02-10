@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
+import org.livingdoc.engine.LivingDoc
 import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.Fixture
@@ -42,6 +43,12 @@ class DecisionTableFixtureWrapper(
         val decisionTableResult =
             DecisionTableResult.Builder().withDecisionTable(testData)
                 .withFixtureSource(fixtureClass)
+
+        if (LivingDoc.failFastActivated) {
+            return decisionTableResult.withStatus(
+                Status.Skipped
+            ).build()
+        }
 
         if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
             return decisionTableResult.withStatus(

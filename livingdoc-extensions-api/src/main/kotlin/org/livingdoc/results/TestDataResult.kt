@@ -1,3 +1,5 @@
 package org.livingdoc.results
 
-interface TestDataResult<out T>
+interface TestDataResult<out T> {
+    val status: Status
+}

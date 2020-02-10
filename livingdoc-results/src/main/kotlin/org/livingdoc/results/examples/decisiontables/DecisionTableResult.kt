@@ -9,7 +9,7 @@ import org.livingdoc.results.TestDataResult
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
-    val status: Status = Status.Unknown,
+    override val status: Status = Status.Unknown,
     val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {
@@ -130,7 +130,7 @@ data class DecisionTableResult private constructor(
                 throw IllegalStateException("Cannot build DecisionTableResult with unknown status")
             }
             val status = this.status
-            val rows = if (status is Status.Manual || status is Status.Disabled)
+            val rows = if (status is Status.Manual || status is Status.Disabled || status is Status.Skipped)
                 decisionTable.rows.map {
                     RowResult.Builder()
                         .withRow(it)

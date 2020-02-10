@@ -27,6 +27,10 @@ class LivingDoc(
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
+    companion object {
+        var failFastActivated: Boolean = false
+    }
+
     /**
      * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
      * classes must be annotated with [ExecutableDocument].
