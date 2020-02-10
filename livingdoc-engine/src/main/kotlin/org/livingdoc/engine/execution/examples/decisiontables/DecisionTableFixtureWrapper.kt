@@ -65,7 +65,6 @@ class DecisionTableFixtureWrapper(
                 }
 
                 decisionTableResult.withUnassignedRowsSkipped()
-
             }
         }
         return decisionTableResult.build()
@@ -122,8 +121,6 @@ class DecisionTableFixtureWrapper(
                 rowResult.withUnassignedFieldsSkipped()
                 rowResult.build()
             }
-
-
         }
 
         return if (fixtureModel.parallelExecution) {
