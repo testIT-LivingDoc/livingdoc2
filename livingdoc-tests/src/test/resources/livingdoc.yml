@@ -15,6 +15,7 @@ reports:
     format: "html"
     config:
       outputDir: "build/livingdoc/reports/html/"
+      generateIndex: true
   - name: "json"
     format: "json"
     config:

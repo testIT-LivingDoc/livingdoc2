@@ -1,6 +1,7 @@
 package org.livingdoc.reports
 
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 import java.time.LocalDateTime
@@ -22,11 +23,12 @@ class ReportWriter(
      * Write the [textToWrite] as report to the configured location. The reports filename will contain the [reportName]
      * and the [reportDate] and end with the [fileExtension].
      */
-    fun writeToFile(textToWrite: String, reportName: String = REPORT_OUTPUT_FILENAME) {
+    fun writeToFile(textToWrite: String, reportName: String = REPORT_OUTPUT_FILENAME) : Path {
         val path = Paths.get(outputDir)
         Files.createDirectories(path)
 
         val file = path.resolve("$reportName$reportDate.$fileExtension")
         Files.write(file, textToWrite.toByteArray(), StandardOpenOption.CREATE_NEW)
+        return file
     }
 }

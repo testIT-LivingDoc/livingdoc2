@@ -8,6 +8,7 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
@@ -19,12 +20,20 @@ class HtmlReportRenderer : ReportRenderer {
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
         val outputFolder = Paths.get(htmlConfig.outputDir, UUID.randomUUID().toString()).toString()
+        val reportWriter = ReportWriter(outputFolder, fileExtension = "html")
 
-        documentResults.forEach { documentResult ->
+        val generatedReports = documentResults.map { documentResult ->
             val html = render(documentResult)
-            ReportWriter(outputFolder, fileExtension = "html").writeToFile(
+            documentResult to reportWriter.writeToFile(
                 html,
                 documentResult.documentClass.name
+            )
+        }
+
+        if (htmlConfig.generateIndex) {
+            reportWriter.writeToFile(
+                renderIndex(generatedReports),
+                "index"
             )
         }
     }
@@ -47,8 +56,17 @@ class HtmlReportRenderer : ReportRenderer {
             .renderTemplate(htmlResults, renderContext)
     }
 
-    fun renderAggregatedReport() {
+    private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
+        val htmlResults = reports.map {
+            titleLink(
+                it.first.documentClass.name,
+                it.second.fileName.toString(),
+                it.first.documentStatus
+            )
+        }
 
+        return HtmlReportTemplate()
+            .renderTemplate(htmlResults, renderContext)
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
@@ -95,6 +113,18 @@ class HtmlReportRenderer : ReportRenderer {
 
     private fun title(value: String?): HtmlTitle? {
         return if (value != null) HtmlTitle(value) else null
+    }
+
+    private fun titleLink(
+        value: String,
+        linkAddress: String,
+        status: Status
+    ): HtmlTitle {
+        return HtmlTitle(
+            HtmlLink(
+                value, linkAddress, status
+            ).toString()
+        )
     }
 
     private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
