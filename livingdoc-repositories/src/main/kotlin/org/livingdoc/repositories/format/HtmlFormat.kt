@@ -97,10 +97,19 @@ class HtmlFormat : DocumentFormat {
         }
     }
 
+    /**
+     * determine if it is a gherkin and take the text and parse a gherkin
+     *
+     * @param element the html element containing the gherkin
+     * @param context The [ParseContext] of the processed gherkin
+     *
+     * @return a List of Scenarios created from gherkin
+     */
     private fun parseGherkin(element: Element, context: ParseContext): List<Scenario> {
         val gherkinlist = mutableListOf<Scenario>()
         if (element.children().isNotEmpty()) {
 
+            // find gherkin
             element.children().forEach {
                 if (it.tagName().equals("gherkin")) {
                     gherkinlist.addAll(createGherkin(it.text(), context))
@@ -110,32 +119,19 @@ class HtmlFormat : DocumentFormat {
         return gherkinlist
     }
 
-    /**
-     *
-     */
     private fun createGherkin(gherkinInput: String, context: ParseContext): List<Scenario> {
 
         // pass to gherkin parser
         val ghf = GherkinFormat()
         val outdoc = ghf.parse(ByteArrayInputStream(gherkinInput.toByteArray(Charsets.UTF_8)))
 
-        // temporary output
-        // println(outdoc.elements)
-        val outscenario = mutableListOf<Scenario>()
-
-        // TODO refactor after discussion
-        outdoc.elements.forEach {
-            val name = it.description.name
-            if (it is Scenario) {
-                outscenario.add(
-                    Scenario(
-                        it.steps,
-                        TestDataDescription(name, context.isManual(), context.descriptiveText.trim())
-                    )
-                )
-            }
+        val scenariolist = outdoc.elements.map {
+            val scenario = it
+            scenario.description.isManual = context.isManual()
+            scenario as Scenario
         }
-        return outscenario
+
+        return scenariolist
     }
 
     /**

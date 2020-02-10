@@ -46,9 +46,9 @@ class HtmlGherkinFormatTest {
     }
 
     @Test
-    fun `descriptive text is detected`() {
+    fun descriptions() {
         val result = cut.parse(getDescriptiveHtml())
-        assertThat(result.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
+        assertThat(result.elements[0].description.descriptiveText).isEqualTo("descriptive text is here.")
     }
 
     @Test

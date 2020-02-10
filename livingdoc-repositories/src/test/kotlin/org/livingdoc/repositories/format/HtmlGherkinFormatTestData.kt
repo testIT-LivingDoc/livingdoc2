@@ -5,15 +5,15 @@ object HtmlGherkinFormatTestData {
     fun getDescriptiveHtml() = """
     <!DOCTYPE html>
     <body>
-        <p>This is a descriptive text.</p>
         <pre>
             <gherkin>
                 Feature: Test Feature
+                descriptive text is here.
                     Scenario: Test Scenario
                         When I test the Gherkin parser
             </gherkin>
         </pre>
-        <p>This is another descriptive text.</p>
+
     </body>
     </html>
     """.byteInputStream()
