@@ -10,7 +10,7 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
+import java.time.LocalDateTime
 
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
@@ -19,7 +19,7 @@ class HtmlReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
-        val outputFolder = Paths.get(htmlConfig.outputDir, UUID.randomUUID().toString()).toString()
+        val outputFolder = Paths.get(htmlConfig.outputDir, LocalDateTime.now().toString()).toString()
         val reportWriter = ReportWriter(outputFolder, fileExtension = "html")
 
         val generatedReports = documentResults.map { documentResult ->

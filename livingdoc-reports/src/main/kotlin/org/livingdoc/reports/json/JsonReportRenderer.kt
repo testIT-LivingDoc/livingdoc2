@@ -10,19 +10,22 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
-import java.util.*
+import java.nio.file.Paths
+import java.time.LocalDateTime
 
 @Format("json")
 class JsonReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val jsonConfig = YamlUtils.toObject(config, JsonReportConfig::class)
+        val outputFolder = Paths.get(jsonConfig.outputDir, LocalDateTime.now().toString()).toString()
+        val reportWriter = ReportWriter(outputFolder, fileExtension = "json")
 
         documentResults.forEach { documentResult ->
             val json = render(documentResult, jsonConfig.prettyPrinted)
-            ReportWriter(jsonConfig.outputDir, fileExtension = "json").writeToFile(
+            reportWriter.writeToFile(
                 json,
-                "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+                documentResult.documentClass.name
             )
         }
     }
