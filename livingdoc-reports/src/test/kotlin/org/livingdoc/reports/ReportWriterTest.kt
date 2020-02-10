@@ -39,7 +39,7 @@ internal class ReportWriterTest {
 
     @Test
     fun `Multiple reports can be written`(@TempDir tempDir: Path) {
-        val cut = ReportWriter(tempDir.toString(), "test", "2019-12-12T12_00_17")
+        val cut = ReportWriter(tempDir.toString(), "test")
 
         cut.writeToFile("test1", "report1")
         cut.writeToFile("test2", "report2")
@@ -51,7 +51,7 @@ internal class ReportWriterTest {
 
     @Test
     fun `Throw exception if file already exists`(@TempDir tempDir: Path) {
-        val cut = ReportWriter(tempDir.toString(), "test", "2019-12-12T12_00_17")
+        val cut = ReportWriter(tempDir.toString(), "test")
 
         cut.writeToFile("test1", "testFileName")
         assertThrows<FileAlreadyExistsException> { cut.writeToFile("test2", "testFileName") }
