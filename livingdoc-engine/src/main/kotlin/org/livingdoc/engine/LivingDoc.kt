@@ -46,9 +46,7 @@ class LivingDoc(
 
         // Generate reports
         val reportsManager = ReportsManager.from(configProvider)
-        documentResults.forEach {
-            reportsManager.generateReports(it)
-        }
+        reportsManager.generateReports(documentResults)
 
         // Return results for further processing
         return documentResults
