@@ -43,6 +43,9 @@ The HTML Report format is similar to the HTML Document format, with additional c
 The directory where the HTML Reports are save.
 The default value is `livingdoc/reports/html`.
 
+.generateIndex
+A boolean that sets whether an index file should be generated that contains links to all other reports. Default is `false`.
+
 === Json Reports
 
 ==== Configuration

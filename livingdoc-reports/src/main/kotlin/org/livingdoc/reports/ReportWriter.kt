@@ -4,8 +4,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ReportWriter(
     private val outputDir: String = REPORT_OUTPUT_PATH,
@@ -21,7 +19,7 @@ class ReportWriter(
      * Write the [textToWrite] as report to the configured location. The reports filename will contain the [reportName]
      * and end with the [fileExtension].
      */
-    fun writeToFile(textToWrite: String, reportName: String = REPORT_OUTPUT_FILENAME) : Path {
+    fun writeToFile(textToWrite: String, reportName: String = REPORT_OUTPUT_FILENAME): Path {
         val path = Paths.get(outputDir)
         Files.createDirectories(path)
 
