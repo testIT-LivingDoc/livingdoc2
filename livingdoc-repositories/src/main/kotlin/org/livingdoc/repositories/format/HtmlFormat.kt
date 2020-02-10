@@ -126,9 +126,7 @@ class HtmlFormat : DocumentFormat {
         val outdoc = ghf.parse(ByteArrayInputStream(gherkinInput.toByteArray(Charsets.UTF_8)))
 
         val scenariolist = outdoc.elements.map {
-            val scenario = it
-            scenario.description.isManual = context.isManual()
-            scenario as Scenario
+            Scenario((it as Scenario).steps, TestDataDescription(it.description.name, context.isManual(), it.description.descriptiveText))
         }
 
         return scenariolist
