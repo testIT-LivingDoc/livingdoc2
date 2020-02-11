@@ -31,3 +31,12 @@ For example a h2 in HTML will be a new section when declared after a h1 which is
     <table>
         ...
     </table>
+
+=== Fail Fast for specific Exception Types
+Some tests need a long time to prepare, run or clean up.
+For example, if you have a a test suite containing several spring API Tests which are defined via LivingDoc,
+a simple error could lead to an IllegalStateException since some bean is missing.
+This will at times lead to failure for the complete suite without any benefit of executing further tests past the first one.
+
+Annotating an Executable Document with `@FailFast(onExceptionTypes = [SomeException, SomeOtherException])` will skip every other test if this
+exception occurs. This also works if you execute the tests in parallel.
