@@ -139,11 +139,24 @@ class HtmlFormat : DocumentFormat {
             }
 
             val rowData = headers.mapIndexed { headerIndex, headerName ->
-                headerName to Field(dataCells[headerIndex].text())
+                headerName to createField(dataCells[headerIndex])
             }.toMap()
             dataRows.add(Row(rowData))
         }
         return dataRows
+    }
+
+    /**
+     * Determines the content to write into the field.
+     * If there is a checkbox, the checkbox is interpreted as boolean.
+     * If there is no checkbox, the plain string is written into the field.
+     *
+     * @return the created field
+     */
+    private fun createField(element: Element): Field {
+        val valueElement = Jsoup.parseBodyFragment(element.html()).body()
+        val checkboxValue = valueElement.selectFirst("input")?.attr("value")
+        return if (checkboxValue.isNullOrEmpty()) Field(element.text()) else Field(checkboxValue)
     }
 
     private fun isHeaderOrDataCell(it: Element) = it.tagName() == "th" || it.tagName() == "td"
