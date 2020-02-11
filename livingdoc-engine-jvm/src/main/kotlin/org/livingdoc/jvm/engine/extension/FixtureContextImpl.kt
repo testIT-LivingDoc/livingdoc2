@@ -1,15 +1,17 @@
 package org.livingdoc.jvm.engine.extension
 
-import org.livingdoc.jvm.extension.Context
 import org.livingdoc.jvm.extension.DocumentFixtureContext
+import org.livingdoc.jvm.extension.ExtensionContext
 import org.livingdoc.jvm.extension.FixtureContext
 import kotlin.reflect.KClass
 
 class FixtureContextImpl(
     override val fixtureClass: KClass<*>,
     override val documentFixtureContext: DocumentFixtureContext
-) : ContextImpl(), FixtureContext {
+) : ContextImpl<ExtensionContext>(), FixtureContext {
 
-    override val parent: Context?
+    override val parent: DocumentFixtureContext?
         get() = documentFixtureContext
+
+    override val testClass: KClass<*> get() = fixtureClass
 }

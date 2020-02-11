@@ -12,6 +12,7 @@ dependencies {
 
 	implementation(kotlin("reflect", Versions.kotlinVersion))
 
+	implementation("org.junit.jupiter:junit-jupiter-api:${Versions.junitJupiter}")
 	api("org.junit.platform:junit-platform-engine:${Versions.junitPlatform}")
 }
 

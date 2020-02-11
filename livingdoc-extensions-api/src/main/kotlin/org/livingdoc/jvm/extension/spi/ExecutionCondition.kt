@@ -1,7 +1,7 @@
 package org.livingdoc.jvm.extension.spi
 
-import org.livingdoc.jvm.extension.Context
+import org.livingdoc.jvm.extension.ExtensionContext
 
 interface ExecutionCondition : Extension {
-    fun evaluateExecutionCondition(context: Context): ConditionEvaluationResult
+    fun evaluateExecutionCondition(context: ExtensionContext): ConditionEvaluationResult
 }

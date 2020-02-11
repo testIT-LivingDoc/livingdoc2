@@ -3,7 +3,7 @@ package org.livingdoc.jvm.engine.extension
 import org.livingdoc.jvm.extension.Context
 import org.livingdoc.jvm.extension.Store
 
-open class ContextImpl(override val parent: Context? = null) : Context {
+open class ContextImpl<T : Context<T>>(override val parent: T? = null) : Context<T> {
     private var stores = mutableMapOf<String, StoreImpl>()
 
     override fun getStore(namespace: String) = stores.getOrPut(namespace) { StoreImpl(namespace, this) }
@@ -11,7 +11,7 @@ open class ContextImpl(override val parent: Context? = null) : Context {
 
 class StoreImpl(
     private val namespace: String,
-    private val context: ContextImpl
+    private val context: ContextImpl<*>
 ) : Store {
     private val map: MutableMap<Any, Any> = mutableMapOf()
     private val ancestor: StoreImpl?

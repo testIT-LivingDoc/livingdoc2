@@ -2,7 +2,7 @@ package org.livingdoc.jvm.extension
 
 import kotlin.reflect.KClass
 
-interface FixtureContext : Context {
+interface FixtureContext : ExtensionContext {
     val fixtureClass: KClass<*>
     val documentFixtureContext: DocumentFixtureContext
 }

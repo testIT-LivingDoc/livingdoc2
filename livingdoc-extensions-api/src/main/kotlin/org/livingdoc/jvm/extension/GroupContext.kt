@@ -2,6 +2,6 @@ package org.livingdoc.jvm.extension
 
 import kotlin.reflect.KClass
 
-interface GroupContext : Context {
+interface GroupContext : ExtensionContext {
     val groupClass: KClass<*>
 }
