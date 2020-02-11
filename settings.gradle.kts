@@ -36,6 +36,7 @@ include(
 	"livingdoc-repository-rest",
 	"livingdoc-repository-confluence",
 	"livingdoc-results",
+	"livingdoc-scenario",
 	"livingdoc-tests",
 	"livingdoc-testdata"
 )
