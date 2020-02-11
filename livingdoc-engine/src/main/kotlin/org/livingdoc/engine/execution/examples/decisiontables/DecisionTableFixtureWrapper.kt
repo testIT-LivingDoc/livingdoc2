@@ -46,7 +46,7 @@ class DecisionTableFixtureWrapper(
 
         when {
             LivingDoc.failFastActivated -> {
-                decisionTableResult.withStatus(Status.Skipped)
+                decisionTableResult.withUnassignedRowsSkipped()
             }
             fixtureClass.isAnnotationPresent(Disabled::class.java) -> {
                 decisionTableResult.withStatus(Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value))

@@ -130,12 +130,12 @@ internal class DocumentExecution(
 
         when (status) {
             is Status.Exception -> {
-                val occuredException = status.exception.cause!!.javaClass
-                val failFastExceptions = groupFixtureModel.getFailFastExceptions() +
-                        documentFixtureModel.getFailFastExceptions()
+                val occurredException = status.exception.cause!!.javaClass
+                val failFastExceptions = groupFixtureModel.failFastExceptions +
+                        documentFixtureModel.failFastExceptions
 
                 LivingDoc.failFastActivated = (failFastExceptions.any { failFastException ->
-                        failFastException.isAssignableFrom(occuredException)
+                        failFastException.isAssignableFrom(occurredException)
                     })
             }
         }

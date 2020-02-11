@@ -17,7 +17,8 @@ internal class GroupFixtureModel(val groupClass: Class<*>) : ScopedFixtureModel(
      *
      * @return a list of Exception classes that should be considered for fail fast
      */
-    fun getFailFastExceptions(): List<Class<*>> {
+    val failFastExceptions: List<Class<*>>
+    get() {
         return groupClass.getAnnotation(FailFast::class.java)?.onExceptionTypes?.map { it.java } ?: emptyList()
     }
 }

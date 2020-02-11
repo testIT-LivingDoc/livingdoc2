@@ -114,7 +114,7 @@ data class ScenarioResult private constructor(
                 throw IllegalStateException("Cannot build ScenarioResult with unknown status")
             }
             val status = this.status
-            val steps = if (status is Status.Manual || status is Status.Disabled || status is Status.Skipped)
+            val steps = if (status is Status.Manual || status is Status.Disabled)
                 scenario.steps.map {
                     StepResult.Builder()
                         .withStatus(this.status)

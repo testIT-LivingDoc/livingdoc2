@@ -116,7 +116,7 @@ data class RowResult private constructor(
                 throw IllegalStateException("Cannot build RowResult with unknown status")
             }
             val status = this.status
-            val fieldResults = if (status is Status.Manual || status is Status.Disabled || status is Status.Skipped)
+            val fieldResults = if (status is Status.Manual || status is Status.Disabled)
                 headers.map {
                     it to FieldResult.Builder()
                         .withValue(row.headerToField[it]?.value!!)

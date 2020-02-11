@@ -39,7 +39,7 @@ class ScenarioFixtureWrapper(
 
         when {
             LivingDoc.failFastActivated -> {
-                scenarioResultBuilder.withStatus(Status.Skipped)
+                scenarioResultBuilder.withUnassignedSkipped()
             }
             fixtureClass.isAnnotationPresent(Disabled::class.java) -> {
                 scenarioResultBuilder.withStatus(

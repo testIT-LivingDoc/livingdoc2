@@ -130,7 +130,7 @@ data class DecisionTableResult private constructor(
                 throw IllegalStateException("Cannot build DecisionTableResult with unknown status")
             }
             val status = this.status
-            val rows = if (status is Status.Manual || status is Status.Disabled || status is Status.Skipped)
+            val rows = if (status is Status.Manual || status is Status.Disabled)
                 decisionTable.rows.map {
                     RowResult.Builder()
                         .withRow(it)
