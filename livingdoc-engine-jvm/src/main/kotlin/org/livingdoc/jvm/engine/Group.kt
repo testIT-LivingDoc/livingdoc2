@@ -16,6 +16,11 @@ internal class Group(
     private val extensionManager: ExtensionManager
 ) {
     fun execute(): List<DocumentResult> {
+        extensionManager.loadExtensions(context)
+
+        if (!extensionManager.shouldExecute(context)) {
+            return emptyList()
+        }
 
         extensionManager.executeBeforeGroup(context)
 

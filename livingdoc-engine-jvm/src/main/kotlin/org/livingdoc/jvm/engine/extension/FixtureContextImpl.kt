@@ -8,12 +8,8 @@ import kotlin.reflect.KClass
 class FixtureContextImpl(
     override val fixtureClass: KClass<*>,
     override val documentFixtureContext: DocumentFixtureContext
-) : FixtureContext {
+) : ContextImpl(), FixtureContext {
 
     override val parent: Context?
         get() = documentFixtureContext
-
-    private var stores = mutableMapOf<String, MutableMap<Any, Any>>()
-
-    override fun getStore(namespace: String) = stores.getOrPut(namespace) { mutableMapOf() }
 }

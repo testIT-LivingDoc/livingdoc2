@@ -21,6 +21,14 @@ internal class DocumentFixture(
      * @return a [DocumentResult] for this execution
      */
     fun execute(): DocumentResult {
+        extensionManager.loadExtensions(context)
+
+        val resultBuilder = DocumentResult.Builder().withDocumentClass(context.documentFixtureClass.java)
+
+        if (!extensionManager.shouldExecute(context)) {
+            return resultBuilder.withStatus(Status.Disabled()).build()
+        }
+
         extensionManager.executeBeforeDocumentFixture(context)
 
         val documentInformation = context.documentInformation
@@ -35,7 +43,7 @@ internal class DocumentFixture(
         extensionManager.executeAfterDocumentFixture(context)
 
         val result =
-            DocumentResult.Builder().withStatus(Status.Executed).withDocumentClass(context.documentFixtureClass.java)
+            resultBuilder.withStatus(Status.Executed)
         results.forEach {
             result.withResult(it)
         }

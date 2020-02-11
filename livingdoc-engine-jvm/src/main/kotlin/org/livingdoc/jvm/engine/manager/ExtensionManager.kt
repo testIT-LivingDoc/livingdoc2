@@ -6,6 +6,8 @@ import org.livingdoc.jvm.extension.DocumentFixtureContext
 import org.livingdoc.jvm.extension.FixtureContext
 import org.livingdoc.jvm.extension.GroupContext
 import org.livingdoc.jvm.extension.Store
+import org.livingdoc.jvm.extension.spi.CallbackExtension
+import org.livingdoc.jvm.extension.spi.ExecutionCondition
 import org.livingdoc.jvm.extension.spi.Extension
 import java.util.*
 import kotlin.reflect.KClass
@@ -16,94 +18,95 @@ class ExtensionManager {
 
     private val defaultExtensions = ServiceLoader.load(Extension::class.java).iterator().asSequence().toList()
 
-    fun executeBeforeGroup(context: GroupContext) {
-        val groupExtensions = context.extensions.map {
-            instantiateExtension(
-                it
-            )
-        }
-        context.extensionStore.extensions = groupExtensions
+    /**
+     * Get all Extensions form the context and the default Extensions
+     */
+    private fun getAllExtensions(context: Context): List<Extension> =
+        context.extensionStore.extensions + defaultExtensions
 
-        val activeExtensions = defaultExtensions + groupExtensions
-        activeExtensions.forEach {
+    fun executeBeforeGroup(context: GroupContext) {
+        val activeExtensions = defaultExtensions + context.extensionStore.extensions
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onBeforeGroup(context)
         }
     }
 
     fun executeBeforeDocumentFixture(context: DocumentFixtureContext) {
-        val documentFixtureExtensions = context.extensions.map {
-            instantiateExtension(
-                it
-            )
-        }
-        context.extensionStore.extensions = documentFixtureExtensions
-
-        val activeExtensions =
-            defaultExtensions + context.groupContext.extensionStore.extensions + documentFixtureExtensions
-        activeExtensions.forEach {
+        val activeExtensions = defaultExtensions + context.extensionStore.extensions
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onBeforeDocument(context)
         }
     }
 
     fun executeBeforeFixture(context: FixtureContext) {
-        val fixtureExtensions = context.extensions.map {
-            instantiateExtension(
-                it
-            )
-        }
-        context.extensionStore.extensions = fixtureExtensions
-
-        val activeExtensions =
-            defaultExtensions + context.documentFixtureContext.groupContext.extensionStore.extensions +
-                    context.documentFixtureContext.extensionStore.extensions + fixtureExtensions
-        activeExtensions.forEach {
+        val activeExtensions = defaultExtensions + context.extensionStore.extensions
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onBeforeFixture(context)
         }
     }
 
     fun executeAfterFixture(context: FixtureContext) {
-        val activeExtensions =
-            defaultExtensions + context.documentFixtureContext.groupContext.extensionStore.extensions +
-                    context.documentFixtureContext.extensionStore.extensions + context.extensionStore.extensions
-        activeExtensions.forEach {
+        val activeExtensions = defaultExtensions + context.extensionStore.extensions
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onAfterFixture(context)
         }
     }
 
     fun executeAfterDocumentFixture(context: DocumentFixtureContext) {
-        val activeExtensions =
-            defaultExtensions + context.groupContext.extensionStore.extensions + context.extensionStore.extensions
-        activeExtensions.forEach {
+        val activeExtensions = defaultExtensions + context.extensionStore.extensions
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onAfterDocument(context)
         }
     }
 
     fun executeAfterGroup(context: GroupContext) {
         val activeExtensions = defaultExtensions + context.extensionStore.extensions
-        activeExtensions.forEach {
+        activeExtensions.extensionsOfType<CallbackExtension>().forEach {
             it.onAfterGroup(context)
         }
     }
+
+    fun shouldExecute(context: Context): Boolean {
+        return getAllExtensions(context).extensionsOfType<ExecutionCondition>()
+            .map { it.evaluateExecutionCondition(context) }
+            .all { it.enabled }
+    }
+
+    fun loadExtensions(context: GroupContext) {
+        context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
+    }
+
+    fun loadExtensions(context: DocumentFixtureContext) {
+        context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
+    }
+
+    fun loadExtensions(context: FixtureContext) {
+        context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
+    }
 }
 
-fun instantiateExtension(extensionClass: KClass<*>): Extension {
-    return extensionClass.castToClass(Extension::class).createInstance()
+fun instantiateExtension(extensionClass: KClass<*>): CallbackExtension {
+    return extensionClass.castToClass(CallbackExtension::class).createInstance()
 }
 
 private val Context.extensionStore: Store
     get() = this.getStore("org.livingdoc.jvm.engine.manager.ExtensionManager")
 
-private val GroupContext.extensions: List<KClass<*>>
+private val GroupContext.extensionClasses: List<KClass<*>>
     get() = this.groupClass.findAnnotation<org.livingdoc.api.Extensions>()?.value?.toList() ?: emptyList()
 
-private val DocumentFixtureContext.extensions: List<KClass<*>>
+private val DocumentFixtureContext.extensionClasses: List<KClass<*>>
     get() = this.documentFixtureClass.findAnnotation<org.livingdoc.api.Extensions>()?.value?.toList() ?: emptyList()
 
-private val FixtureContext.extensions: List<KClass<*>>
+private val FixtureContext.extensionClasses: List<KClass<*>>
     get() = this.fixtureClass.findAnnotation<org.livingdoc.api.Extensions>()?.value?.toList() ?: emptyList()
 
 private var Store.extensions: List<Extension>
-    get() = this["extensions"] as List<Extension>
+    get() = getListCombineAncestors("extensions").filterIsInstance<Extension>()
     set(value) {
-        this["extensions"] = value
+        put("extensions", value)
     }
+
+private inline fun <reified T : Extension> List<Extension>.extensionsOfType(): List<T> {
+    return this.filterIsInstance<T>()
+}
