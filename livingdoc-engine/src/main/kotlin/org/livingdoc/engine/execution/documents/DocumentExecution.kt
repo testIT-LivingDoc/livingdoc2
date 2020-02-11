@@ -107,7 +107,7 @@ internal class DocumentExecution(
                 checkStatusExceptionForFastFail(result.status)
                 result.rows.forEach { rowResult ->
                     checkStatusExceptionForFastFail(rowResult.status)
-                    rowResult.headerToField.forEach { _, fieldResult ->
+                    rowResult.headerToField.forEach { (_, fieldResult) ->
                         checkStatusExceptionForFastFail(fieldResult.status)
                     }
                 }

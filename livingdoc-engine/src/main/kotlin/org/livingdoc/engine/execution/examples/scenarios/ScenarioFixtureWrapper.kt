@@ -73,7 +73,7 @@ class ScenarioFixtureWrapper(
 
     private fun executeScenario(scenario: Scenario): List<StepResult> {
         val fixture = createFixtureInstance()
-        return executeWithBeforeAndAfter<List<StepResult>>(
+        return executeWithBeforeAndAfter(
             before = { invokeBeforeMethods(fixture) },
             body = { executeSteps(scenario, fixture) },
             after = { invokeAfterMethods(fixture) }

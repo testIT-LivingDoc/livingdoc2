@@ -44,7 +44,6 @@ class DividerDocumentMdFailFast {
 
         @Check("a / b = ?")
         fun checkDivide(expectedValue: Float) {
-
                 val result = sut.divide(valueA, valueB)
                 assertThat(result).isEqualTo(expectedValue)
         }
