@@ -28,6 +28,18 @@ class HtmlTitle(value: String) : HtmlResult {
     }
 }
 
+class HtmlLink(value: String, link: String, status: Status) : HtmlResult {
+    private val title = Element("a").apply {
+        setStyleClasses(determineCssClassForBackgroundColor(status))
+        setLink(link)
+        html(value)
+    }
+
+    override fun toString(): String {
+        return title.toString()
+    }
+}
+
 class HtmlDescription : HtmlResult {
     val description = Element("div")
 
@@ -225,4 +237,8 @@ private fun determineCssClassForBackgroundColor(status: Status): String {
 
 private fun Element.setStyleClasses(vararg classes: String) {
     this.attr("class", classes.joinToString(separator = " "))
+}
+
+private fun Element.setLink(target: String) {
+    this.attr("href", target)
 }

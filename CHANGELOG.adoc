@@ -30,6 +30,8 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Test titles and descriptions now appear in the generated reports
 - Add caching of documents for the RESTRepository and ConfluenceRepository
 - Added support for html reports as attachments in confluence
+- HTML reports can generate a index file with links to all reports
+- Reorganized the file and directory structure of reports
 
 === Changed
 

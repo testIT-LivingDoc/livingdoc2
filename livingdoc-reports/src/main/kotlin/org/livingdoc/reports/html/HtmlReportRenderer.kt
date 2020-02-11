@@ -8,7 +8,9 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
-import java.util.*
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.time.LocalDateTime
 
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
@@ -17,12 +19,21 @@ class HtmlReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
+        val outputFolder = Paths.get(htmlConfig.outputDir, LocalDateTime.now().toString()).toString()
+        val reportWriter = ReportWriter(outputFolder, fileExtension = "html")
 
-        documentResults.forEach { documentResult ->
+        val generatedReports = documentResults.map { documentResult ->
             val html = render(documentResult)
-            ReportWriter(htmlConfig.outputDir, fileExtension = "html").writeToFile(
+            documentResult to reportWriter.writeToFile(
                 html,
-                "${documentResult.documentClass.name}-${UUID.randomUUID()}"
+                documentResult.documentClass.name
+            )
+        }
+
+        if (htmlConfig.generateIndex) {
+            reportWriter.writeToFile(
+                renderIndex(generatedReports),
+                "index"
             )
         }
     }
@@ -40,6 +51,19 @@ class HtmlReportRenderer : ReportRenderer {
                 else -> throw IllegalArgumentException("Unknown Result type.")
             }
         }.filterNotNull()
+
+        return HtmlReportTemplate()
+            .renderTemplate(htmlResults, renderContext)
+    }
+
+    private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
+        val htmlResults = reports.map {
+            titleLink(
+                it.first.documentClass.name,
+                it.second.fileName.toString(),
+                it.first.documentStatus
+            )
+        }
 
         return HtmlReportTemplate()
             .renderTemplate(htmlResults, renderContext)
@@ -89,6 +113,18 @@ class HtmlReportRenderer : ReportRenderer {
 
     private fun title(value: String?): HtmlTitle? {
         return if (value != null) HtmlTitle(value) else null
+    }
+
+    private fun titleLink(
+        value: String,
+        linkAddress: String,
+        status: Status
+    ): HtmlTitle {
+        return HtmlTitle(
+            HtmlLink(
+                value, linkAddress, status
+            ).toString()
+        )
     }
 
     private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
