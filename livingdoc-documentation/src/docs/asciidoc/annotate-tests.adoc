@@ -38,5 +38,5 @@ For example, if you have a a test suite containing several spring API Tests whic
 a simple error could lead to an IllegalStateException since some bean is missing.
 This will at times lead to failure for the complete suite without any benefit of executing further tests past the first one.
 
-Annotating an Executable Document with `@FailFast(onExceptionTypes = [SomeException, SomeOtherException])` will skip every other test if this
+Annotating an Executable Document or a Group with `@FailFast(onExceptionTypes = [SomeException, SomeOtherException])` will skip every other test if this
 exception occurs. This also works if you execute the tests in parallel.

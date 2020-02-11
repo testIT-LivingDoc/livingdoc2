@@ -15,7 +15,7 @@ class Divider {
     @Throws(IllegalArgumentException::class)
     fun divide(a: Float, b: Float): Float {
         if (b == 0.0f) {
-            throw IllegalArgumentException("MEINS")
+            throw IllegalArgumentException("Thrown by Divider")
         }
         return a / b
     }
