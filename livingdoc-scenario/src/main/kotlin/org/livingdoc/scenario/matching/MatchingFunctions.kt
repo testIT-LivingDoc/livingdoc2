@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 /**
  * All functions used to perform the regex Matching
@@ -126,12 +126,21 @@ object MatchingFunctions {
         }
         val outmap = interntext.map {
             if (checkIfVar(it)) {
-                val bracketcount = countBrackets(it.toCharArray())
-                val (before, variable, after) = constructVar(it, bracketcount)
+                val bracketcount =
+                    countBrackets(it.toCharArray())
+                val (before, variable, after) = constructVar(
+                    it,
+                    bracketcount
+                )
 
                 variablesMap.add(variable)
 
-                getRegex(before, after, false, singlestring)
+                getRegex(
+                    before,
+                    after,
+                    false,
+                    singlestring
+                )
             } else {
                 it + lineend
             }
@@ -140,7 +149,12 @@ object MatchingFunctions {
         // consider last two strings and put all together
         if (singlestring)
             return Pair(outstring, variablesMap)
-        return computeRegexAtEndOfString(outstring, lastentry, secondlast, variablesMap)
+        return computeRegexAtEndOfString(
+            outstring,
+            lastentry,
+            secondlast,
+            variablesMap
+        )
     }
 
     /**
@@ -170,19 +184,37 @@ object MatchingFunctions {
         val innerVariableMap = variablesMap.toMutableList()
         // check last one and add them to the outmap
         if (checkIfVar(lastentry)) {
-            val bracketcount = countBrackets(lastentry.toCharArray())
-            val (before, variable, after) = constructVar(lastentry, bracketcount)
+            val bracketcount =
+                countBrackets(lastentry.toCharArray())
+            val (before, variable, after) = constructVar(
+                lastentry,
+                bracketcount
+            )
             // adding the varibale name
             innerVariableMap.add(variable)
             // rebuilding the regex string
             inneroutstring += secondlast + before +
-                    getRegex(before, after, true, false) + after
+                    getRegex(
+                        before,
+                        after,
+                        true,
+                        false
+                    ) + after
         } else if (checkIfVar(secondlast)) {
-            val bracketcount = countBrackets(secondlast.toCharArray())
-            val (before, variable, after) = constructVar(secondlast, bracketcount)
+            val bracketcount =
+                countBrackets(secondlast.toCharArray())
+            val (before, variable, after) = constructVar(
+                secondlast,
+                bracketcount
+            )
             innerVariableMap.add(variable)
             inneroutstring +=
-                getRegex(before, after, false, false) + lastentry
+                getRegex(
+                    before,
+                    after,
+                    false,
+                    false
+                ) + lastentry
         } else {
             inneroutstring += secondlast + " " + lastentry
         }

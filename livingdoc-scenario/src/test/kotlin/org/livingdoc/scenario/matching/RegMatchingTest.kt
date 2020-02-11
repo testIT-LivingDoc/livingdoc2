@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -54,7 +54,11 @@ class RegMatchingTest {
     @Test
     fun `failure creating template`() {
         val template = "a}a{a"
-        assertThrows<IllegalFormatException> { StepTemplate.parse(template) }
+        assertThrows<IllegalFormatException> {
+            StepTemplate.parse(
+                template
+            )
+        }
     }
 
     @Test

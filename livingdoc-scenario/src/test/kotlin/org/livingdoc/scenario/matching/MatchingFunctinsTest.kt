@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -62,7 +62,11 @@ class MatchingFunctinsTest {
     @ParameterizedTest()
     @MethodSource("varLengthProvider")
     fun `test length consideration`(mapValues: Map<String, String>, output: Float) {
-        Assertions.assertThat(MatchingFunctions.considerVarLength(mapValues)).isEqualTo(output)
+        Assertions.assertThat(
+            MatchingFunctions.considerVarLength(
+                mapValues
+            )
+        ).isEqualTo(output)
     }
 
     fun varvalues(): Stream<Arguments> {
@@ -76,7 +80,11 @@ class MatchingFunctinsTest {
     @ParameterizedTest()
     @MethodSource("varvalues")
     fun `test valuePostCalc`(value: String, output: String) {
-        Assertions.assertThat(MatchingFunctions.variablevaluePostcalc(value)).isEqualTo(output)
+        Assertions.assertThat(
+            MatchingFunctions.variablevaluePostcalc(
+                value
+            )
+        ).isEqualTo(output)
     }
 
     @Test
@@ -107,6 +115,10 @@ class MatchingFunctinsTest {
     @MethodSource("templates")
     fun `test templates`(value: String, regexString: String, variablesMap: List<String>) {
         val output = Pair(regexString, variablesMap)
-        Assertions.assertThat(MatchingFunctions.templateStepToRegexString(value)).isEqualTo(output)
+        Assertions.assertThat(
+            MatchingFunctions.templateStepToRegexString(
+                value
+            )
+        ).isEqualTo(output)
     }
 }

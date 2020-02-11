@@ -36,6 +36,8 @@
       <module name="livingdoc.livingdoc-repository-rest.test" target="11" />
       <module name="livingdoc.livingdoc-results.main" target="11" />
       <module name="livingdoc.livingdoc-results.test" target="11" />
+      <module name="livingdoc.livingdoc-scenario.main" target="11" />
+      <module name="livingdoc.livingdoc-scenario.test" target="11" />
       <module name="livingdoc.livingdoc-testdata.main" target="11" />
       <module name="livingdoc.livingdoc-testdata.test" target="11" />
       <module name="livingdoc.livingdoc-tests.main" target="11" />

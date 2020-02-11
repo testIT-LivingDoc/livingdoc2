@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.livingdoc.engine.algo.Stemmer
 

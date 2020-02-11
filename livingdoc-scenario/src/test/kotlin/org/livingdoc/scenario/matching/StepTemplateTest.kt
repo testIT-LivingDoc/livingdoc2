@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -19,7 +19,8 @@ class StepTemplateTest {
 
         @Test
         fun `parses StepTemplates without variable`() {
-            val cut = StepTemplate.parse("Peter enters the building.")
+            val cut =
+                StepTemplate.parse("Peter enters the building.")
             assertThat(cut.fragments).containsExactly(Text("Peter enters the building."))
         }
 
@@ -35,7 +36,8 @@ class StepTemplateTest {
 
         @Test
         fun `parses StepTemplates with one variable`() {
-            val cut = StepTemplate.parse("{user} enters the building.")
+            val cut =
+                StepTemplate.parse("{user} enters the building.")
             assertThat(cut.fragments).containsExactly(
                 Variable("user"),
                 Text(" enters the building.")
@@ -44,13 +46,17 @@ class StepTemplateTest {
 
         @Test
         fun `accepts optional set of quotation characters`() {
-            val cut = StepTemplate.parse("{user} enters the building.", setOf('\''))
+            val cut = StepTemplate.parse(
+                "{user} enters the building.",
+                setOf('\'')
+            )
             assertThat(cut.quotationCharacters).containsExactly('\'')
         }
 
         @Test
         fun `parses StepTemplates with multiple variables`() {
-            val cut = StepTemplate.parse("The user {user} enters a value for {variable}: {value}")
+            val cut =
+                StepTemplate.parse("The user {user} enters a value for {variable}: {value}")
             assertThat(cut.fragments).containsExactly(
                 Text("The user "),
                 Variable("user"),
@@ -63,7 +69,8 @@ class StepTemplateTest {
 
         @Test
         fun `parses StepTemplates with escaped curly braces`() {
-            val cut = StepTemplate.parse("Literal \\{curly braces\\} have to be escaped with backslashes.")
+            val cut =
+                StepTemplate.parse("Literal \\{curly braces\\} have to be escaped with backslashes.")
             assertThat(cut.fragments).containsExactly(
                 Text("Literal \\{curly braces\\} have to be escaped with backslashes.")
             )
@@ -79,14 +86,16 @@ class StepTemplateTest {
 
     @Test
     fun `aligns with scenario step descriptions`() {
-        val cut = StepTemplate.parse("My name is {username}.")
+        val cut =
+            StepTemplate.parse("My name is {username}.")
         val result = cut.alignWith("My name is Peter.")
         assertThat(result).isInstanceOf(RegMatching::class.java)
     }
 
     @Test
     fun `round-trip serializes to String`() {
-        val cut = StepTemplate.parse("My name is {username}.")
+        val cut =
+            StepTemplate.parse("My name is {username}.")
         assertThat(cut.toString()).isEqualTo("My name is {username}.")
     }
 }

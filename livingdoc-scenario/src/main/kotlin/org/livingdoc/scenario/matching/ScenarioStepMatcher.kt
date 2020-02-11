@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 // maybe refactor this exception to yield more information
 class NoMatchingStepTemplate(msg: String) : RuntimeException(msg)
@@ -23,7 +23,6 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
         if (bestFit.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }
-
         return MatchingResult(bestFit.stepTemplate, bestFit.variables)
     }
 }

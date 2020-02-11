@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 /**
  * RegMatching is used to match a step to a template and give them a cost depending on the
@@ -102,13 +102,19 @@ internal class RegMatching(
         val templatetext = MatchingFunctions.filterString(stepTemplate.toString(), false)
         val testText = MatchingFunctions.filterString(step, true)
 
-        val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(templatetext)
+        val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(
+            templatetext
+        )
         val reggedText = regstring.toRegex()
 
         // matching
         val (output, increase) = matchStrings(testText, reggedText, templatetext)
         operationNumber += increase
-        val filteredMap: List<String> = output.map { MatchingFunctions.variablevaluePostcalc(it) }
+        val filteredMap: List<String> = output.map {
+            MatchingFunctions.variablevaluePostcalc(
+                it
+            )
+        }
 
         // mapping all outputs to the variables
 
@@ -206,7 +212,9 @@ internal class RegMatching(
 
         val preppedTemplate = reconstructVars(templateS = stemmedsentence, variables = vari)
 
-        val (regexString) = MatchingFunctions.templateStepToRegexString(value = preppedTemplate)
+        val (regexString) = MatchingFunctions.templateStepToRegexString(
+            value = preppedTemplate
+        )
 
         val regexText = regexString.toRegex()
 

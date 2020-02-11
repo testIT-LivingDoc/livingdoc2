@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test

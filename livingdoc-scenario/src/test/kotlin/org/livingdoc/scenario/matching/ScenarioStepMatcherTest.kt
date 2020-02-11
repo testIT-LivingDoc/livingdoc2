@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -17,15 +17,22 @@ class ScenarioStepMatcherTest {
 
     @Test
     fun `matches step against single template`() {
-        val template = StepTemplate.parse("User {username} has entered the building.")
+        val template =
+            StepTemplate.parse("User {username} has entered the building.")
         val cut = ScenarioStepMatcher(arrayListOf(template))
         val result = cut.match("User Peter has entered the building.")
-        assertThat(result).isEqualTo(ScenarioStepMatcher.MatchingResult(template, mapOf("username" to "Peter")))
+        assertThat(result).isEqualTo(
+            ScenarioStepMatcher.MatchingResult(
+                template,
+                mapOf("username" to "Peter")
+            )
+        )
     }
 
     @Test
     fun `throws when no StepTemplate matches the given step`() {
-        val template = StepTemplate.parse("User {username} has entered the building.")
+        val template =
+            StepTemplate.parse("User {username} has entered the building.")
         val cut = ScenarioStepMatcher(arrayListOf(template))
         assertThatExceptionOfType(NoMatchingStepTemplate::class.java).isThrownBy {
             cut.match("This step does not match the provided template at all.")
@@ -45,6 +52,11 @@ class ScenarioStepMatcherTest {
 
         val result = cut.match("the user 'Paul' is logged into the shop")
 
-        assertThat(result).isEqualTo(ScenarioStepMatcher.MatchingResult(bestMatch, mapOf("username" to "Paul")))
+        assertThat(result).isEqualTo(
+            ScenarioStepMatcher.MatchingResult(
+                bestMatch,
+                mapOf("username" to "Paul")
+            )
+        )
     }
 }

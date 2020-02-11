@@ -1,4 +1,4 @@
-package org.livingdoc.engine.execution.examples.scenarios.matching
+package org.livingdoc.scenario.matching
 
 /**
  * Represents a template specified by a fixture developer for scenario steps. Used for matching scenario
@@ -30,7 +30,8 @@ internal class StepTemplate(
      * Returns a Matching of the template and the specified scenario step.
      */
 
-    fun alignWith(step: String, maxLevelOfStemming: Float = 3.0f) = RegMatching(this, step, maxLevelOfStemming)
+    fun alignWith(step: String, maxLevelOfStemming: Float = 3.0f) =
+        RegMatching(this, step, maxLevelOfStemming)
 
     override fun toString(): String = fragments.joinToString(separator = "") { fragment ->
         when (fragment) {
@@ -49,13 +50,18 @@ internal class StepTemplate(
          * @throws IllegalFormatException if the specified template string is malformed
          */
         fun parse(templateAsString: String, quotationCharacters: Set<Char> = emptySet()) =
-            StepTemplate(parseString(templateAsString), quotationCharacters)
+            StepTemplate(
+                parseString(
+                    templateAsString
+                ), quotationCharacters
+            )
 
         private fun parseString(templateAsString: String): List<Fragment> {
             if (templateAsString.isEmpty()) {
                 throw IllegalFormatException("StepTemplates cannot be empty!")
             }
-            return split(templateAsString).map { createFragment(it) }.toList()
+            return split(templateAsString)
+                .map { createFragment(it) }.toList()
         }
 
         private fun split(templateAsString: String): List<String> {
@@ -65,14 +71,27 @@ internal class StepTemplate(
             var isVariable = false
             var isPreceededByVariable = false
             for ((i, c) in templateAsString.withIndex()) {
-                if (c == '{' && !isEscaped(templateAsString, i)) {
-                    validateVariables(isVariable, i, templateAsString, isPreceededByVariable)
+                if (c == '{' && !isEscaped(
+                        templateAsString,
+                        i
+                    )
+                ) {
+                    validateVariables(
+                        isVariable,
+                        i,
+                        templateAsString,
+                        isPreceededByVariable
+                    )
                     isVariable = true
                     if (lastIndex < i) {
                         tokens.add(templateAsString.substring(lastIndex, i))
                     }
                     lastIndex = i
-                } else if (c == '}' && !isEscaped(templateAsString, i)) {
+                } else if (c == '}' && !isEscaped(
+                        templateAsString,
+                        i
+                    )
+                ) {
                     if (!isVariable) {
                         throw IllegalFormatException(
                             "Illegal closing curly brace at position $i!\nOffending string was: $templateAsString"
@@ -118,7 +137,12 @@ internal class StepTemplate(
 
         private fun createFragment(fragmentAsString: String): Fragment {
             return if (fragmentAsString.startsWith('{') && fragmentAsString.endsWith('}'))
-                Variable(fragmentAsString.substring(1, fragmentAsString.length - 1))
+                Variable(
+                    fragmentAsString.substring(
+                        1,
+                        fragmentAsString.length - 1
+                    )
+                )
             else
                 Text(fragmentAsString)
         }
