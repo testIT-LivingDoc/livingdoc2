@@ -154,7 +154,7 @@ class ScenarioFixtureWrapper(
             } catch (e: AssertionError) {
                 exceptions.add(e)
             } catch (e: FixtureMethodInvoker.FixtureMethodInvocationException) {
-                exceptions.add(e.cause!!)
+                exceptions.add(e.cause)
             }
         }
         if (exceptions.isNotEmpty()) throw AfterMethodExecutionException(exceptions)
