@@ -9,6 +9,7 @@ import org.livingdoc.jvm.extension.Store
 import org.livingdoc.jvm.extension.spi.CallbackExtension
 import org.livingdoc.jvm.extension.spi.ExecutionCondition
 import org.livingdoc.jvm.extension.spi.Extension
+import org.livingdoc.jvm.extension.spi.TestExecutionExceptionHandler
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -72,15 +73,20 @@ class ExtensionManager {
             .all { it.enabled }
     }
 
-    fun loadExtensions(context: GroupContext) {
-        context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
+    @Suppress("TooGenericExceptionCaught")
+    fun handleTestExecutionException(context: FixtureContext, throwable: Throwable): Throwable? {
+        return getAllExtensions(context).extensionsOfType<TestExecutionExceptionHandler>()
+            .fold(throwable) { currentThrowable, handler ->
+                try {
+                    handler.handleTestExecutionException(context, currentThrowable)
+                    return null
+                } catch (t: Throwable) {
+                    t
+                }
+            }
     }
 
-    fun loadExtensions(context: DocumentFixtureContext) {
-        context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
-    }
-
-    fun loadExtensions(context: FixtureContext) {
+    fun loadExtensions(context: ExtensionContext) {
         context.extensionStore.extensions = context.extensionClasses.map { instantiateExtension(it) }
     }
 }
