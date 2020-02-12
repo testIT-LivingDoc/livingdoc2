@@ -106,7 +106,7 @@ class HtmlFormat : DocumentFormat {
      */
     private fun parseGherkin(element: Element, context: ParseContext): List<Scenario> {
 
-        //finding gherkin and bringing the results into one single list
+        // finding gherkin and bringing the results into one single list
         return element.children().filter { it.tagName() == "gherkin" }
             .flatMap { createGherkin(it.text(), context) }
     }
