@@ -4,7 +4,7 @@ import org.livingdoc.jvm.extension.ExtensionContext
 import org.livingdoc.jvm.extension.GroupContext
 import kotlin.reflect.KClass
 
-class GroupContextImpl(override val groupClass: KClass<*>) : ContextImpl<ExtensionContext>(), GroupContext {
+internal class GroupContextImpl(override val groupClass: KClass<*>) : ContextImpl<ExtensionContext>(), GroupContext {
     override val testClass: KClass<*>
         get() = groupClass
 }

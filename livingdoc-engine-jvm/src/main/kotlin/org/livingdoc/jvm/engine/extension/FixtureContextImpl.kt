@@ -5,7 +5,7 @@ import org.livingdoc.jvm.extension.ExtensionContext
 import org.livingdoc.jvm.extension.FixtureContext
 import kotlin.reflect.KClass
 
-class FixtureContextImpl(
+internal class FixtureContextImpl(
     override val fixtureClass: KClass<*>,
     override val documentFixtureContext: DocumentFixtureContext
 ) : ContextImpl<ExtensionContext>(), FixtureContext {
