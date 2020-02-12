@@ -9,4 +9,3 @@ internal open class ContextImpl<T : Context<T>>(override val parent: T? = null) 
     override fun getStore(namespace: String): Store =
         stores.getOrPut(namespace) { StoreImpl { this.parent?.getStore(namespace) } }
 }
-

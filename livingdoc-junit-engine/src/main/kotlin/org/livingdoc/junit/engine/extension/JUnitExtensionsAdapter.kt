@@ -1,25 +1,33 @@
 package org.livingdoc.junit.engine.extension
 
+import org.junit.jupiter.api.extension.AfterAllCallback
+import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extension
+import org.livingdoc.jvm.extension.DocumentFixtureContext
 import org.livingdoc.jvm.extension.ExtensionContext
+import org.livingdoc.jvm.extension.FixtureContext
+import org.livingdoc.jvm.extension.GroupContext
 import org.livingdoc.jvm.extension.Store
+import org.livingdoc.jvm.extension.spi.CallbackExtension
 import org.livingdoc.jvm.extension.spi.ConditionEvaluationResult
 import org.livingdoc.jvm.extension.spi.ExecutionCondition
 import java.util.*
-import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
-class JUnitExecutionConditionExtensions : ExecutionCondition {
+class JUnitExtensionsAdapter : ExecutionCondition, CallbackExtension {
 
     private val spiExtensions = ServiceLoader.load(Extension::class.java).iterator().asSequence().toList()
-        .filterIsInstance<org.junit.jupiter.api.extension.ExecutionCondition>()
 
     override fun evaluateExecutionCondition(context: ExtensionContext): ConditionEvaluationResult {
         loadExtensions(context)
 
         val junitContext = JUnitExtensionContext(context)
-        val results = (spiExtensions + context.extensions).map { it.evaluateExecutionCondition(junitContext) }
+        val results =
+            (spiExtensions + context.extensions).filterIsInstance<org.junit.jupiter.api.extension.ExecutionCondition>()
+                .map {
+                    it.evaluateExecutionCondition(junitContext)
+                }
         val enabled = results.all { !it.isDisabled }
         val reason =
             results.mapNotNull { conditionEvaluationResult -> conditionEvaluationResult.reason.orElse(null) }
@@ -28,20 +36,63 @@ class JUnitExecutionConditionExtensions : ExecutionCondition {
         return ConditionEvaluationResult(enabled, reason)
     }
 
+    override fun onBeforeGroup(context: GroupContext) {
+        loadExtensions(context)
+        onBeforeAllCallback(context)
+    }
+
+    override fun onBeforeDocument(context: DocumentFixtureContext) {
+        loadExtensions(context)
+        onBeforeAllCallback(context)
+    }
+
+    override fun onBeforeFixture(context: FixtureContext) {
+        loadExtensions(context)
+        onBeforeAllCallback(context)
+    }
+
+    override fun onAfterFixture(context: FixtureContext) {
+        onAfterAllCallback(context)
+    }
+
+    override fun onAfterDocument(context: DocumentFixtureContext) {
+        onAfterAllCallback(context)
+    }
+
+    override fun onAfterGroup(context: GroupContext) {
+        onAfterAllCallback(context)
+    }
+
+    private fun onBeforeAllCallback(context: ExtensionContext) {
+        val junitContext = JUnitExtensionContext(context)
+        (spiExtensions + context.extensions).filterIsInstance<BeforeAllCallback>()
+            .forEach { it.beforeAll(junitContext) }
+    }
+
+    private fun onAfterAllCallback(context: ExtensionContext) {
+        val junitContext = JUnitExtensionContext(context)
+        (spiExtensions + context.extensions).reversed().filterIsInstance<AfterAllCallback>()
+            .forEach { it.afterAll(junitContext) }
+    }
+
     private fun loadExtensions(context: ExtensionContext) {
+        if (context.store.get("loadedExtensionsTestClass") == context.testClass) {
+            // already loaded
+            return
+        }
         val extensionTypes = context.testClass.annotations.filterIsInstance<ExtendWith>().flatMap { it.value.toList() }
-        val extensions = extensionTypes.filterIsInstance<KClass<org.junit.jupiter.api.extension.ExecutionCondition>>()
-            .map { it.createInstance() }
+        val extensions = extensionTypes.map { it.createInstance() }
         context.extensions = extensions
+        context.store.put("loadedExtensionsTestClass", context.testClass)
     }
 }
 
 private val ExtensionContext.store: Store
-    get() = getStore("org.livingdoc.junit.engine.extension.JUnitExecutionConditionExtensions")
+    get() = getStore("org.livingdoc.junit.engine.extension.JUnitExtensionsAdapter")
 
-private var ExtensionContext.extensions: List<org.junit.jupiter.api.extension.ExecutionCondition>
+private var ExtensionContext.extensions: List<Extension>
     get() = store.getListCombineAncestors("extensions")
-        .filterIsInstance<org.junit.jupiter.api.extension.ExecutionCondition>()
+        .filterIsInstance<Extension>()
     set(value) {
         store.put("extensions", value)
     }

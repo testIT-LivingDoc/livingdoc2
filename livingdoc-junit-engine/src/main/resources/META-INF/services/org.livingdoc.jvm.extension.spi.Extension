@@ -1,1 +1,1 @@
-org.livingdoc.junit.engine.extension.JUnitExecutionConditionExtensions
+org.livingdoc.junit.engine.extension.JUnitExtensionsAdapter
