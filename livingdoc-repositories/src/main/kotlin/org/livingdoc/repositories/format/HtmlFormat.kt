@@ -106,18 +106,18 @@ class HtmlFormat : DocumentFormat {
      */
     private fun parseGherkin(element: Element, context: ParseContext): List<Scenario> {
 
-        // find gherkin
-        return element.children().filter { it.tagName() == "gherkin" }.flatMap { createGherkin(it.text(), context) }
-            .toMutableList()
+        //finding gherkin and bringing the results into one single list
+        return element.children().filter { it.tagName() == "gherkin" }
+            .flatMap { createGherkin(it.text(), context) }
     }
 
     private fun createGherkin(gherkinInput: String, context: ParseContext): List<Scenario> {
 
         // pass to gherkin parser
         val ghf = GherkinFormat()
-        val outDoc = ghf.parse(gherkinInput.byteInputStream(Charsets.UTF_8))
+        val parsedGherkinDoc = ghf.parse(gherkinInput.byteInputStream(Charsets.UTF_8))
 
-        val scenariolist = outDoc.elements.map {
+        val scenariolist = parsedGherkinDoc.elements.map {
             Scenario(
                 (it as Scenario).steps, TestDataDescription(
                     it.description.name,
@@ -125,7 +125,6 @@ class HtmlFormat : DocumentFormat {
                 )
             )
         }
-
         return scenariolist
     }
 

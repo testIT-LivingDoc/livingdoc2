@@ -2,7 +2,6 @@ plugins {
 	`kotlin-project-config`
 }
 dependencies {
-	implementation("io.cucumber:gherkin:${Versions.gherkin}")
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.vladsch.flexmark:flexmark:${Versions.flexmark}")
@@ -17,5 +16,6 @@ dependencies {
 	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
 	testCompile("org.assertj:assertj-core:${Versions.assertJ}")
 
+	testImplementation("io.cucumber:gherkin:${Versions.gherkin}")
 	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
 }
