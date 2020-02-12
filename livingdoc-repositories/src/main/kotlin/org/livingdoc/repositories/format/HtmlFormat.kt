@@ -13,7 +13,6 @@ import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
-import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.charset.Charset
 
@@ -123,11 +122,15 @@ class HtmlFormat : DocumentFormat {
 
         // pass to gherkin parser
         val ghf = GherkinFormat()
-        val outdoc = ghf.parse(ByteArrayInputStream(gherkinInput.toByteArray(Charsets.UTF_8)))
+        val outDoc = ghf.parse(gherkinInput.byteInputStream(Charsets.UTF_8))
 
-        val scenariolist = outdoc.elements.map {
-            Scenario((it as Scenario).steps, TestDataDescription(it.description.name,
-                context.isManual(), it.description.descriptiveText))
+        val scenariolist = outDoc.elements.map {
+            Scenario(
+                (it as Scenario).steps, TestDataDescription(
+                    it.description.name,
+                    context.isManual(), it.description.descriptiveText
+                )
+            )
         }
 
         return scenariolist
