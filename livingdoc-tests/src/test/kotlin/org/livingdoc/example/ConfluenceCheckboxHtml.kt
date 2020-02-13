@@ -44,7 +44,7 @@ class ConfluenceCheckboxHtml {
             this.valueB = valueB
         }
 
-        @Check("a && b = ?")
+        @Check("a and b = ?")
         fun checkSum(expectedValue: Boolean) {
             assertThat(valueA && valueB).isEqualTo(expectedValue)
         }
