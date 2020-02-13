@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension.spi
+package org.livingdoc.jvm.api.extension
 
 /**
  * The result of evaluating an [ExecutionCondition].
@@ -14,10 +14,12 @@ data class ConditionEvaluationResult(
         /**
          * Create a disabled ConditionEvaluationResult with an optional [reason] why the test should be disabled
          */
-        fun disabled(reason: String? = null) = ConditionEvaluationResult(false, reason)
+        fun disabled(reason: String? = null) =
+            ConditionEvaluationResult(false, reason)
         /**
          * Create a enabled ConditionEvaluationResult with an optional [reason] why the test should be enabled
          */
-        fun enabled(reason: String? = null) = ConditionEvaluationResult(true, reason)
+        fun enabled(reason: String? = null) =
+            ConditionEvaluationResult(true, reason)
     }
 }

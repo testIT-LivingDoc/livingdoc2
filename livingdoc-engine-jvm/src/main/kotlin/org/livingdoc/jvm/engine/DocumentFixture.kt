@@ -3,7 +3,7 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.extension.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult

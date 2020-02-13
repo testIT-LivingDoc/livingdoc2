@@ -1,8 +1,8 @@
-package org.livingdoc.jvm.extension.spi
+package org.livingdoc.jvm.api.extension
 
-import org.livingdoc.jvm.extension.DocumentFixtureContext
-import org.livingdoc.jvm.extension.FixtureContext
-import org.livingdoc.jvm.extension.GroupContext
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.extension.context.GroupContext
 
 /**
  * The Extensions interface used to extend the lifecycle of the Livingdoc tests. The Extension can listen to different

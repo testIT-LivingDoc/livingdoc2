@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension
+package org.livingdoc.jvm.api.extension.context
 
 /**
  * Store provides methods for extensions to save and retrieve data.

@@ -8,7 +8,7 @@ import java.lang.reflect.Method
 import java.util.*
 
 @Suppress("TooManyFunctions")
-class JUnitExtensionContext(private val context: org.livingdoc.jvm.extension.ExtensionContext) : ExtensionContext {
+class JUnitExtensionContext(private val context: org.livingdoc.jvm.api.extension.context.ExtensionContext) : ExtensionContext {
     override fun getElement(): Optional<AnnotatedElement> {
         return Optional.of(context.testClass.java)
     }

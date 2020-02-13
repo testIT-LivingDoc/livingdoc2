@@ -1,9 +1,9 @@
 package org.livingdoc.jvm.engine.extension.default
 
 import org.livingdoc.api.disabled.Disabled
-import org.livingdoc.jvm.extension.ExtensionContext
-import org.livingdoc.jvm.extension.spi.ConditionEvaluationResult
-import org.livingdoc.jvm.extension.spi.ExecutionCondition
+import org.livingdoc.jvm.api.extension.context.ExtensionContext
+import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
+import org.livingdoc.jvm.api.extension.ExecutionCondition
 import kotlin.reflect.full.findAnnotation
 
 /**

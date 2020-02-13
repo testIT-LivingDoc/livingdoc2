@@ -5,8 +5,8 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.livingdoc.jvm.extension.FixtureContext
-import org.livingdoc.jvm.extension.spi.FixtureFactory
+import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
 import kotlin.reflect.KClass

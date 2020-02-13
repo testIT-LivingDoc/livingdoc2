@@ -1,6 +1,6 @@
 package org.livingdoc.jvm.engine.extension
 
-import org.livingdoc.jvm.extension.Store
+import org.livingdoc.jvm.api.extension.context.Store
 
 internal class StoreImpl(
     getAncestor: () -> Store?

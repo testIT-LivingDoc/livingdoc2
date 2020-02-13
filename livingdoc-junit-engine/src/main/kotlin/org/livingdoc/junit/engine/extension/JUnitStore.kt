@@ -1,7 +1,7 @@
 package org.livingdoc.junit.engine.extension
 
 import org.junit.jupiter.api.extension.ExtensionContext
-import org.livingdoc.jvm.extension.Store
+import org.livingdoc.jvm.api.extension.context.Store
 import java.util.function.Function
 
 class JUnitStore(private val store: Store) :

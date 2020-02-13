@@ -1,9 +1,9 @@
 package org.livingdoc.jvm.scenario
 
 import org.livingdoc.api.fixtures.scenarios.Step
-import org.livingdoc.jvm.extension.Fixture
-import org.livingdoc.jvm.extension.FixtureContext
-import org.livingdoc.jvm.extension.spi.FixtureFactory
+import org.livingdoc.jvm.api.fixture.Fixture
+import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.scenario.matching.NoMatchingStepTemplate

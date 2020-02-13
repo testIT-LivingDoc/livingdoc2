@@ -1,9 +1,10 @@
 package org.livingdoc.jvm.engine.extension
 
-import org.livingdoc.jvm.extension.Context
-import org.livingdoc.jvm.extension.Store
+import org.livingdoc.jvm.api.extension.context.Context
+import org.livingdoc.jvm.api.extension.context.Store
 
-internal open class ContextImpl<T : Context<T>>(override val parent: T? = null) : Context<T> {
+internal open class ContextImpl<T : Context<T>>(override val parent: T? = null) :
+    Context<T> {
     private var stores = mutableMapOf<String, StoreImpl>()
 
     override fun getStore(namespace: String): Store =

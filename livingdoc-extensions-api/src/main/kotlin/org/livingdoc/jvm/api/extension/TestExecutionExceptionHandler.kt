@@ -1,6 +1,6 @@
-package org.livingdoc.jvm.extension.spi
+package org.livingdoc.jvm.api.extension
 
-import org.livingdoc.jvm.extension.ExtensionContext
+import org.livingdoc.jvm.api.extension.context.ExtensionContext
 
 /**
  * TestExecutionExceptionHandler defines the API for Extensions that wish to handle exceptions thrown during test

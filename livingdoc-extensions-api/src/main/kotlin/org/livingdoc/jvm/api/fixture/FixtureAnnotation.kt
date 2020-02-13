@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension.spi
+package org.livingdoc.jvm.api.fixture
 
 /**
  * This meta-annotation determines that an annotation is used to mark Fixtures in Livingdoc Document classes.

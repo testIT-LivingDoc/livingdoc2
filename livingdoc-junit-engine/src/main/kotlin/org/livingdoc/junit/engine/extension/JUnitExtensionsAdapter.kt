@@ -4,18 +4,19 @@ import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extension
-import org.livingdoc.jvm.extension.DocumentFixtureContext
-import org.livingdoc.jvm.extension.ExtensionContext
-import org.livingdoc.jvm.extension.FixtureContext
-import org.livingdoc.jvm.extension.GroupContext
-import org.livingdoc.jvm.extension.Store
-import org.livingdoc.jvm.extension.spi.CallbackExtension
-import org.livingdoc.jvm.extension.spi.ConditionEvaluationResult
-import org.livingdoc.jvm.extension.spi.ExecutionCondition
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.ExtensionContext
+import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.extension.context.GroupContext
+import org.livingdoc.jvm.api.extension.context.Store
+import org.livingdoc.jvm.api.extension.CallbackExtension
+import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
+import org.livingdoc.jvm.api.extension.ExecutionCondition
 import java.util.*
 import kotlin.reflect.full.createInstance
 
-class JUnitExtensionsAdapter : ExecutionCondition, CallbackExtension {
+class JUnitExtensionsAdapter : ExecutionCondition,
+    CallbackExtension {
 
     private val spiExtensions = ServiceLoader.load(Extension::class.java).iterator().asSequence().toList()
 

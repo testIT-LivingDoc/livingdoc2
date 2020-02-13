@@ -3,7 +3,7 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.jvm.engine.extension.DocumentFixtureContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.extension.GroupContext
+import org.livingdoc.jvm.api.extension.context.GroupContext
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.documents.DocumentResult
 import kotlin.reflect.KClass

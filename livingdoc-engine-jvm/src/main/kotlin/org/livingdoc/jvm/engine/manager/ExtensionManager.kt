@@ -1,15 +1,16 @@
 package org.livingdoc.jvm.engine.manager
 
 import org.livingdoc.jvm.engine.castToClass
-import org.livingdoc.jvm.extension.DocumentFixtureContext
-import org.livingdoc.jvm.extension.ExtensionContext
-import org.livingdoc.jvm.extension.FixtureContext
-import org.livingdoc.jvm.extension.GroupContext
-import org.livingdoc.jvm.extension.Store
-import org.livingdoc.jvm.extension.spi.CallbackExtension
-import org.livingdoc.jvm.extension.spi.ExecutionCondition
-import org.livingdoc.jvm.extension.spi.Extension
-import org.livingdoc.jvm.extension.spi.TestExecutionExceptionHandler
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.ExtensionContext
+import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.extension.context.GroupContext
+import org.livingdoc.jvm.api.extension.context.Store
+import org.livingdoc.jvm.api.extension.CallbackExtension
+import org.livingdoc.jvm.api.extension.ExecutionCondition
+import org.livingdoc.jvm.api.extension.Extension
+import org.livingdoc.jvm.api.extension.LifecycleMethodExecutionExceptionHandler
+import org.livingdoc.jvm.api.extension.TestExecutionExceptionHandler
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -76,14 +77,22 @@ class ExtensionManager {
     @Suppress("TooGenericExceptionCaught")
     fun handleTestExecutionException(context: FixtureContext, throwable: Throwable): Throwable? {
         return getAllExtensions(context).extensionsOfType<TestExecutionExceptionHandler>()
-            .fold(throwable) { currentThrowable, handler ->
-                try {
-                    handler.handleTestExecutionException(context, currentThrowable)
-                    return null
-                } catch (t: Throwable) {
-                    t
-                }
-            }
+            .map { handler -> { t: Throwable -> handler.handleTestExecutionException(context, t) } }
+            .handle(throwable)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun handleBeforeMethodExecutionException(context: ExtensionContext, throwable: Throwable): Throwable? {
+        return getAllExtensions(context).extensionsOfType<LifecycleMethodExecutionExceptionHandler>()
+            .map { handler -> { t: Throwable -> handler.handleBeforeMethodExecutionException(context, t) } }
+            .handle(throwable)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun handleAfterMethodExecutionException(context: ExtensionContext, throwable: Throwable): Throwable? {
+        return getAllExtensions(context).extensionsOfType<LifecycleMethodExecutionExceptionHandler>()
+            .map { handler -> { t: Throwable -> handler.handleAfterMethodExecutionException(context, t) } }
+            .handle(throwable)
     }
 
     fun loadExtensions(context: ExtensionContext) {
@@ -109,4 +118,15 @@ private var Store.extensions: List<Extension>
 
 private inline fun <reified T : Extension> List<Extension>.extensionsOfType(): List<T> {
     return this.filterIsInstance<T>()
+}
+
+private fun List<(Throwable) -> Unit>.handle(throwable: Throwable): Throwable? {
+    return fold(throwable) { currentThrowable, handler ->
+        try {
+            handler(currentThrowable)
+            return null
+        } catch (t: Throwable) {
+            t
+        }
+    }
 }

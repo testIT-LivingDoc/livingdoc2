@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension
+package org.livingdoc.jvm.api.extension.context
 
 interface Context<T : Context<T>> {
     val parent: T?

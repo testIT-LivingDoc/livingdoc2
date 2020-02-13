@@ -2,10 +2,10 @@ package org.livingdoc.jvm.engine.manager
 
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.engine.extension.FixtureContextImpl
-import org.livingdoc.jvm.extension.DocumentFixtureContext
-import org.livingdoc.jvm.extension.Fixture
-import org.livingdoc.jvm.extension.spi.FixtureAnnotation
-import org.livingdoc.jvm.extension.spi.FixtureFactory
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.fixture.Fixture
+import org.livingdoc.jvm.api.fixture.FixtureAnnotation
+import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.TestData
 import java.util.*
 import kotlin.reflect.KClass

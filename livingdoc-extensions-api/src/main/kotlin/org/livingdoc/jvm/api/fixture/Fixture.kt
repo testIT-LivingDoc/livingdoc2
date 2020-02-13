@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension
+package org.livingdoc.jvm.api.fixture
 
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.results.TestDataResult

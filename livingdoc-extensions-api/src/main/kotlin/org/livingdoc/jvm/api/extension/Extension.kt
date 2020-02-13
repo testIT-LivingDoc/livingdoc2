@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.extension.spi
+package org.livingdoc.jvm.api.extension
 
 /**
  * Marker interface for all extensions.
