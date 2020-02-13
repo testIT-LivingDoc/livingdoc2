@@ -154,8 +154,7 @@ class HtmlFormat : DocumentFormat {
      * @return the created field
      */
     private fun createField(element: Element): Field {
-        val valueElement = Jsoup.parseBodyFragment(element.html()).body()
-        val checkboxValue = valueElement.selectFirst("input")?.attr("value")
+        val checkboxValue = element.selectFirst("input")?.attr("value")
         return if (checkboxValue.isNullOrEmpty()) Field(element.text()) else Field(checkboxValue)
     }
 
