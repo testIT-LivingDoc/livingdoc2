@@ -11,6 +11,7 @@ import org.livingdoc.results.examples.scenarios.ScenarioResult
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
@@ -19,7 +20,10 @@ class HtmlReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
-        val outputFolder = Paths.get(htmlConfig.outputDir, LocalDateTime.now().toString()).toString()
+        val outputFolder = Paths.get(
+            htmlConfig.outputDir,
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
+        ).toString()
         val reportWriter = ReportWriter(outputFolder, fileExtension = "html")
 
         val generatedReports = documentResults.map { documentResult ->
