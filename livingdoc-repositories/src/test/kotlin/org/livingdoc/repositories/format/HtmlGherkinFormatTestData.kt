@@ -304,8 +304,8 @@ object HtmlGherkinFormatTestData {
                   Then I get a valid Document containing the expected information
                   But the Document is not modified
         </gherkin>
-        </pre>
-        <p>This is a description 2</p>
+      </pre>
+      <p>This is a description 2</p>
     </body>
     </html>
     """.byteInputStream()

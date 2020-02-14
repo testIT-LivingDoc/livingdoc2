@@ -121,7 +121,8 @@ class HtmlFormat : DocumentFormat {
             Scenario(
                 (it as Scenario).steps, TestDataDescription(
                     context.headline + "\n" + it.description.name,
-                    context.isManual(), context.descriptiveText + "\n" + it.description.descriptiveText
+                    context.isManual(),
+                    (context.descriptiveText + "\n" + it.description.descriptiveText).trimIndent().trim()
                 )
             )
         }

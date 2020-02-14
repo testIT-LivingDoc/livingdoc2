@@ -50,7 +50,7 @@ class HtmlGherkinFormatTest {
     @Test
     fun descriptions() {
         val result = cut.parse(getDescriptiveHtml())
-        assertThat(result.elements[0].description.descriptiveText).isEqualTo("\ndescriptive text is here.")
+        assertThat(result.elements[0].description.descriptiveText).isEqualTo("descriptive text is here.")
     }
 
     @Test
@@ -101,8 +101,7 @@ class HtmlGherkinFormatTest {
         val htmldocument = cut.parse(getPTags())
 
         assertThat(htmldocument.elements[0].description.descriptiveText).isEqualTo("This is a description 1\n" +
-                "This is a description 2\n" +
-                "\n")
+                "This is a description 2")
     }
 
     @Test
