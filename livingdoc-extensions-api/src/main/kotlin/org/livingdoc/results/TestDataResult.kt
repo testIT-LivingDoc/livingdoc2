@@ -1,3 +1,13 @@
 package org.livingdoc.results
 
-interface TestDataResult<out T>
+/**
+ * Base interface for all results.
+ */
+interface TestDataResult<out T> {
+    /**
+     * The [Status] of the [TestDataResult].
+     *
+     * @see [Status]
+     */
+    val status: Status
+}

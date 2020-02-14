@@ -21,12 +21,20 @@ import org.livingdoc.results.documents.DocumentResult
  * @since 2.0
  */
 class LivingDoc(
-    val configProvider: ConfigProvider = ConfigProvider.load(),
+    private val configProvider: ConfigProvider = ConfigProvider.load(),
     private val repositoryManager: RepositoryManager =
         RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
     private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
     private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
+    companion object {
+        /**
+         * Indicates whether the execution should fail fast due to a specific
+         * thrown exception and not execute any more tests.
+         */
+        var failFastActivated: Boolean = false
+    }
+
     /**
      * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
      * classes must be annotated with [ExecutableDocument].

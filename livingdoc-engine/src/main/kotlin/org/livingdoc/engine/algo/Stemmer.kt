@@ -98,7 +98,7 @@ class Stemmer {
     private fun cons(i: Int): Boolean {
         return when (resultBuffer[i]) {
             'a', 'e', 'i', 'o', 'u' -> false
-            'y' -> if (i == 0) true else !cons(i - 1)
+            'y' -> (i == 0) || !cons(i - 1)
             else -> true
         }
     }
@@ -158,7 +158,7 @@ class Stemmer {
      */
     private fun doubleConsonant(j: Int): Boolean {
         if (j < 1) return false
-        return if (resultBuffer[j] != resultBuffer[j - 1]) false else cons(j)
+        return (resultBuffer[j] == resultBuffer[j - 1]) && cons(j)
     }
 
     /**
@@ -392,9 +392,8 @@ class Stemmer {
                     return
             }
             'c' -> {
-                if (ends("ance"))
-                    if (ends("ence"))
-                        return
+                if (ends("ance") && ends("ence"))
+                    return
             }
             'e' -> {
                 if (ends("er"))
@@ -405,22 +404,16 @@ class Stemmer {
                     return
             }
             'l' -> {
-                if (ends("able"))
-                    if (ends("ible"))
-                        return
+                if (ends("able") && ends("ible"))
+                    return
             }
             'n' -> {
-                if (ends("ant"))
-                    if (ends("ement"))
-                        if (ends("ment"))
-                        /* element etc. not stripped before the m */ if (ends("ent"))
-                            return
+                if (ends("ant") && ends("ement") && ends("ment") && ends("ent"))
+                    return
             }
             'o' -> {
-                if (ends("ion") && j >= 0 &&
-                    (resultBuffer[j] == 's' || resultBuffer[j] == 't')
-                )
-                /* j >= 0 fixes Bug 2 */ if (ends("ou"))
+                /* j >= 0 fixes Bug 2 */
+                if (ends("ion") && j >= 0 && (resultBuffer[j] == 's' || resultBuffer[j] == 't') && ends("ou"))
                     return
             }
             's' -> {
@@ -428,9 +421,8 @@ class Stemmer {
                     return
             }
             't' -> {
-                if (ends("ate"))
-                    if (ends("iti"))
-                        return
+                if (ends("ate") && ends("iti"))
+                    return
             }
             'u' -> {
                 if (ends("ous"))

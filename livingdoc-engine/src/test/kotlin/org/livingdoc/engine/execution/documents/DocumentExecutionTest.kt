@@ -17,6 +17,7 @@ class DocumentExecutionTest {
             LifeCycleFixture::class.java,
             mockk(relaxed = true),
             mockk(relaxed = true),
+            mockk(relaxed = true),
             mockk(relaxed = true)
         ).execute()
 

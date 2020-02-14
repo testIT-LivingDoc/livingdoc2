@@ -6,7 +6,7 @@ import org.livingdoc.results.TestDataResult
 
 data class ScenarioResult private constructor(
     val steps: List<StepResult>,
-    val status: Status,
+    override val status: Status,
     val fixtureSource: Class<*>?,
     val scenario: Scenario
 ) : TestDataResult<Scenario> {

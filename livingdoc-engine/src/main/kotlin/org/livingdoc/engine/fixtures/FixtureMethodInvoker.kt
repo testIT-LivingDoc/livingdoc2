@@ -160,8 +160,8 @@ class FixtureMethodInvoker(
         }
     }
 
-    class FixtureMethodInvocationException(method: Method, fixture: Any, e: Exception) :
-        RuntimeException("Could not invoke method '$method' on fixture '$fixture' because of an exception:", e)
+    class FixtureMethodInvocationException(method: Method, fixture: Any, override val cause: Exception) :
+        RuntimeException("Could not invoke method '$method' on fixture '$fixture' because of an exception:", cause)
 
     class StaticFixtureMethodInvocationException(method: Method, fixtureClass: Class<*>, e: Exception) :
         RuntimeException(

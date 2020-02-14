@@ -27,16 +27,15 @@ object StemmerHandler {
         val s = Stemmer()
         val collector = StringBuffer()
 
-        val `in` = input
-        val splittedin = `in`.split(" ")
-        splittedin.forEach {
-            var iit = it + ' '
-                var iteration = 0
+        val splitIn = input.split(" ")
+        splitIn.forEach {
+            val iit = "$it "
+            var iteration = 0
             while (true) {
                 try {
                     var ch: Int = iit[iteration].toInt()
                     iteration++
-                    // println(`in`)
+
                     if (Character.isLetter(ch.toChar())) {
                         var j = 0
                         while (true) {

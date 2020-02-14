@@ -3,6 +3,7 @@ package org.livingdoc.engine.execution.examples.scenarios
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
 import org.livingdoc.api.fixtures.scenarios.Binding
+import org.livingdoc.engine.LivingDoc
 import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.Fixture
@@ -36,23 +37,30 @@ class ScenarioFixtureWrapper(
         val scenarioResultBuilder =
             ScenarioResult.Builder().withScenario(testData).withFixtureSource(fixtureClass)
 
-        if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            return scenarioResultBuilder
-                .withStatus(Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value))
-                .build()
+        when {
+            LivingDoc.failFastActivated -> {
+                scenarioResultBuilder.withUnassignedSkipped()
+            }
+            fixtureClass.isAnnotationPresent(Disabled::class.java) -> {
+                scenarioResultBuilder.withStatus(
+                    Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value)
+                )
+            }
+            else -> {
+                try {
+                    assertFixtureIsDefinedCorrectly()
+                    executeScenario(testData).forEach { scenarioResultBuilder.withStep(it) }
+                    scenarioResultBuilder.withStatus(Status.Executed)
+                } catch (e: Exception) {
+                    scenarioResultBuilder.withStatus(Status.Exception(e))
+                        .withUnassignedSkipped()
+                } catch (e: AssertionError) {
+                    scenarioResultBuilder.withStatus(Status.Exception(e))
+                        .withUnassignedSkipped()
+                }
+            }
         }
 
-        try {
-            assertFixtureIsDefinedCorrectly()
-            executeScenario(testData).forEach { scenarioResultBuilder.withStep(it) }
-            scenarioResultBuilder.withStatus(Status.Executed)
-        } catch (e: Exception) {
-            scenarioResultBuilder.withStatus(Status.Exception(e))
-                .withUnassignedSkipped()
-        } catch (e: AssertionError) {
-            scenarioResultBuilder.withStatus(Status.Exception(e))
-                .withUnassignedSkipped()
-        }
         return scenarioResultBuilder.build()
     }
 
@@ -65,7 +73,7 @@ class ScenarioFixtureWrapper(
 
     private fun executeScenario(scenario: Scenario): List<StepResult> {
         val fixture = createFixtureInstance()
-        return executeWithBeforeAndAfter<List<StepResult>>(
+        return executeWithBeforeAndAfter(
             before = { invokeBeforeMethods(fixture) },
             body = { executeSteps(scenario, fixture) },
             after = { invokeAfterMethods(fixture) }
@@ -146,7 +154,7 @@ class ScenarioFixtureWrapper(
             } catch (e: AssertionError) {
                 exceptions.add(e)
             } catch (e: FixtureMethodInvoker.FixtureMethodInvocationException) {
-                exceptions.add(e.cause!!)
+                exceptions.add(e.cause)
             }
         }
         if (exceptions.isNotEmpty()) throw AfterMethodExecutionException(exceptions)

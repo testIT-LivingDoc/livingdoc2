@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.exception.ExampleSyntax
+import org.livingdoc.engine.LivingDoc
 import org.livingdoc.engine.execution.examples.NoExpectedExceptionThrownException
 import org.livingdoc.engine.execution.examples.executeWithBeforeAndAfter
 import org.livingdoc.engine.fixtures.Fixture
@@ -43,27 +44,29 @@ class DecisionTableFixtureWrapper(
             DecisionTableResult.Builder().withDecisionTable(testData)
                 .withFixtureSource(fixtureClass)
 
-        if (fixtureClass.isAnnotationPresent(Disabled::class.java)) {
-            return decisionTableResult.withStatus(
-                Status.Disabled(
-                    fixtureClass.getAnnotation(Disabled::class.java).value
-                )
-            ).build()
-        }
-
-        try {
-            assertFixtureIsDefinedCorrectly(testData)
-            executeTableWithBeforeAndAfter(testData).forEach {
-                decisionTableResult.withRow(it)
+        when {
+            LivingDoc.failFastActivated -> {
+                decisionTableResult.withUnassignedRowsSkipped()
             }
-            decisionTableResult.withStatus(Status.Executed)
-        } catch (e: Exception) {
-            decisionTableResult.withStatus(Status.Exception(e))
-        } catch (e: AssertionError) {
-            decisionTableResult.withStatus(Status.Exception(e))
-        }
+            fixtureClass.isAnnotationPresent(Disabled::class.java) -> {
+                decisionTableResult.withStatus(Status.Disabled(fixtureClass.getAnnotation(Disabled::class.java).value))
+            }
+            else -> {
+                try {
+                    assertFixtureIsDefinedCorrectly(testData)
+                    executeTableWithBeforeAndAfter(testData).forEach {
+                        decisionTableResult.withRow(it)
+                    }
+                    decisionTableResult.withStatus(Status.Executed)
+                } catch (e: Exception) {
+                    decisionTableResult.withStatus(Status.Exception(e))
+                } catch (e: AssertionError) {
+                    decisionTableResult.withStatus(Status.Exception(e))
+                }
 
-        decisionTableResult.withUnassignedRowsSkipped()
+                decisionTableResult.withUnassignedRowsSkipped()
+            }
+        }
         return decisionTableResult.build()
     }
 
@@ -100,6 +103,7 @@ class DecisionTableFixtureWrapper(
         val executeRow = { row: Row ->
             val rowResult = RowResult.Builder()
                 .withRow(row)
+
             try {
                 executeRowWithBeforeAndAfter(row, rowResult, inputHeaders, checkHeaders)
                 rowResult.withStatus(Status.Executed)

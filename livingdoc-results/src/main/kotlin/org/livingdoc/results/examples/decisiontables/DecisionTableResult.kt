@@ -9,7 +9,7 @@ import org.livingdoc.results.TestDataResult
 data class DecisionTableResult private constructor(
     val headers: List<Header>,
     val rows: List<RowResult>,
-    val status: Status = Status.Unknown,
+    override val status: Status = Status.Unknown,
     val fixtureSource: Class<*>?,
     val decisionTable: DecisionTable
 ) : TestDataResult<DecisionTable> {

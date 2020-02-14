@@ -1,5 +1,6 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
+import org.livingdoc.engine.LivingDoc
 import org.livingdoc.engine.fixtures.Fixture
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.results.Status
@@ -18,6 +19,12 @@ internal class DecisionTableNoFixture : Fixture<DecisionTable> {
     override fun execute(testData: DecisionTable): DecisionTableResult {
         val result = DecisionTableResult.Builder().withDecisionTable(testData)
             .withFixtureSource(this.javaClass)
+
+        if (LivingDoc.failFastActivated) {
+            return result.withStatus(
+                Status.Skipped
+            ).build()
+        }
 
         if (testData.description.isManual) {
             result.withStatus(Status.Manual)
