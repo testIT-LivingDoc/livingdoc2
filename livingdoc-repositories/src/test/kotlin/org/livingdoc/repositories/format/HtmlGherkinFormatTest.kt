@@ -7,6 +7,8 @@ import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.emptyHtml
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getDescriptiveHtml
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkin2
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getHtmlGherkinTableWithOnlyOneRow
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getPTags
+import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.getheaderOutsideOfPre
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.htmlGherkinGiven
 import org.livingdoc.repositories.format.HtmlGherkinFormatTestData.htmlGherkinThen
 import org.livingdoc.repositories.model.scenario.Scenario
@@ -48,7 +50,7 @@ class HtmlGherkinFormatTest {
     @Test
     fun descriptions() {
         val result = cut.parse(getDescriptiveHtml())
-        assertThat(result.elements[0].description.descriptiveText).isEqualTo("descriptive text is here.")
+        assertThat(result.elements[0].description.descriptiveText).isEqualTo("\ndescriptive text is here.")
     }
 
     @Test
@@ -68,7 +70,8 @@ class HtmlGherkinFormatTest {
     fun `descriptive text is parsed before gherkin`() {
         val htmlDocument = cut.parse(HtmlGherkinFormatTestData.getHtmlGherkinDescriptionText())
 
-        assertThat(htmlDocument.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text.\nThis is another descriptive text.")
+        assertThat(htmlDocument.elements[0].description.descriptiveText).isEqualTo("This is a descriptive text." +
+                "\nThis is another descriptive text.")
     }
 
     @Test
@@ -82,7 +85,24 @@ class HtmlGherkinFormatTest {
     fun `Ignores headline if headline between pre tags`() {
         val htmlDocument = cut.parse(HtmlGherkinFormatTestData.headlineBetweenPre())
 
-        assertThat(htmlDocument.elements[0].description.name).isEqualTo("Test Scenario 1")
+        assertThat(htmlDocument.elements[0].description.name).isEqualTo(null + "\n" + "Test Scenario 1")
+    }
+
+    @Test
+    fun `header outside pre`() {
+        val htmldocument = cut.parse(getheaderOutsideOfPre())
+
+        assertThat(htmldocument.elements[0].description.name).isEqualTo("This is a header\n" +
+                "Test Scenario 1")
+    }
+
+    @Test
+    fun `parse descriptive text from html`() {
+        val htmldocument = cut.parse(getPTags())
+
+        assertThat(htmldocument.elements[0].description.descriptiveText).isEqualTo("This is a description 1\n" +
+                "This is a description 2\n" +
+                "\n")
     }
 
     @Test
@@ -91,7 +111,7 @@ class HtmlGherkinFormatTest {
 
         assertThat(htmlDocument.elements).hasOnlyOneElementSatisfying { element ->
             assertThat(element.description).satisfies { description ->
-                assertThat(description.name).isEqualTo("Test Scenario")
+                assertThat(description.name).isEqualTo(null + "\n" + "Test Scenario")
                 assertThat(description.isManual).isFalse()
             }
 
@@ -110,7 +130,7 @@ class HtmlGherkinFormatTest {
         assertThat(htmlDocument.elements).hasSize(2)
         assertThat(htmlDocument.elements[0]).satisfies { testData ->
             assertThat(testData.description).satisfies { description ->
-                assertThat(description.name).isEqualTo("Test Scenario 1")
+                assertThat(description.name).isEqualTo(null + "\n" + "Test Scenario 1")
                 assertThat(description.isManual).isFalse()
             }
 
@@ -122,7 +142,7 @@ class HtmlGherkinFormatTest {
         }
         assertThat(htmlDocument.elements[1]).satisfies { testData ->
             assertThat(testData.description).satisfies { description ->
-                assertThat(description.name).isEqualTo("Test Scenario 2")
+                assertThat(description.name).isEqualTo(null + "\n" + "Test Scenario 2")
                 assertThat(description.isManual).isFalse()
             }
 
@@ -140,7 +160,7 @@ class HtmlGherkinFormatTest {
 
         assertThat(htmlDocument.elements).hasOnlyOneElementSatisfying { testData ->
             assertThat(testData.description).satisfies { description ->
-                assertThat(description.name).isEqualTo("Test Scenario 1")
+                assertThat(description.name).isEqualTo(null + "\n" + "Test Scenario 1")
                 assertThat(description.isManual).isFalse()
             }
 

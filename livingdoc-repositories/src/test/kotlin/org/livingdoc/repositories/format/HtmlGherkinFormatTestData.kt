@@ -196,12 +196,7 @@ object HtmlGherkinFormatTestData {
     <html lang="en">
     <body>
         <p>This is a descriptive text.</p>
-        <ol>
-            <li>First list item</li>
-            <li>Second list item</li>
-        </ol>
-        <p>This is another descriptive text.</p>
-       <pre>
+        <pre>
         <gherkin>
         Feature: Test Feature
              Scenario: Test Scenario 1
@@ -211,6 +206,7 @@ object HtmlGherkinFormatTestData {
                Then I get a valid Document containing the expected information
         </gherkin>
         </pre>
+        <p>This is another descriptive text.</p>
     </body>
     </html>
     """.byteInputStream()
@@ -266,6 +262,50 @@ object HtmlGherkinFormatTestData {
                   But the Document is not modified
         </gherkin>
         </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
+    fun getheaderOutsideOfPre() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    <h2>This is a header</h2>
+      <pre>
+        <gherkin>
+          Feature: Test Feature
+            Scenario: Test Scenario 1
+                  Given a working Gherkin parser
+                  And some Gherkin text
+                  When I test the Gherkin parser
+                  Then I get a valid Document containing the expected information
+                  But the Document is not modified
+        </gherkin>
+        </pre>
+    </body>
+    </html>
+    """.byteInputStream()
+
+    fun getPTags() =
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    <h1>header1</h1>
+    <p>This is a description 1</p>
+      <pre>
+        <gherkin>
+          Feature: Test Feature
+            Scenario: Test Scenario 1
+                  Given a working Gherkin parser
+                  And some Gherkin text
+                  When I test the Gherkin parser
+                  Then I get a valid Document containing the expected information
+                  But the Document is not modified
+        </gherkin>
+        </pre>
+        <p>This is a description 2</p>
     </body>
     </html>
     """.byteInputStream()
