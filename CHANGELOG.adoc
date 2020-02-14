@@ -32,6 +32,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Added support for html reports as attachments in confluence
 - HTML reports can generate a index file with links to all reports
 - Reorganized the file and directory structure of reports
+- Interpret checkboxes as boolean values
 
 === Changed
 
