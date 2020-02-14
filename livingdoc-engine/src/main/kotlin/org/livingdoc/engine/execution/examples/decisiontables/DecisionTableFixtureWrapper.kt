@@ -104,23 +104,17 @@ class DecisionTableFixtureWrapper(
             val rowResult = RowResult.Builder()
                 .withRow(row)
 
-            if (LivingDoc.failFastActivated) {
-                rowResult.withStatus(
-                    Status.Skipped
-                ).build()
-            } else {
-                try {
-                    executeRowWithBeforeAndAfter(row, rowResult, inputHeaders, checkHeaders)
-                    rowResult.withStatus(Status.Executed)
-                } catch (e: Exception) {
-                    rowResult.withStatus(Status.Exception(e))
-                } catch (e: AssertionError) {
-                    rowResult.withStatus(Status.Exception(e))
-                }
-
-                rowResult.withUnassignedFieldsSkipped()
-                rowResult.build()
+            try {
+                executeRowWithBeforeAndAfter(row, rowResult, inputHeaders, checkHeaders)
+                rowResult.withStatus(Status.Executed)
+            } catch (e: Exception) {
+                rowResult.withStatus(Status.Exception(e))
+            } catch (e: AssertionError) {
+                rowResult.withStatus(Status.Exception(e))
             }
+
+            rowResult.withUnassignedFieldsSkipped()
+            rowResult.build()
         }
 
         return if (fixtureModel.parallelExecution) {
