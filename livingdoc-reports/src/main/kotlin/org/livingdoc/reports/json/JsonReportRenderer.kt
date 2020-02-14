@@ -12,13 +12,17 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
 import java.nio.file.Paths
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Format("json")
 class JsonReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val jsonConfig = YamlUtils.toObject(config, JsonReportConfig::class)
-        val outputFolder = Paths.get(jsonConfig.outputDir, LocalDateTime.now().toString()).toString()
+        val outputFolder = Paths.get(
+            jsonConfig.outputDir,
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
+        ).toString()
         val reportWriter = ReportWriter(outputFolder, fileExtension = "json")
 
         documentResults.forEach { documentResult ->
