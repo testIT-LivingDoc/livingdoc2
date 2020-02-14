@@ -65,6 +65,7 @@ class HtmlFormat : DocumentFormat {
                 "p", "span" -> {
                     context = context.copy(descriptiveText = context.descriptiveText + it.text() + "\n")
                 }
+
                 else -> elementQueue.add(it)
             }
         }
@@ -84,8 +85,48 @@ class HtmlFormat : DocumentFormat {
             "ul", "ol" -> {
                 parseRecursive(element, context) + parseList(element, context)
             }
-            else -> parseRecursive(element, context)
+
+            "pre" -> {
+                parseRecursive(element, context) + parseGherkin(element, context)
+            }
+
+            else -> {
+                parseRecursive(element, context)
+            }
         }
+    }
+
+    /**
+     * determine if it is a gherkin and take the text and parse a gherkin
+     *
+     * @param element the html element containing the gherkin
+     * @param context The [ParseContext] of the processed gherkin
+     *
+     * @return a List of Scenarios created from gherkin
+     */
+    private fun parseGherkin(element: Element, context: ParseContext): List<Scenario> {
+
+        // finding gherkin and bringing the results into one single list
+        return element.children().filter { it.tagName() == "gherkin" }
+            .flatMap { createGherkin(it, context) }
+    }
+
+    private fun createGherkin(element: Element, context: ParseContext): List<Scenario> {
+
+        // pass to gherkin parser
+        val ghf = GherkinFormat()
+        val parsedGherkinDoc = ghf.parse(element.text().byteInputStream(Charsets.UTF_8))
+
+        val scenariolist = parsedGherkinDoc.elements.map {
+            Scenario(
+                (it as Scenario).steps, TestDataDescription(
+                    context.headline + "\n" + it.description.name,
+                    context.isManual(),
+                    (context.descriptiveText + "\n" + it.description.descriptiveText).trimIndent().trim()
+                )
+            )
+        }
+        return scenariolist
     }
 
     /**

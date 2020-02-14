@@ -11,9 +11,11 @@ dependencies {
 	implementation(project(":livingdoc-extensions-api"))
 	implementation(project(":livingdoc-results"))
 	implementation(project(":livingdoc-testdata"))
+	implementation(project(":livingdoc-format-gherkin"))
 
 	testCompile("ch.qos.logback:logback-classic:${Versions.logback}")
 	testCompile("org.assertj:assertj-core:${Versions.assertJ}")
 
+	testImplementation("io.cucumber:gherkin:${Versions.gherkin}")
 	testImplementation("com.github.tomakehurst:wiremock-jre8:${Versions.wiremock}")
 }
