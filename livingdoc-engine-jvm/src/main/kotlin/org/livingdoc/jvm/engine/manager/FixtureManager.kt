@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
-class FixtureManager {
+internal class FixtureManager {
     private val fixtureFactories: List<FixtureFactory<*>> =
         ServiceLoader.load(FixtureFactory::class.java).iterator().asSequence().toList()
 

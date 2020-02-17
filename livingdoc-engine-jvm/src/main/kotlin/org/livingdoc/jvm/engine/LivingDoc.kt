@@ -14,7 +14,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
 @ExperimentalStdlibApi
-class LivingDoc(
+class LivingDoc internal constructor(
     private val configProvider: ConfigProvider = ConfigProvider.load(),
     private val repositoryManager: RepositoryManager =
         RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
@@ -86,5 +86,9 @@ class LivingDoc(
             )
         }
         return declaringGroup ?: annotationGroup ?: ImplicitGroup::class
+    }
+
+    companion object {
+        fun create() = LivingDoc()
     }
 }
