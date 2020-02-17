@@ -2,7 +2,9 @@ package org.livingdoc.engine
 
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.documents.Group
+import org.livingdoc.api.tagging.Tag
 import org.livingdoc.config.ConfigProvider
+import org.livingdoc.engine.config.TaggingConfig
 import org.livingdoc.engine.execution.ExecutionException
 import org.livingdoc.engine.execution.MalformedFixtureException
 import org.livingdoc.engine.execution.groups.GroupFixture
@@ -35,6 +37,8 @@ class LivingDoc(
         var failFastActivated: Boolean = false
     }
 
+    val taggingConfig = TaggingConfig.from(configProvider)
+
     /**
      * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
      * classes must be annotated with [ExecutableDocument].
@@ -46,7 +50,15 @@ class LivingDoc(
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
         // Execute documents
-        val documentResults = documentClasses.groupBy { documentClass ->
+        val documentResults = documentClasses.filter {
+            val tags = getTags(it)
+            when {
+                taggingConfig.includedTags.isNotEmpty() && tags.none { tag -> taggingConfig.includedTags.contains(tag) }
+                    -> false
+                tags.any { tag -> taggingConfig.excludedTags.contains(tag) } -> false
+                else -> true
+            }
+        }.groupBy { documentClass ->
             extractGroup(documentClass)
         }.flatMap { (groupClass, documentClasses) ->
             executeGroup(groupClass, documentClasses)
@@ -58,6 +70,12 @@ class LivingDoc(
 
         // Return results for further processing
         return documentResults
+    }
+
+    private fun getTags(documentClass: Class<*>): List<String> {
+        return documentClass.getAnnotationsByType(Tag::class.java).map {
+            it.value
+        }
     }
 
     /**
