@@ -31,7 +31,7 @@ internal class LivingDocTest {
     @Test
     fun `ambiguous group is detected`() {
         val repoManagerMock = mockkJClass(RepositoryManager::class.java)
-        val configProviderMock = mockkJClass(ConfigProvider::class.java)
+        val configProviderMock = ConfigProvider(emptyMap())
         val cut = LivingDoc(configProviderMock, repoManagerMock)
         val documentClass = AmbiguousGroupExecutableDocument::class.java
 
