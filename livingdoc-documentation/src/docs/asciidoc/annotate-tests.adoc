@@ -40,3 +40,18 @@ This will at times lead to failure for the complete suite without any benefit of
 
 Annotating an Executable Document or a Group with `@FailFast(onExceptionTypes = [SomeException, SomeOtherException])` will skip every other test if this
 exception occurs. This also works if you execute the tests in parallel.
+
+=== Tagging
+When there is a large number of tests, there might be some interest in tagging tests to only execute some tests with a
+specified tag or to exclude some.
+
+Executable Documents that have the  `@Tag("tagName")` Annotation can be included or excluded for execution by
+including or excluding their tag name. This can be done in livingdoc.yml and as a property when livingdoc is called in the command line.
+
+.Example Including and excluding tags in livingdoc.yml
+ tags:
+   include:
+     - "linux"
+   exclude:
+     - "slow"
+
