@@ -1,4 +1,4 @@
-package org.livingdoc.engine.algo
+package org.livingdoc.scenario.matching
 
 /*
 

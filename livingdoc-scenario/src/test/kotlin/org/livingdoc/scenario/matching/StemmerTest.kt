@@ -1,11 +1,11 @@
-package org.livingdoc.engine.algo
+package org.livingdoc.scenario.matching
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 class StemmerTest {
-    val input = "this modified String is a test string"
-    val input2 = "The user buys an apple"
+    private val input = "this modified String is a test string"
+    private val input2 = "The user buys an apple"
 
     @Test
     fun `test add function`() {

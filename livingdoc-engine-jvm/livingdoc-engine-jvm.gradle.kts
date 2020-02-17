@@ -7,12 +7,12 @@ dependencies {
 	implementation(kotlin("reflect"))
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation(project(":livingdoc-api"))
-	implementation(project(":livingdoc-converters"))
 	implementation(project(":livingdoc-extensions-api"))
-	implementation(project(":livingdoc-results"))
-	implementation(project(":livingdoc-testdata"))
 
-	api(project(":livingdoc-engine"))
+	implementation(project(":livingdoc-converters"))
+	implementation(project(":livingdoc-config"))
+	implementation(project(":livingdoc-repositories"))
+	implementation(project(":livingdoc-engine"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")

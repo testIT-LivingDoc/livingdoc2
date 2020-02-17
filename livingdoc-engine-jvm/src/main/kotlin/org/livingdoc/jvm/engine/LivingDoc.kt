@@ -15,7 +15,7 @@ import kotlin.reflect.full.hasAnnotation
 
 @ExperimentalStdlibApi
 class LivingDoc(
-    val configProvider: ConfigProvider = ConfigProvider.load(),
+    private val configProvider: ConfigProvider = ConfigProvider.load(),
     private val repositoryManager: RepositoryManager =
         RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
     private val fixtureManager: FixtureManager = FixtureManager(),
