@@ -54,4 +54,3 @@ including or excluding their tag name. This can be done in livingdoc.yml and as 
      - "linux"
    exclude:
      - "slow"
-
