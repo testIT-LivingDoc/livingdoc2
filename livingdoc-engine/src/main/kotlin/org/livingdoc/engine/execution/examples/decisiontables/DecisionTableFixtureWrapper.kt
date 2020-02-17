@@ -18,6 +18,12 @@ import org.livingdoc.results.examples.decisiontables.FieldResult
 import org.livingdoc.results.examples.decisiontables.RowResult
 import java.lang.reflect.Method
 import kotlin.streams.toList
+import kotlinx.coroutines.*
+import org.livingdoc.engine.LivingDoc.Companion.executor
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 /**
  * Obviously wraps a decision table fixture
@@ -118,11 +124,38 @@ class DecisionTableFixtureWrapper(
         }
 
         return if (fixtureModel.parallelExecution) {
-            decisionTable.rows.parallelStream().map(executeRow).toList()
+
+
+            val result = decisionTable.rows.map { { executeRow(it) } }.map { executor.submit(it) }.map { it.get() }
+            executor.shutdown()
+return result
+
+/*
+            val exec = Executors.newWorkStealingPool()
+            val res : MutableList<Callable<RowResult>> = decisionTable.rows.map { { executeRow(it) } as Callable<RowResult> }.toMutableList()
+            val x = exec.invokeAll(res).map { it.get() }
+            exec.shutdown()
+
+
+            return x
+*/
+
+            /*
+            return runBlocking {
+                decisionTable.rows.rowMapping(executeRow).toList()
+            }
+            */
+
+              //return decisionTable.rows.parallelStream().map(executeRow).toList()
         } else {
             decisionTable.rows.map(executeRow)
         }
     }
+
+    private suspend fun <Row, RowResult> Iterable<Row>.rowMapping(f: (Row) -> RowResult): List<RowResult> =
+        coroutineScope {
+            map { async { f(it) } }.awaitAll()
+        }
 
     private fun executeRowWithBeforeAndAfter(
         row: Row,
