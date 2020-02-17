@@ -112,12 +112,12 @@ internal class RegMatching(
 
         // mapping all outputs to the variables
 
-        if (filteredMap.size == variablesList.size) {
+        return if (filteredMap.size == variablesList.size) {
             val variablesMap = variablesList.zip(filteredMap).toMap()
-            return Pair(variablesMap, operationNumber)
+            Pair(variablesMap, operationNumber)
         } else {
             operationNumber = maxNumberOfOperations
-            return Pair(emptyMap(), operationNumber)
+            Pair(emptyMap(), operationNumber)
         }
     }
 
@@ -137,31 +137,18 @@ internal class RegMatching(
      *@return List of variables matched to the string
      */
     private fun matchStrings(testText: String, reggedText: Regex, templatetext: String): Pair<List<String>, Float> {
-        val matched: List<String>
-
         val matchedResult = reggedText.find(testText)
         var opIncrease = 0.0f
 
-        if (matchedResult == null) {
+        var outputPair = Pair<List<String>, Float>(emptyList(), opIncrease)
 
-            if (!reggedText.matches(testText)) {
-                val (rematchResult, numOp) = rematch(testText, templatetext)
-
-                if (!rematchResult.isEmpty()) {
-                    opIncrease += numOp
-                    matched = rematchResult
-                } else {
-                    opIncrease = maxNumberOfOperations
-                    matched = emptyList()
-                }
-            } else {
-                matched = emptyList()
-            }
-            return Pair(matched, opIncrease)
-        } else {
-            matched = matchedResult.destructured.toList()
-            return Pair(matched, opIncrease)
+        if (matchedResult == null && !reggedText.matches(testText)) {
+            val (rematchResult, numOp) = rematch(testText, templatetext)
+            outputPair = Pair(rematchResult, opIncrease + numOp)
         }
+        if (matchedResult != null)
+            outputPair = Pair(matchedResult.destructured.toList(), opIncrease)
+        return outputPair
     }
 
     // Rematch with stemming, if already fit the template this should be not needed,
