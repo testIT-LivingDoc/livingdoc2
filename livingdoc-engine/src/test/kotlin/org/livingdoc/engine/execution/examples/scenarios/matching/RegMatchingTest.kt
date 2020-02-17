@@ -71,6 +71,20 @@ class RegMatchingTest {
     }
 
     @Test
+    fun `can handle special regex characters in template`() {
+        val template = "I add 1 + 2 .*^&!?/\\"
+        val sp = StepTemplate.parse(template)
+        val step = "I add 1 + 2 .*^&!?/\\"
+        val regm = RegMatching(sp, step, 3.0f)
+        Assertions.assertThat(regm.stepTemplate.toString()).isEqualTo(sp.toString())
+        Assertions.assertThat(regm.step).isEqualTo(step)
+        Assertions.assertThat(regm.maxNumberOfOperations).isEqualTo(3.0f)
+        Assertions.assertThat(regm.variables).isEmpty()
+        Assertions.assertThat(regm.totalCost).isEqualTo(Pair(0.0f, 0.0f))
+        Assertions.assertThat(regm.isMisaligned()).isEqualTo(false)
+    }
+
+    @Test
     fun `symbols before brackets variable only`() {
         val template = "c{a}c"
         val sp = StepTemplate.parse(template)

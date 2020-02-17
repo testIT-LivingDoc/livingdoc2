@@ -20,11 +20,27 @@ class MatchingFunctinsTest {
             Arguments.of("ant ant ant", "ant ant ant")
         )
     }
+    fun valueProviderTemplate(): Stream<Arguments> {
+        return Stream.of(
+            Arguments.of("+", "\\+"),
+            Arguments.of("\\", "\\\\"),
+            Arguments.of("", ""),
+            Arguments.of("?", "\\?"),
+            Arguments.of("anb", "anb"),
+            Arguments.of(".", "\\.")
+        )
+    }
 
     @ParameterizedTest()
     @MethodSource("valueProvider")
     fun `test filter string`(value: String, output: String) {
-        Assertions.assertThat(MatchingFunctions.filterString(value)).isEqualTo(output)
+        Assertions.assertThat(MatchingFunctions.filterStepString(value)).isEqualTo(output)
+    }
+
+    @ParameterizedTest()
+    @MethodSource("valueProviderTemplate")
+    fun `test filter string for template`(value: String, output: String) {
+        Assertions.assertThat(MatchingFunctions.filterTemplateString(value)).isEqualTo(output)
     }
 
     fun varLengthProvider(): Stream<Arguments> {

@@ -63,8 +63,10 @@ internal class RegMatching(
      * cost of matching
      */
     private fun getCost(): Pair<Float, Float> {
-        return Pair(matchoutput.component2(),
-            MatchingFunctions.considerVarLength(matchoutput.component1()) + matchoutput.component2())
+        return Pair(
+            matchoutput.component2(),
+            MatchingFunctions.considerVarLength(matchoutput.component1()) + matchoutput.component2()
+        )
     }
 
     /**
@@ -97,8 +99,8 @@ internal class RegMatching(
         var operationNumber = 0.0f
 
         // copy the input strings to local variables
-        val templatetext = MatchingFunctions.filterString(stepTemplate.toString())
-        val testText = MatchingFunctions.filterString(step)
+        val templatetext = MatchingFunctions.filterTemplateString(stepTemplate.toString())
+        val testText = MatchingFunctions.filterStepString(step)
 
         val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(templatetext)
         val reggedText = regstring.toRegex()
@@ -141,13 +143,18 @@ internal class RegMatching(
         var opIncrease = 0.0f
 
         if (matchedResult == null) {
-            val (rematchResult, numOp) = rematch(testText, templatetext)
 
-            if (!rematchResult.isEmpty()) {
-                opIncrease += numOp
-                matched = rematchResult
+            if (!reggedText.matches(testText)) {
+                val (rematchResult, numOp) = rematch(testText, templatetext)
+
+                if (!rematchResult.isEmpty()) {
+                    opIncrease += numOp
+                    matched = rematchResult
+                } else {
+                    opIncrease = maxNumberOfOperations
+                    matched = emptyList()
+                }
             } else {
-                opIncrease = maxNumberOfOperations
                 matched = emptyList()
             }
             return Pair(matched, opIncrease)
@@ -243,14 +250,19 @@ internal class RegMatching(
         val regexText = prepareTemplateToRegex(stemmedsentence, variables)
         val matchresult = regexText.find(stepAsString)
 
+        val matches = regexText.matches(stepAsString)
+
         matchingcost++
 
         // extend here if more algorithm have to be applied to strings or if
         // a rematch has to be made
         //
 
-        return if (matchresult != null)
-            Pair(matchresult.destructured.toList(), matchingcost)
-        else Pair(emptyList(), maxNumberOfOperations)
+        return if (matchresult == null)
+            if (matches)
+                Pair(emptyList(), matchingcost)
+            else
+                Pair(emptyList(), maxNumberOfOperations)
+        else Pair(matchresult.destructured.toList(), matchingcost)
     }
 }
