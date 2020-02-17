@@ -2,6 +2,7 @@ package org.livingdoc.junit.engine.discovery
 
 import org.junit.platform.engine.DiscoverySelector
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.documents.Group
 
 abstract class SelectorHandler<in T : DiscoverySelector> {
 
@@ -9,6 +10,9 @@ abstract class SelectorHandler<in T : DiscoverySelector> {
         candidateClass.isAnnotationPresent(ExecutableDocument::class.java)
     }
 
+    /**
+     * Select all Document classes
+     */
     fun selectDocumentClasses(selector: T): List<Class<*>> {
         return selectDocumentClasses(selector, executableDocumentAnnotationIsPresent)
     }
