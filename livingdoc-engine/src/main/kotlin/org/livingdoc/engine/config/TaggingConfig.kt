@@ -9,8 +9,8 @@ data class TaggingConfig(var tags: TaggingDefinition = TaggingDefinition()) {
         }
     }
 
-    val includedTags : List<String>
+    val includedTags: List<String>
         get() = System.getProperty("livingdoc.tags.include")?.split(',') ?: tags.include
-    val excludedTags : List<String>
+    val excludedTags: List<String>
         get() = System.getProperty("livingdoc.tags.exclude")?.split(',') ?: tags.exclude
 }
