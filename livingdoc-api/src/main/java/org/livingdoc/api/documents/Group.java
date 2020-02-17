@@ -1,5 +1,6 @@
 package org.livingdoc.api.documents;
 
+import org.junit.platform.commons.annotation.Testable;
 import org.livingdoc.api.After;
 import org.livingdoc.api.Before;
 
@@ -19,6 +20,7 @@ import java.lang.annotation.Target;
  * @see Before
  * @see After
  */
+@Testable
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Group {
