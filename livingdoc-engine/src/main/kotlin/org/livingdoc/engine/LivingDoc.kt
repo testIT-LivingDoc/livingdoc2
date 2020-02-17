@@ -53,9 +53,9 @@ class LivingDoc(
         val documentResults = documentClasses.filter {
             val tags = getTags(it)
             when {
-                taggingConfig.tags.include.isNotEmpty() && tags.none { tag -> taggingConfig.tags.include.contains(tag) }
+                taggingConfig.includedTags.isNotEmpty() && tags.none { tag -> taggingConfig.includedTags.contains(tag) }
                     -> false
-                tags.any { tag -> taggingConfig.tags.exclude.contains(tag) } -> false
+                tags.any { tag -> taggingConfig.excludedTags.contains(tag) } -> false
                 else -> true
             }
         }.groupBy { documentClass ->
