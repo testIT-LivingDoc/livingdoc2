@@ -1,16 +1,16 @@
 package org.livingdoc.jvm.engine
 
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import kotlin.reflect.full.findAnnotation
 
 internal class DocumentFixture(
-    private val context: DocumentFixtureContext,
+    private val context: EngineContext,
     private val repositoryManager: RepositoryManager,
     private val fixtureManager: FixtureManager,
     private val extensionManager: ExtensionManager
@@ -23,7 +23,8 @@ internal class DocumentFixture(
     fun execute(): DocumentResult {
         extensionManager.loadExtensions(context)
 
-        val resultBuilder = DocumentResult.Builder().withDocumentClass(context.documentFixtureClass.java)
+        val extensionContext = context.extensionContext as DocumentFixtureContext
+        val resultBuilder = DocumentResult.Builder().withDocumentClass(extensionContext.documentFixtureClass.java)
 
         if (!extensionManager.shouldExecute(context)) {
             return resultBuilder.withStatus(Status.Disabled()).build()
@@ -31,7 +32,7 @@ internal class DocumentFixture(
 
         extensionManager.executeBeforeDocumentFixture(context)
 
-        val documentInformation = context.documentInformation
+        val documentInformation = extensionContext.documentInformation
 
         val document = repositoryManager.getRepository(extractRepositoryName(documentInformation))
             .getDocument(extractDocumentId(documentInformation))

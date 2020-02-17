@@ -9,7 +9,7 @@ import org.livingdoc.results.documents.DocumentResult
 import kotlin.reflect.KClass
 
 internal class Group(
-    private val context: GroupContext,
+    private val context: EngineContext,
     private val documentClasses: List<KClass<*>>,
     private val repositoryManager: RepositoryManager,
     private val fixtureManager: FixtureManager,
@@ -21,16 +21,26 @@ internal class Group(
         if (!extensionManager.shouldExecute(context)) {
             return emptyList()
         }
+        if (!context.throwableCollector.isEmpty()) {
+            return emptyList()
+        }
 
         extensionManager.executeBeforeGroup(context)
+        if (!context.throwableCollector.isEmpty()) {
+            return emptyList()
+        }
 
         val results = documentClasses.map {
-            val documentFixtureContext = DocumentFixtureContextImpl(it, context)
+            val documentFixtureContext = DocumentFixtureContextImpl(it, context.extensionContext as GroupContext)
+            val documentFixtureEngineContext = EngineContext(context, documentFixtureContext)
             val documentFixture =
-                DocumentFixture(documentFixtureContext, repositoryManager, fixtureManager, extensionManager)
+                DocumentFixture(documentFixtureEngineContext, repositoryManager, fixtureManager, extensionManager)
             documentFixture.execute()
         }
         extensionManager.executeAfterGroup(context)
+        if (!context.throwableCollector.isEmpty()) {
+            return emptyList()
+        }
 
         return results
     }

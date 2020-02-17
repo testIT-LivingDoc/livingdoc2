@@ -60,7 +60,9 @@ class LivingDoc internal constructor(
      * @return a Group
      */
     private fun createGroup(groupClass: KClass<*>, documentClasses: List<KClass<*>>): Group {
-        val context = GroupContextImpl(groupClass)
+        val extensionContext = GroupContextImpl(groupClass)
+        val context = EngineContext(null, extensionContext)
+
         return Group(
             context,
             documentClasses,
