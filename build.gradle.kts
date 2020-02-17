@@ -24,6 +24,7 @@ val livingdocKotlinProjects by extra(
 	listOf(
 		project(":livingdoc-config"),
 		project(":livingdoc-converters"),
+		project(":livingdoc-decisiontable"),
 		project(":livingdoc-engine"),
 		project(":livingdoc-engine-jvm"),
 		project(":livingdoc-extensions-api"),

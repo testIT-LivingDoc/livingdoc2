@@ -23,6 +23,7 @@ include(
 	"livingdoc-api",
 	"livingdoc-config",
 	"livingdoc-converters",
+	"livingdoc-decisiontable",
 	"livingdoc-documentation",
 	"livingdoc-engine",
 	"livingdoc-engine-jvm",
