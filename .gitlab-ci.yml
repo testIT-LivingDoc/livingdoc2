@@ -29,6 +29,7 @@ test project:
     expire_in: 1d
     paths:
       - build/reports/jacoco
+      - livingdoc-*/build/reports/tests/test
     reports:
       junit:
         - livingdoc-*/build/test-results/test/TEST-*.xml
@@ -40,7 +41,7 @@ lint project:
     - ./gradlew detekt
 
 generate documentation:
-  stage: documentation
+  stage: test
   script:
     - ./gradlew aggregatedDokka
   dependencies:
