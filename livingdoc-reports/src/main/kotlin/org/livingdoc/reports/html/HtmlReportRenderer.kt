@@ -1,7 +1,6 @@
 package org.livingdoc.reports.html
 
 import org.jsoup.nodes.Element
-import org.jsoup.nodes.Node
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
@@ -108,7 +107,6 @@ class HtmlReportRenderer : ReportRenderer {
 
         tagListDiv.appendChild(Element("h2").html("Tag Summary"))
 
-
         val reportsByTag = reports.flatMap { report ->
             listOf(
                 "all" to report,
@@ -121,9 +119,9 @@ class HtmlReportRenderer : ReportRenderer {
         val tagTable = Element("table").attr("id", "summary-table")
         tagTable.appendChild(summaryTableHeader())
 
-        reportsByTag.map { (tag,documentResults) ->
-            tagTable.appendChild(tagRow(tag,documentResults))
-            tagTable.appendChild(collapseRow(tag,documentResults))
+        reportsByTag.map { (tag, documentResults) ->
+            tagTable.appendChild(tagRow(tag, documentResults))
+            tagTable.appendChild(collapseRow(tag, documentResults))
         }
 
         tagListDiv.appendChild(tagTable)
@@ -176,7 +174,6 @@ class HtmlReportRenderer : ReportRenderer {
     private fun title(value: String?): HtmlTitle? {
         return if (value != null) HtmlTitle(value) else null
     }
-
 
     private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
         val htmlDescription = HtmlDescription()

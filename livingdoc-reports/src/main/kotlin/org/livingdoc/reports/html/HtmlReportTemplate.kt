@@ -111,7 +111,7 @@ class HtmlReportTemplate {
                 .flex {
                     display: flex;
                 }
-        
+
                 .flex-50 {
                     width: 50%;
                     overflow: auto;
@@ -120,33 +120,33 @@ class HtmlReportTemplate {
                 .hidden {
                     display: none;
                 }
-        
+
                 #summary-table {
                     width: 90%;
                     border-width: 1px;
                 }
-        
+
                 #summary-table th:first-child, #summary-table td:first-child {
                     text-align: left;
                 }
                 #summary-table th:nth-child(1n+2), #summary-table td:nth-child(1n+2) {
                     width: 50px;
                 }
-        
+
                 #summary-table td, #summary-table th {
                     border: 1px solid #ddd;
                     padding: 8px;
                 }
-        
+
                 #summary-table tr:nth-child(even){background-color: #f2f2f2;}
-        
+
                 #summary-table tr:hover {background-color: #ddd;}
-        
+
                 #summary-table th {
                     padding-top: 12px;
                     padding-bottom: 12px;
                 }
-        
+
                 .indicator {
                     cursor: pointer;
                 }

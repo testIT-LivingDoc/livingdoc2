@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html
 
-import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import org.jsoup.nodes.Element
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
@@ -35,24 +34,23 @@ private fun listElement(
     )
 }
 
-
 fun summaryTableHeader(): Element {
     val headerRow = Element("tr")
     headerRow.appendChild(Element("th").apply {
         html("Tag")
-        //Styling here
+        // Styling here
     })
     headerRow.appendChild(Element("th").apply {
         html("✅")
-        //Styling here
+        // Styling here
     })
     headerRow.appendChild(Element("th").apply {
         html("❔")
-        //Styling here
+        // Styling here
     })
     headerRow.appendChild(Element("th").apply {
         html("❌")
-        //Styling here
+        // Styling here
     })
 
     return headerRow
@@ -64,7 +62,7 @@ fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Elem
 
         tagRow.appendChild(Element("td").apply {
             addClass("tag-cell")
-            if(tag == "all")
+            if (tag == "all")
                 html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag','ID_$tag')\">⏵</span> <i>all tags</i>")
             else
                 html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag','ID_$tag')\">⏵</span> $tag")
@@ -74,8 +72,8 @@ fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Elem
         var numberFailed = 0
         var numberOther = 0
 
-        documentResults.forEach { (document,_) ->
-            when(document.documentStatus) {
+        documentResults.forEach { (document, _) ->
+            when (document.documentStatus) {
                 is Status.Executed
                     -> numberSuccessful++
                 is Status.Failed
@@ -105,7 +103,7 @@ fun collapseRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>):
     collapseRow.attr("id", "ID_$tag")
     collapseRow.addClass("hidden")
 
-    collapseRow.appendChild(Element("td").attr("colspan","4").apply {
+    collapseRow.appendChild(Element("td").attr("colspan", "4").apply {
         appendChild(renderLinkList(documentResults))
     })
 
