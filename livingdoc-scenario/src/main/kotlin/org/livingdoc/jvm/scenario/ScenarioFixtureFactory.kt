@@ -1,8 +1,8 @@
 package org.livingdoc.jvm.scenario
 
 import org.livingdoc.api.fixtures.scenarios.Step
-import org.livingdoc.jvm.api.fixture.Fixture
 import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.fixture.Fixture
 import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.TestData
@@ -19,7 +19,7 @@ class ScenarioFixtureFactory : FixtureFactory<Scenario> {
 
     override fun match(fixtureClass: KClass<*>, testData: Scenario): Boolean {
         val stepMatcher = ScenarioStepMatcher(fixtureClass.declaredMembers.flatMap { member ->
-            member.findAnnotation<Step>()?.value?.asIterable() ?: listOf()
+            member.findAnnotation<Step>()?.value.orEmpty().asIterable()
         }.map { StepTemplate.parse(it) })
 
         return testData.steps.all {

@@ -19,10 +19,10 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
         val numberOfHeaders = headerNames.size
         val inputAliasMethod = fixtureClass.declaredMembers.flatMap { member ->
             // TODO Annotation Input cannot be found on fields
-            member.findAnnotation<Input>()?.value?.asIterable() ?: listOf()
+            member.findAnnotation<Input>()?.value.orEmpty().asIterable()
         }
         val checkAliasMethod = fixtureClass.declaredMembers.flatMap { member ->
-            member.findAnnotation<Check>()?.value?.asIterable() ?: listOf()
+            member.findAnnotation<Check>()?.value.orEmpty().asIterable()
         }
         val aliases = inputAliasMethod + checkAliasMethod
         val numberOfMatchedHeaders = headerNames.filter { aliases.contains(it) }.size
