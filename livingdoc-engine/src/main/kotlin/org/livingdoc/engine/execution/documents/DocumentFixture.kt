@@ -2,6 +2,7 @@ package org.livingdoc.engine.execution.documents
 
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.tagging.Tag
 import org.livingdoc.engine.DecisionTableToFixtureMatcher
 import org.livingdoc.engine.ScenarioToFixtureMatcher
 import org.livingdoc.engine.execution.groups.GroupFixtureModel
@@ -34,13 +35,16 @@ internal class DocumentFixture(
         val builder = DocumentResult.Builder()
         if (documentClass.isAnnotationPresent(Disabled::class.java)) {
             return builder.withDocumentClass(documentClass)
+                .withTags(documentClass.getAnnotationsByType(Tag::class.java).map { it.value })
                 .withStatus(Status.Disabled(documentClass.getAnnotation(Disabled::class.java).value)).build()
         }
 
         val document = loadDocument()
 
-        return DocumentExecution(documentClass, document,
-            decisionTableToFixtureMatcher, scenarioToFixtureMatcher, groupFixtureModel).execute()
+        return DocumentExecution(
+            documentClass, document,
+            decisionTableToFixtureMatcher, scenarioToFixtureMatcher, groupFixtureModel
+        ).execute()
     }
 
     val executableDocumentAnnotation: ExecutableDocument?
@@ -52,7 +56,7 @@ internal class DocumentFixture(
     private fun validate() {
         if (executableDocumentAnnotation == null) {
             throw IllegalArgumentException(
-                    "ExecutableDocument annotation is not present on class ${documentClass.canonicalName}."
+                "ExecutableDocument annotation is not present on class ${documentClass.canonicalName}."
             )
         }
     }

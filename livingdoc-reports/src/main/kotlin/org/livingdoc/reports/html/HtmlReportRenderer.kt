@@ -1,5 +1,7 @@
 package org.livingdoc.reports.html
 
+import org.jsoup.nodes.Element
+import org.jsoup.nodes.Node
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
@@ -57,20 +59,76 @@ class HtmlReportRenderer : ReportRenderer {
         }.filterNotNull()
 
         return HtmlReportTemplate()
-            .renderTemplate(htmlResults, renderContext)
+            .renderResultListTemplate(htmlResults, renderContext)
     }
 
+    /**
+     * This renders the two column layout for the index/summary page
+     */
     private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
-        val htmlResults = reports.map {
-            titleLink(
-                it.first.documentClass.name,
-                it.second.fileName.toString(),
-                it.first.documentStatus
-            )
-        }
+
+        val columnContainer = Element("div")
+            .addClass("flex")
+            .appendChild(Element("script").html(
+                """function collapse (indicator, row) {
+                    var indicatorElem = document.getElementById(indicator);
+                    var rowElem = document.getElementById(row);
+                    if (rowElem.classList.contains("hidden")) {
+                        indicatorElem.innerHTML = "⏷";
+                    } else {
+                        indicatorElem.innerHTML = "⏵";
+                    }
+                    rowElem.classList.toggle("hidden");
+                }"""
+            ))
+            .appendChild(renderIndexList(reports))
+            .appendChild(renderTagList(reports))
 
         return HtmlReportTemplate()
-            .renderTemplate(htmlResults, renderContext)
+            .renderElementTemplate(columnContainer, renderContext)
+    }
+
+    /**
+     * This returns the left column for the index/summary page with a title and a list of all documents
+     */
+    private fun renderIndexList(reports: List<Pair<DocumentResult, Path>>): Element {
+        val indexListDiv = Element("div").addClass("flex-50")
+
+        indexListDiv.appendChild(Element("h2").html("Index"))
+
+        indexListDiv.appendChild(renderLinkList(reports))
+        return indexListDiv
+    }
+
+    /**
+     *  This returns the right column with the tag table
+     */
+    private fun renderTagList(reports: List<Pair<DocumentResult, Path>>): Element {
+        val tagListDiv = Element("div").addClass("flex-50")
+
+        tagListDiv.appendChild(Element("h2").html("Tag Summary"))
+
+
+        val reportsByTag = reports.flatMap { report ->
+            listOf(
+                "all" to report,
+                *report.first.tags.map { tag ->
+                    tag to report
+                }.toTypedArray()
+            )
+        }.groupBy({ it.first }, { it.second })
+
+        val tagTable = Element("table").attr("id", "summary-table")
+        tagTable.appendChild(summaryTableHeader())
+
+        reportsByTag.map { (tag,documentResults) ->
+            tagTable.appendChild(tagRow(tag,documentResults))
+            tagTable.appendChild(collapseRow(tag,documentResults))
+        }
+
+        tagListDiv.appendChild(tagTable)
+
+        return tagListDiv
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
@@ -119,17 +177,6 @@ class HtmlReportRenderer : ReportRenderer {
         return if (value != null) HtmlTitle(value) else null
     }
 
-    private fun titleLink(
-        value: String,
-        linkAddress: String,
-        status: Status
-    ): HtmlTitle {
-        return HtmlTitle(
-            HtmlLink(
-                value, linkAddress, status
-            ).toString()
-        )
-    }
 
     private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
         val htmlDescription = HtmlDescription()

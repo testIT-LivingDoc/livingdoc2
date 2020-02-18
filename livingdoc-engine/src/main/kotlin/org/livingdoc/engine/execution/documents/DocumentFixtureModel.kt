@@ -33,13 +33,12 @@ internal class DocumentFixtureModel(
             return documentClass.getAnnotation(FailFast::class.java)?.onExceptionTypes?.map { it.java } ?: emptyList()
         }
 
-
     /**
      * getTags returns the specified tags of a Document or an empty list
      *
      * @return a list of Strings that represents the tags
      */
-    val tags : List<String>
+    val tags: List<String>
         get() {
             return documentClass.getAnnotationsByType(Tag::class.java).orEmpty().map { it.value }
         }

@@ -70,7 +70,7 @@ data class DocumentResult private constructor(
         /**
          * Set the tags that were applied to the document
          */
-        fun withTags(tags: List<String>): Builder  {
+        fun withTags(tags: List<String>): Builder {
             this.tags = tags
 
             return this

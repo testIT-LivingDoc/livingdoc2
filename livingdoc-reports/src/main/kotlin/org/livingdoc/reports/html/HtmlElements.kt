@@ -3,10 +3,12 @@ package org.livingdoc.reports.html
 import org.jsoup.nodes.Element
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.RowResult
 import org.livingdoc.results.examples.scenarios.StepResult
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.nio.file.Path
 
 class HtmlRenderContext {
     private var popupErrorNumber = 0
@@ -22,6 +24,14 @@ interface HtmlResult
 
 class HtmlTitle(value: String) : HtmlResult {
     private val title = Element("h2").apply { html(value) }
+
+    override fun toString(): String {
+        return title.toString()
+    }
+}
+
+class HtmlListElement(value: String) : HtmlResult {
+    private val title = Element("li").apply { html(value) }
 
     override fun toString(): String {
         return title.toString()

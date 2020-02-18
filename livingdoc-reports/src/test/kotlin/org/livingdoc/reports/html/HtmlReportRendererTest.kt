@@ -140,6 +140,7 @@ internal class HtmlReportRendererTest {
             .withDocumentClass(HtmlReportRendererTest::class.java)
             .withStatus(Status.Executed)
             .withResult(decisionTableResult.build())
+            .withTags(emptyList())
             .build()
 
         val renderResult = cut.render(documentResult)
@@ -235,7 +236,7 @@ internal class HtmlReportRendererTest {
                         )
                     )
                     .build()
-            ).build()
+            ).withTags(emptyList()).build()
 
         val renderResult = cut.render(documentResult)
 
