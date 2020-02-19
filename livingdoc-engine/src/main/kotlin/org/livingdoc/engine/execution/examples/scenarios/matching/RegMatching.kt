@@ -99,8 +99,8 @@ internal class RegMatching(
         var operationNumber = 0.0f
 
         // copy the input strings to local variables
-        val templatetext = MatchingFunctions.filterTemplateString(stepTemplate.toString())
-        val testText = MatchingFunctions.filterStepString(step)
+        val templatetext = MatchingFunctions.filterString(stepTemplate.toString(), false)
+        val testText = MatchingFunctions.filterString(step, true)
 
         val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(templatetext)
         val reggedText = regstring.toRegex()
