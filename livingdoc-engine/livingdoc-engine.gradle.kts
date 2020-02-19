@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
 	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-converters"))
 	implementation(project(":livingdoc-extensions-api"))
