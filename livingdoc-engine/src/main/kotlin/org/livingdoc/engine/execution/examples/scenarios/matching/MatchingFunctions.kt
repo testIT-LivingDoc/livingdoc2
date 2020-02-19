@@ -19,15 +19,27 @@ object MatchingFunctions {
     private val allRegex = "(.*)"
 
     /**
-     * syntax:
-     * changes all "an" and "a" to "a"
-     * stemmer algorithm cannot handle those
-     * @param string input string in our case it will be the step and the template
-     * @return string where a/an are changed to a
+     * characters used by regex that need to be escaped
      */
-    fun filterString(string: String): String {
+    private val regexCharacters =
+        listOf('.', '*', '+', '^', '-', '\\', '|', '$', '&', '(', ')', '/', '[', ']', '?', '{', '}')
+
+    /**
+     * change all "an" to "a"
+     * escape all regex symbols unless it is a variable or a step string
+     * @param string the template string
+     * @return prepared string to be used for precalculations for regex
+     */
+    fun filterString(string: String, isStep: Boolean): String {
         val tokens = string.split(" ")
-        val out = tokens.map { if (it.equals("an")) "a" else it }
+        val out = tokens.map {
+            if (it.equals("an")) "a"
+            else if (isStep || checkIfVar(it)) it
+            else it.map { character ->
+                if (regexCharacters.contains(character)) "\\$character"
+                else character
+            }.joinToString("")
+        }
         val outputString = out.joinToString(" ")
         return outputString
     }

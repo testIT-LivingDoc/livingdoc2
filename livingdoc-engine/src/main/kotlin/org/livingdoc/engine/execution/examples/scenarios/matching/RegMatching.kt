@@ -63,8 +63,10 @@ internal class RegMatching(
      * cost of matching
      */
     private fun getCost(): Pair<Float, Float> {
-        return Pair(matchoutput.component2(),
-            MatchingFunctions.considerVarLength(matchoutput.component1()) + matchoutput.component2())
+        return Pair(
+            matchoutput.component2(),
+            MatchingFunctions.considerVarLength(matchoutput.component1()) + matchoutput.component2()
+        )
     }
 
     /**
@@ -97,8 +99,8 @@ internal class RegMatching(
         var operationNumber = 0.0f
 
         // copy the input strings to local variables
-        val templatetext = MatchingFunctions.filterString(stepTemplate.toString())
-        val testText = MatchingFunctions.filterString(step)
+        val templatetext = MatchingFunctions.filterString(stepTemplate.toString(), false)
+        val testText = MatchingFunctions.filterString(step, true)
 
         val (regstring, variablesList) = MatchingFunctions.templateStepToRegexString(templatetext)
         val reggedText = regstring.toRegex()
@@ -110,12 +112,12 @@ internal class RegMatching(
 
         // mapping all outputs to the variables
 
-        if (filteredMap.size == variablesList.size) {
+        return if (filteredMap.size == variablesList.size) {
             val variablesMap = variablesList.zip(filteredMap).toMap()
-            return Pair(variablesMap, operationNumber)
+            Pair(variablesMap, operationNumber)
         } else {
             operationNumber = maxNumberOfOperations
-            return Pair(emptyMap(), operationNumber)
+            Pair(emptyMap(), operationNumber)
         }
     }
 
@@ -135,26 +137,18 @@ internal class RegMatching(
      *@return List of variables matched to the string
      */
     private fun matchStrings(testText: String, reggedText: Regex, templatetext: String): Pair<List<String>, Float> {
-        val matched: List<String>
-
         val matchedResult = reggedText.find(testText)
         var opIncrease = 0.0f
 
-        if (matchedResult == null) {
-            val (rematchResult, numOp) = rematch(testText, templatetext)
+        var outputPair = Pair<List<String>, Float>(emptyList(), opIncrease)
 
-            if (!rematchResult.isEmpty()) {
-                opIncrease += numOp
-                matched = rematchResult
-            } else {
-                opIncrease = maxNumberOfOperations
-                matched = emptyList()
-            }
-            return Pair(matched, opIncrease)
-        } else {
-            matched = matchedResult.destructured.toList()
-            return Pair(matched, opIncrease)
+        if (matchedResult == null && !reggedText.matches(testText)) {
+            val (rematchResult, numOp) = rematch(testText, templatetext)
+            outputPair = Pair(rematchResult, opIncrease + numOp)
         }
+        if (matchedResult != null)
+            outputPair = Pair(matchedResult.destructured.toList(), opIncrease)
+        return outputPair
     }
 
     // Rematch with stemming, if already fit the template this should be not needed,
@@ -243,14 +237,19 @@ internal class RegMatching(
         val regexText = prepareTemplateToRegex(stemmedsentence, variables)
         val matchresult = regexText.find(stepAsString)
 
+        val matches = regexText.matches(stepAsString)
+
         matchingcost++
 
         // extend here if more algorithm have to be applied to strings or if
         // a rematch has to be made
         //
 
-        return if (matchresult != null)
-            Pair(matchresult.destructured.toList(), matchingcost)
-        else Pair(emptyList(), maxNumberOfOperations)
+        return if (matchresult == null)
+            if (matches)
+                Pair(emptyList(), matchingcost)
+            else
+                Pair(emptyList(), maxNumberOfOperations)
+        else Pair(matchresult.destructured.toList(), matchingcost)
     }
 }

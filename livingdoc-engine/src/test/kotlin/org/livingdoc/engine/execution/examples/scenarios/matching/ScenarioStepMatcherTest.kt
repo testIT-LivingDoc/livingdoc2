@@ -7,6 +7,15 @@ import org.junit.jupiter.api.Test
 class ScenarioStepMatcherTest {
 
     @Test
+    fun `can handle empty list of templates`() {
+        val cut = ScenarioStepMatcher(arrayListOf())
+
+        assertThatExceptionOfType(NoMatchingStepTemplate::class.java).isThrownBy {
+            cut.match("Test matching without templates")
+        }
+    }
+
+    @Test
     fun `matches step against single template`() {
         val template = StepTemplate.parse("User {username} has entered the building.")
         val cut = ScenarioStepMatcher(arrayListOf(template))

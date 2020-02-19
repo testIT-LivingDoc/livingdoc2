@@ -12,19 +12,25 @@ import java.util.stream.Stream
 class MatchingFunctinsTest {
     fun valueProvider(): Stream<Arguments> {
         return Stream.of(
-            Arguments.of("Eating an apple", "Eating a apple"),
-            Arguments.of("an an an", "a a a"),
-            Arguments.of("", ""),
-            Arguments.of("hello", "hello"),
-            Arguments.of("anb", "anb"),
-            Arguments.of("ant ant ant", "ant ant ant")
+            Arguments.of("Eating an apple", "Eating a apple", true),
+            Arguments.of("an an an", "a a a", true),
+            Arguments.of("", "", true),
+            Arguments.of("hello", "hello", true),
+            Arguments.of("anb", "anb", true),
+            Arguments.of("ant ant ant", "ant ant ant", true),
+            Arguments.of("+", "\\+", false),
+            Arguments.of("\\", "\\\\", false),
+            Arguments.of("", "", false),
+            Arguments.of("?", "\\?", false),
+            Arguments.of("anb", "anb", false),
+            Arguments.of(".", "\\.", false)
         )
     }
 
     @ParameterizedTest()
     @MethodSource("valueProvider")
-    fun `test filter string`(value: String, output: String) {
-        Assertions.assertThat(MatchingFunctions.filterString(value)).isEqualTo(output)
+    fun `test filter string`(value: String, output: String, isStep: Boolean) {
+        Assertions.assertThat(MatchingFunctions.filterString(value, isStep)).isEqualTo(output)
     }
 
     fun varLengthProvider(): Stream<Arguments> {

@@ -12,6 +12,9 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
 
     fun match(step: String): MatchingResult {
 
+        if (stepTemplates.isEmpty())
+            throw NoMatchingStepTemplate("StepTemplate list must not be empty")
+
         val bestFit = stepTemplates
             .map { it.alignWith(step, maxLevelOfStemming = 4.0f) }
             .sortedWith(compareBy({ it.totalCost.first }, { it.totalCost.second }))
@@ -20,10 +23,7 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
         if (bestFit.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }
-        /*bestFit.variables.forEach {
-            if (it.value == "")
-                throw NoMatchingStepTemplate("No matching template!")
-        }*/
+
         return MatchingResult(bestFit.stepTemplate, bestFit.variables)
     }
 }
