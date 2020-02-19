@@ -118,9 +118,7 @@ class DecisionTableFixtureWrapper(
         }
 
         return if (fixtureModel.parallelExecution) {
-            val result = decisionTable.rows.map { { executeRow(it) } }.map { executor.submit(it) }.map { it.get() }
-            executor.shutdown()
-            return result
+            decisionTable.rows.map { { executeRow(it) } }.map { executor.submit(it) }.map { it.get() }
         } else {
             decisionTable.rows.map(executeRow)
         }
