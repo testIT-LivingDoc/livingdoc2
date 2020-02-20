@@ -109,11 +109,11 @@ class HtmlReportRenderer : ReportRenderer {
 
         val reportsByTag = reports.flatMap { report ->
             listOf(
-                "all" to report,
-                *report.first.tags.map { tag ->
+                listOf("all" to report),
+                report.first.tags.map { tag ->
                     tag to report
-                }.toTypedArray()
-            )
+                }
+            ).flatten()
         }.groupBy({ it.first }, { it.second })
 
         val tagTable = Element("table").attr("id", "summary-table")
