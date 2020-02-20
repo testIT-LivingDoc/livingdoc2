@@ -1,7 +1,5 @@
 package org.livingdoc.scenario.matching
 
-import org.livingdoc.engine.algo.Stemmer
-
 /**
  * entry point to Stemmer Algorithm, refactoring not recommended,
  * algorithm is stable and commonly used
