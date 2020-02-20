@@ -1,6 +1,7 @@
 package org.livingdoc.jvm.engine.manager
 
 import org.livingdoc.jvm.api.extension.CallbackExtension
+import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
 import org.livingdoc.jvm.api.extension.ExecutionCondition
 import org.livingdoc.jvm.api.extension.Extension
 import org.livingdoc.jvm.api.extension.LifecycleMethodExecutionExceptionHandler
@@ -9,13 +10,8 @@ import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.jvm.api.extension.context.ExtensionContext
 import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.extension.context.GroupContext
-import org.livingdoc.jvm.api.extension.context.Store
 import org.livingdoc.jvm.engine.EngineContext
-import org.livingdoc.jvm.engine.castToClass
 import java.util.*
-import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.findAnnotation
 
 internal class ExtensionManager {
 
@@ -93,10 +89,10 @@ internal class ExtensionManager {
         }
     }
 
-    fun shouldExecute(context: EngineContext): Boolean {
+    fun shouldExecute(context: EngineContext): ConditionEvaluationResult {
         return getAllExtensions(context).extensionsOfType<ExecutionCondition>()
             .map { it.evaluateExecutionCondition(context.extensionContext) } // TODO handle exception form extensions
-            .all { it.enabled }
+            .find { it.disabled } ?: ConditionEvaluationResult.enabled("No 'disabled' conditions encountered")
     }
 
     fun handleTestExecutionException(context: EngineContext, throwable: Throwable): Throwable? {
@@ -130,21 +126,7 @@ internal class ExtensionManager {
             }
             .handle(throwable)
     }
-
-    fun loadExtensions(context: EngineContext) {
-        context.extensions = context.extensionContext.extensionClasses.map { instantiateExtension(it) }
-    }
 }
-
-fun instantiateExtension(extensionClass: KClass<*>): CallbackExtension {
-    return extensionClass.castToClass(CallbackExtension::class).createInstance()
-}
-
-private val ExtensionContext.extensionStore: Store
-    get() = this.getStore("org.livingdoc.jvm.engine.manager.ExtensionManager")
-
-private val ExtensionContext.extensionClasses: List<KClass<*>>
-    get() = this.testClass.findAnnotation<org.livingdoc.api.Extensions>()?.value?.toList() ?: emptyList()
 
 private val EngineContext.allExtensions: List<Extension>
     get() = parent?.allExtensions.orEmpty() + extensions

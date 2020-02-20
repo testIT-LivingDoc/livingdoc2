@@ -2,11 +2,15 @@ package org.livingdoc.jvm.engine
 
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.GroupContext
+import org.livingdoc.jvm.engine.extension.DocumentFixtureContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
+import org.livingdoc.jvm.engine.manager.loadExtensions
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
+import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 
 internal class DocumentFixture(
@@ -21,13 +25,13 @@ internal class DocumentFixture(
      * @return a [DocumentResult] for this execution
      */
     fun execute(): DocumentResult {
-        extensionManager.loadExtensions(context)
 
         val extensionContext = context.extensionContext as DocumentFixtureContext
         val resultBuilder = DocumentResult.Builder().withDocumentClass(extensionContext.documentFixtureClass.java)
 
-        if (!extensionManager.shouldExecute(context)) {
-            return resultBuilder.withStatus(Status.Disabled()).build()
+        val conditionEvaluationResult = extensionManager.shouldExecute(context)
+        if (conditionEvaluationResult.disabled) {
+            return resultBuilder.withStatus(Status.Disabled(conditionEvaluationResult.reason.orEmpty())).build()
         }
 
         extensionManager.executeBeforeDocumentFixture(context)
@@ -38,7 +42,7 @@ internal class DocumentFixture(
             .getDocument(extractDocumentId(documentInformation))
 
         val results = document.elements.map {
-            val fixture = fixtureManager.getFixture(context, it)
+            val fixture = fixtureManager.getFixture(context, it, extensionManager)
             fixture.execute(it)
         }
         extensionManager.executeAfterDocumentFixture(context)
@@ -50,6 +54,14 @@ internal class DocumentFixture(
         }
 
         return result.build()
+    }
+
+    companion object {
+        fun createContext(documentFixtureClass: KClass<*>, parent: EngineContext): EngineContext {
+            val documentFixtureContext =
+                DocumentFixtureContextImpl(documentFixtureClass, parent.extensionContext as GroupContext)
+            return EngineContext(parent, documentFixtureContext, loadExtensions(documentFixtureClass))
+        }
     }
 }
 

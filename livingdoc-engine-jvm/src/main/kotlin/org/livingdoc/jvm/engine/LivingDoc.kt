@@ -3,7 +3,6 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.ExecutionException
-import org.livingdoc.jvm.engine.extension.GroupContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
 import org.livingdoc.repositories.RepositoryManager
@@ -30,11 +29,16 @@ class LivingDoc internal constructor(
      * @return a list of [DocumentResults][DocumentResult] of the execution
      * @throws ExecutionException in case the execution failed in a way that did not produce a viable result
      */
+    @Suppress("TooGenericExceptionCaught")
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<KClass<*>>): List<DocumentResult> {
-        return documentClasses.groupBy { extractGroup(it) }.map { (groupClass, documentClasses) ->
-            createGroup(groupClass, documentClasses)
-        }.flatMap { executeGroup(it) }
+        try {
+            return documentClasses.groupBy { extractGroup(it) }.map { (groupClass, documentClasses) ->
+                createGroup(groupClass, documentClasses)
+            }.flatMap { executeGroup(it) }
+        } catch (e: Throwable) {
+            throw ExecutionException("Unhandled Exception was thrown", e)
+        }
     }
 
     /**
@@ -60,8 +64,7 @@ class LivingDoc internal constructor(
      * @return a Group
      */
     private fun createGroup(groupClass: KClass<*>, documentClasses: List<KClass<*>>): Group {
-        val extensionContext = GroupContextImpl(groupClass)
-        val context = EngineContext(null, extensionContext)
+        val context = Group.createContext(groupClass)
 
         return Group(
             context,

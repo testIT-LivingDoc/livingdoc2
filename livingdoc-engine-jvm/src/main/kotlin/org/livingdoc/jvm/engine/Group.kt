@@ -1,10 +1,11 @@
 package org.livingdoc.jvm.engine
 
-import org.livingdoc.jvm.engine.extension.DocumentFixtureContextImpl
+import org.livingdoc.jvm.engine.extension.GroupContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.api.extension.context.GroupContext
+import org.livingdoc.jvm.engine.manager.loadExtensions
 import org.livingdoc.repositories.RepositoryManager
+import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import kotlin.reflect.KClass
 
@@ -16,32 +17,40 @@ internal class Group(
     private val extensionManager: ExtensionManager
 ) {
     fun execute(): List<DocumentResult> {
-        extensionManager.loadExtensions(context)
 
-        if (!extensionManager.shouldExecute(context)) {
-            return emptyList()
+        val conditionEvaluationResult = extensionManager.shouldExecute(context)
+        if (conditionEvaluationResult.disabled) {
+            return documentClasses.resultsWithStatus(Status.Disabled(conditionEvaluationResult.reason.orEmpty()))
         }
-        if (!context.throwableCollector.isEmpty()) {
-            return emptyList()
-        }
+
+        val throwableCollector = context.throwableCollector
 
         extensionManager.executeBeforeGroup(context)
-        if (!context.throwableCollector.isEmpty()) {
-            return emptyList()
+        if (!throwableCollector.isEmpty()) {
+            return documentClasses.resultsWithStatus(Status.Exception(throwableCollector.throwable))
         }
 
         val results = documentClasses.map {
-            val documentFixtureContext = DocumentFixtureContextImpl(it, context.extensionContext as GroupContext)
-            val documentFixtureEngineContext = EngineContext(context, documentFixtureContext)
+            val documentFixtureEngineContext = DocumentFixture.createContext(it, context)
             val documentFixture =
                 DocumentFixture(documentFixtureEngineContext, repositoryManager, fixtureManager, extensionManager)
             documentFixture.execute()
         }
         extensionManager.executeAfterGroup(context)
-        if (!context.throwableCollector.isEmpty()) {
-            return emptyList()
+        if (!throwableCollector.isEmpty()) {
+            return documentClasses.resultsWithStatus(Status.Exception(throwableCollector.throwable))
         }
 
         return results
     }
+
+    companion object {
+        fun createContext(groupClass: KClass<*>): EngineContext {
+            val extensionContext = GroupContextImpl(groupClass)
+            return EngineContext(null, extensionContext, loadExtensions(groupClass))
+        }
+    }
 }
+
+fun List<KClass<*>>.resultsWithStatus(status: Status): List<DocumentResult> =
+    map { DocumentResult.Builder().withDocumentClass(it.java).withStatus(status).build() }

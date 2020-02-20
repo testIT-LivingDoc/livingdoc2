@@ -9,5 +9,5 @@ interface FixtureFactory<T : TestData> {
 
     fun match(fixtureClass: KClass<*>, testData: T): Boolean
 
-    fun getFixture(context: FixtureContext): Fixture<T>
+    fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<T>
 }

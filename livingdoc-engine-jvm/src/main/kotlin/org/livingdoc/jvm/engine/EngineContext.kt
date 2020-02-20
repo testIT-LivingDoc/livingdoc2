@@ -6,9 +6,8 @@ import org.livingdoc.jvm.engine.extension.ContextImpl
 
 internal class EngineContext(
     parent: EngineContext?,
-    val extensionContext: ExtensionContext
-
+    val extensionContext: ExtensionContext,
+    val extensions: List<Extension>
 ) : ContextImpl<EngineContext>(parent) {
     val throwableCollector: ThrowableCollector = ThrowableCollector()
-    lateinit var extensions: List<Extension>
 }

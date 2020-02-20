@@ -2,6 +2,7 @@ package org.livingdoc.jvm.engine.manager
 
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
+import org.livingdoc.jvm.api.extension.context.ExtensionContext
 import org.livingdoc.jvm.api.fixture.Fixture
 import org.livingdoc.jvm.api.fixture.FixtureAnnotation
 import org.livingdoc.jvm.api.fixture.FixtureFactory
@@ -21,7 +22,7 @@ internal class FixtureManager {
      * Get the fixture for the given [testData] using the provided [context]. The Context must be have a
      * DocumentFixtureContext.
      */
-    fun <T : TestData> getFixture(context: EngineContext, testData: T): Fixture<T> {
+    fun <T : TestData> getFixture(context: EngineContext, testData: T, extensionManager: ExtensionManager): Fixture<T> {
         val extensionContext = context.extensionContext as DocumentFixtureContext
         val fixtureClasses = extensionContext.externalFixtureClasses + extensionContext.internalFixtureClasses
         return fixtureFactories.filter { it.isCompatible(testData) }.filterIsInstance<FixtureFactory<T>>()
@@ -29,9 +30,22 @@ internal class FixtureManager {
                 val fixtureClass = fixtureClasses.firstOrNull { factory.match(it, testData) }
                 fixtureClass?.let {
                     val fixtureContextImpl = FixtureContextImpl(fixtureClass, extensionContext)
-                    factory.getFixture(fixtureContextImpl)
+                    val internalContext = createContext(it, context, fixtureContextImpl)
+                    factory.getFixture(fixtureContextImpl, FixtureExtensionsManager(extensionManager, internalContext))
                 }
             }.firstOrNull() ?: throw IllegalArgumentException("No matching Fixture found")
+    }
+
+    /**
+     * Create the internal EngineContext required by the ExtensionManager. This context is not exposed to the Fixture
+     * implementation.
+     */
+    private fun createContext(
+        fixtureClass: KClass<*>,
+        parent: EngineContext,
+        extensionContext: ExtensionContext
+    ): EngineContext {
+        return EngineContext(parent, extensionContext, loadExtensions(fixtureClass))
     }
 }
 

@@ -10,6 +10,8 @@ data class ConditionEvaluationResult(
     val enabled: Boolean,
     val reason: String?
 ) {
+    val disabled get() = !enabled
+
     companion object {
         /**
          * Create a disabled ConditionEvaluationResult with an optional [reason] why the test should be disabled

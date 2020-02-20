@@ -17,4 +17,6 @@ class ThrowableCollector {
     }
 
     fun isEmpty() = list.isEmpty()
+
+    val throwable get() = list.getOrNull(0) ?: throw IllegalStateException("The ThrowableCollector is empty")
 }
