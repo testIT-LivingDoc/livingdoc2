@@ -35,7 +35,8 @@ internal class DecisionTableFixtureFactoryTest {
         val decisionTable = DecisionTable(listOf(), listOf())
 
         Assertions.assertThat(cut.match(EmptyFixture::class, decisionTable)).isTrue()
-        Assertions.assertThat(cut.match(CalculatorFixture::class, decisionTable)).isTrue()
+        // Assertions.assertThat(cut.match(CalculatorFixture::class, decisionTable)).isTrue()
+        // Assertions.assertThat(cut.match(TestJavaFixture::class, decisionTable)).isTrue()
     }
 
     @Test
@@ -76,6 +77,7 @@ internal class DecisionTableFixtureFactoryTest {
         )
 
         Assertions.assertThat(cut.match(CalculatorFixture::class, decisionTable)).isTrue()
+        Assertions.assertThat(cut.match(TestJavaFixture::class, decisionTable)).isTrue()
     }
 
     @Test

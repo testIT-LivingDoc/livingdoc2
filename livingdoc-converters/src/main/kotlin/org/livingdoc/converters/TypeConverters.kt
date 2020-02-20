@@ -133,7 +133,7 @@ object TypeConverters {
             .firstOrNull { it.canConvertTo(converting) }
     }
 
-    private fun findDefaultConverterFor(type: Class<*>?): TypeConverter<out Any>? {
+    private fun findDefaultConverterFor(type: Class<*>): TypeConverter<*>? {
         return TypeConverterManager.getDefaultConverters()
             .firstOrNull { it.canConvertTo(type) }
     }

@@ -16,7 +16,7 @@ object TypeConverterManager {
 
     private val log: Logger = LoggerFactory.getLogger(javaClass)
 
-    private val cache: MutableMap<Class<out TypeConverter<out Any>>, TypeConverter<*>> = mutableMapOf()
+    private val cache: MutableMap<Class<out TypeConverter<*>>, TypeConverter<*>> = mutableMapOf()
     private val defaultConverters: List<TypeConverter<*>>
 
     init {
@@ -35,7 +35,7 @@ object TypeConverterManager {
      * @param converterType the class of the type converter
      * @return the type converter instance for the given type
      */
-    fun getInstance(converterType: KClass<out TypeConverter<out Any>>): TypeConverter<*> {
+    fun getInstance(converterType: KClass<out TypeConverter<*>>): TypeConverter<*> {
         return getInstance(converterType.java)
     }
 
@@ -46,7 +46,7 @@ object TypeConverterManager {
      * @param converterType the class of the type converter
      * @return the type converter instance for the given type
      */
-    private fun getInstance(converterType: Class<out TypeConverter<out Any>>): TypeConverter<*> {
+    private fun getInstance(converterType: Class<out TypeConverter<*>>): TypeConverter<*> {
         return cache.computeIfAbsent(converterType) { clazz ->
             log.debug("creating new cached instance of {}", clazz.canonicalName)
             clazz.getDeclaredConstructor().newInstance()

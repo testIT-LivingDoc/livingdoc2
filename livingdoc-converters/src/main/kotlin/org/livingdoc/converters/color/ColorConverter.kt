@@ -8,7 +8,7 @@ import java.util.*
 /**
  * A class containing methods, that can convert a string to a hex color value.
  */
-open class ColorConverter : TypeConverter<String> {
+class ColorConverter : TypeConverter<String> {
 
     private val prop: Properties = Properties()
 
@@ -17,7 +17,7 @@ open class ColorConverter : TypeConverter<String> {
         prop.load(fis)
     }
 
-    override fun canConvertTo(targetType: Class<*>?): Boolean = String::class.java == targetType
+    override fun canConvertTo(targetType: Class<*>): Boolean = String::class.java == targetType
 
     /**
      * Converts a given string to a lower case hex color value string.
@@ -32,11 +32,7 @@ open class ColorConverter : TypeConverter<String> {
      *
      * @return A lower case hex color value as a string.
      */
-    override fun convert(value: String?, element: AnnotatedElement?, documentClass: Class<*>?): String {
-        if (value.isNullOrEmpty()) {
-            throw ColorFormatException(value)
-        }
-
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): String {
         val lowerCaseAndTrimmedValue = value.toLowerCase().trim().replace(" ", "")
 
         return parseHexColor(lowerCaseAndTrimmedValue)

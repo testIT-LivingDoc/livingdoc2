@@ -18,10 +18,10 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
     override fun match(fixtureClass: KClass<*>, testData: DecisionTable): Boolean {
         val headerNames = testData.headers.map { it.name }
         val numberOfHeaders = headerNames.size
-        val inputAliasMethod = fixtureClass.declaredMembers.flatMap { member ->
-            // TODO Annotation Input cannot be found on fields
-            member.findAnnotation<Input>()?.value.orEmpty().asIterable()
+        val inputAliasMethod = fixtureClass.declaredMembers.mapNotNull { member ->
+            member.findAnnotation<Input>()?.value
         }
+
         val checkAliasMethod = fixtureClass.declaredMembers.flatMap { member ->
             member.findAnnotation<Check>()?.value.orEmpty().asIterable()
         }

@@ -25,6 +25,10 @@ internal class FixtureManager {
     fun <T : TestData> getFixture(context: EngineContext, testData: T, extensionManager: ExtensionManager): Fixture<T> {
         val extensionContext = context.extensionContext as DocumentFixtureContext
         val fixtureClasses = extensionContext.externalFixtureClasses + extensionContext.internalFixtureClasses
+        if (fixtureClasses.isEmpty()) {
+            throw IllegalArgumentException("There are no Fixtures for ${extensionContext.documentFixtureClass}")
+        }
+
         return fixtureFactories.filter { it.isCompatible(testData) }.filterIsInstance<FixtureFactory<T>>()
             .map { factory ->
                 val fixtureClass = fixtureClasses.firstOrNull { factory.match(it, testData) }
@@ -33,7 +37,11 @@ internal class FixtureManager {
                     val internalContext = createContext(it, context, fixtureContextImpl)
                     factory.getFixture(fixtureContextImpl, FixtureExtensionsManager(extensionManager, internalContext))
                 }
-            }.firstOrNull() ?: throw IllegalArgumentException("No matching Fixture found")
+            }.firstOrNull()
+            ?: throw IllegalArgumentException(
+                "No matching Fixture found for TestData of type: " +
+                        testData::class.qualifiedName + " available Fixtures: " + fixtureClasses
+            )
     }
 
     /**

@@ -6,14 +6,14 @@ import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.TypeConverters.findTypeConverterForGenericElement
 import org.livingdoc.converters.collection.Tokenizer.tokenizeToMap
 
-open class MapConverter : TypeConverter<Map<Any, Any>> {
+open class MapConverter : TypeConverter<Map<*, *>> {
 
     private val keyParameter: Int = 0
     private val valueParameter: Int = 1
 
     @Throws(ConversionException::class)
-    override fun convert(value: String, element: AnnotatedElement, documentClass: Class<*>?): Map<Any, Any> {
-        val keyConverter = findTypeConverterForGenericElement(element, keyParameter, documentClass)
+    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Map<*, *> {
+        val keyConverter = findTypeConverterForGenericElement(element!!, keyParameter, documentClass)
         val valueConverter = findTypeConverterForGenericElement(element, valueParameter, documentClass)
         val pairs = tokenizeToMap(value)
         return pairs.map { (key, value) ->
@@ -23,5 +23,5 @@ open class MapConverter : TypeConverter<Map<Any, Any>> {
         }.toMap()
     }
 
-    override fun canConvertTo(targetType: Class<*>?) = Map::class.java == targetType
+    override fun canConvertTo(targetType: Class<*>) = Map::class.java == targetType
 }
