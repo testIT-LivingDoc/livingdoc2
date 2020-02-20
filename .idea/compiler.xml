@@ -10,6 +10,8 @@
       <module name="livingdoc.livingdoc-config.test" target="11" />
       <module name="livingdoc.livingdoc-converters.main" target="11" />
       <module name="livingdoc.livingdoc-converters.test" target="11" />
+      <module name="livingdoc.livingdoc-decisiontable.main" target="11" />
+      <module name="livingdoc.livingdoc-decisiontable.test" target="11" />
       <module name="livingdoc.livingdoc-documentation.main" target="11" />
       <module name="livingdoc.livingdoc-documentation.test" target="11" />
       <module name="livingdoc.livingdoc-engine-jvm.jmh" target="11" />

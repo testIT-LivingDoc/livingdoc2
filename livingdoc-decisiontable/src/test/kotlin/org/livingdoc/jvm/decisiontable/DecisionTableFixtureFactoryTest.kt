@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.livingdoc.jvm.api.extension.context.FixtureContext
-import org.livingdoc.jvm.api.fixture.FixtureFactory
+import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 internal class DecisionTableFixtureFactoryTest {
 
     companion object {
-        lateinit var cut: FixtureFactory<DecisionTable>
+        lateinit var cut: DecisionTableFixtureFactory
 
         @BeforeAll
         @JvmStatic
@@ -102,9 +102,10 @@ internal class DecisionTableFixtureFactoryTest {
     fun `can create correct fixture from context`() {
         val fixture = mockk<KClass<*>>()
         val context = mockk<FixtureContext>()
+        val manager = mockk<FixtureExtensionsInterface>()
         every { context.fixtureClass } returns fixture
 
-        Assertions.assertThat(cut.getFixture(context)).isInstanceOfSatisfying(DecisionTableFixture::class.java) {
+        Assertions.assertThat(cut.getFixture(context, manager)).isInstanceOfSatisfying(DecisionTableFixture::class.java) {
             Assertions.assertThat(it.fixtureClass).isEqualTo(fixture)
         }
     }
