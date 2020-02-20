@@ -63,9 +63,11 @@ fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Elem
         tagRow.appendChild(Element("td").apply {
             addClass("tag-cell")
             if (tag == "all")
-                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag','ID_$tag')\">⏵</span> <i>all tags</i>")
+                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
+                        "'ID_$tag')\">⏵</span> <i>all tags</i>")
             else
-                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag','ID_$tag')\">⏵</span> $tag")
+                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
+                        "'ID_$tag')\">⏵</span> $tag")
         })
 
         var numberSuccessful = 0
