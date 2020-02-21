@@ -130,44 +130,56 @@ fun summaryTableHeader(): Element {
 
 fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Element {
 
-        val tagRow = Element("tr")
+    val tagRow = Element("tr")
 
+    tagRow.appendChild(Element("td").apply {
+        addClass("tag-cell")
+        if (tag == "all")
+            html(
+                "<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
+                        "'ID_$tag')\">⏵</span> <i>all tags</i>"
+            )
+        else
+            html(
+                "<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
+                        "'ID_$tag')\">⏵</span> $tag"
+            )
+    })
+
+    calculateSummaryNumbers(documentResults).forEachIndexed { index, number ->
         tagRow.appendChild(Element("td").apply {
-            addClass("tag-cell")
-            if (tag == "all")
-                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
-                        "'ID_$tag')\">⏵</span> <i>all tags</i>")
-            else
-                html("<span class=\"indicator\" id=\"indicator_$tag\" onClick=\"collapse('indicator_$tag'," +
-                        "'ID_$tag')\">⏵</span> $tag")
+            html(number.toString())
         })
+    }
 
-        var numberSuccessful = 0
-        var numberFailed = 0
-        var numberOther = 0
+    return tagRow
+}
 
-        documentResults.forEach { (document, _) ->
-            when (document.documentStatus) {
-                is Status.Executed
-                    -> numberSuccessful++
-                is Status.Failed
-                    -> numberFailed++
-                is Status.Exception
-                    -> numberFailed++
-                else
-                    -> numberOther++
-            }
+/**
+ * Calculates the summary numbers for the tag table
+ *
+ * @param   documentResults a list of results to be examined
+ * @return a list with three numbers (success, other, failed)
+ */
+private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Int> {
+    var numberSuccessful = 0
+    var numberFailed = 0
+    var numberOther = 0
+
+    documentResults.forEach { (document, _) ->
+        when (document.documentStatus) {
+            is Status.Executed
+            -> numberSuccessful++
+            is Status.Failed
+            -> numberFailed++
+            is Status.Exception
+            -> numberFailed++
+            else
+            -> numberOther++
         }
+    }
 
-        val summaryNumbers = listOf<Int>(numberSuccessful, numberOther, numberFailed)
-
-        summaryNumbers.forEachIndexed { index, number ->
-            tagRow.appendChild(Element("td").apply {
-                html(number.toString())
-            })
-        }
-
-        return tagRow
+    return listOf(numberSuccessful, numberOther, numberFailed)
 }
 
 /**
