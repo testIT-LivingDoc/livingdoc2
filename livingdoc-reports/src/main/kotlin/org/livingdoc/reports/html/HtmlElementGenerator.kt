@@ -158,7 +158,7 @@ fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Elem
 /**
  * Calculates the summary numbers for the tag table
  *
- * @param   documentResults a list of results to be examined
+ * @param documentResults a list of results to be examined
  * @return a list with three numbers (success, other, failed)
  */
 private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Int> {
