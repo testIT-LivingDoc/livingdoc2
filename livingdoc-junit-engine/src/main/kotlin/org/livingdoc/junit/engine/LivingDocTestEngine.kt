@@ -10,6 +10,7 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector
 import org.junit.platform.engine.discovery.PackageSelector
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine
 import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.documents.Group
 import org.livingdoc.junit.engine.descriptors.EngineDescriptor
 import org.livingdoc.junit.engine.discovery.ClassSelectorHandler
 import org.livingdoc.junit.engine.discovery.ClasspathRootSelectorHandler
@@ -136,6 +137,10 @@ class LivingDocTestEngine : HierarchicalTestEngine<LivingDocContext>() {
         }
         val groupMembers = allClasses.groupBy { document ->
             document.getAnnotation(ExecutableDocument::class.java).group.java
+                .takeIf { groupCandidate -> groupCandidate.isAnnotationPresent(Group::class.java) }
+                ?: document.enclosingClass?.takeIf { groupCandidate ->
+                    groupCandidate.isAnnotationPresent(Group::class.java)
+                }
         }
 
         return groupClasses.flatMap { group -> groupMembers[group].orEmpty() }.toSet()
