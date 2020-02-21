@@ -5,9 +5,6 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import java.nio.file.Path
 
-
-
-
 /**
  * This returns the left column for the index/summary page with a title and a list of all documents
  *
@@ -88,7 +85,7 @@ private fun listElement(
 /**
  * This returns a HTML node div with a script block for collapsing java script function
  *
- * @return  The HTML node containing the script child node
+ * @return The HTML node containing the script child node
  */
 fun generateTwoColumnLayoutWithScript(): Element {
     return Element("div")

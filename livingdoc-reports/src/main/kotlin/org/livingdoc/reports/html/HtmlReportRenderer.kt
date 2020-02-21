@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html
 
-import org.jsoup.nodes.Element
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.spi.Format
