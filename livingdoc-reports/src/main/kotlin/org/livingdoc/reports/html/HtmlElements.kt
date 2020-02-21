@@ -28,6 +28,14 @@ class HtmlTitle(value: String) : HtmlResult {
     }
 }
 
+class HtmlListElement(value: String) : HtmlResult {
+    private val title = Element("li").apply { html(value) }
+
+    override fun toString(): String {
+        return title.toString()
+    }
+}
+
 class HtmlLink(value: String, link: String, status: Status) : HtmlResult {
     private val title = Element("a").apply {
         setStyleClasses(determineCssClassForBackgroundColor(status))

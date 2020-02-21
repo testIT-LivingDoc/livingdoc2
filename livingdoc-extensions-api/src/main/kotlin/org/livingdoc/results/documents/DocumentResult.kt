@@ -10,7 +10,8 @@ import org.livingdoc.results.TestDataResult
 data class DocumentResult private constructor(
     val documentClass: Class<*>,
     val documentStatus: Status,
-    val results: List<TestDataResult<TestData>>
+    val results: List<TestDataResult<TestData>>,
+    val tags: List<String>
 ) {
     /**
      * Builder can be used to build a [DocumentResult].
@@ -18,6 +19,7 @@ data class DocumentResult private constructor(
     class Builder {
         private lateinit var documentClass: Class<*>
         private lateinit var status: Status
+        private lateinit var tags: List<String>
         private var results: MutableList<TestDataResult<TestData>> = mutableListOf()
 
         /**
@@ -62,7 +64,16 @@ data class DocumentResult private constructor(
          * @return a [DocumentResult] containing the data of this Builder
          */
         fun build(): DocumentResult {
-            return DocumentResult(documentClass, status, results)
+            return DocumentResult(documentClass, status, results, tags)
+        }
+
+        /**
+         * Set the tags that were applied to the document
+         */
+        fun withTags(tags: List<String>): Builder {
+            this.tags = tags
+
+            return this
         }
     }
 }

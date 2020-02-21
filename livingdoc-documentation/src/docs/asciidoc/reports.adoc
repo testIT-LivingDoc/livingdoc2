@@ -44,7 +44,8 @@ The directory where the HTML Reports are save.
 The default value is `livingdoc/reports/html`.
 
 .generateIndex
-A boolean that sets whether an index file should be generated that contains links to all other reports. Default is `false`.
+A boolean that sets whether an index file should be generated that contains links to all other reports
+ and shows a summary grouped by tags. Default is `false`.
 
 === Json Reports
 

@@ -31,7 +31,7 @@ internal class DocumentExecution(
     private val groupFixtureModel: GroupFixtureModel
 ) {
     private val documentFixtureModel: DocumentFixtureModel = DocumentFixtureModel(documentClass)
-    private val builder = DocumentResult.Builder().withDocumentClass(documentClass)
+    private val builder = DocumentResult.Builder().withDocumentClass(documentClass).withTags(documentFixtureModel.tags)
     private val methodInvoker: FixtureMethodInvoker = FixtureMethodInvoker(documentClass)
 
     /**

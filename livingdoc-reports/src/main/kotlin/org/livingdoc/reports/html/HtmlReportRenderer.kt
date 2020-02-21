@@ -44,6 +44,9 @@ class HtmlReportRenderer : ReportRenderer {
 
     /**
      * Create a html string from a [DocumentResult]
+     *
+     * @param documentResult The document that should be used for the report
+     * @return the HTML code for a single report as a String
      */
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
@@ -57,20 +60,23 @@ class HtmlReportRenderer : ReportRenderer {
         }.filterNotNull()
 
         return HtmlReportTemplate()
-            .renderTemplate(htmlResults, renderContext)
+            .renderResultListTemplate(htmlResults, renderContext)
     }
 
+    /**
+     * This renders the two column layout for the index/summary page
+     *
+     * @param reports a list of all reports that were generated in this test run
+     * @return a String containing HTML code of the two column layout
+     */
     private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
-        val htmlResults = reports.map {
-            titleLink(
-                it.first.documentClass.name,
-                it.second.fileName.toString(),
-                it.first.documentStatus
-            )
-        }
+
+        val columnContainer = generateTwoColumnLayoutWithScript()
+            .appendChild(renderIndexList(reports))
+            .appendChild(renderTagList(reports))
 
         return HtmlReportTemplate()
-            .renderTemplate(htmlResults, renderContext)
+            .renderElementTemplate(columnContainer, renderContext)
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
@@ -117,18 +123,6 @@ class HtmlReportRenderer : ReportRenderer {
 
     private fun title(value: String?): HtmlTitle? {
         return if (value != null) HtmlTitle(value) else null
-    }
-
-    private fun titleLink(
-        value: String,
-        linkAddress: String,
-        status: Status
-    ): HtmlTitle {
-        return HtmlTitle(
-            HtmlLink(
-                value, linkAddress, status
-            ).toString()
-        )
     }
 
     private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {

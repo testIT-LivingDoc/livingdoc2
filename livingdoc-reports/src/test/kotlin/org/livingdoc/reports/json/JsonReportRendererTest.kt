@@ -108,6 +108,7 @@ internal class JsonReportRendererTest {
             .withDocumentClass(JsonReportRendererTest::class.java)
             .withStatus(Status.Executed)
             .withResult(decisionTableResult.build())
+            .withTags(emptyList())
             .build()
 
         val renderResult = cut.render(documentResult, false)
@@ -237,7 +238,8 @@ internal class JsonReportRendererTest {
                             )
                         )
                         .build()
-                ).build()
+                ).withTags(emptyList())
+                .build()
 
         val renderResult = cut.render(documentResult, false)
         assertThat(renderResult).hasLineCount(1)

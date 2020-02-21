@@ -13,16 +13,19 @@ internal class ConfluenceReportRendererTest {
     private val doc1Result = DocumentResult.Builder()
         .withDocumentClass(TestDocument1::class.java)
         .withStatus(Status.Executed)
+        .withTags(emptyList())
         .build()
 
     private val doc2Result = DocumentResult.Builder()
         .withDocumentClass(TestDocument2::class.java)
         .withStatus(Status.Executed)
+        .withTags(emptyList())
         .build()
 
     private val doc3Result = DocumentResult.Builder()
         .withDocumentClass(TestDocument3::class.java)
         .withStatus(Status.Executed)
+        .withTags(emptyList())
         .build()
 
     private val reportRenderer = ConfluenceReportRenderer()
