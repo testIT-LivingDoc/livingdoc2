@@ -238,7 +238,8 @@ internal class JsonReportRendererTest {
                             )
                         )
                         .build()
-                ).withTags(emptyList()).build()
+                ).withTags(emptyList())
+                .build()
 
         val renderResult = cut.render(documentResult, false)
         assertThat(renderResult).hasLineCount(1)

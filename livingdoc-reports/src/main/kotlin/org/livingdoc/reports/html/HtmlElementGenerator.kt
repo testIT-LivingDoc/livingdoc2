@@ -5,6 +5,57 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import java.nio.file.Path
 
+
+
+
+/**
+ * This returns the left column for the index/summary page with a title and a list of all documents
+ *
+ * @param reports a list of all reports that were generated in this test run
+ * @return a String containing HTML code of the left column (index list with a list item üer result)
+ */
+fun renderIndexList(reports: List<Pair<DocumentResult, Path>>): Element {
+    val indexListDiv = Element("div").addClass("flex-50")
+
+    indexListDiv.appendChild(Element("h2").html("Index"))
+
+    indexListDiv.appendChild(renderLinkList(reports))
+    return indexListDiv
+}
+
+/**
+ *  This returns the right column with the tag table
+ *
+ * @param reports a list of all reports that were generated in this test run
+ * @return a String containing HTML code of the right column (table with sublist per tag)
+ */
+fun renderTagList(reports: List<Pair<DocumentResult, Path>>): Element {
+    val tagListDiv = Element("div").addClass("flex-50")
+
+    tagListDiv.appendChild(Element("h2").html("Tag Summary"))
+
+    val reportsByTag = reports.flatMap { report ->
+        listOf(
+            listOf("all" to report),
+            report.first.tags.map { tag ->
+                tag to report
+            }
+        ).flatten()
+    }.groupBy({ it.first }, { it.second })
+
+    val tagTable = Element("table").attr("id", "summary-table")
+    tagTable.appendChild(summaryTableHeader())
+
+    reportsByTag.map { (tag, documentResults) ->
+        tagTable.appendChild(tagRow(tag, documentResults))
+        tagTable.appendChild(collapseRow(tag, documentResults))
+    }
+
+    tagListDiv.appendChild(tagTable)
+
+    return tagListDiv
+}
+
 /**
  * This returns an unordered HTML list of Links to DocumentResults
  */
@@ -32,6 +83,30 @@ private fun listElement(
             value, linkAddress, status
         ).toString()
     )
+}
+
+/**
+ * This returns a HTML node div with a script block for collapsing java script function
+ *
+ * @return  The HTML node containing the script child node
+ */
+fun generateTwoColumnLayoutWithScript(): Element {
+    return Element("div")
+        .addClass("flex")
+        .appendChild(
+            Element("script").html(
+                """function collapse (indicator, row) {
+                        var indicatorElem = document.getElementById(indicator);
+                        var rowElem = document.getElementById(row);
+                        if (rowElem.classList.contains("hidden")) {
+                            indicatorElem.innerHTML = "⏷";
+                        } else {
+                            indicatorElem.innerHTML = "⏵";
+                        }
+                        rowElem.classList.toggle("hidden");
+                    }"""
+            )
+        )
 }
 
 fun summaryTableHeader(): Element {
@@ -79,6 +154,8 @@ fun tagRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>): Elem
                 is Status.Executed
                     -> numberSuccessful++
                 is Status.Failed
+                    -> numberFailed++
+                is Status.Exception
                     -> numberFailed++
                 else
                     -> numberOther++

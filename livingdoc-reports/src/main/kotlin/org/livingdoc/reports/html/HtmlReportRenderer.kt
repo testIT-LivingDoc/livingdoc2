@@ -45,6 +45,9 @@ class HtmlReportRenderer : ReportRenderer {
 
     /**
      * Create a html string from a [DocumentResult]
+     *
+     * @param documentResult The document that should be used for the report
+     * @return the HTML code for a single report as a String
      */
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
@@ -63,70 +66,18 @@ class HtmlReportRenderer : ReportRenderer {
 
     /**
      * This renders the two column layout for the index/summary page
+     *
+     * @param reports a list of all reports that were generated in this test run
+     * @return a String containing HTML code of the two column layout
      */
     private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
 
-        val columnContainer = Element("div")
-            .addClass("flex")
-            .appendChild(Element("script").html(
-                """function collapse (indicator, row) {
-                    var indicatorElem = document.getElementById(indicator);
-                    var rowElem = document.getElementById(row);
-                    if (rowElem.classList.contains("hidden")) {
-                        indicatorElem.innerHTML = "⏷";
-                    } else {
-                        indicatorElem.innerHTML = "⏵";
-                    }
-                    rowElem.classList.toggle("hidden");
-                }"""
-            ))
+        val columnContainer = generateTwoColumnLayoutWithScript()
             .appendChild(renderIndexList(reports))
             .appendChild(renderTagList(reports))
 
         return HtmlReportTemplate()
             .renderElementTemplate(columnContainer, renderContext)
-    }
-
-    /**
-     * This returns the left column for the index/summary page with a title and a list of all documents
-     */
-    private fun renderIndexList(reports: List<Pair<DocumentResult, Path>>): Element {
-        val indexListDiv = Element("div").addClass("flex-50")
-
-        indexListDiv.appendChild(Element("h2").html("Index"))
-
-        indexListDiv.appendChild(renderLinkList(reports))
-        return indexListDiv
-    }
-
-    /**
-     *  This returns the right column with the tag table
-     */
-    private fun renderTagList(reports: List<Pair<DocumentResult, Path>>): Element {
-        val tagListDiv = Element("div").addClass("flex-50")
-
-        tagListDiv.appendChild(Element("h2").html("Tag Summary"))
-
-        val reportsByTag = reports.flatMap { report ->
-            listOf(
-                listOf("all" to report),
-                report.first.tags.map { tag ->
-                    tag to report
-                }
-            ).flatten()
-        }.groupBy({ it.first }, { it.second })
-
-        val tagTable = Element("table").attr("id", "summary-table")
-        tagTable.appendChild(summaryTableHeader())
-
-        reportsByTag.map { (tag, documentResults) ->
-            tagTable.appendChild(tagRow(tag, documentResults))
-            tagTable.appendChild(collapseRow(tag, documentResults))
-        }
-
-        tagListDiv.appendChild(tagTable)
-
-        return tagListDiv
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
