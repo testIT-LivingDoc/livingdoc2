@@ -13,6 +13,8 @@ import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.results.documents.DocumentResult
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 /**
  * Executes the given document class and returns the [DocumentResult]. The document's class must be annotated
@@ -35,10 +37,15 @@ class LivingDoc(
          * thrown exception and not execute any more tests.
          */
         var failFastActivated: Boolean = false
+
+        /**
+         * Global ExecutorService which uses a WorkStealing(Thread)Pool
+         * for the parallel execution of tasks in the LivingDoc engine
+         */
+        val executor: ExecutorService = Executors.newWorkStealingPool()
     }
 
     val taggingConfig = TaggingConfig.from(configProvider)
-
     /**
      * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
      * classes must be annotated with [ExecutableDocument].

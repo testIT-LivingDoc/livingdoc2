@@ -17,7 +17,7 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.decisiontables.FieldResult
 import org.livingdoc.results.examples.decisiontables.RowResult
 import java.lang.reflect.Method
-import kotlin.streams.toList
+import org.livingdoc.engine.LivingDoc.Companion.executor
 
 /**
  * Obviously wraps a decision table fixture
@@ -118,7 +118,7 @@ class DecisionTableFixtureWrapper(
         }
 
         return if (fixtureModel.parallelExecution) {
-            decisionTable.rows.parallelStream().map(executeRow).toList()
+            decisionTable.rows.map { { executeRow(it) } }.map { executor.submit(it) }.map { it.get() }
         } else {
             decisionTable.rows.map(executeRow)
         }
