@@ -2,6 +2,9 @@
 package org.livingdoc.reports.html
 
 import org.jsoup.nodes.Element
+import org.livingdoc.reports.html.elements.HtmlElement
+import org.livingdoc.reports.html.elements.HtmlRenderContext
+import org.livingdoc.reports.html.elements.HtmlResult
 
 class HtmlReportTemplate {
 
@@ -176,7 +179,7 @@ class HtmlReportTemplate {
     }
 
     fun renderElementTemplate(
-        htmlElement: Element,
+        htmlElement: HtmlElement,
         renderContext: HtmlRenderContext
     ): String {
         return """

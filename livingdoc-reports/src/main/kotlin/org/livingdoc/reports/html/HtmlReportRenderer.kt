@@ -2,9 +2,21 @@ package org.livingdoc.reports.html
 
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
+import org.livingdoc.reports.html.elements.HtmlColumnLayout
+import org.livingdoc.reports.html.elements.HtmlDescription
+import org.livingdoc.reports.html.elements.HtmlList
+import org.livingdoc.reports.html.elements.HtmlRenderContext
+import org.livingdoc.reports.html.elements.HtmlResult
+import org.livingdoc.reports.html.elements.HtmlTable
+import org.livingdoc.reports.html.elements.HtmlTitle
+import org.livingdoc.reports.html.elements.headers
+import org.livingdoc.reports.html.elements.indexList
+import org.livingdoc.reports.html.elements.paragraphs
+import org.livingdoc.reports.html.elements.rows
+import org.livingdoc.reports.html.elements.steps
+import org.livingdoc.reports.html.elements.tagList
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
-import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
@@ -71,9 +83,10 @@ class HtmlReportRenderer : ReportRenderer {
      */
     private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
 
-        val columnContainer = generateTwoColumnLayoutWithScript()
-            .appendChild(renderIndexList(reports))
-            .appendChild(renderTagList(reports))
+        val columnContainer = HtmlColumnLayout {
+            indexList(reports)
+            tagList(reports)
+        }
 
         return HtmlReportTemplate()
             .renderElementTemplate(columnContainer, renderContext)
@@ -84,17 +97,12 @@ class HtmlReportRenderer : ReportRenderer {
         val name = decisionTableResult.decisionTable.description.name
         val desc = decisionTableResult.decisionTable.description.descriptiveText
 
-        val htmlDescription = if (desc != "")
-            description {
-                paragraphs(desc.split("\n"))
-            }
-        else
-            null
-
         return listOf(
-            title(name),
-            htmlDescription,
-            table(renderContext, tableResult, headers.size) {
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlTable(renderContext, tableResult, headers.size) {
                 headers(headers)
                 rows(rows)
             }
@@ -105,46 +113,14 @@ class HtmlReportRenderer : ReportRenderer {
         val name = scenarioResult.scenario.description.name
         val desc = scenarioResult.scenario.description.descriptiveText
 
-        val htmlDescription = if (desc != "")
-            description {
-                paragraphs(desc.split("\n"))
-            }
-        else
-            null
-
         return listOf(
-            title(name),
-            htmlDescription,
-            list {
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlList {
                 steps(scenarioResult.steps)
             }
         )
-    }
-
-    private fun title(value: String?): HtmlTitle? {
-        return if (value != null) HtmlTitle(value) else null
-    }
-
-    private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
-        val htmlDescription = HtmlDescription()
-        htmlDescription.block()
-        return htmlDescription
-    }
-
-    private fun table(
-        renderContext: HtmlRenderContext,
-        tableStatus: Status,
-        columnCount: Int,
-        block: HtmlTable.() -> Unit
-    ): HtmlTable {
-        val table = HtmlTable(renderContext, tableStatus, columnCount)
-        table.block()
-        return table
-    }
-
-    private fun list(block: HtmlList.() -> Unit): HtmlList {
-        val htmlList = HtmlList()
-        htmlList.block()
-        return htmlList
     }
 }
