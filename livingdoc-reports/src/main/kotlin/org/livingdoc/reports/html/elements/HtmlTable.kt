@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html.elements
 
-import org.jsoup.nodes.Element
 import org.livingdoc.reports.html.HtmlReportTemplate
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status

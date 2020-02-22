@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html.elements
 
-import org.jsoup.nodes.Element
 import org.livingdoc.results.documents.DocumentResult
 import java.nio.file.Path
 
