@@ -169,12 +169,12 @@ internal class HtmlReportRendererTest {
                                 <tr>
                                     <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
                                     <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
-                                    <td class="border-black-onepx background-failed"><span class="result-value">6</span><a class="background-failed icon-failed" href="#popup1"></a></td>
+                                    <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
                                  </tr>
                                  <tr>
                                     <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
                                     <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
-                                    <td class="border-black-onepx background-exception"><span class="result-value">11</span><a class="background-exception icon-exception" href="#popup2"></a></td>
+                                    <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
                                  </tr>
                                  <tr>
                                     <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>

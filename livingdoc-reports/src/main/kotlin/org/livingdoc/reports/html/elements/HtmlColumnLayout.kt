@@ -7,8 +7,8 @@ import java.nio.file.Path
 class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div") {
 
     init {
-        addClass("flex")
-        appendChild {
+        cssClass("flex")
+        child {
             HtmlElement(
                 "script",
                 """function collapse (indicator, row) {
@@ -33,11 +33,12 @@ class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div"
  * @param reports a list of all reports that were generated in this test run
  */
 fun HtmlColumnLayout.indexList(reports: List<Pair<DocumentResult, Path>>) {
-    appendChild {
+    child {
         HtmlElement("div") {
-            addClass("flex-50")
-            appendChild { HtmlTitle("Index") }
-            appendChild {
+            cssClass("flex-50")
+            child { HtmlTitle("Index") }
+
+            child {
                 HtmlList {
                     linkList(reports)
                 }
@@ -47,37 +48,36 @@ fun HtmlColumnLayout.indexList(reports: List<Pair<DocumentResult, Path>>) {
 }
 
 /**
- *  This returns the right column with the tag table
+ *  This creates the right column with the tag table
  *
  * @param reports a list of all reports that were generated in this test run
- * @return a String containing HTML code of the right column (table with sublist per tag)
  */
 fun HtmlColumnLayout.tagList(reports: List<Pair<DocumentResult, Path>>) {
-    val tagListDiv = Element("div").addClass("flex-50")
+    child {
+        HtmlElement("div") {
+            cssClass("flex-50")
+            child { HtmlTitle("Tag summary") }
 
-    tagListDiv.appendChild(Element("h2").html("Tag Summary"))
+            val reportsByTag = reports.flatMap { report ->
+                listOf(
+                    listOf("all" to report),
+                    report.first.tags.map { tag ->
+                        tag to report
+                    }
+                ).flatten()
+            }.groupBy({ it.first }, { it.second })
 
-    val reportsByTag = reports.flatMap { report ->
-        listOf(
-            listOf("all" to report),
-            report.first.tags.map { tag ->
-                tag to report
+            child {
+                HtmlTable {
+                    attr("id", "summary-table")
+                    summaryTableHeader()
+
+                    reportsByTag.map { (tag, documentResults) ->
+                        tagRow(tag, documentResults)
+                        collapseRow(tag, documentResults)
+                    }
+                }
             }
-        ).flatten()
-    }.groupBy({ it.first }, { it.second })
-
-    val tagTable = Element("table").attr("id", "summary-table")
-    tagTable.appendChild(summaryTableHeader())
-
-    reportsByTag.map { (tag, documentResults) ->
-        tagTable.appendChild(tagRow(tag, documentResults))
-        tagTable.appendChild(collapseRow(tag, documentResults))
-    }
-
-    tagListDiv.appendChild(tagTable)
-
-    // TODO rework
-    appendHtml {
-        tagListDiv.toString()
+        }
     }
 }

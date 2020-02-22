@@ -2,21 +2,45 @@ package org.livingdoc.reports.html.elements
 
 import org.livingdoc.results.Status
 
-class HtmlLink(linkAddress: String, status: Status) :
+/**
+ * A link element in a HTML report
+ *
+ * @param linkAddress The address the link is pointing to
+ */
+class HtmlLink(linkAddress: String) :
     HtmlElement("a") {
 
     init {
-        addClass(determineCssClassForBackgroundColor(status))
-        setAttr("href", linkAddress)
+        attr("href", linkAddress)
     }
 
-    constructor(linkAddress: String, status: Status, value: String) :
-            this(linkAddress, status) {
-        appendHtml { value }
+    /**
+     * A link element in a HTML report
+     *
+     * @param linkAddress The address the link is pointing to
+     * @param value The text displayed by the link
+     */
+    constructor(linkAddress: String, value: String) :
+            this(linkAddress) {
+        text { value }
     }
 
-    constructor(linkAddress: String, status: Status, block: HtmlLink.() -> Unit) :
-            this(linkAddress, status) {
+    /**
+     * A link element in a HTML report
+     *
+     * @param linkAddress The address the link is pointing to
+     * @param block A lambda generating the content of this link
+     */
+    constructor(linkAddress: String, block: HtmlLink.() -> Unit) :
+            this(linkAddress) {
         block()
     }
+}
+
+/**
+ * Generates a link that points to a test execution
+ */
+fun HtmlLink.resultLink(className: String, status: Status) {
+    cssClass(determineCssClassForBackgroundColor(status))
+    text { className }
 }

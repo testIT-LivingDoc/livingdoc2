@@ -2,6 +2,11 @@ package org.livingdoc.reports.html.elements
 
 import org.jsoup.nodes.Element
 
+/**
+ * This class represents any HTML element to be used in an HTML report
+ *
+ * @param tag Defines the tag that specifies this HTML element
+ */
 open class HtmlElement(tag: String) {
     private val element = Element(tag)
 
@@ -9,6 +14,12 @@ open class HtmlElement(tag: String) {
         element.html(value)
     }
 
+    /**
+     * This class represents any HTML element to be used in an HTML report
+     *
+     * @param tag Defines the tag that specifies this HTML element
+     * @param block A lambda that should set the content and attributes of this [HtmlElement]
+     */
     constructor(tag: String, block: HtmlElement.() -> Unit) : this(tag) {
         block()
     }
@@ -17,19 +28,40 @@ open class HtmlElement(tag: String) {
         return if (element.hasText()) element.toString() else ""
     }
 
-    fun appendChild(child: () -> HtmlElement) {
+    /**
+     * Appends a new child element to this [HtmlElement]
+     *
+     * @param child A lambda returning the new child element
+     */
+    fun child(child: () -> HtmlElement) {
         element.appendChild(child().element)
     }
 
-    fun appendHtml(html: () -> String) {
-        element.append(html())
+    /**
+     * Appends the given text to this [HtmlElement]
+     *
+     * @param text A lambda returning the text
+     */
+    fun text(text: () -> String) {
+        element.append(text())
     }
 
-    fun addClass(cl: String) {
+    /**
+     * Adds a new css class to this [HtmlElement]
+     *
+     * @param cl A [String] representing a css class
+     */
+    fun cssClass(cl: String) {
         element.addClass(cl)
     }
 
-    fun setAttr(key: String, value: String) {
+    /**
+     * Sets a given attribute in this [HtmlElement] with the given value
+     *
+     * @param key The name of the attribute
+     * @param value The value to assign to the attribute
+     */
+    fun attr(key: String, value: String) {
         element.attr(key, value)
     }
 }

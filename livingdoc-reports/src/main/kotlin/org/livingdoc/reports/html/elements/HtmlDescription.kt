@@ -1,5 +1,10 @@
 package org.livingdoc.reports.html.elements
 
+/**
+ * A test description element in a HTML report
+ *
+ * @param block A lambda that creates the paragraphs of this description
+ */
 class HtmlDescription(block: HtmlDescription.() -> Unit) : HtmlElement("div") {
     init {
         block()
@@ -14,7 +19,7 @@ class HtmlDescription(block: HtmlDescription.() -> Unit) : HtmlElement("div") {
 fun HtmlDescription.paragraphs(paragraphs: List<String>) {
     paragraphs.forEach { paragraph ->
         if (paragraph.isNotEmpty())
-            appendChild {
+            child {
                 HtmlElement("p", paragraph)
             }
     }

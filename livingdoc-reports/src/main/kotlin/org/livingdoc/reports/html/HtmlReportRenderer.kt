@@ -12,6 +12,7 @@ import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.headers
 import org.livingdoc.reports.html.elements.indexList
 import org.livingdoc.reports.html.elements.paragraphs
+import org.livingdoc.reports.html.elements.rowIfTableFailed
 import org.livingdoc.reports.html.elements.rows
 import org.livingdoc.reports.html.elements.steps
 import org.livingdoc.reports.html.elements.tagList
@@ -102,9 +103,10 @@ class HtmlReportRenderer : ReportRenderer {
             HtmlDescription {
                 paragraphs(desc.split("\n"))
             },
-            HtmlTable(renderContext, tableResult, headers.size) {
+            HtmlTable {
                 headers(headers)
-                rows(rows)
+                rows(renderContext, rows)
+                rowIfTableFailed(renderContext, tableResult, headers.size)
             }
         )
     }
