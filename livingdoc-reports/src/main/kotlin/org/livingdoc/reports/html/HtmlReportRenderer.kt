@@ -6,7 +6,7 @@ import org.livingdoc.reports.html.elements.HtmlColumnLayout
 import org.livingdoc.reports.html.elements.HtmlDescription
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
-import org.livingdoc.reports.html.elements.HtmlRenderContext
+import org.livingdoc.reports.html.elements.HtmlErrorContext
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.headers
@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
 
-    private val renderContext = HtmlRenderContext()
+    private val renderContext = HtmlErrorContext()
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)

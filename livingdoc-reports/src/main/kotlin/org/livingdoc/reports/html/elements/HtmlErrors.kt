@@ -1,6 +1,6 @@
 package org.livingdoc.reports.html.elements
 
-class HtmlRenderContext {
+class HtmlErrorContext {
     private var popupErrorNumber = 0
     val popupErrors = ArrayList<HtmlError>()
 

@@ -3,7 +3,7 @@
 package org.livingdoc.reports.html
 
 import org.livingdoc.reports.html.elements.HtmlElement
-import org.livingdoc.reports.html.elements.HtmlRenderContext
+import org.livingdoc.reports.html.elements.HtmlErrorContext
 
 class HtmlReportTemplate {
 
@@ -161,7 +161,7 @@ class HtmlReportTemplate {
 
     fun renderResultListTemplate(
         htmlResults: List<HtmlElement>,
-        renderContext: HtmlRenderContext
+        errorContext: HtmlErrorContext
     ): String {
         return """
             <!DOCTYPE html>
@@ -171,7 +171,7 @@ class HtmlReportTemplate {
                 </head>
                 <body>
                     ${htmlResults.joinToString(separator = "\n")}
-                    ${createErrorPopups(renderContext)}
+                    ${createErrorPopups(errorContext)}
                 </body>
             </html>
             """.trimIndent()
@@ -179,7 +179,7 @@ class HtmlReportTemplate {
 
     fun renderElementTemplate(
         htmlElement: HtmlElement,
-        renderContext: HtmlRenderContext
+        errorContext: HtmlErrorContext
     ): String {
         return """
             <!DOCTYPE html>
@@ -190,14 +190,14 @@ class HtmlReportTemplate {
                 </head>
                 <body>
                     $htmlElement
-                    ${createErrorPopups(renderContext)}
+                    ${createErrorPopups(errorContext)}
                 </body>
             </html>
             """.trimIndent()
     }
 
-    private fun createErrorPopups(renderContext: HtmlRenderContext): String {
-        return renderContext.popupErrors.joinToString(separator = "") { error ->
+    private fun createErrorPopups(errorContext: HtmlErrorContext): String {
+        return errorContext.popupErrors.joinToString(separator = "") { error ->
             """
 
             <div id="popup${error.number}" class="overlay">

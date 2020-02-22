@@ -64,10 +64,10 @@ fun HtmlTable.headers(headers: List<Header>) {
 /**
  * Creates and adds the body for a table displaying a decision table
  *
- * @param renderContext A [HtmlRenderContext] containing popups for error stack traces
+ * @param errorContext A [HtmlErrorContext] containing popups for error stack traces
  * @param rows The [row results][RowResult] of the decision table
  */
-fun HtmlTable.rows(renderContext: HtmlRenderContext, rows: List<RowResult>) {
+fun HtmlTable.rows(errorContext: HtmlErrorContext, rows: List<RowResult>) {
 
     fun appendCellToDisplayFailedRowIfNecessary(row: HtmlElement, rowStatus: Status) {
         if (rowStatus is Status.Failed || rowStatus is Status.Exception) {
@@ -78,7 +78,7 @@ fun HtmlTable.rows(renderContext: HtmlRenderContext, rows: List<RowResult>) {
 
                     child {
                         createFailedPopupLink(
-                            renderContext,
+                            errorContext,
                             rowStatus
                         )
                     }
@@ -105,7 +105,7 @@ fun HtmlTable.rows(renderContext: HtmlRenderContext, rows: List<RowResult>) {
                     if (cellStatus is Status.Failed || cellStatus is Status.Exception) {
                         child {
                             createFailedPopupLink(
-                                renderContext,
+                                errorContext,
                                 cellStatus
                             )
                         }
@@ -121,11 +121,11 @@ fun HtmlTable.rows(renderContext: HtmlRenderContext, rows: List<RowResult>) {
 /**
  * Creates and adds a single row only if the entire decision table failed
  *
- * @param renderContext A [HtmlRenderContext] containing popups for error stack traces
+ * @param errorContext A [HtmlErrorContext] containing popups for error stack traces
  * @param tableStatus The [Status] of the decision table execution
  * @param columnCount The number of columns this table has
  */
-fun HtmlTable.rowIfTableFailed(renderContext: HtmlRenderContext, tableStatus: Status, columnCount: Int) {
+fun HtmlTable.rowIfTableFailed(errorContext: HtmlErrorContext, tableStatus: Status, columnCount: Int) {
     if (tableStatus is Status.Failed || tableStatus is Status.Exception) {
         child {
             HtmlElement("tr") {
@@ -137,7 +137,7 @@ fun HtmlTable.rowIfTableFailed(renderContext: HtmlRenderContext, tableStatus: St
                             cssClass(HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX)
                             cssClass(determineCssClassForBackgroundColor(tableStatus))
                             attr("colspan", columnCount.toString())
-                            text { createFailedPopupLink(renderContext, tableStatus).toString() }
+                            text { createFailedPopupLink(errorContext, tableStatus).toString() }
                         }
                     }
                 }
@@ -150,7 +150,7 @@ private fun getReportString(value: String, cellStatus: Status): String {
     return if (cellStatus is Status.ReportActualResult) cellStatus.actualResult else value
 }
 
-private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Status): HtmlElement {
+private fun createFailedPopupLink(errorContext: HtmlErrorContext, status: Status): HtmlElement {
     fun createStacktrace(e: Throwable): String {
         return StringWriter().use { stringWriter ->
             e.printStackTrace(PrintWriter(stringWriter))
@@ -158,14 +158,14 @@ private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Stat
         }
     }
 
-    val nextErrorNumber = renderContext.getNextErrorNumber()
+    val nextErrorNumber = errorContext.getNextErrorNumber()
 
     val failedPopupLink = HtmlLink("#popup$nextErrorNumber")
 
     when (status) {
         is Status.Failed -> {
             failedPopupLink.cssClass(HtmlReportTemplate.CSS_CLASS_ICON_FAILED)
-            renderContext.addPopupError(
+            errorContext.addPopupError(
                 HtmlError(
                     nextErrorNumber,
                     status.reason.message ?: "",
@@ -175,7 +175,7 @@ private fun createFailedPopupLink(renderContext: HtmlRenderContext, status: Stat
         }
         is Status.Exception -> {
             failedPopupLink.cssClass(HtmlReportTemplate.CSS_CLASS_ICON_EXCEPTION)
-            renderContext.addPopupError(
+            errorContext.addPopupError(
                 HtmlError(
                     nextErrorNumber,
                     status.exception.message ?: "",
