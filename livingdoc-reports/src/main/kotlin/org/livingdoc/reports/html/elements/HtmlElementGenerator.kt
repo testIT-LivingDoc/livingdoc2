@@ -92,7 +92,7 @@ fun collapseRow(tag: String, documentResults: List<Pair<DocumentResult, Path>>):
     collapseRow.addClass("hidden")
 
     collapseRow.appendChild(Element("td").attr("colspan", "4").apply {
-        append(HtmlList{linkList(documentResults)}.toString())
+        append(HtmlList { linkList(documentResults) }.toString())
     })
 
     return collapseRow

@@ -1,7 +1,5 @@
 package org.livingdoc.reports.html.elements
 
-import org.jsoup.nodes.Element
-
 class HtmlDescription(block: HtmlDescription.() -> Unit) : HtmlElement("div") {
     init {
         block()

@@ -7,7 +7,7 @@ import java.nio.file.Path
 class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div") {
 
     init {
-        addClass { "flex" }
+        addClass("flex")
         appendChild {
             HtmlElement(
                 "script",
@@ -25,7 +25,6 @@ class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div"
         }
         columns()
     }
-
 }
 
 /**
@@ -36,7 +35,7 @@ class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div"
 fun HtmlColumnLayout.indexList(reports: List<Pair<DocumentResult, Path>>) {
     appendChild {
         HtmlElement("div") {
-            addClass { "flex-50" }
+            addClass("flex-50")
             appendChild { HtmlTitle("Index") }
             appendChild {
                 HtmlList {

@@ -1,13 +1,6 @@
 package org.livingdoc.reports.html.elements
 
-import org.jsoup.nodes.Element
 import org.livingdoc.results.Status
-
-interface HtmlResult
-
-internal fun Element.setStyleClasses(vararg classes: String) {
-    this.attr("class", classes.joinToString(separator = " "))
-}
 
 internal fun determineCssClassForBackgroundColor(status: Status): String {
     return when (status) {

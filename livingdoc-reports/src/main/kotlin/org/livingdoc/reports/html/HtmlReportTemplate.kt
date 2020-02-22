@@ -1,10 +1,9 @@
 @file:Suppress("MaxLineLength")
+
 package org.livingdoc.reports.html
 
-import org.jsoup.nodes.Element
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlRenderContext
-import org.livingdoc.reports.html.elements.HtmlResult
 
 class HtmlReportTemplate {
 
@@ -161,7 +160,7 @@ class HtmlReportTemplate {
     }
 
     fun renderResultListTemplate(
-        htmlResults: List<HtmlResult>,
+        htmlResults: List<HtmlElement>,
         renderContext: HtmlRenderContext
     ): String {
         return """

@@ -2,14 +2,14 @@ package org.livingdoc.reports.html.elements
 
 import org.jsoup.nodes.Element
 
-open class HtmlElement(tag: String): HtmlResult {
-    protected val element = Element(tag)
+open class HtmlElement(tag: String) {
+    private val element = Element(tag)
 
-    constructor(tag: String, value: String): this(tag) {
+    constructor(tag: String, value: String) : this(tag) {
         element.html(value)
     }
 
-    constructor(tag: String, block: HtmlElement.() -> Unit): this(tag) {
+    constructor(tag: String, block: HtmlElement.() -> Unit) : this(tag) {
         block()
     }
 
@@ -25,11 +25,11 @@ open class HtmlElement(tag: String): HtmlResult {
         element.append(html())
     }
 
-    fun addClass(cl: () -> String) {
-        element.addClass(cl())
+    fun addClass(cl: String) {
+        element.addClass(cl)
     }
 
-    fun setAttr(key: String, value: () -> String) {
-        element.attr(key, value())
+    fun setAttr(key: String, value: String) {
+        element.attr(key, value)
     }
 }

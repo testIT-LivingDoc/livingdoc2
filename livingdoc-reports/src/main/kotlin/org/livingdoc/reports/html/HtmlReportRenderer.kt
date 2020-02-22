@@ -4,9 +4,9 @@ import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.html.elements.HtmlColumnLayout
 import org.livingdoc.reports.html.elements.HtmlDescription
+import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlRenderContext
-import org.livingdoc.reports.html.elements.HtmlResult
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.headers
@@ -92,7 +92,7 @@ class HtmlReportRenderer : ReportRenderer {
             .renderElementTemplate(columnContainer, renderContext)
     }
 
-    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
+    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
         val (headers, rows, tableResult) = decisionTableResult
         val name = decisionTableResult.decisionTable.description.name
         val desc = decisionTableResult.decisionTable.description.descriptiveText
@@ -109,7 +109,7 @@ class HtmlReportRenderer : ReportRenderer {
         )
     }
 
-    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlResult?> {
+    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlElement?> {
         val name = scenarioResult.scenario.description.name
         val desc = scenarioResult.scenario.description.descriptiveText
 

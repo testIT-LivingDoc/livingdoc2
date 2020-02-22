@@ -16,10 +16,9 @@ fun HtmlList.steps(stepResults: List<StepResult>) {
         appendChild {
             HtmlListElement {
                 appendHtml { value }
-                addClass { determineCssClassForBackgroundColor(result) }
+                addClass(determineCssClassForBackgroundColor(result))
             }
         }
-
     }
 }
 
