@@ -26,8 +26,10 @@ fun HtmlList.linkList(reports: List<Pair<DocumentResult, Path>>) {
     reports.map {
         appendChild {
             HtmlListElement {
-                HtmlLink(it.second.fileName.toString(), it.first.documentStatus) {
-                    it.first.documentClass.name
+                appendChild {
+                    HtmlLink(it.second.fileName.toString(), it.first.documentStatus) {
+                        appendHtml { it.first.documentClass.name }
+                    }
                 }
             }
         }
