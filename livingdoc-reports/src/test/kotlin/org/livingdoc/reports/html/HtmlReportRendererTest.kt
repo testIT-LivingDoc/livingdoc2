@@ -158,26 +158,30 @@ internal class HtmlReportRendererTest {
                             <p>descriptive text</p>
                         </div>
                         <table>
-                            <tr>
-                               <th class="border-black-onepx">a</th>
-                               <th class="border-black-onepx">b</th>
-                               <th class="border-black-onepx">a + b = ?</th>
-                            </tr>
-                            <tr>
-                                <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
-                                <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
-                             </tr>
-                             <tr>
-                                <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
-                                <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
-                                <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
-                             </tr>
-                             <tr>
-                                <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                <td class="border-black-onepx background-executed"><span class="result-value">1</span></td>
-                                <td class="border-black-onepx background-report-result"><span class="result-value">3</span></td>
-                             </tr>
+                            <thead>
+                                <tr>
+                                   <th class="border-black-onepx">a</th>
+                                   <th class="border-black-onepx">b</th>
+                                   <th class="border-black-onepx">a + b = ?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
+                                    <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
+                                    <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
+                                 </tr>
+                                 <tr>
+                                    <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
+                                    <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
+                                    <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
+                                 </tr>
+                                 <tr>
+                                    <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
+                                    <td class="border-black-onepx background-executed"><span class="result-value">1</span></td>
+                                    <td class="border-black-onepx background-report-result"><span class="result-value">3</span></td>
+                                 </tr>
+                             </tbody>
                         </table>
 
                         <div id="popup1" class="overlay">

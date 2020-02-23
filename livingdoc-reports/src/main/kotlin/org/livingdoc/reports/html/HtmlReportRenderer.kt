@@ -2,9 +2,22 @@ package org.livingdoc.reports.html
 
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.ReportWriter
+import org.livingdoc.reports.html.elements.HtmlColumnLayout
+import org.livingdoc.reports.html.elements.HtmlDescription
+import org.livingdoc.reports.html.elements.HtmlElement
+import org.livingdoc.reports.html.elements.HtmlList
+import org.livingdoc.reports.html.elements.HtmlErrorContext
+import org.livingdoc.reports.html.elements.HtmlTable
+import org.livingdoc.reports.html.elements.HtmlTitle
+import org.livingdoc.reports.html.elements.headers
+import org.livingdoc.reports.html.elements.indexList
+import org.livingdoc.reports.html.elements.paragraphs
+import org.livingdoc.reports.html.elements.rowIfTableFailed
+import org.livingdoc.reports.html.elements.rows
+import org.livingdoc.reports.html.elements.steps
+import org.livingdoc.reports.html.elements.tagList
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
-import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
@@ -16,7 +29,7 @@ import java.time.format.DateTimeFormatter
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
 
-    private val renderContext = HtmlRenderContext()
+    private val renderContext = HtmlErrorContext()
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val htmlConfig = YamlUtils.toObject(config, HtmlReportConfig::class)
@@ -71,80 +84,45 @@ class HtmlReportRenderer : ReportRenderer {
      */
     private fun renderIndex(reports: List<Pair<DocumentResult, Path>>): String {
 
-        val columnContainer = generateTwoColumnLayoutWithScript()
-            .appendChild(renderIndexList(reports))
-            .appendChild(renderTagList(reports))
+        val columnContainer = HtmlColumnLayout {
+            indexList(reports)
+            tagList(reports)
+        }
 
         return HtmlReportTemplate()
             .renderElementTemplate(columnContainer, renderContext)
     }
 
-    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlResult?> {
+    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
         val (headers, rows, tableResult) = decisionTableResult
         val name = decisionTableResult.decisionTable.description.name
         val desc = decisionTableResult.decisionTable.description.descriptiveText
 
-        val htmlDescription = if (desc != "")
-            description {
-                paragraphs(desc.split("\n"))
-            }
-        else
-            null
-
         return listOf(
-            title(name),
-            htmlDescription,
-            table(renderContext, tableResult, headers.size) {
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlTable {
                 headers(headers)
-                rows(rows)
+                rows(renderContext, rows)
+                rowIfTableFailed(renderContext, tableResult, headers.size)
             }
         )
     }
 
-    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlResult?> {
+    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlElement?> {
         val name = scenarioResult.scenario.description.name
         val desc = scenarioResult.scenario.description.descriptiveText
 
-        val htmlDescription = if (desc != "")
-            description {
-                paragraphs(desc.split("\n"))
-            }
-        else
-            null
-
         return listOf(
-            title(name),
-            htmlDescription,
-            list {
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlList {
                 steps(scenarioResult.steps)
             }
         )
-    }
-
-    private fun title(value: String?): HtmlTitle? {
-        return if (value != null) HtmlTitle(value) else null
-    }
-
-    private fun description(block: HtmlDescription.() -> Unit): HtmlDescription? {
-        val htmlDescription = HtmlDescription()
-        htmlDescription.block()
-        return htmlDescription
-    }
-
-    private fun table(
-        renderContext: HtmlRenderContext,
-        tableStatus: Status,
-        columnCount: Int,
-        block: HtmlTable.() -> Unit
-    ): HtmlTable {
-        val table = HtmlTable(renderContext, tableStatus, columnCount)
-        table.block()
-        return table
-    }
-
-    private fun list(block: HtmlList.() -> Unit): HtmlList {
-        val htmlList = HtmlList()
-        htmlList.block()
-        return htmlList
     }
 }

@@ -1,7 +1,9 @@
 @file:Suppress("MaxLineLength")
+
 package org.livingdoc.reports.html
 
-import org.jsoup.nodes.Element
+import org.livingdoc.reports.html.elements.HtmlElement
+import org.livingdoc.reports.html.elements.HtmlErrorContext
 
 class HtmlReportTemplate {
 
@@ -158,8 +160,8 @@ class HtmlReportTemplate {
     }
 
     fun renderResultListTemplate(
-        htmlResults: List<HtmlResult>,
-        renderContext: HtmlRenderContext
+        htmlResults: List<HtmlElement>,
+        errorContext: HtmlErrorContext
     ): String {
         return """
             <!DOCTYPE html>
@@ -169,15 +171,15 @@ class HtmlReportTemplate {
                 </head>
                 <body>
                     ${htmlResults.joinToString(separator = "\n")}
-                    ${createErrorPopups(renderContext)}
+                    ${createErrorPopups(errorContext)}
                 </body>
             </html>
             """.trimIndent()
     }
 
     fun renderElementTemplate(
-        htmlElement: Element,
-        renderContext: HtmlRenderContext
+        htmlElement: HtmlElement,
+        errorContext: HtmlErrorContext
     ): String {
         return """
             <!DOCTYPE html>
@@ -188,14 +190,14 @@ class HtmlReportTemplate {
                 </head>
                 <body>
                     $htmlElement
-                    ${createErrorPopups(renderContext)}
+                    ${createErrorPopups(errorContext)}
                 </body>
             </html>
             """.trimIndent()
     }
 
-    private fun createErrorPopups(renderContext: HtmlRenderContext): String {
-        return renderContext.popupErrors.joinToString(separator = "") { error ->
+    private fun createErrorPopups(errorContext: HtmlErrorContext): String {
+        return errorContext.popupErrors.joinToString(separator = "") { error ->
             """
 
             <div id="popup${error.number}" class="overlay">
