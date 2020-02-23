@@ -1,1 +1,2 @@
-org.livingdoc.jvm.engine.extension.default.DisabledCondition
+org.livingdoc.jvm.engine.extension.defaults.DisabledCondition
+org.livingdoc.jvm.engine.extension.defaults.LifecycleMethodAdapter

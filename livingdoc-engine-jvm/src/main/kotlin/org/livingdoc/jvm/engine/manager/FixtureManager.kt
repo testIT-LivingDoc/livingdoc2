@@ -7,7 +7,7 @@ import org.livingdoc.jvm.api.fixture.Fixture
 import org.livingdoc.jvm.api.fixture.FixtureAnnotation
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.jvm.engine.EngineContext
-import org.livingdoc.jvm.engine.extension.FixtureContextImpl
+import org.livingdoc.jvm.engine.extension.context.FixtureContextImpl
 import org.livingdoc.repositories.model.TestData
 import java.util.*
 import kotlin.reflect.KClass
@@ -39,7 +39,10 @@ internal class FixtureManager {
         )
         fixtureClass ?: throw IllegalStateException("this is not possible")
 
-        val fixtureContextImpl = FixtureContextImpl(fixtureClass, extensionContext)
+        val fixtureContextImpl = FixtureContextImpl(
+            fixtureClass,
+            extensionContext
+        )
         val internalContext = createContext(fixtureClass, context, fixtureContextImpl)
         return factory.getFixture(fixtureContextImpl, FixtureExtensionsManager(extensionManager, internalContext))
     }

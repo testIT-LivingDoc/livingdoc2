@@ -4,7 +4,7 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.jvm.api.extension.context.GroupContext
 import org.livingdoc.jvm.engine.config.getTags
-import org.livingdoc.jvm.engine.extension.DocumentFixtureContextImpl
+import org.livingdoc.jvm.engine.extension.context.DocumentFixtureContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
 import org.livingdoc.jvm.engine.manager.loadExtensions
@@ -43,10 +43,10 @@ internal class DocumentFixture(
         val documentInformation = extensionContext.documentInformation
 
         val document = repositoryManager.getRepository(extractRepositoryName(documentInformation))
-            .getDocument(extractDocumentId(documentInformation))// TODO Handle exception
+            .getDocument(extractDocumentId(documentInformation)) // TODO Handle exception
 
         val results = document.elements.filter { !it.description.isManual }.map {
-            //TODO manual
+            // TODO manual
             val fixture = fixtureManager.getFixture(context, it, extensionManager)
             fixture.execute(it)
         }
@@ -64,7 +64,10 @@ internal class DocumentFixture(
     companion object {
         fun createContext(documentFixtureClass: KClass<*>, parent: EngineContext): EngineContext {
             val documentFixtureContext =
-                DocumentFixtureContextImpl(documentFixtureClass, parent.extensionContext as GroupContext)
+                DocumentFixtureContextImpl(
+                    documentFixtureClass,
+                    parent.extensionContext as GroupContext
+                )
             return EngineContext(parent, documentFixtureContext, loadExtensions(documentFixtureClass))
         }
     }

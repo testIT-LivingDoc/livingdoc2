@@ -341,7 +341,6 @@ internal class GherkinFormatTest {
     }
 
     companion object {
-        @JvmStatic
         fun generateRandomStrings(): List<String> {
             return (0..999).map {
                 generateRandomString()

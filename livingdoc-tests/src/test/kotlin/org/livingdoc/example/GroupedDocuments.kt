@@ -74,14 +74,12 @@ class GroupedDocuments {
     companion object {
         lateinit var sut: TextFunctions
 
-        @JvmStatic
         @Before
         fun setUp() {
             sut = TextFunctions()
             println("Before group of documents")
         }
 
-        @JvmStatic
         @After
         fun cleanUp() {
             println("After group of documents")

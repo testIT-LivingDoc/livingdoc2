@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.engine.extension.default
+package org.livingdoc.jvm.engine.extension.defaults
 
 import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.jvm.api.extension.context.ExtensionContext

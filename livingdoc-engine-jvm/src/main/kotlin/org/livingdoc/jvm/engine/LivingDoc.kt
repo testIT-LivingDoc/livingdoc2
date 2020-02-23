@@ -7,6 +7,7 @@ import org.livingdoc.jvm.engine.config.TaggingConfig
 import org.livingdoc.jvm.engine.config.filterTags
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
+import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.results.documents.DocumentResult
@@ -37,11 +38,16 @@ class LivingDoc internal constructor(
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<KClass<*>>): List<DocumentResult> {
         try {
-            return documentClasses
+            val documentResults = documentClasses
                 .filterTags(taggingConfig.includedTags, taggingConfig.excludedTags)
                 .groupBy { extractGroup(it) }
                 .map { (groupClass, documentClasses) -> createGroup(groupClass, documentClasses) }
                 .flatMap { executeGroup(it) }
+
+            val reportsManager = ReportsManager.from(configProvider)
+            reportsManager.generateReports(documentResults)
+
+            return documentResults
         } catch (e: Throwable) {
             throw ExecutionException("Unhandled Exception was thrown", e)
         }

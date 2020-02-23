@@ -1,6 +1,7 @@
 package org.livingdoc.jvm.engine
 
-import org.livingdoc.jvm.engine.extension.GroupContextImpl
+import org.livingdoc.jvm.engine.config.getTags
+import org.livingdoc.jvm.engine.extension.context.GroupContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
 import org.livingdoc.jvm.engine.manager.loadExtensions
@@ -46,11 +47,12 @@ internal class Group(
 
     companion object {
         fun createContext(groupClass: KClass<*>): EngineContext {
-            val extensionContext = GroupContextImpl(groupClass)
+            val extensionContext =
+                GroupContextImpl(groupClass)
             return EngineContext(null, extensionContext, loadExtensions(groupClass))
         }
     }
 }
 
 fun List<KClass<*>>.resultsWithStatus(status: Status): List<DocumentResult> =
-    map { DocumentResult.Builder().withDocumentClass(it.java).withStatus(status).build() }
+    map { DocumentResult.Builder().withDocumentClass(it.java).withTags(getTags(it)).withStatus(status).build() }

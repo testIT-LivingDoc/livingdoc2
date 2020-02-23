@@ -3,6 +3,7 @@ package org.livingdoc.jvm.engine.extension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
+import org.livingdoc.jvm.engine.extension.context.StoreImpl
 
 internal class StoreImplTest {
 

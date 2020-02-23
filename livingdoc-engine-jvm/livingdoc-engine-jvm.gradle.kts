@@ -13,6 +13,7 @@ dependencies {
 	implementation(project(":livingdoc-config"))
 	implementation(project(":livingdoc-repositories"))
 	implementation(project(":livingdoc-engine"))
+	implementation(project(":livingdoc-reports"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")

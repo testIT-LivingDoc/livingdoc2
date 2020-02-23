@@ -12,7 +12,6 @@ class TextFunctionsBeforeAndAfterMD {
     companion object {
         private lateinit var sut: TextFunctions
 
-        @JvmStatic
         @Before
         fun before() {
             sut = TextFunctions()

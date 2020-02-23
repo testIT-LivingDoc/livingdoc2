@@ -1,6 +1,5 @@
 package org.livingdoc.jvm.scenario
 
-import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
@@ -10,14 +9,12 @@ import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
-import kotlin.reflect.KClass
 
 internal class ScenarioFixtureFactoryTest {
     companion object {
         lateinit var cut: FixtureFactory<Scenario>
 
         @BeforeAll
-        @JvmStatic
         fun `initialize factory`() {
             cut = ScenarioFixtureFactory()
         }

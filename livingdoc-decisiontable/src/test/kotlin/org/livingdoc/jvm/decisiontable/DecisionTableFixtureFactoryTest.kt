@@ -1,6 +1,5 @@
 package org.livingdoc.jvm.decisiontable
 
-import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -11,7 +10,6 @@ import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
-import kotlin.reflect.KClass
 
 internal class DecisionTableFixtureFactoryTest {
 
@@ -19,7 +17,6 @@ internal class DecisionTableFixtureFactoryTest {
         lateinit var cut: DecisionTableFixtureFactory
 
         @BeforeAll
-        @JvmStatic
         fun `initialize factory`() {
             cut = DecisionTableFixtureFactory()
         }

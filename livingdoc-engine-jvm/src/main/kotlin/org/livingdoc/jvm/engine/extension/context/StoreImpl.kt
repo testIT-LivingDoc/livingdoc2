@@ -1,4 +1,4 @@
-package org.livingdoc.jvm.engine.extension
+package org.livingdoc.jvm.engine.extension.context
 
 import org.livingdoc.jvm.api.extension.context.Store
 

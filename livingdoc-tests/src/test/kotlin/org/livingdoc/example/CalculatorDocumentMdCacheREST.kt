@@ -28,7 +28,6 @@ class RestGroup {
 
         private var wms: WireMockServer = WireMockServer(port)
 
-        @JvmStatic
         @Before
         fun before() {
             wms.start()
@@ -50,7 +49,6 @@ class RestGroup {
             )
         }
 
-        @JvmStatic
         @After
         fun after() {
             wms.stop()
