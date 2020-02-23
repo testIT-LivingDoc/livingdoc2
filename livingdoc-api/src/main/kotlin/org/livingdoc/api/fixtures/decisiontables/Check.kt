@@ -29,4 +29,4 @@ package org.livingdoc.api.fixtures.decisiontables
  */
 @Repeatable
 @Target(AnnotationTarget.FUNCTION)
-annotation class Check(vararg val value: String)
+annotation class Check(val value: String)

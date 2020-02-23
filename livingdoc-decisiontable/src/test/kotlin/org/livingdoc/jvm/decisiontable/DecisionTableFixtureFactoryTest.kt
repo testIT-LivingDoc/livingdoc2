@@ -102,13 +102,11 @@ internal class DecisionTableFixtureFactoryTest {
 
     @Test
     fun `can create correct fixture from context`() {
-        val fixture = mockk<KClass<*>>()
         val context = mockk<FixtureContext>()
         val manager = mockk<FixtureExtensionsInterface>()
-        every { context.fixtureClass } returns fixture
 
         Assertions.assertThat(cut.getFixture(context, manager)).isInstanceOfSatisfying(DecisionTableFixture::class.java) {
-            Assertions.assertThat(it.fixtureClass).isEqualTo(fixture)
+            Assertions.assertThat(it.context).isEqualTo(context)
         }
     }
 }

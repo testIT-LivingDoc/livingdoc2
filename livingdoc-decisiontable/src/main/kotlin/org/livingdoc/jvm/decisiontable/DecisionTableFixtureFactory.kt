@@ -23,7 +23,7 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
         }
 
         val checkAliasMethod = fixtureClass.declaredMembers.flatMap { member ->
-            member.findAnnotation<Check>()?.value.orEmpty().asIterable()
+            member.annotations.filterIsInstance<Check>().map { it.value }
         }
         val aliases = inputAliasMethod + checkAliasMethod
         val numberOfMatchedHeaders = headerNames.filter { aliases.contains(it) }.size
@@ -32,6 +32,6 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
     }
 
     override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<DecisionTable> {
-        return DecisionTableFixture(context.fixtureClass, manager)
+        return DecisionTableFixture(context, manager)
     }
 }

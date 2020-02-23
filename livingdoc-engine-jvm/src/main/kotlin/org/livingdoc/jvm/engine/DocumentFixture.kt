@@ -3,6 +3,7 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.jvm.api.extension.context.DocumentFixtureContext
 import org.livingdoc.jvm.api.extension.context.GroupContext
+import org.livingdoc.jvm.engine.config.getTags
 import org.livingdoc.jvm.engine.extension.DocumentFixtureContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
@@ -27,7 +28,10 @@ internal class DocumentFixture(
     fun execute(): DocumentResult {
 
         val extensionContext = context.extensionContext as DocumentFixtureContext
-        val resultBuilder = DocumentResult.Builder().withDocumentClass(extensionContext.documentFixtureClass.java)
+        val resultBuilder =
+            DocumentResult.Builder().withDocumentClass(extensionContext.documentFixtureClass.java).withTags(
+                getTags(extensionContext.documentFixtureClass)
+            )
 
         val conditionEvaluationResult = extensionManager.shouldExecute(context)
         if (conditionEvaluationResult.disabled) {
@@ -39,9 +43,10 @@ internal class DocumentFixture(
         val documentInformation = extensionContext.documentInformation
 
         val document = repositoryManager.getRepository(extractRepositoryName(documentInformation))
-            .getDocument(extractDocumentId(documentInformation))
+            .getDocument(extractDocumentId(documentInformation))// TODO Handle exception
 
-        val results = document.elements.map {
+        val results = document.elements.filter { !it.description.isManual }.map {
+            //TODO manual
             val fixture = fixtureManager.getFixture(context, it, extensionManager)
             fixture.execute(it)
         }

@@ -29,19 +29,19 @@ internal class FixtureManager {
             throw IllegalArgumentException("There are no Fixtures for ${extensionContext.documentFixtureClass}")
         }
 
-        return fixtureFactories.filter { it.isCompatible(testData) }.filterIsInstance<FixtureFactory<T>>()
-            .map { factory ->
-                val fixtureClass = fixtureClasses.firstOrNull { factory.match(it, testData) }
-                fixtureClass?.let {
-                    val fixtureContextImpl = FixtureContextImpl(fixtureClass, extensionContext)
-                    val internalContext = createContext(it, context, fixtureContextImpl)
-                    factory.getFixture(fixtureContextImpl, FixtureExtensionsManager(extensionManager, internalContext))
-                }
-            }.firstOrNull()
-            ?: throw IllegalArgumentException(
-                "No matching Fixture found for TestData of type: " +
-                        testData::class.qualifiedName + " available Fixtures: " + fixtureClasses
-            )
+        val (factory, fixtureClass) = fixtureFactories
+            .filter { it.isCompatible(testData) }
+            .filterIsInstance<FixtureFactory<T>>()
+            .map { factory -> factory to fixtureClasses.firstOrNull { factory.match(it, testData) } }
+            .firstOrNull { it.second != null } ?: throw IllegalArgumentException(
+            "No matching Fixture found for TestData of type: " +
+                    testData::class.qualifiedName + " available Fixtures: " + fixtureClasses
+        )
+        fixtureClass ?: throw IllegalStateException("this is not possible")
+
+        val fixtureContextImpl = FixtureContextImpl(fixtureClass, extensionContext)
+        val internalContext = createContext(fixtureClass, context, fixtureContextImpl)
+        return factory.getFixture(fixtureContextImpl, FixtureExtensionsManager(extensionManager, internalContext))
     }
 
     /**

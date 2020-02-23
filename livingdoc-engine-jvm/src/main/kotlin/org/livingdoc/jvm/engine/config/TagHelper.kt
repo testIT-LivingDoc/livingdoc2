@@ -14,6 +14,6 @@ fun List<KClass<*>>.filterTags(include: List<String>, exclude: List<String>): Li
     }
 }
 
-private fun getTags(documentClass: KClass<*>): List<String> {
+fun getTags(documentClass: KClass<*>): List<String> {
     return documentClass.annotations.filterIsInstance<Tag>().map { it.value }
 }

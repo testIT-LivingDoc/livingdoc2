@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.livingdoc.jvm.api.extension.context.FixtureContext
+import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
@@ -76,12 +77,11 @@ internal class ScenarioFixtureFactoryTest {
 
     @Test
     fun `can create correct fixture from context`() {
-        val fixture = mockk<KClass<*>>()
         val context = mockk<FixtureContext>()
-        every { context.fixtureClass } returns fixture
+        val manager = mockk<FixtureExtensionsInterface>()
 
-        assertThat(cut.getFixture(context)).isInstanceOfSatisfying(ScenarioFixture::class.java) {
-            assertThat(it.fixtureClass).isEqualTo(fixture)
+        assertThat(cut.getFixture(context, manager)).isInstanceOfSatisfying(ScenarioFixture::class.java) {
+            assertThat(it.context).isEqualTo(context)
         }
     }
 }
