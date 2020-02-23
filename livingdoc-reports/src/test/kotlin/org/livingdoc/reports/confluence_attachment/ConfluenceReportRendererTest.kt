@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence
+package org.livingdoc.reports.confluence_attachment
 
 import com.atlassian.confluence.api.model.content.id.ContentId
 import org.assertj.core.api.Assertions.assertThat
