@@ -61,6 +61,12 @@ val DocumentFixtureContext.externalFixtureClasses: List<KClass<*>>
     get() = this.documentFixtureClass.findAnnotation<ExecutableDocument>()!!.fixtureClasses.toList()
 
 val DocumentFixtureContext.internalFixtureClasses: List<KClass<*>>
-    get() = this.documentFixtureClass.nestedClasses.filter {
-        it.annotations.any { it.annotationClass.hasAnnotation<FixtureAnnotation>() }
-    }
+    get() = this.documentFixtureClass.nestedClasses.filter { it.isFixtureClass() }
+
+fun KClass<*>.isFixtureClass(): Boolean {
+    return this.annotations.any { annotation -> annotation.isFixtureAnnotation() }
+}
+
+fun Annotation.isFixtureAnnotation(): Boolean {
+    return this.annotationClass.hasAnnotation<FixtureAnnotation>()
+}

@@ -9,6 +9,8 @@ dependencies {
 	implementation(project(":livingdoc-repositories"))
 	implementation(project(":livingdoc-results"))
 	implementation(project(":livingdoc-testdata"))
+	runtime(project(":livingdoc-decisiontable"))
+	runtime(project(":livingdoc-scenario"))
 
 	implementation(kotlin("reflect", Versions.kotlinVersion))
 

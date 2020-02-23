@@ -12,19 +12,18 @@ import org.livingdoc.scenario.matching.ScenarioStepMatcher
 import org.livingdoc.scenario.matching.StepTemplate
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMembers
-import kotlin.reflect.full.findAnnotation
 
 class ScenarioFixtureFactory : FixtureFactory<Scenario> {
     override fun isCompatible(testData: TestData): Boolean = testData is Scenario
 
     override fun match(fixtureClass: KClass<*>, testData: Scenario): Boolean {
         val stepMatcher = ScenarioStepMatcher(fixtureClass.declaredMembers.flatMap { member ->
-            member.findAnnotation<Step>()?.value.orEmpty().asIterable()
+            member.annotations.filterIsInstance<Step>().flatMap { it.value.asIterable() }
         }.map { StepTemplate.parse(it) })
 
-        return testData.steps.all {
+        return testData.steps.all { step ->
             try {
-                stepMatcher.match(it.value)
+                stepMatcher.match(step.value)
                 true
             } catch (e: NoMatchingStepTemplate) {
                 false
