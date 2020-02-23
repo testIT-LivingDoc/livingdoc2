@@ -3,6 +3,8 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.config.ConfigProvider
 import org.livingdoc.engine.ExecutionException
+import org.livingdoc.jvm.engine.config.TaggingConfig
+import org.livingdoc.jvm.engine.config.filterTags
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
 import org.livingdoc.repositories.RepositoryManager
@@ -21,6 +23,8 @@ class LivingDoc internal constructor(
     private val extensionManager: ExtensionManager = ExtensionManager()
 ) {
 
+    private val taggingConfig = TaggingConfig.from(configProvider)
+
     /**
      * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
      * classes must be annotated with [ExecutableDocument].
@@ -33,9 +37,11 @@ class LivingDoc internal constructor(
     @Throws(ExecutionException::class)
     fun execute(documentClasses: List<KClass<*>>): List<DocumentResult> {
         try {
-            return documentClasses.groupBy { extractGroup(it) }.map { (groupClass, documentClasses) ->
-                createGroup(groupClass, documentClasses)
-            }.flatMap { executeGroup(it) }
+            return documentClasses
+                .filterTags(taggingConfig.includedTags, taggingConfig.excludedTags)
+                .groupBy { extractGroup(it) }
+                .map { (groupClass, documentClasses) -> createGroup(groupClass, documentClasses) }
+                .flatMap { executeGroup(it) }
         } catch (e: Throwable) {
             throw ExecutionException("Unhandled Exception was thrown", e)
         }

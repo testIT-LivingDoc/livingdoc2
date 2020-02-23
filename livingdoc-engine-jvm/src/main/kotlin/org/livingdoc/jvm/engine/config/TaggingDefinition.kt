@@ -1,4 +1,4 @@
-package org.livingdoc.engine.config
+package org.livingdoc.jvm.engine.config
 
 /**
  * This data class contains two lists, one for included string tags, one for excluded string tags

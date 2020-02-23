@@ -1,4 +1,4 @@
-package org.livingdoc.engine.config
+package org.livingdoc.jvm.engine.config
 
 import org.livingdoc.config.ConfigProvider
 
