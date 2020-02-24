@@ -13,27 +13,38 @@ class ScenarioFixture(
     private val manager: FixtureExtensionsInterface
 ) : Fixture<Scenario> {
     override fun execute(testData: Scenario): TestDataResult<Scenario> {
-        var scResult: ScenarioResult
+        val srBuilder = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
 
-        if (manager.shouldExecute().disabled)
-            return if (!manager.shouldExecute().reason.isNullOrEmpty())
-                ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                    .withStatus(Status.Disabled(manager.shouldExecute().reason!!)).withUnassignedSkipped().build()
-            else ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                .withStatus(Status.Disabled()).withUnassignedSkipped().build()
 
-        // TODO use assert() and add it to withStatus(Status.Failed(assertFailure))
-        try {
-            manager.onBeforeFixture()
-            scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                .withStatus(Status.Executed).withUnassignedSkipped().build()
-            manager.onAfterFixture()
-        } catch (throwable: IllegalStateException) {
-            manager.handleTestExecutionException(throwable)
-            scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                .withStatus(Status.Failed()).withUnassignedSkipped().build()
+        val shouldExecute = manager.shouldExecute()
+        // unassigned Skipped sollte man sich nochmal ansehen
+        if (shouldExecute.disabled) {
+            srBuilder.withStatus(Status.Disabled(shouldExecute.reason.orEmpty())).withUnassignedSkipped()
         }
 
-        return scResult
+
+        try {
+            manager.onBeforeFixture()
+
+
+            //TODO execute step
+
+
+
+            manager.onAfterFixture()
+
+            srBuilder.withStatus(Status.Executed).withUnassignedSkipped()
+
+            // laut Leon macht eine IllegalStateException an der Stelle keinen Sinn, daher brauchen wir das Failed
+            // auch nicht. Daher waere ein throwable auch besser
+        } catch (throwable: Throwable) {
+            val processedThrowable = manager.handleTestExecutionException(throwable)
+            if (processedThrowable != null) {
+                srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped().build()
+            }
+
+        }
+
+        return srBuilder.build()
     }
 }
