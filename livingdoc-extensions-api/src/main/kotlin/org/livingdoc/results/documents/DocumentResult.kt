@@ -11,12 +11,14 @@ data class DocumentResult private constructor(
     val documentClass: Class<*>,
     val documentStatus: Status,
     val results: List<TestDataResult<TestData>>,
-    val tags: List<String>
+    val tags: List<String>,
+    val time: Long
 ) {
     /**
      * Builder can be used to build a [DocumentResult].
      */
     class Builder {
+        private var time: Long = 0
         private lateinit var documentClass: Class<*>
         private lateinit var status: Status
         private lateinit var tags: List<String>
@@ -64,7 +66,7 @@ data class DocumentResult private constructor(
          * @return a [DocumentResult] containing the data of this Builder
          */
         fun build(): DocumentResult {
-            return DocumentResult(documentClass, status, results, tags)
+            return DocumentResult(documentClass, status, results, tags, time)
         }
 
         /**
@@ -72,6 +74,12 @@ data class DocumentResult private constructor(
          */
         fun withTags(tags: List<String>): Builder {
             this.tags = tags
+
+            return this
+        }
+
+        fun withTime(time: Long): Builder {
+            this.time = time
 
             return this
         }
