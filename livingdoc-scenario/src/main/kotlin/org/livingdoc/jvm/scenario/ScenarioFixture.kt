@@ -8,14 +8,15 @@ import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
 import org.livingdoc.results.examples.scenarios.StepResult
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.createInstance
 
 class ScenarioFixture(
-    private val fixtureClass: Class<*>,
     val context: FixtureContext,
     private val manager: FixtureExtensionsInterface
 ) : Fixture<Scenario> {
 
-    private val fixtureModel = ScenarioFixtureModel(fixtureClass)
+    private val fixtureModel = ScenarioFixtureModel(context.fixtureClass)
 
     override fun execute(scenario: Scenario): TestDataResult<Scenario> {
         val srBuilder = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(scenario)
@@ -80,11 +81,18 @@ class ScenarioFixture(
         ).withFixtureMethod(method)
     }
 
+    private fun getParameterName(parameter: KParameter): String {
+        //  return parameter.getAnnotationsByType(Binding::class.java).firstOrNull()?.value
+        //      ?: parameter.name
+        // noch nicht aequivalent
+        return parameter.annotations.toString()
+    }
+
     /**
      * Creates a new instance of the fixture class passed to this execution
      */
 
     private fun createFixtureInstance(): Any {
-        return fixtureClass.getDeclaredConstructor().newInstance()
+        return context.fixtureClass.createInstance()
     }
 }
