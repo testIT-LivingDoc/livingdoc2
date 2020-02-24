@@ -1,0 +1,34 @@
+== Additional information
+
+=== Annotation - Manual
+It is possible to exclude a table or scenario from execution.
+You can use `MANUAL` to mark them.
+By declaring a section in a page as `MANUAL` the whole selection will be  ignored when tests are run.
+This way, the user can work on decision tables and scenarios without the risk of breaking existing tests.
+
+A `MANUAL` section is created by writing `MANUAL` in any place of the header.
+The `MANUAL` is valid until the next section or header is declared.
+It is not necessary to declare a section with the same hierarchy.
+For example a h2 in HTML will be a new section when declared after a h1 which is manual.
+
+.Example Declaring a MANUAL section in Markdown
+    # Section (it is a MANUAL)
+    - adding 1 and 2 equals 3
+
+    # MANUAL Section XY
+    - adding 3 and 6 equals 9
+
+.Example Declaring a MANUAL section in HTML
+    <h1>MANUAL Test</h1>
+    <table>
+        ...
+    </table>
+
+=== Expected Exceptions
+You can use a string named after an exception as any expected result of a decision table or scenario.
+The exception can be used to check for unwanted behavior.
+For example, you can add corrupt input values to check whether a function behaves as you would expect.
+A test is only successful if the exception thrown from the underlying code matches the exception you specify as the result.
+If no exception is thrown, but you expect one, the test will fail.
+
+

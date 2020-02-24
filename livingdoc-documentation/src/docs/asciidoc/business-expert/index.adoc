@@ -1,0 +1,11 @@
+= Documentation for business experts
+:toc:
+
+== Introduction
+This page is considered to give a detailed explanation for the usage of LivingDoc in the role of a business expert.
+
+include::writing-fixtures.adoc[]
+
+include::creating-fixtures.adoc[]
+
+include::additional-information.adoc[]

@@ -1,0 +1,77 @@
+== Writing Fixtures
+In LivingDoc it is possible to write different kinds of fixtures.
+
+First of all there are the decision tables.
+It is a simple table containing input values and multiple possible functions for each column.
+Each row therby represnt a test case where the given input values are calculated using the fuctions and checked with the corresponding result.
+
+Another possiblity are scenario fixtures which are written in plain text.
+In this case every line is a test case.
+By writting a meaningful scenario the test case can be executed.
+
+
+=== Decision Tables
+
+> Decision Table: A table where each row represents a test case.
+A column can contain either a test input or an expectation.
+
+Decision tables are easily created.
+You can write them as a markdown table, a HTML table or using confluence.
+Following is a example of a valid table you can recreate using any of the ways.
+
+
+.Example Decision Table
+
+|===
+|value a |value b |a + b = ?
+
+|1
+|2
+|3
+
+|-1
+|2
+|1
+|===
+
+In this example the columns `value a` and `value b` are test inputs and the column
+`a + b = ?` is an expectation.
+When a test case is running, each row is executed as a test.
+So in the end it will check if `1 + 2 = 3`.
+If the result of the test written behind does match the value of the result cell, the implementation is correct.
+
+=== Scenario
+> Scenario: An example describing a single test case as a sequence of steps.
+Each step is represented as a sentence containing either one or more test inputs
+or one or more expectations.
+
+Scenario Fixtures don't need any tables.
+The input values and the result are contained inside a sentence or message.
+
+It has to be possible to extract any necessary information out of the message in order to create a test case.
+Hence it should be self-contained.
+
+.Example Scenario - Structure
+    adding {a} and {b} equals {c}
+
+Here for example we wrote our decision table in to a sentence.
+The input values `a` and `b` exist as well as the result `c`.
+When writing a scenario it have to be clear what an input values and what the result is.
+
+With this knowledge we can go ahead and write a simple scenario.
+
+.Example Scenario - Final
+    adding 1 and 2 equals 3
+
+In this example the values for `a` and `b` are replaced with string values as well as the expectation `c`.
+The test behind will be able to extract the values for `a = 1` and `b = 2` and check if it matches `c = 3`.
+If the result of the test written behind does match the value of the expecation, the implementation is correct.
+
+
+==== Gherkin
+LivingDoc supports link:https://cucumber.io/docs/gherkin/[Gherkin].
+Gherkin can be seen as a more structured and defined scenario fixture containing keywords and rules.
+Have a look at the official documentation of link:https://cucumber.io/docs/gherkin/[Gherkin] to find out more.
+
+For now LivingDoc only support s Gherkin in plain HTML.
+The `<gherkin>` tag is nested inside a `<pre>` tag.
