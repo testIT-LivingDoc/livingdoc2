@@ -32,6 +32,9 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
     }
 
     override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<DecisionTable> {
-        return DecisionTableFixture(context, manager)
+        val decisionTableFixtureModel = DecisionTableFixtureModel(context.fixtureClass)
+        DecisionTableFixtureChecker.check(decisionTableFixtureModel)
+
+        return DecisionTableFixture(context, manager, decisionTableFixtureModel)
     }
 }
