@@ -13,19 +13,25 @@ class ScenarioFixture(
     private val manager: FixtureExtensionsInterface
 ) : Fixture<Scenario> {
     override fun execute(testData: Scenario): TestDataResult<Scenario> {
-        var scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-            .withStatus(Status.Disabled()).withUnassignedSkipped().build()
+        var scResult: ScenarioResult
 
         if (manager.shouldExecute().disabled)
-            return scResult
+            return if (!manager.shouldExecute().reason.isNullOrEmpty())
+                ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
+                    .withStatus(Status.Disabled(manager.shouldExecute().reason!!)).withUnassignedSkipped().build()
+            else ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
+                .withStatus(Status.Disabled()).withUnassignedSkipped().build()
 
+        // TODO use assert() and add it to withStatus(Status.Failed(assertFailure))
         try {
             manager.onBeforeFixture()
             scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                .withStatus(Status.Unknown).withUnassignedSkipped().build()
+                .withStatus(Status.Executed).withUnassignedSkipped().build()
             manager.onAfterFixture()
         } catch (throwable: IllegalStateException) {
             manager.handleTestExecutionException(throwable)
+            scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
+                .withStatus(Status.Failed()).withUnassignedSkipped().build()
         }
 
         return scResult
