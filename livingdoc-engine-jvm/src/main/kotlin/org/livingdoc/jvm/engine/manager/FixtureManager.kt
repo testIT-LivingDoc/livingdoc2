@@ -8,6 +8,7 @@ import org.livingdoc.jvm.api.fixture.FixtureAnnotation
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.jvm.engine.EngineContext
 import org.livingdoc.jvm.engine.extension.context.FixtureContextImpl
+import org.livingdoc.jvm.engine.manager.ExtensionRegistryImpl.Companion.loadExtensions
 import org.livingdoc.repositories.model.TestData
 import java.util.*
 import kotlin.reflect.KClass
@@ -56,7 +57,8 @@ internal class FixtureManager {
         parent: EngineContext,
         extensionContext: ExtensionContext
     ): EngineContext {
-        return EngineContext(parent, extensionContext, loadExtensions(fixtureClass))
+        val extensionRegistry = ExtensionRegistryImpl.createRegistryFrom(loadExtensions(fixtureClass), parent.extensionRegistry)
+        return EngineContext(parent, extensionContext, extensionRegistry)
     }
 }
 

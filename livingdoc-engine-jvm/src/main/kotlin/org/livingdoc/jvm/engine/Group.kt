@@ -3,8 +3,8 @@ package org.livingdoc.jvm.engine
 import org.livingdoc.jvm.engine.config.getTags
 import org.livingdoc.jvm.engine.extension.context.GroupContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
+import org.livingdoc.jvm.engine.manager.ExtensionRegistryImpl
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.engine.manager.loadExtensions
 import org.livingdoc.jvm.engine.result.GroupResultImpl
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
@@ -63,10 +63,16 @@ internal class Group(
     }
 
     companion object {
+        private val rootExtensionRegistry = ExtensionRegistryImpl.createRootExtensionRegistry()
+
         fun createContext(groupClass: KClass<*>): EngineContext {
             val extensionContext =
                 GroupContextImpl(groupClass)
-            return EngineContext(null, extensionContext, loadExtensions(groupClass))
+            val extensionRegistry = ExtensionRegistryImpl.createRegistryFrom(
+                ExtensionRegistryImpl.loadExtensions(groupClass),
+                rootExtensionRegistry
+            )
+            return EngineContext(null, extensionContext, extensionRegistry)
         }
     }
 }

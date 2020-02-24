@@ -27,7 +27,6 @@ include(
 	"livingdoc-documentation",
 	"livingdoc-engine",
 	"livingdoc-engine-jvm",
-	"livingdoc-extensions-api",
 	"livingdoc-format-gherkin",
 	"livingdoc-junit-engine",
 	"livingdoc-reports",

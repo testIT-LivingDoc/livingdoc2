@@ -6,8 +6,8 @@ import org.livingdoc.jvm.api.extension.context.GroupContext
 import org.livingdoc.jvm.engine.config.getTags
 import org.livingdoc.jvm.engine.extension.context.DocumentFixtureContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
+import org.livingdoc.jvm.engine.manager.ExtensionRegistryImpl
 import org.livingdoc.jvm.engine.manager.FixtureManager
-import org.livingdoc.jvm.engine.manager.loadExtensions
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
@@ -67,7 +67,12 @@ internal class DocumentFixture(
                     documentFixtureClass,
                     parent.extensionContext as GroupContext
                 )
-            return EngineContext(parent, documentFixtureContext, loadExtensions(documentFixtureClass))
+            val extensionRegistry =
+                ExtensionRegistryImpl.createRegistryFrom(
+                    ExtensionRegistryImpl.loadExtensions(documentFixtureClass),
+                    parent.extensionRegistry
+                )
+            return EngineContext(parent, documentFixtureContext, extensionRegistry)
         }
     }
 }

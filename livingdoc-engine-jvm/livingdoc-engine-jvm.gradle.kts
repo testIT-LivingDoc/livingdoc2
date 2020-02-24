@@ -7,7 +7,6 @@ dependencies {
 	implementation(kotlin("reflect"))
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
 	implementation(project(":livingdoc-api"))
-	implementation(project(":livingdoc-extensions-api"))
 
 	implementation(project(":livingdoc-converters"))
 	implementation(project(":livingdoc-config"))

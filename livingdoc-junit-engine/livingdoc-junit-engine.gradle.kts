@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
 	implementation(project(":livingdoc-api"))
-	implementation(project(":livingdoc-extensions-api"))
 	implementation(project(":livingdoc-engine-jvm"))
 	implementation(project(":livingdoc-results"))
 	implementation(project(":livingdoc-testdata"))

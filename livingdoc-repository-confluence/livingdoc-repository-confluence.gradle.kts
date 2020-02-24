@@ -14,7 +14,7 @@ dependencies {
 	implementation("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
 	runtimeOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 	implementation(project(":livingdoc-config"))
-	implementation(project(":livingdoc-extensions-api"))
+	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-repositories"))
 
 	testImplementation("ch.qos.logback:logback-classic:${Versions.logback}")

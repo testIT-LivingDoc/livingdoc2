@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-	implementation(project(":livingdoc-extensions-api"))
+	implementation(project(":livingdoc-api"))
 }

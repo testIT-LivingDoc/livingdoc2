@@ -8,7 +8,7 @@ dependencies {
 	implementation("com.vladsch.flexmark:flexmark-ext-tables:${Versions.flexmark}")
 
 	implementation(project(":livingdoc-config"))
-	implementation(project(":livingdoc-extensions-api"))
+	implementation(project(":livingdoc-api"))
 	implementation(project(":livingdoc-results"))
 	implementation(project(":livingdoc-testdata"))
 	implementation(project(":livingdoc-format-gherkin"))

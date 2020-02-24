@@ -15,19 +15,18 @@ buildScan {
 
 val livingdocJavaProjects by extra(
 	listOf(
-		project(":livingdoc-api"),
 		project(":livingdoc-documentation")
 	)
 )
 
 val livingdocKotlinProjects by extra(
 	listOf(
+		project(":livingdoc-api"),
 		project(":livingdoc-config"),
 		project(":livingdoc-converters"),
 		project(":livingdoc-decisiontable"),
 		project(":livingdoc-engine"),
 		project(":livingdoc-engine-jvm"),
-		project(":livingdoc-extensions-api"),
 		project(":livingdoc-format-gherkin"),
 		project(":livingdoc-junit-engine"),
 		project(":livingdoc-reports"),
