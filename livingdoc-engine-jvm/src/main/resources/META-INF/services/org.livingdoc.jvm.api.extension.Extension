@@ -1,2 +1,3 @@
 org.livingdoc.jvm.engine.extension.defaults.DisabledCondition
 org.livingdoc.jvm.engine.extension.defaults.LifecycleMethodAdapter
+org.livingdoc.jvm.engine.extension.defaults.FailFast
