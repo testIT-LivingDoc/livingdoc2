@@ -11,21 +11,23 @@ class ScenarioFixtureModel(
     val fixtureClass: KClass<*>
 ) {
     // val x: List<KFunction<T>>
-    val stepMethods: List<KFunction>
-    val stepTemplateToMethod: Map<StepTemplate, KFunction>
+    val stepMethods: List<KFunction<*>>
+    val stepTemplateToMethod: Map<StepTemplate, KFunction<*>>
 
     private val stepMatcher: ScenarioStepMatcher
 
     init {
 
         // method analysis
-        val stepMethods = mutableListOf<KFunction>()
+        val stepMethods = mutableListOf<KFunction<*>>()
 
         // TODO something here
 
         fixtureClass.declaredFunctions.forEach {
             method ->
-            if (method.annotations.equals(Step::class)) stepMethods.add(method)
+            // if (method.annotations.equals(Step::class)) stepMethods.add(method)
+            // TODO iterate into it
+            // if(method.annotations.filterIsInstance<Step>() //stepMethods.add(method)
         }
 
         this.stepMethods = stepMethods
@@ -34,9 +36,9 @@ class ScenarioFixtureModel(
 
         val stepAliases = mutableSetOf<String>()
 
-        val stepTemplateToMethod = mutableMapOf<StepTemplate, Method>()
+        val stepTemplateToMethod = mutableMapOf<StepTemplate, KFunction<*>>()
         stepMethods.forEach { method ->
-            method.getAnnotationsByType(Step::class.java)
+            method.annotations.filterIsInstance<Step>()
                 .flatMap { it.value.asIterable() }
                 .forEach { alias ->
                     stepAliases.add(alias)
@@ -49,9 +51,5 @@ class ScenarioFixtureModel(
     }
 
     fun getMatchingStepTemplate(step: String): ScenarioStepMatcher.MatchingResult = stepMatcher.match(step)
-    fun getStepMethod(template: StepTemplate): Method = stepTemplateToMethod[template]!!
-
-    private fun Method.isAnnotatedWith(annotationClass: KClass<out Annotation>): Boolean {
-        return this.isAnnotationPresent(annotationClass.java)
-    }
+    fun getStepMethod(template: StepTemplate): KFunction<*> = stepTemplateToMethod[template]!!
 }
