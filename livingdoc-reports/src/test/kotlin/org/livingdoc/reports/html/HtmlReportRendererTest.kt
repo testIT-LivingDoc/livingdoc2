@@ -153,6 +153,10 @@ internal class HtmlReportRendererTest {
                         ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
+                        <h2>HtmlReportRendererTest (0,000s)</h2>
+                        <div>
+                         <p>tags: []</p>
+                        </div>
                         <h2>Title</h2>
                         <div>
                             <p>descriptive text</p>
@@ -253,6 +257,10 @@ internal class HtmlReportRendererTest {
                        ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
+                        <h2>HtmlReportRendererTest (0,000s)</h2>
+                        <div>
+                         <p>tags: []</p>
+                        </div>
                         <h2>Title</h2>
                         <div>
                             <p>descriptive text</p>
@@ -270,62 +278,4 @@ internal class HtmlReportRendererTest {
         )
     }
 
-    @Test
-    fun `summary is rendered correctly`() {
-        val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
-        val stepResultB = StepResult.Builder().withValue("B").withStatus(Status.Manual).build()
-        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Skipped).build()
-        val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
-        val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
-
-        val documentResult = DocumentResult.Builder()
-            .withDocumentClass(HtmlReportRendererTest::class.java)
-            .withStatus(Status.Executed)
-            .withResult(
-                ScenarioResult.Builder()
-                    .withStep(stepResultA)
-                    .withStep(stepResultB)
-                    .withStep(stepResultC)
-                    .withStep(stepResultD)
-                    .withStep(stepResultE)
-                    .withStatus(Status.Executed)
-                    .withScenario(
-                        Scenario(
-                            listOf(
-                                Step("A"), Step("B"), Step("C"),
-                                Step("D"), Step("E")
-                            ),
-                            TestDataDescription("Title", false, "descriptive text")
-                        )
-                    )
-                    .build()
-            ).withTags(emptyList())
-            .build()
-
-        val renderResult = cut.render(documentResult)
-
-        assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                       ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
-                    </head>
-                    <body>
-                        <h2>Title</h2>
-                        <div>
-                            <p>descriptive text</p>
-                        </div>
-                        <ul>
-                            <li class="background-executed">A</li>
-                            <li class="background-manual">B</li>
-                            <li class="background-skipped">C</li>
-                            <li class="background-failed">D</li>
-                            <li class="background-exception">E</li>
-                        </ul>
-                    </body>
-                </html>
-                """
-        )
-    }
 }

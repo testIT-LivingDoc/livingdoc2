@@ -64,6 +64,7 @@ class HtmlReportRenderer : ReportRenderer {
     fun render(documentResult: DocumentResult): String {
         val exampleResult = documentResult.results
 
+
         val htmlResults = exampleResult.flatMap { result ->
             when (result) {
                 is DecisionTableResult -> handleDecisionTableResult(result)
@@ -72,8 +73,15 @@ class HtmlReportRenderer : ReportRenderer {
             }
         }.filterNotNull()
 
+        val timestring = " (" + "%.3f".format(documentResult.time/1000f) + "s)"
+
+        val header = listOf<HtmlElement>(HtmlTitle(
+            documentResult.documentClass.simpleName + timestring),
+            HtmlDescription {paragraphs(listOf("tags: " + documentResult.tags.toString()))})
+
+
         return HtmlReportTemplate()
-            .renderResultListTemplate(htmlResults, renderContext)
+            .renderResultListTemplate(header.plus(htmlResults), renderContext)
     }
 
     /**

@@ -194,6 +194,7 @@ fun HtmlTable.summaryTableHeader() {
     appendHead {
         HtmlElement("tr") {
             child { HtmlElement("th", "Tag") }
+            child { HtmlElement("th", "Time") }
             child { HtmlElement("th", "✅") }
             child { HtmlElement("th", "❔") }
             child { HtmlElement("th", "❌") }
@@ -213,11 +214,13 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
         HtmlElement("tr") {
             child {
                 HtmlElement("td") {
-                    HtmlElement("span") {
-                        cssClass("indicator")
-                        attr("id", "indicator_$tag")
-                        attr("onClick", "collapse('indicator_$tag', 'ID_$tag')")
-                        text { "⏵" }
+                    child {
+                        HtmlElement("span") {
+                            cssClass("indicator")
+                            attr("id", "indicator_$tag")
+                            attr("onClick", "collapse('indicator_$tag', 'ID_$tag')")
+                            text { "⏵" }
+                        }
                     }
                     if (tag == "all")
                         child { HtmlElement("i", "all tags") }
@@ -226,13 +229,20 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
                 }
             }
 
-            calculateSummaryNumbers(documentResults).forEachIndexed { index, number ->
-                child {
-                    HtmlElement("td", number.toString())
-                }
+        calculateSummaryNumbers(documentResults).forEachIndexed { index, number ->
+            when (index) {
+                0 ->
+                    child {
+                        HtmlElement("td", "%.3f".format(number / 1000f) + "s")
+                    }
+                else ->
+                    child {
+                        HtmlElement("td", number.toInt().toString())
+                    }
             }
         }
     }
+}
 }
 
 /**
@@ -241,7 +251,8 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
  * @param documentResults a list of results to be examined
  * @return a list with three numbers (success, other, failed)
  */
-private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Int> {
+private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Long> {
+    var time: Long = 0
     var numberSuccessful = 0
     var numberFailed = 0
     var numberOther = 0
@@ -257,9 +268,11 @@ private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, P
             else
             -> numberOther++
         }
+
+        time += document.time
     }
 
-    return listOf(numberSuccessful, numberOther, numberFailed)
+    return listOf(time, numberSuccessful.toLong(), numberOther.toLong(), numberFailed.toLong())
 }
 
 /**
@@ -272,7 +285,7 @@ fun HtmlTable.collapseRow(tag: String, documentResults: List<Pair<DocumentResult
             cssClass("hidden")
             child {
                 HtmlElement("td") {
-                    attr("colspan", "4")
+                    attr("colspan", "5")
                     child {
                         HtmlList {
                             linkList(documentResults)

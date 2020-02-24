@@ -17,7 +17,6 @@ import org.livingdoc.results.TestDataResult
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
-import java.rmi.UnexpectedException
 import kotlin.system.measureTimeMillis
 
 /**
@@ -59,7 +58,6 @@ internal class DocumentExecution(
         } catch (e: MalformedFixtureException) {
             builder.withStatus(Status.Exception(e))
         } finally {
-            //Time end
         }
 
         return builder.build()

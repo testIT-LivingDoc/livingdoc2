@@ -43,7 +43,10 @@ fun HtmlList.linkList(reports: List<Pair<DocumentResult, Path>>) {
             HtmlElement("li") {
                 child {
                     HtmlLink(it.second.fileName.toString()) {
-                        resultLink(it.first.documentClass.name, it.first.documentStatus)
+                        resultLink(
+                            it.first.documentClass.name + " (" + "%.3f".format(it.first.time / 1000f) + "s)",
+                            it.first.documentStatus
+                        )
                     }
                 }
             }
