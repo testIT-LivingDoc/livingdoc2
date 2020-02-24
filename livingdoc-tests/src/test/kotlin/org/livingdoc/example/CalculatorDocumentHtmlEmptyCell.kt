@@ -6,7 +6,9 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.tagging.Tag
 
+@Tag("html")
 @ExecutableDocument("local://CalculatorEmptyCell.html")
 class CalculatorDocumentHtmlEmptyCell {
 

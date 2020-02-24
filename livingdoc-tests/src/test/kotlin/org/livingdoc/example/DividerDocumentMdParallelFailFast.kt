@@ -12,12 +12,14 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
+import org.livingdoc.api.tagging.Tag
 
 /**
  * [ExecutableDocuments][ExecutableDocument] can also be specified in Markdown
  *
  * @see ExecutableDocument
  */
+@Tag("markdown")
 @Disabled
 @FailFast(onExceptionTypes = [IllegalArgumentException::class])
 @ExecutableDocument("local://DividerFailFast.md")

@@ -5,6 +5,7 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.tagging.Tag
 
 /**
  * This [ExecutableDocument] tests interpreting a checkbox from a confluence page as boolean.
@@ -12,6 +13,8 @@ import org.livingdoc.api.fixtures.decisiontables.Input
  * @see DecisionTableFixture
  * @see ExecutableDocument
  */
+
+@Tag("confluence")
 @ExecutableDocument("local://ConfluenceCheckbox.html")
 class ConfluenceCheckboxHtml {
 
