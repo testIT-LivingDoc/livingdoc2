@@ -33,8 +33,6 @@ class ScenarioFixtureFactory : FixtureFactory<Scenario> {
     }
 
     override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<Scenario> {
-        val fixtureModel = ScenarioFixtureModel(context.fixtureClass)
-
-        return ScenarioFixture(context, manager, fixtureModel)
+        return ScenarioFixture(context, manager)
     }
 }

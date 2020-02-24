@@ -10,23 +10,23 @@ import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 class ScenarioFixture(
     val context: FixtureContext,
-    private val manager: FixtureExtensionsInterface,
-    private val fixtureModel: ScenarioFixtureModel
+    private val manager: FixtureExtensionsInterface
 ) : Fixture<Scenario> {
     override fun execute(testData: Scenario): TestDataResult<Scenario> {
+        var scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
+            .withStatus(Status.Disabled()).withUnassignedSkipped().build()
+
         if (manager.shouldExecute().disabled)
-            return ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-                .withStatus(Status.Disabled()).withUnassignedSkipped().build()
+            return scResult
+
         try {
             manager.onBeforeFixture()
-        } catch (throwable: Throwable) {
-            manager.handleBeforeMethodExecutionException(throwable)
+            scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
+                .withStatus(Status.Unknown).withUnassignedSkipped().build()
+            manager.onAfterFixture()
+        } catch (throwable: IllegalStateException) {
+            manager.handleTestExecutionException(throwable)
         }
-
-        val scResult = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
-            .withStatus(Status.Unknown).withUnassignedSkipped().build()
-
-        manager.onAfterFixture()
 
         return scResult
     }
