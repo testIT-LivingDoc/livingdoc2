@@ -11,6 +11,7 @@ import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.repositories.config.RepositoryConfiguration
 import org.livingdoc.results.documents.DocumentResult
+import org.livingdoc.results.groups.GroupResult
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -36,18 +37,18 @@ class LivingDoc internal constructor(
      */
     @Suppress("TooGenericExceptionCaught")
     @Throws(ExecutionException::class)
-    fun execute(documentClasses: List<KClass<*>>): List<DocumentResult> {
+    fun execute(documentClasses: List<KClass<*>>): List<GroupResult> {
         try {
-            val documentResults = documentClasses
+            val groupResults = documentClasses
                 .filterTags(taggingConfig.includedTags, taggingConfig.excludedTags)
                 .groupBy { extractGroup(it) }
                 .map { (groupClass, documentClasses) -> createGroup(groupClass, documentClasses) }
-                .flatMap { executeGroup(it) }
+                .map { executeGroup(it) }
 
             val reportsManager = ReportsManager.from(configProvider)
-            reportsManager.generateReports(documentResults)
+            reportsManager.generateReports(groupResults.flatMap { it.documentResults }) // TODO refactor reports
 
-            return documentResults
+            return groupResults
         } catch (e: Throwable) {
             throw ExecutionException("Unhandled Exception was thrown", e)
         }
@@ -63,7 +64,7 @@ class LivingDoc internal constructor(
      * @throws ExecutionException in case the execution failed in a way that did not produce a viable result
      */
     @Throws(ExecutionException::class)
-    private fun executeGroup(group: Group): List<DocumentResult> {
+    private fun executeGroup(group: Group): GroupResult {
         return group.execute()
     }
 

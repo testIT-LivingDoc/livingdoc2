@@ -52,8 +52,7 @@ internal class DocumentFixture(
         }
         extensionManager.executeAfterDocumentFixture(context)
 
-        val result =
-            resultBuilder.withStatus(Status.Executed)
+        val result = resultBuilder.withStatus(Status.Executed)
         results.forEach {
             result.withResult(it)
         }

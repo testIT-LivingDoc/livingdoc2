@@ -296,11 +296,13 @@ internal class GherkinFormatTest {
 
             assertThat(element).isInstanceOfSatisfying(Scenario::class.java) { scenario ->
                 assertThat(scenario.steps).hasOnlyOneElementSatisfying { step ->
-                    assertThat(step.value).isEqualToIgnoringWhitespace("the following users exist:" +
-                            " {\"rows\" : [[\"name\", \"email\", \"twitter\"]," +
-                            " [\"Aslak\", \"aslak@cucumber.io\", \"@aslak_hellesoy\"]," +
-                            " [\"Julien\", \"julien@cucumber.io\", \"@jbpros\"]," +
-                            " [\"Matt\", \"matt@cucumber.io\", \"@mattwynne\"]]}")
+                    assertThat(step.value).isEqualToIgnoringWhitespace(
+                        "the following users exist:" +
+                                " {\"rows\" : [[\"name\", \"email\", \"twitter\"]," +
+                                " [\"Aslak\", \"aslak@cucumber.io\", \"@aslak_hellesoy\"]," +
+                                " [\"Julien\", \"julien@cucumber.io\", \"@jbpros\"]," +
+                                " [\"Matt\", \"matt@cucumber.io\", \"@mattwynne\"]]}"
+                    )
                 }
             }
         }
@@ -341,6 +343,7 @@ internal class GherkinFormatTest {
     }
 
     companion object {
+        @JvmStatic
         fun generateRandomStrings(): List<String> {
             return (0..999).map {
                 generateRandomString()

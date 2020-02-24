@@ -1,13 +1,13 @@
 package org.livingdoc.results
 
 /**
- * Base interface for all results.
+ * Base interface for all results of Fixtures.
  */
-interface TestDataResult<out T> {
+interface TestDataResult<out T> : Result {
     /**
      * The [Status] of the [TestDataResult].
      *
      * @see [Status]
      */
-    val status: Status
+    override val status: Status
 }

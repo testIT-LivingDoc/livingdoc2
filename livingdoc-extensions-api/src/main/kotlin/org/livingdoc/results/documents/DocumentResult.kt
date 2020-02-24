@@ -1,6 +1,7 @@
 package org.livingdoc.results.documents
 
 import org.livingdoc.repositories.model.TestData
+import org.livingdoc.results.Result
 import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
 import java.time.Duration
@@ -11,11 +12,13 @@ import java.time.Duration
 data class DocumentResult
 private constructor(
     val documentClass: Class<*>,
-    val documentStatus: Status,
+    override val status: Status,
     val results: List<TestDataResult<TestData>>,
     val tags: List<String>,
     val time: Duration
-) {
+) : Result {
+    val documentStatus: Status get() = status
+
     /**
      * Builder can be used to build a [DocumentResult].
      */

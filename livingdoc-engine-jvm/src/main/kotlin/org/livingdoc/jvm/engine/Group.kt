@@ -5,9 +5,11 @@ import org.livingdoc.jvm.engine.extension.context.GroupContextImpl
 import org.livingdoc.jvm.engine.manager.ExtensionManager
 import org.livingdoc.jvm.engine.manager.FixtureManager
 import org.livingdoc.jvm.engine.manager.loadExtensions
+import org.livingdoc.jvm.engine.result.GroupResultImpl
 import org.livingdoc.repositories.RepositoryManager
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
+import org.livingdoc.results.groups.GroupResult
 import kotlin.reflect.KClass
 
 internal class Group(
@@ -17,32 +19,47 @@ internal class Group(
     private val fixtureManager: FixtureManager,
     private val extensionManager: ExtensionManager
 ) {
-    fun execute(): List<DocumentResult> {
-
+    fun execute(): GroupResult {
         val conditionEvaluationResult = extensionManager.shouldExecute(context)
         if (conditionEvaluationResult.disabled) {
-            return documentClasses.resultsWithStatus(Status.Disabled(conditionEvaluationResult.reason.orEmpty()))
+            return createResultWithDocumentResultsSkipped(Status.Disabled(conditionEvaluationResult.reason.orEmpty()))
         }
 
         val throwableCollector = context.throwableCollector
-
         extensionManager.executeBeforeGroup(context)
         if (!throwableCollector.isEmpty()) {
-            return documentClasses.resultsWithStatus(Status.Exception(throwableCollector.throwable))
+            return createResultWithDocumentResultsSkipped(Status.Exception(throwableCollector.throwable))
         }
 
-        val results = documentClasses.map {
-            val documentFixtureEngineContext = DocumentFixture.createContext(it, context)
-            val documentFixture =
-                DocumentFixture(documentFixtureEngineContext, repositoryManager, fixtureManager, extensionManager)
-            documentFixture.execute()
-        }
+        val results = documentClasses
+            .map { createDocumentFixture(it) }
+            .map { executeDocument(it) }
         extensionManager.executeAfterGroup(context)
         if (!throwableCollector.isEmpty()) {
-            return documentClasses.resultsWithStatus(Status.Exception(throwableCollector.throwable))
+            return createResult(results, Status.Exception(throwableCollector.throwable))
         }
 
-        return results
+        return createResult(results, Status.Executed)
+    }
+
+    private fun createDocumentFixture(documentClass: KClass<*>): DocumentFixture {
+        val documentFixtureEngineContext = DocumentFixture.createContext(documentClass, context)
+        return DocumentFixture(documentFixtureEngineContext, repositoryManager, fixtureManager, extensionManager)
+    }
+
+    private fun executeDocument(documentFixture: DocumentFixture): DocumentResult {
+        return documentFixture.execute()
+    }
+
+    private fun createResult(results: List<DocumentResult>, status: Status): GroupResult {
+        return GroupResultImpl(results, status)
+    }
+
+    private fun createResultWithDocumentResultsSkipped(status: Status): GroupResult {
+        val results = documentClasses.map {
+            DocumentResult.Builder().withDocumentClass(it.java).withTags(getTags(it)).withStatus(Status.Skipped).build()
+        }
+        return createResult(results, status)
     }
 
     companion object {
@@ -53,6 +70,3 @@ internal class Group(
         }
     }
 }
-
-fun List<KClass<*>>.resultsWithStatus(status: Status): List<DocumentResult> =
-    map { DocumentResult.Builder().withDocumentClass(it.java).withTags(getTags(it)).withStatus(status).build() }

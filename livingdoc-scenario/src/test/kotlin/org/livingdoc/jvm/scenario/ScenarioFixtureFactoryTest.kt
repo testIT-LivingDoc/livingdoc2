@@ -2,7 +2,7 @@ package org.livingdoc.jvm.scenario
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
@@ -11,13 +11,12 @@ import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
 
 internal class ScenarioFixtureFactoryTest {
-    companion object {
-        lateinit var cut: FixtureFactory<Scenario>
 
-        @BeforeAll
-        fun `initialize factory`() {
-            cut = ScenarioFixtureFactory()
-        }
+    private lateinit var cut: FixtureFactory<Scenario>
+
+    @BeforeEach
+    fun `initialize factory`() {
+        cut = ScenarioFixtureFactory()
     }
 
     @Test
