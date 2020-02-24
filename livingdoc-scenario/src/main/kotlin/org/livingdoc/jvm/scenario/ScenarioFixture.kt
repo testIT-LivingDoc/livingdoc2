@@ -7,14 +7,18 @@ import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
+import org.livingdoc.results.examples.scenarios.StepResult
 
 class ScenarioFixture(
+    private val fixtureClass: Class<*>,
     val context: FixtureContext,
     private val manager: FixtureExtensionsInterface
 ) : Fixture<Scenario> {
-    override fun execute(testData: Scenario): TestDataResult<Scenario> {
-        val srBuilder = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(testData)
 
+    private val fixtureModel = ScenarioFixtureModel(fixtureClass)
+
+    override fun execute(scenario: Scenario): TestDataResult<Scenario> {
+        val srBuilder = ScenarioResult.Builder().withFixtureSource(context.fixtureClass.java).withScenario(scenario)
 
         val shouldExecute = manager.shouldExecute()
         // unassigned Skipped sollte man sich nochmal ansehen
@@ -22,14 +26,13 @@ class ScenarioFixture(
             srBuilder.withStatus(Status.Disabled(shouldExecute.reason.orEmpty())).withUnassignedSkipped()
         }
 
-
         try {
             manager.onBeforeFixture()
 
+            val fixture = createFixtureInstance()
 
-            //TODO execute step
-
-
+            // TODO execute step
+            executeSteps(scenario, fixture)
 
             manager.onAfterFixture()
 
@@ -42,9 +45,46 @@ class ScenarioFixture(
             if (processedThrowable != null) {
                 srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped().build()
             }
-
         }
 
         return srBuilder.build()
+    }
+
+    private fun executeSteps(scenario: Scenario, fixture: Any): List<StepResult> {
+        var previousStatus: Status = Status.Executed
+        return scenario.steps.map { step ->
+            val stepResultBuilder = StepResult.Builder().withValue(step.value)
+
+            if (previousStatus == Status.Executed) {
+                executeStep(fixture, step.value, stepResultBuilder)
+            } else {
+                stepResultBuilder.withStatus(Status.Skipped)
+            }
+
+            stepResultBuilder.build().also { previousStatus = it.status }
+        }
+    }
+
+    private fun executeStep(fixture: Any, stepValue: String, stepResultBuilder: StepResult.Builder) {
+        val result = fixtureModel.getMatchingStepTemplate(stepValue)
+        val method = fixtureModel.getStepMethod(result.template)
+        val parameterList = method.parameters
+            .map { parameter ->
+                result.variables.getOrElse(
+                    getParameterName(parameter),
+                    { error("Missing parameter value: ${getParameterName(parameter)}") })
+            }
+            .toTypedArray()
+        stepResultBuilder.withStatus(
+            invokeExpectingException(method, fixture, parameterList)
+        ).withFixtureMethod(method)
+    }
+
+    /**
+     * Creates a new instance of the fixture class passed to this execution
+     */
+
+    private fun createFixtureInstance(): Any {
+        return fixtureClass.getDeclaredConstructor().newInstance()
     }
 }
