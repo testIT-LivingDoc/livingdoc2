@@ -21,7 +21,7 @@ package org.livingdoc.scenario.matching
  * @param maxNumberOfOperations the maximum number of operations for the algorithm.
  *
  */
-internal class RegMatching(
+class RegMatching(
     val stepTemplate: StepTemplate,
     val step: String,
     val maxNumberOfOperations: Float

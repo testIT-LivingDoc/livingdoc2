@@ -14,6 +14,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMembers
 
 class ScenarioFixtureFactory : FixtureFactory<Scenario> {
+
     override fun isCompatible(testData: TestData): Boolean = testData is Scenario
 
     override fun match(fixtureClass: KClass<*>, testData: Scenario): Boolean {
@@ -32,6 +33,8 @@ class ScenarioFixtureFactory : FixtureFactory<Scenario> {
     }
 
     override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<Scenario> {
-        return ScenarioFixture(context, manager)
+        val fixtureModel = ScenarioFixtureModel(context.fixtureClass)
+
+        return ScenarioFixture(context, manager, fixtureModel)
     }
 }

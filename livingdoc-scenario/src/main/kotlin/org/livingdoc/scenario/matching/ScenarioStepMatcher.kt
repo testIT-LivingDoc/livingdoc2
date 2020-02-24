@@ -3,7 +3,7 @@ package org.livingdoc.scenario.matching
 // maybe refactor this exception to yield more information
 class NoMatchingStepTemplate(msg: String) : RuntimeException(msg)
 
-internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>) {
+class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>) {
 
     data class MatchingResult(
         val template: StepTemplate,

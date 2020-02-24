@@ -8,7 +8,7 @@ package org.livingdoc.scenario.matching
  * Variables can be quoted with optional `quotationCharacters` (e.g. single quotation marks). A matching step
  * *must* contain exactly the same quotation characters. By default, no quotation characters are used.
  */
-internal class StepTemplate(
+class StepTemplate(
     val fragments: List<Fragment>,
     val quotationCharacters: Set<Char>
 ) {
@@ -151,6 +151,6 @@ internal class StepTemplate(
 
 internal class IllegalFormatException(msg: String) : IllegalArgumentException(msg)
 
-internal sealed class Fragment
+sealed class Fragment
 internal data class Text(val content: String) : Fragment()
 internal data class Variable(val name: String) : Fragment()
