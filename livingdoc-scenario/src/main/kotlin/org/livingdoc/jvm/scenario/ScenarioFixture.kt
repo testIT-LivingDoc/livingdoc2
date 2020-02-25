@@ -88,6 +88,26 @@ class ScenarioFixture(
         return parameter.annotations.toString()
     }
 
+    private fun invokeExpectingException(
+        method: Method,
+        fixture: Any,
+        parameterList: Array<String>
+    ): Status {
+        return try {
+            methodInvoker.invoke(method, fixture, parameterList)
+            if (parameterList.contains(ExampleSyntax.EXCEPTION)) {
+                return Status.Failed(NoExpectedExceptionThrownException())
+            }
+            Status.Executed
+        } catch (e: AssertionError) {
+            this.handleAssertionError(parameterList, e)
+        } catch (e: FixtureMethodInvoker.ExpectedException) {
+            Status.Executed
+        } catch (e: Exception) {
+            Status.Exception(e)
+        }
+    }
+
     /**
      * Creates a new instance of the fixture class passed to this execution
      */
