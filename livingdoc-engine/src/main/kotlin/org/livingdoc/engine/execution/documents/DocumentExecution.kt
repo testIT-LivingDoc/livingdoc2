@@ -54,7 +54,6 @@ internal class DocumentExecution(
                 executeFixtures()
                 executeAfterMethods()
                 builder.withStatus(Status.Executed)
-
             } catch (e: MalformedFixtureException) {
                 builder.withStatus(Status.Exception(e))
             }

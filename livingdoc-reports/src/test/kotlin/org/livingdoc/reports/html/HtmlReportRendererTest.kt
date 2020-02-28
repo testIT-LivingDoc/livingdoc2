@@ -153,7 +153,7 @@ internal class HtmlReportRendererTest {
                         ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
-                        <h2>HtmlReportRendererTest (0,000s)</h2>
+                        <h2>HtmlReportRendererTest (${"%.3f".format(0 / 1000f)}s)</h2>
                         <div>
                          <p>tags: []</p>
                         </div>
@@ -257,7 +257,7 @@ internal class HtmlReportRendererTest {
                        ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
                     </head>
                     <body>
-                        <h2>HtmlReportRendererTest (0,000s)</h2>
+                        <h2>HtmlReportRendererTest (${"%.3f".format(0 / 1000f)}s)</h2>
                         <div>
                          <p>tags: []</p>
                         </div>
