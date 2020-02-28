@@ -1,6 +1,7 @@
 package org.livingdoc.reports.html.elements
 
 import org.livingdoc.reports.html.HtmlReportTemplate
+import org.livingdoc.reports.html.MILLISECONDS_DIVIDER
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
@@ -8,6 +9,7 @@ import org.livingdoc.results.examples.decisiontables.RowResult
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.nio.file.Path
+import java.time.Duration
 
 /**
  * A table in a HTML report
@@ -233,7 +235,7 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
             when (index) {
                 0 ->
                     child {
-                        HtmlElement("td", "%.3f".format(number / 1000f) + "s")
+                        HtmlElement("td", "%.3f".format(number / MILLISECONDS_DIVIDER) + "s")
                     }
                 else ->
                     child {
@@ -252,7 +254,7 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
  * @return a list with three numbers (success, other, failed)
  */
 private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Long> {
-    var time: Long = 0
+    var time: Duration = Duration.ofMillis(0)
     var numberSuccessful = 0
     var numberFailed = 0
     var numberOther = 0
@@ -272,7 +274,7 @@ private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, P
         time += document.time
     }
 
-    return listOf(time, numberSuccessful.toLong(), numberOther.toLong(), numberFailed.toLong())
+    return listOf(time.toMillis(), numberSuccessful.toLong(), numberOther.toLong(), numberFailed.toLong())
 }
 
 /**

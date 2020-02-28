@@ -5,8 +5,8 @@ import org.livingdoc.reports.ReportWriter
 import org.livingdoc.reports.html.elements.HtmlColumnLayout
 import org.livingdoc.reports.html.elements.HtmlDescription
 import org.livingdoc.reports.html.elements.HtmlElement
-import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlErrorContext
+import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.headers
@@ -25,6 +25,8 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
+const val MILLISECONDS_DIVIDER = 1000f
 
 @Format("html")
 class HtmlReportRenderer : ReportRenderer {
@@ -71,11 +73,11 @@ class HtmlReportRenderer : ReportRenderer {
                 else -> throw IllegalArgumentException("Unknown Result type.")
             }
         }.filterNotNull()
-
-        val timestring = " (" + "%.3f".format(documentResult.time / 1000f) + "s)"
+        val timestring = " (" + "%.3f".format(documentResult.time.toMillis() / MILLISECONDS_DIVIDER) + "s)"
 
         val header = listOf<HtmlElement>(HtmlTitle(
-            documentResult.documentClass.simpleName + timestring),
+            documentResult.documentClass.simpleName + timestring
+        ),
             HtmlDescription { paragraphs(listOf("tags: " + documentResult.tags.toString())) })
 
         return HtmlReportTemplate()

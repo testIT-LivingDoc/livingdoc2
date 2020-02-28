@@ -17,6 +17,7 @@ import org.livingdoc.results.TestDataResult
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
+import java.time.Duration
 import kotlin.system.measureTimeMillis
 
 /**
@@ -47,7 +48,7 @@ internal class DocumentExecution(
             ).build()
         }
 
-        val time = measureTimeMillis {
+        val time = Duration.ofMillis(measureTimeMillis {
             try {
                 assertFixtureIsDefinedCorrectly()
                 executeBeforeMethods()
@@ -57,7 +58,7 @@ internal class DocumentExecution(
             } catch (e: MalformedFixtureException) {
                 builder.withStatus(Status.Exception(e))
             }
-        }
+        })
         builder.withTime(time)
 
         return builder.build()

@@ -36,6 +36,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Interpret checkboxes as boolean values
 - Add `@Tag` annotation support similar to JUnit5
 - Groups can now be executed
+- Add time measurement for document execution
 
 === Changed
 
