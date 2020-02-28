@@ -46,19 +46,20 @@ internal class DocumentExecution(
                 Status.Skipped
             ).build()
         }
-        try {
-            assertFixtureIsDefinedCorrectly()
-            val time = measureTimeMillis {
+
+        val time = measureTimeMillis {
+            try {
+                assertFixtureIsDefinedCorrectly()
                 executeBeforeMethods()
                 executeFixtures()
                 executeAfterMethods()
                 builder.withStatus(Status.Executed)
+
+            } catch (e: MalformedFixtureException) {
+                builder.withStatus(Status.Exception(e))
             }
-            builder.withTime(time)
-        } catch (e: MalformedFixtureException) {
-            builder.withStatus(Status.Exception(e))
-        } finally {
         }
+        builder.withTime(time)
 
         return builder.build()
     }

@@ -277,5 +277,4 @@ internal class HtmlReportRendererTest {
                 """
         )
     }
-
 }

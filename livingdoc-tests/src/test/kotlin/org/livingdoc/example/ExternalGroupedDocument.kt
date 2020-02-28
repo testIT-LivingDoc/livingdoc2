@@ -7,7 +7,6 @@ import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.api.tagging.Tag
 
-
 @Tag("markdown")
 @ExecutableDocument("local://TestTexts.md", group = GroupedDocuments::class)
 class ExternalGroupedDocument {

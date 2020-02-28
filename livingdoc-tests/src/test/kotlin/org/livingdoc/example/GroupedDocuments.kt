@@ -11,7 +11,6 @@ import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.api.tagging.Tag
 import org.livingdoc.example.GroupedDocuments.Companion.sut
 
-
 @Group
 class GroupedDocuments {
 
