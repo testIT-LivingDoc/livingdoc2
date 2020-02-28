@@ -122,7 +122,7 @@ class RegMatchingTest {
         val sp1 = StepTemplate.parse(template1)
         val sp2 = StepTemplate.parse(template2)
         val stm = ScenarioStepMatcher(listOf(sp1, sp2)).match(step1)
-        Assertions.assertThat(stm.variables)
+        Assertions.assertThat(stm.variableToValue)
             .isEqualTo(mapOf(("a" to "1234"), ("b" to "234"), ("c" to "345"), ("d" to "0")))
     }
 

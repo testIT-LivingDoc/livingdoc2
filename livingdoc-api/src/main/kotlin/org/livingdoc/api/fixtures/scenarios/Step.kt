@@ -29,6 +29,5 @@ package org.livingdoc.api.fixtures.scenarios
  *
  * @since 2.0
  */
-@Repeatable
 @Target(AnnotationTarget.FUNCTION)
 annotation class Step(vararg val value: String)

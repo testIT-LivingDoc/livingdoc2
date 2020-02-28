@@ -7,7 +7,7 @@ class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>) {
 
     data class MatchingResult(
         val template: StepTemplate,
-        val variables: Map<String, String>
+        val variableToValue: Map<String, String>
     )
 
     fun match(step: String): MatchingResult {
