@@ -10,11 +10,11 @@ import org.junit.platform.commons.annotation.Testable
  * A Group can also define [Before] and [After] hooks, which are run before or after all documents.
  *
  * @see ExecutableDocument
- *
  * @see Before
- *
  * @see After
  */
+/*
 @Testable
 @Target(AnnotationTarget.CLASS)
 annotation class Group
+*/

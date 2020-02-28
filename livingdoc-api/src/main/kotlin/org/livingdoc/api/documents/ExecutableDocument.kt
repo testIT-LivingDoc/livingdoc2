@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
  * An ExecutableDocument can be grouped by using the [Group] annotation.
  * An ExecutableDocument can be disabled by using the [org.livingdoc.api.disabled.Disabled] annotation.
  */
+/*
 @Testable
 @Target(AnnotationTarget.CLASS)
 annotation class ExecutableDocument(
@@ -35,3 +36,4 @@ annotation class ExecutableDocument(
     val group: KClass<*> = Any::class,
     val fixtureClasses: Array<KClass<*>> = []
 )
++*/
