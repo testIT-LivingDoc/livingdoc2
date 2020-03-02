@@ -74,4 +74,4 @@ Gherkin can be seen as a more structured and defined scenario fixture containing
 Have a look at the official documentation of link:https://cucumber.io/docs/gherkin/[Gherkin] to find out more.
 
 For now LivingDoc only support s Gherkin in plain HTML.
-The `<gherkin>` tag is nested inside a `<pre>` tag.
+The `<gherkin>` tag is nested inside a `<pre>` tag of the HTML file.

@@ -1,5 +1,7 @@
 == Additional information
 
+Besides the basic possibilities of using livingdoc, it offers additional features.
+
 === Annotation - Manual
 It is possible to exclude a table or scenario from execution.
 You can use `MANUAL` to mark them.
@@ -24,9 +26,15 @@ For example a h2 in HTML will be a new section when declared after a h1 which is
         ...
     </table>
 
+
+.TODO Example Declaring a MANUAL section in Confluence
+image::pic/scenario-final-view.png[]
+
 === Expected Exceptions
 You can use a string named after an exception as any expected result of a decision table or scenario.
 The exception can be used to check for unwanted behavior.
 For example, you can add corrupt input values to check whether a function behaves as you would expect.
 A test is only successful if the exception thrown from the underlying code matches the exception you specify as the result.
 If no exception is thrown, but you expect one, the test will fail.
+
+=== Execution reports

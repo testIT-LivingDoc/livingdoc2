@@ -2,7 +2,7 @@
 :toc:
 
 == Introduction
-This page is considered to give a detailed explanation for the usage of LivingDoc in the role of a business expert.
+This page is intended to provide a detailed explanation of how to use LivingDoc in the role of a business expert.
 
 include::writing-fixtures.adoc[]
 
