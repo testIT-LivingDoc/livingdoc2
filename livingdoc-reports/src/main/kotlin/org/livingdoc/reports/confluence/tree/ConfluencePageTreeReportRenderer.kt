@@ -5,7 +5,6 @@ import com.atlassian.confluence.api.model.content.Content
 import com.atlassian.confluence.api.model.content.ContentRepresentation
 import com.atlassian.confluence.api.model.content.ContentStatus
 import com.atlassian.confluence.api.model.content.ContentType
-import com.atlassian.confluence.api.model.content.Version
 import com.atlassian.confluence.api.model.content.id.ContentId
 import com.atlassian.confluence.rest.client.RemoteContentService
 import com.atlassian.confluence.rest.client.RemoteContentServiceImpl
@@ -13,10 +12,21 @@ import com.atlassian.confluence.rest.client.RestClientFactory
 import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResourceProvider
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
+import org.livingdoc.reports.confluence.tree.elements.cfHeaders
+import org.livingdoc.reports.confluence.tree.elements.cfRowIfTableFailed
+import org.livingdoc.reports.confluence.tree.elements.cfRows
+import org.livingdoc.reports.confluence.tree.elements.cfSteps
+import org.livingdoc.reports.html.elements.HtmlDescription
+import org.livingdoc.reports.html.elements.HtmlElement
+import org.livingdoc.reports.html.elements.HtmlList
+import org.livingdoc.reports.html.elements.HtmlTable
+import org.livingdoc.reports.html.elements.HtmlTitle
+import org.livingdoc.reports.html.elements.paragraphs
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
-
+import org.livingdoc.results.examples.decisiontables.DecisionTableResult
+import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 private val VERSION_SEPERATOR = '@'
 
@@ -28,7 +38,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
 
         executeWithResourceService(confluenceConfig) { service ->
             val root = findRootPage(service, confluenceConfig)
-            val prevPageMapping = findPreviosPages(root, documentResults, service)
+            val prevPageMapping = findPreviousPages(root, documentResults, service)
 
             val reportIds = documentResults.map { documentResult ->
                 renderReport(documentResult, confluenceConfig, prevPageMapping[documentResult], root, service)
@@ -45,13 +55,13 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         // TODO find better exception to throw
     }
 
-    fun findPreviosPages(
+    fun findPreviousPages(
         rootPage: Content,
         documentResults: List<DocumentResult>,
         service: RemoteContentService
     ): Map<DocumentResult, Content> {
         // TODO Rewrite with the following line
-        //val children = rootPage.descendants[ContentType.PAGE]
+        // val children = rootPage.descendants[ContentType.PAGE]
 
         return documentResults.map { documentResult ->
             documentResult to
@@ -76,15 +86,55 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
     ): ContentId {
 
         // Render report
+        val reportBody = documentResult.results
+            .flatMap { result ->
+                when (result) {
+                    is DecisionTableResult -> handleDecisionTableResult(result)
+                    is ScenarioResult -> handleScenarioResult(result)
+                    else -> throw IllegalArgumentException("Unknown Result type.")
+                }
+            }
+            .filterNotNull()
+            .joinToString("\n")
 
         // Upload report
         return prevPage?.let {
-            updatePage(it, "<p>html...2</p>", service, config)
-        } ?: createPage(rootPage, documentResult, "<p>html...2</p>", service)
-
-        TODO("Generate the report")
+            updatePage(it, reportBody, service, config)
+        } ?: createPage(rootPage, documentResult, reportBody, service)
     }
 
+    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
+        val (headers, rows, tableResult) = decisionTableResult
+        val name = decisionTableResult.decisionTable.description.name
+        val desc = decisionTableResult.decisionTable.description.descriptiveText
+
+        return listOf(
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlTable {
+                cfHeaders(headers)
+                cfRows(rows)
+                cfRowIfTableFailed(tableResult, headers.size)
+            }
+        )
+    }
+
+    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlElement?> {
+        val name = scenarioResult.scenario.description.name
+        val desc = scenarioResult.scenario.description.descriptiveText
+
+        return listOf(
+            HtmlTitle(name),
+            HtmlDescription {
+                paragraphs(desc.split("\n"))
+            },
+            HtmlList {
+                cfSteps(scenarioResult.steps)
+            }
+        )
+    }
 
     fun createPage(
         rootPage: Content,
@@ -120,11 +170,12 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         val newPage =
             Content.builder(prevPage)
                 .status(ContentStatus.CURRENT)
-                .version(prevPage
-                    .version
-                    .nextBuilder()
-                    .message(config.comment)
-                    .build()
+                .version(
+                    prevPage
+                        .version
+                        .nextBuilder()
+                        .message(config.comment)
+                        .build()
                 )
                 .body(reportBody, ContentRepresentation.STORAGE)
                 .build()
@@ -156,7 +207,6 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             instructions(service)
         }
     }
-
 }
 
 fun RemoteContentService.RemoteContentFinder.withStringId(identifier: String):
