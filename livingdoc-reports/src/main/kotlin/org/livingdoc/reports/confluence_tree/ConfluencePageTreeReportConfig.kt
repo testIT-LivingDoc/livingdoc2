@@ -1,8 +1,7 @@
 package org.livingdoc.reports.confluence_tree
 
 data class ConfluencePageTreeReportConfig(
-    var repositoryName: String = "",
-    var rootPage: String = "",
+    var rootContentId: Long = 0,
     var baseURL: String = "",
     var path: String = "",
     var username: String = "",
