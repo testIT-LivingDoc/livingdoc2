@@ -24,3 +24,11 @@ fun HtmlDescription.paragraphs(paragraphs: List<String>) {
             }
     }
 }
+/**
+ * Adds a given list of Strings as one paragraph to the [HtmlDescription] element
+ *
+ * @param content A list of strings which are merged to a paragraph
+ */
+fun HtmlDescription.content(content: List<String>) {
+    child { HtmlElement("p", content.joinToString("")) }
+}

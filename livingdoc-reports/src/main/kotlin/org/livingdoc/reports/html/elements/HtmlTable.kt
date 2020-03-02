@@ -197,9 +197,9 @@ fun HtmlTable.summaryTableHeader() {
         HtmlElement("tr") {
             child { HtmlElement("th", "Tag") }
             child { HtmlElement("th", "Time") }
-            child { HtmlElement("th", "✅") }
-            child { HtmlElement("th", "❔") }
-            child { HtmlElement("th", "❌") }
+            child { HtmlElement("th", "✔") }
+            child { HtmlElement("th", "✖") }
+            child { HtmlElement("th", "···") }
         }
     }
 }
@@ -231,20 +231,14 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
                 }
             }
 
-        calculateSummaryNumbers(documentResults).forEachIndexed { index, number ->
-            when (index) {
-                0 ->
-                    child {
-                        HtmlElement("td", "%.3f".format(number / MILLISECONDS_DIVIDER) + "s")
-                    }
-                else ->
-                    child {
-                        HtmlElement("td", number.toInt().toString())
-                    }
+            generateSummaryCells(documentResults).forEach {
+                child {
+                    it
+                }
             }
+
         }
     }
-}
 }
 
 /**
@@ -253,7 +247,7 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
  * @param documentResults a list of results to be examined
  * @return a list with three numbers (success, other, failed)
  */
-private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, Path>>): List<Long> {
+private fun generateSummaryCells(documentResults: List<Pair<DocumentResult, Path>>): List<HtmlElement> {
     var time: Duration = Duration.ofMillis(0)
     var numberSuccessful = 0
     var numberFailed = 0
@@ -274,7 +268,31 @@ private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, P
         time += document.time
     }
 
-    return listOf(time.toMillis(), numberSuccessful.toLong(), numberOther.toLong(), numberFailed.toLong())
+    return listOf(
+        HtmlElement("td") {
+            cssClass("timeCell")
+            text { "%.3f".format(time.toMillis() / MILLISECONDS_DIVIDER) + "s" }
+        },
+        HtmlElement("td") {
+            text { numberSuccessful.toString()}
+            if (numberFailed + numberOther == 0)
+                cssClass("successfulCell")
+        },
+        HtmlElement("td") {
+            text { numberFailed.toString()}
+            if (numberFailed > 0)
+                cssClass("failedCell")
+            else if (numberOther == 0)
+                cssClass("successfulCell")
+        },
+        HtmlElement("td") {
+            text { numberOther.toString()}
+            if (numberOther > 0)
+                cssClass("otherCell")
+            else if (numberFailed == 0)
+                cssClass("successfulCell")
+        }
+    )
 }
 
 /**
