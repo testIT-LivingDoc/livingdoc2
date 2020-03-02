@@ -2,12 +2,12 @@ package org.livingdoc.results.examples.decisiontables
 
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.results.Status
-import java.lang.reflect.Method
+import kotlin.reflect.KCallable
 
 data class FieldResult private constructor(
     val value: String,
     val status: Status,
-    val method: Method?
+    val method: KCallable<*>?
 ) {
     /**
      * A not threadsafe builder class for [FieldResult] objects
@@ -15,7 +15,7 @@ data class FieldResult private constructor(
     class Builder {
         private lateinit var value: String
         private lateinit var status: Status
-        private var method: Method? = null
+        private var method: KCallable<*>? = null
 
         private var finalized = false
 
@@ -49,7 +49,7 @@ data class FieldResult private constructor(
         /**
          * Sets or overrides the [check method][method] for the built [FieldResult]
          */
-        fun withCheckMethod(method: Method): Builder {
+        fun withCheckMethod(method: KCallable<*>): Builder {
             checkFinalized()
             this.method = method
             return this
