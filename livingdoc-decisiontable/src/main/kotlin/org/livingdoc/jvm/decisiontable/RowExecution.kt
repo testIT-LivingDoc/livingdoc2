@@ -17,6 +17,11 @@ class RowExecution(
         val rowResultBuilder = RowResult.Builder()
             .withRow(row)
 
+        getHeaderToFieldMapForRow(row, inputHeaders).forEach {(header, field) ->
+            val fieldResult = Input(header, field).setInput()
+            rowResultBuilder.withFieldResult(header, fieldResult)
+        }
+
         getHeaderToFieldMapForRow(row, checkHeaders).forEach { (header, field) ->
             val checkMethod = fixtureModel.getCheckMethod(header.name)!!
             val fieldResult = CheckExecution(checkMethod, header, field).execute()
