@@ -70,14 +70,4 @@ internal class ScenarioFixtureFactoryTest {
 
         assertThat(cut.match(CalculatorFixture::class, scenario)).isFalse()
     }
-
-    @Test
-    fun `can create correct fixture from context`() {
-        val context = mockk<FixtureContext>()
-        val manager = mockk<FixtureExtensionsInterface>()
-
-        assertThat(cut.getFixture(context, manager)).isInstanceOfSatisfying(ScenarioFixture::class.java) {
-            assertThat(it.context).isEqualTo(context)
-        }
-    }
 }

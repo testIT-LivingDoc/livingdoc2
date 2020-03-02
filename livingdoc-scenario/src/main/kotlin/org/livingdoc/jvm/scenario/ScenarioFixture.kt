@@ -32,13 +32,14 @@ class ScenarioFixture(
                 manager.onBeforeFixture()
 
                 val fixture = ScenarioFixtureInstance.createFixtureInstance(fixtureModel.context.fixtureClass)
-
-                // TODO execute step
-                executeSteps(scenario, fixture)
+                val results = executeSteps(scenario, fixture)
+                results.forEach{
+                    srBuilder.withStep(it)
+                }
 
                 manager.onAfterFixture()
 
-                srBuilder.withStatus(Status.Executed).withUnassignedSkipped()
+                srBuilder.withStatus(Status.Executed)
 
                 // laut Leon macht eine IllegalStateException an der Stelle keinen Sinn, daher brauchen wir das Failed
                 // auch nicht. Daher waere ein throwable auch besser
