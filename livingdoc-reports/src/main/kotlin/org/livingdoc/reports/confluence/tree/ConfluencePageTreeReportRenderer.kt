@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence_tree
+package org.livingdoc.reports.confluence.tree
 
 import com.atlassian.confluence.api.model.Expansion
 import com.atlassian.confluence.api.model.content.Content
@@ -165,7 +165,7 @@ fun RemoteContentService.RemoteContentFinder.withStringId(identifier: String):
         val docParams = identifier.split(VERSION_SEPERATOR)
         val docId = docParams[0]
         if (docParams.size != 2) {
-            throw Exception("${docParams.size - 1}")
+            throw IllegalArgumentException("The given id is not a confluence content id $identifier")
         }
         val docVersion = docParams[1].toInt()
 

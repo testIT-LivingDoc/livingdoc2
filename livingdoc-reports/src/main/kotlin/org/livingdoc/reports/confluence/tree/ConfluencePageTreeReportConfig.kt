@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence_tree
+package org.livingdoc.reports.confluence.tree
 
 data class ConfluencePageTreeReportConfig(
     var rootContentId: Long = 0,

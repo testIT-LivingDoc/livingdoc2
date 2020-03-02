@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence_attachment
+package org.livingdoc.reports.confluence.attachment
 
 import com.atlassian.confluence.api.model.content.AttachmentUpload
 import com.atlassian.confluence.api.model.content.id.ContentId
@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
 private const val MINOR_VERSION = false
 
 @Format("confluence-attachment")
-class ConfluenceReportRenderer : ReportRenderer {
+class ConfluenceAttachmentReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val confluenceConfig = YamlUtils.toObject(config, ConfluenceAttachmentReportConfig::class)

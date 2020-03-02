@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence_attachment
+package org.livingdoc.reports.confluence.attachment
 
 /**
  * The configuration object for the Confluence Report.

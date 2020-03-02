@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence_attachment
+package org.livingdoc.reports.confluence.attachment
 
 import com.atlassian.confluence.api.model.content.id.ContentId
 import org.assertj.core.api.Assertions.assertThat
@@ -8,7 +8,7 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 
-internal class ConfluenceReportRendererTest {
+internal class ConfluenceAttachmentReportRendererTest {
 
     private val doc1Result = DocumentResult.Builder()
         .withDocumentClass(TestDocument1::class.java)
@@ -28,7 +28,8 @@ internal class ConfluenceReportRendererTest {
         .withTags(emptyList())
         .build()
 
-    private val reportRenderer = ConfluenceReportRenderer()
+    private val reportRenderer =
+        ConfluenceAttachmentReportRenderer()
 
     @Test
     fun `extractContentId$livingdoc_livingdoc_reports_main`() {
