@@ -30,5 +30,3 @@ The exception can be used to check for unwanted behavior.
 For example, you can add corrupt input values to check whether a function behaves as you would expect.
 A test is only successful if the exception thrown from the underlying code matches the exception you specify as the result.
 If no exception is thrown, but you expect one, the test will fail.
-
-
