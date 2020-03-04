@@ -51,7 +51,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         }
     }
 
-    fun findRootPage(service: RemoteContentService, config: ConfluencePageTreeReportConfig): Content {
+    private fun findRootPage(service: RemoteContentService, config: ConfluencePageTreeReportConfig): Content {
         val contentFetcher = service.find().withId(ContentId.of(config.rootContentId))
 
         return contentFetcher.fetchCompletionStage()
@@ -60,7 +60,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         // TODO find better exception to throw
     }
 
-    fun findPreviousPages(
+    private fun findPreviousPages(
         rootPage: Content,
         documentResults: List<DocumentResult>,
         service: RemoteContentService
@@ -82,7 +82,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         }.toMap()
     }
 
-    fun renderReport(
+    private fun renderReport(
         documentResult: DocumentResult,
         config: ConfluencePageTreeReportConfig,
         prevPage: Content?,
@@ -112,12 +112,18 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             .joinToString("\n")
     }
 
-    fun renderIndex(
+    private fun renderIndex(
         config: ConfluencePageTreeReportConfig,
         service: RemoteContentService,
         rootPage: Content,
         reports: List<Pair<DocumentResult, ContentId>>
     ) {
+        val tagSummary = renderIndex(reports)
+
+        updatePage(rootPage, tagSummary.toString(), service, config)
+    }
+
+    fun renderIndex(reports: List<Pair<DocumentResult, ContentId>>): String {
         val reportsByTag = reports.flatMap { report ->
             listOf(
                 listOf("all" to report),
@@ -127,16 +133,14 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             ).flatten()
         }.groupBy({ it.first }, { it.second })
 
-        val tagSummary = HtmlTable {
+        return HtmlTable {
             summaryTableHeader()
 
             reportsByTag.map { (tag, documentResults) ->
                 cfTagRow(tag, documentResults)
                 cfReportRow(tag, documentResults)
             }
-        }
-
-        updatePage(rootPage, tagSummary.toString(), service, config)
+        }.toString()
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
