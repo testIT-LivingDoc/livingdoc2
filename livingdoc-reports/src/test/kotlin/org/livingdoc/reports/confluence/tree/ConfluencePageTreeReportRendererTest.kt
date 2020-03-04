@@ -24,6 +24,32 @@ internal class ConfluencePageTreeReportRendererTest {
     private val cut = ConfluencePageTreeReportRenderer()
 
     @Test
+    fun `tags are rendered correctly`() {
+        val documentResult = DocumentResult.Builder()
+            .withStatus(Status.Executed)
+            .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+            .withTags(listOf("slow", "api"))
+            .build()
+
+        val renderResult = cut.render(documentResult)
+
+        assertThat(renderResult).isEqualToIgnoringWhitespace(
+            """
+                <h2>
+                    <ac:structured-macro ac:name="status" ac:schema-version="1">
+                        <ac:parameter ac:name="colour">Blue</ac:parameter>
+                        <ac:parameter ac:name="title">slow</ac:parameter>
+                    </ac:structured-macro>
+                    <ac:structured-macro ac:name="status" ac:schema-version="1">
+                        <ac:parameter ac:name="colour">Blue</ac:parameter>
+                        <ac:parameter ac:name="title">api</ac:parameter>
+                    </ac:structured-macro>
+                </h2>
+            """
+        )
+    }
+
+    @Test
     fun `decisionTableResult is rendered correctly`() {
         val headerA = Header("a")
         val headerB = Header("b")

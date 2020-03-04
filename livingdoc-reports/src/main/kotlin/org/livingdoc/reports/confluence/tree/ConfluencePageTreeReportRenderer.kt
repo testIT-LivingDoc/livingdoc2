@@ -12,6 +12,8 @@ import com.atlassian.confluence.rest.client.RestClientFactory
 import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResourceProvider
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
+import org.livingdoc.reports.confluence.tree.elements.ConfluenceStatus
+import org.livingdoc.reports.confluence.tree.elements.ConfluenceStatusBar
 import org.livingdoc.reports.confluence.tree.elements.cfHeaders
 import org.livingdoc.reports.confluence.tree.elements.cfReportRow
 import org.livingdoc.reports.confluence.tree.elements.cfRows
@@ -100,16 +102,28 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
     }
 
     fun render(documentResult: DocumentResult): String {
-        return documentResult.results
-            .flatMap { result ->
-                when (result) {
-                    is DecisionTableResult -> handleDecisionTableResult(result)
-                    is ScenarioResult -> handleScenarioResult(result)
-                    else -> throw IllegalArgumentException("Unknown Result type.")
-                }
-            }
-            .filterNotNull()
-            .joinToString("\n")
+        // TODO tidy this up
+        return (
+                ConfluenceStatusBar().apply {
+                    documentResult
+                        .tags
+                        .forEach { tag ->
+                            child {
+                                ConfluenceStatus(tag)
+                            }
+                        }
+                }.toString() + "\n" +
+                        documentResult.results
+                            .flatMap { result ->
+                                when (result) {
+                                    is DecisionTableResult -> handleDecisionTableResult(result)
+                                    is ScenarioResult -> handleScenarioResult(result)
+                                    else -> throw IllegalArgumentException("Unknown Result type.")
+                                }
+                            }
+                            .filterNotNull()
+                            .joinToString("\n")
+                ).trim()
     }
 
     private fun renderIndex(
