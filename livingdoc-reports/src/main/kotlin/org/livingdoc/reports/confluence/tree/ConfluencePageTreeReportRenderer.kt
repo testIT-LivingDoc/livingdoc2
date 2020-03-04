@@ -14,7 +14,6 @@ import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.confluence.tree.elements.cfHeaders
 import org.livingdoc.reports.confluence.tree.elements.cfReportRow
-import org.livingdoc.reports.confluence.tree.elements.cfRowIfTableFailed
 import org.livingdoc.reports.confluence.tree.elements.cfRows
 import org.livingdoc.reports.confluence.tree.elements.cfSteps
 import org.livingdoc.reports.confluence.tree.elements.cfTagRow
@@ -92,7 +91,16 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
     ): ContentId {
 
         // Render report
-        val reportBody = documentResult.results
+        val reportBody = render(documentResult)
+
+        // Upload report
+        return prevPage?.let {
+            updatePage(it, reportBody, service, config)
+        } ?: createPage(rootPage, documentResult, reportBody, service)
+    }
+
+    fun render(documentResult: DocumentResult): String {
+        return documentResult.results
             .flatMap { result ->
                 when (result) {
                     is DecisionTableResult -> handleDecisionTableResult(result)
@@ -102,11 +110,6 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             }
             .filterNotNull()
             .joinToString("\n")
-
-        // Upload report
-        return prevPage?.let {
-            updatePage(it, reportBody, service, config)
-        } ?: createPage(rootPage, documentResult, reportBody, service)
     }
 
     fun renderIndex(
@@ -149,7 +152,6 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             HtmlTable {
                 cfHeaders(headers)
                 cfRows(rows)
-                cfRowIfTableFailed(tableResult, headers.size)
             }
         )
     }

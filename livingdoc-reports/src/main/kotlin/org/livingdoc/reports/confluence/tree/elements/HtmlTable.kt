@@ -69,32 +69,6 @@ fun HtmlTable.cfRows(rows: List<RowResult>) {
     }
 }
 
-/**
- * Creates and adds a single row only if the entire decision table failed
- *
- * @param tableStatus The [Status] of the decision table execution
- * @param columnCount The number of columns this table has
- */
-fun HtmlTable.cfRowIfTableFailed(tableStatus: Status, columnCount: Int) {
-    if (tableStatus is Status.Failed || tableStatus is Status.Exception) {
-        child {
-            HtmlElement("tr") {
-                HtmlElement("td") {
-                    cssClass(determineCfClassForStatus(tableStatus))
-                    child {
-                        HtmlElement("td") {
-                            cssClass(determineCssClassForBackgroundColor(tableStatus))
-                            attr("colspan", columnCount.toString())
-                            // TODO Find better way to print the exception
-                            text { tableStatus.toString() }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 fun HtmlTable.cfTagRow(tag: String, documentResults: List<Pair<DocumentResult, ContentId>>) {
     appendBody {
         HtmlElement("tr") {
