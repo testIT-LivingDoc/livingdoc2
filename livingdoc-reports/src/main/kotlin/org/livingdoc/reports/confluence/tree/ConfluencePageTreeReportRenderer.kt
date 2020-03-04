@@ -38,7 +38,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val confluenceConfig = YamlUtils.toObject(config, ConfluencePageTreeReportConfig::class)
 
-        executeWithResourceService(confluenceConfig) { service ->
+        executeWithContentService(confluenceConfig) { service ->
             val root = findRootPage(service, confluenceConfig)
             val prevPageMapping = findPreviousPages(root, documentResults, service)
 
@@ -175,7 +175,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         )
     }
 
-    fun createPage(
+    private fun createPage(
         rootPage: Content,
         documentResult: DocumentResult,
         reportBody: String,
@@ -198,7 +198,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             .id
     }
 
-    fun updatePage(
+    private fun updatePage(
         prevPage: Content,
         reportBody: String,
         service: RemoteContentService,
@@ -225,7 +225,7 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             .id
     }
 
-    fun executeWithResourceService(
+    private fun executeWithContentService(
         config: ConfluencePageTreeReportConfig,
         instructions: (service: RemoteContentService) -> Unit
     ) {

@@ -4,7 +4,6 @@ import com.atlassian.confluence.api.model.content.id.ContentId
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
-import org.livingdoc.reports.html.elements.determineCssClassForBackgroundColor
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
