@@ -1,11 +1,5 @@
 package org.livingdoc.reports.html.elements
 
-import org.livingdoc.results.documents.DocumentResult
-import java.nio.file.Path
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-
 class HtmlFooter(content: HtmlFooter.() -> Unit) : HtmlElement("div") {
 
     init {
@@ -25,15 +19,14 @@ fun HtmlFooter.populateFooter() {
                     text {
                         "↩ Index"
                     }
-                    attr("href","index.html")
+                    attr("href", "index.html")
                 }
             }
         }
     }
     child {
         HtmlElement("p") {
-            text { LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + " Generated with <strong>Living Doc 2</strong>." }
+            text { "Generated with <strong>Living Doc 2</strong>." }
         }
     }
 }
-

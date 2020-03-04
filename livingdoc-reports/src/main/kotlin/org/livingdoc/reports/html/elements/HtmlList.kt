@@ -48,7 +48,7 @@ fun HtmlList.linkList(reports: List<Pair<DocumentResult, Path>>) {
                         resultLink(
                             it.first.documentClass.name + " (" +
                                     "%.3f".format(it.first.time.toMillis() / MILLISECONDS_DIVIDER) + "s)",
-                            it.first.documentStatus
+                            getLinkStatus(it.first)
                         )
                     }
                 }

@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html
 
-
 private const val SCRIPT_CONTENT = """
             function collapse (indicator, row) {
                 var indicatorElem = document.getElementById(indicator);

@@ -236,7 +236,6 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
                     it
                 }
             }
-
         }
     }
 }
@@ -254,15 +253,19 @@ private fun generateSummaryCells(documentResults: List<Pair<DocumentResult, Path
     var numberOther = 0
 
     documentResults.forEach { (document, _) ->
-        when (document.documentStatus) {
-            is Status.Executed
-            -> numberSuccessful++
-            is Status.Failed
-            -> numberFailed++
-            is Status.Exception
-            -> numberFailed++
-            else
-            -> numberOther++
+        if (checkFailedStatus(document) is Status.Failed) {
+            numberFailed++
+        } else {
+            when (document.documentStatus) {
+                is Status.Executed
+                -> numberSuccessful++
+                is Status.Failed
+                -> numberFailed++
+                is Status.Exception
+                -> numberFailed++
+                else
+                -> numberOther++
+            }
         }
 
         time += document.time
@@ -274,19 +277,19 @@ private fun generateSummaryCells(documentResults: List<Pair<DocumentResult, Path
             text { "%.3f".format(time.toMillis() / MILLISECONDS_DIVIDER) + "s" }
         },
         HtmlElement("td") {
-            text { numberSuccessful.toString()}
+            text { numberSuccessful.toString() }
             if (numberFailed + numberOther == 0)
                 cssClass("successfulCell")
         },
         HtmlElement("td") {
-            text { numberFailed.toString()}
+            text { numberFailed.toString() }
             if (numberFailed > 0)
                 cssClass("failedCell")
             else if (numberOther == 0)
                 cssClass("successfulCell")
         },
         HtmlElement("td") {
-            text { numberOther.toString()}
+            text { numberOther.toString() }
             if (numberOther > 0)
                 cssClass("otherCell")
             else if (numberFailed == 0)

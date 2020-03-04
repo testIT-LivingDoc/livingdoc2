@@ -9,7 +9,7 @@ import java.nio.file.Path
 class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div") {
 
     init {
-        cssClass("flex")
+        cssClass("flex flex-row")
         columns()
     }
 }
@@ -22,7 +22,7 @@ class HtmlColumnLayout(columns: HtmlColumnLayout.() -> Unit) : HtmlElement("div"
 fun HtmlColumnLayout.indexList(reports: List<Pair<DocumentResult, Path>>) {
     child {
         HtmlElement("div") {
-            cssClass("flex-50")
+            cssClass("flex-50 column")
             child { HtmlTitle("Index") }
             child {
                 HtmlDescription {
@@ -53,7 +53,7 @@ fun HtmlColumnLayout.indexList(reports: List<Pair<DocumentResult, Path>>) {
 fun HtmlColumnLayout.tagList(reports: List<Pair<DocumentResult, Path>>) {
     child {
         HtmlElement("div") {
-            cssClass("flex-50")
+            cssClass("flex-50 column")
             child { HtmlTitle("Tag summary") }
             child {
                 HtmlDescription {
@@ -91,39 +91,43 @@ fun HtmlColumnLayout.tagList(reports: List<Pair<DocumentResult, Path>>) {
     }
 }
 
-
 fun HtmlColumnLayout.report(documentResult: DocumentResult, context: HtmlErrorContext) {
-    val exampleResult = documentResult.results
-
-    val htmlResults = exampleResult.flatMap { result ->
-        when (result) {
-            is DecisionTableResult -> handleDecisionTableResult(result,context)
-            is ScenarioResult -> handleScenarioResult(result)
-            else -> throw IllegalArgumentException("Unknown Result type.")
-        }
-    }.filterNotNull()
-
-    val timestring = " (" + "%.3f".format(documentResult.time.toMillis() / MILLISECONDS_DIVIDER) + "s)"
-
     child {
-        HtmlTitle(
-            documentResult.documentClass.simpleName + timestring
-        )
-    }
-    child {
-        HtmlDescription {
-            content(listOf("tags: ").plus(documentResult.tags.map {
-                    tag -> "<span class=\"tag\">$tag</span>"
-            }))
-        }
-    }
+        HtmlElement("div") {
+            cssClass("column")
+            val exampleResult = documentResult.results
 
-    htmlResults.forEach { htmlResult ->
-        child { htmlResult }
+            val htmlResults = exampleResult.flatMap { result ->
+                when (result) {
+                    is DecisionTableResult -> handleDecisionTableResult(result, context)
+                    is ScenarioResult -> handleScenarioResult(result)
+                    else -> throw IllegalArgumentException("Unknown Result type.")
+                }
+            }.filterNotNull()
+
+            val timestring = " (" + "%.3f".format(documentResult.time.toMillis() / MILLISECONDS_DIVIDER) + "s)"
+
+            child {
+                HtmlTitle(
+                    documentResult.documentClass.simpleName + timestring
+                )
+            }
+            child {
+                HtmlDescription {
+                    content(listOf("tags: ").plus(documentResult.tags.map {
+                            tag -> "<span class=\"tag\">$tag</span>"
+                    }))
+                }
+            }
+
+            htmlResults.forEach { htmlResult ->
+                child { htmlResult }
+            }
+        }
     }
 }
 
-private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult, renderContext : HtmlErrorContext): List<HtmlElement?> {
+private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult, renderContext: HtmlErrorContext): List<HtmlElement?> {
     val (headers, rows, tableResult) = decisionTableResult
     val name = decisionTableResult.decisionTable.description.name
     val desc = decisionTableResult.decisionTable.description.descriptiveText

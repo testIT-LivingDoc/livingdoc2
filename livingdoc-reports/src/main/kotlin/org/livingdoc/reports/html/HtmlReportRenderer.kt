@@ -100,6 +100,4 @@ class HtmlReportRenderer : ReportRenderer {
         return HtmlReportTemplate()
             .renderElementListTemplate(listOf(columnContainer, footer), renderContext)
     }
-
-
 }

@@ -1,6 +1,5 @@
 package org.livingdoc.reports.html
 
-
 private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
         private const val CSS_CLASS_ICON_FAILED = "icon-failed"
         private const val CSS_CLASS_ICON_EXCEPTION = "icon-exception"
@@ -26,14 +25,24 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
             .$CSS_CLASS_RESULT_VALUE {
                 vertical-align: middle;
             }
-            .background-executed {color: rgb(0,128,0);}
-            .background-disabled {color: #5e6c84;}
-            .background-manual {color: rgb(255,102,0);}
-            .background-skipped {color: #5e6c84;}
-            .background-unknown {color: #5e6c84;}
-            .background-report-result {background-color: #458cff;}
-            .background-failed {color: rgb(255,0,0);}
-            .background-exception {color: rgb(255,0,0);}
+            li.background-executed, a.background-executed {color: rgb(0,128,0);}
+            li.background-disabled, a.background-disabled {color: #5e6c84;}
+            li.background-manual, a.background-manual {color: rgb(255,102,0);}
+            li.background-skipped, a.background-skipped {color: #5e6c84;}
+            li.background-unknown, a.background-unknown {color: #5e6c84;}
+            li.background-report-result, a.background-report-result {color: #458cff;}
+            li.background-failed, a.background-failed {color: rgb(255,0,0);}
+            li.background-exception, a.background-exception {color: rgb(255,0,0);}
+
+            .successfulCell, td.background-executed {background-color: #e3fcef;}
+            td.background-disabled {background-color: #f4f5f7;}
+            td.background-manual {background-color: #fffae5;}
+            td.background-skipped {background-color: #f4f5f7;}
+            .otherCell, td.background-unknown {background-color: #fffae5;}
+            td.background-report-result {background-color: #deebff;}
+            .failedCell, td.background-failed {background-color: #ffebe5;}
+            td.background-exception {background-color: #ffebe5;}
+
             .overlay {
                 position: fixed;
                 top: 0;
@@ -88,12 +97,12 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
             .popup .content {
                 overflow: auto;
             }
-            
+
             html {
                 height: 100%;
             }
-            
-            
+
+
             body {
                 display: flex;
                 flex-direction: column;
@@ -107,23 +116,24 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                 line-height: 1.42857143;
                 letter-spacing: 0;
             }
-            
-            
+
+
             .flex {
                 display: flex;
                 flex: 1 0 auto;
+                flex-direction: column;
             }
-            .flex-50 {
+            .column {
                 overflow: auto;
                 padding-left: 40px;
                 padding-right: 40px;
                 padding-bottom: 40px;
                 overflow-wrap: break-word;
             }
-            
+
             @media (min-width: 1000px) {
-             .flex {
-                 flex-direction: row;
+             .flex-row {
+                 flex-direction: row !important;
              }
              .flex-50 {
                  width: 50%;
@@ -134,8 +144,8 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                  flex-direction: column-reverse;
              }
             }
-            
-            .footer {    
+
+            .footer {
                 flex-shrink: 0;
                 background-color: #f4f5f7;
                 padding: 0px 40px;
@@ -144,13 +154,13 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                 line-height: 1.66666667;
                 text-align: center;
             }
-            
-            
-            
+
+
+
             table {
                 border-collapse: collapse;
             }
-            
+
             th, td {
                 min-width: 30px;
                 text-align: center;
@@ -162,15 +172,15 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                 color: #172B4D;
                 font-weight: bold;
             }
-            
-            
-            
-            
-            
+
+
+
+
+
             .hidden {
                 display: none;
             }
-            
+
             #summary-table {
                 width: 90%;
                 border-width: 1px;
@@ -186,24 +196,15 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                 padding-left: 25px;
                 padding-right: 25px;
             }
-            
+
             .indicator {
                 cursor: pointer;
             }
             .tag-cell {
                 user-select: none;
             }
-            .successfulCell {
-                background-color: #e3fcef;
-            }
-            .otherCell {
-                background-color: #fffae5;
-            }
-            .failedCell {
-                background-color: #ffebe5;
-            }
-            
-            
+
+
             h2 {
                 color: #172B4D;
                 text-decoration: none;
@@ -213,15 +214,15 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
                 text-transform: none;
                 letter-spacing: -.01em;
             }
-            
+
             a {
                 text-decoration: none;
             }
             a:hover {
                 text-decoration: underline;
             }
-            
-            
+
+
             .tag {
                 min-width: 76px;
                 background: #42526e;
@@ -250,7 +251,7 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
         """
 
 class ReportStyle {
-    fun reportStyle() : String {
+    fun reportStyle(): String {
         return " ${STYLE_CONTENT.trimIndent()}"
     }
 }
