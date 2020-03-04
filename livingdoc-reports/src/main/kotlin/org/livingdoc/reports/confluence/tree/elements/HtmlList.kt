@@ -27,7 +27,7 @@ fun HtmlList.cfLinkList(reports: List<Pair<DocumentResult, ContentId>>) {
         child {
             HtmlElement("li") {
                 child {
-                    ConfluenceLink(it.first.documentClass.name)
+                    ConfluenceLink(it.first.documentClass.name, it.first.documentStatus)
                 }
             }
         }
