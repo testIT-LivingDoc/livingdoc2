@@ -13,15 +13,18 @@ import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResou
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
 import org.livingdoc.reports.confluence.tree.elements.cfHeaders
+import org.livingdoc.reports.confluence.tree.elements.cfReportRow
 import org.livingdoc.reports.confluence.tree.elements.cfRowIfTableFailed
 import org.livingdoc.reports.confluence.tree.elements.cfRows
 import org.livingdoc.reports.confluence.tree.elements.cfSteps
+import org.livingdoc.reports.confluence.tree.elements.cfTagRow
 import org.livingdoc.reports.html.elements.HtmlDescription
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.paragraphs
+import org.livingdoc.reports.html.elements.summaryTableHeader
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
@@ -40,9 +43,12 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
             val root = findRootPage(service, confluenceConfig)
             val prevPageMapping = findPreviousPages(root, documentResults, service)
 
-            val reportIds = documentResults.map { documentResult ->
-                renderReport(documentResult, confluenceConfig, prevPageMapping[documentResult], root, service)
+            val reports = documentResults.map { documentResult ->
+                documentResult to
+                        renderReport(documentResult, confluenceConfig, prevPageMapping[documentResult], root, service)
             }
+
+            renderIndex(confluenceConfig, service, root, reports)
         }
     }
 
@@ -101,6 +107,33 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         return prevPage?.let {
             updatePage(it, reportBody, service, config)
         } ?: createPage(rootPage, documentResult, reportBody, service)
+    }
+
+    fun renderIndex(
+        config: ConfluencePageTreeReportConfig,
+        service: RemoteContentService,
+        rootPage: Content,
+        reports: List<Pair<DocumentResult, ContentId>>
+    ) {
+        val reportsByTag = reports.flatMap { report ->
+            listOf(
+                listOf("all" to report),
+                report.first.tags.map { tag ->
+                    tag to report
+                }
+            ).flatten()
+        }.groupBy({ it.first }, { it.second })
+
+        val tagSummary = HtmlTable {
+            summaryTableHeader()
+
+            reportsByTag.map { (tag, documentResults) ->
+                cfTagRow(tag, documentResults)
+                cfReportRow(tag, documentResults)
+            }
+        }
+
+        updatePage(rootPage, tagSummary.toString(), service, config)
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
