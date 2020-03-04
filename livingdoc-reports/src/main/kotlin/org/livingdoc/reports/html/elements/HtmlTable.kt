@@ -231,7 +231,7 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
                 }
             }
 
-            generateSummaryCells(documentResults).forEach {
+            calculateAndGenerateSummaryCells(documentResults).forEach {
                 child {
                     it
                 }
@@ -246,7 +246,7 @@ fun HtmlTable.tagRow(tag: String, documentResults: List<Pair<DocumentResult, Pat
  * @param documentResults a list of results to be examined
  * @return a list with three numbers (success, other, failed)
  */
-private fun generateSummaryCells(documentResults: List<Pair<DocumentResult, Path>>): List<HtmlElement> {
+private fun calculateAndGenerateSummaryCells(documentResults: List<Pair<DocumentResult, Path>>): List<HtmlElement> {
     var time: Duration = Duration.ofMillis(0)
     var numberSuccessful = 0
     var numberFailed = 0
@@ -271,6 +271,15 @@ private fun generateSummaryCells(documentResults: List<Pair<DocumentResult, Path
         time += document.time
     }
 
+    return generateCells(time, numberSuccessful, numberFailed, numberOther)
+}
+
+private fun generateCells(
+    time: Duration,
+    numberSuccessful: Int,
+    numberFailed: Int,
+    numberOther: Int
+): List<HtmlElement> {
     return listOf(
         HtmlElement("td") {
             cssClass("timeCell")

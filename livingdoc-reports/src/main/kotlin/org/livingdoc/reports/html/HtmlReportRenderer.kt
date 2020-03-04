@@ -36,11 +36,11 @@ class HtmlReportRenderer : ReportRenderer {
         val jsWriter = ReportWriter(outputFolder, fileExtension = "js")
 
         cssWriter.writeToFile(
-            ReportStyle().reportStyle(),
+            reportStyle(),
             "style"
         )
         jsWriter.writeToFile(
-            ReportScript().reportScript(),
+            reportScript(),
             "script"
         )
 

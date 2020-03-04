@@ -1,3 +1,4 @@
+@file:Suppress("MaxLineLength")
 package org.livingdoc.reports.html
 
 private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
@@ -250,8 +251,6 @@ private const val CSS_CLASS_BORDER_BLACK_ONEPX = "border-black-onepx"
             }
         """
 
-class ReportStyle {
-    fun reportStyle(): String {
-        return " ${STYLE_CONTENT.trimIndent()}"
-    }
+fun reportStyle(): String {
+    return " ${STYLE_CONTENT.trimIndent()}"
 }

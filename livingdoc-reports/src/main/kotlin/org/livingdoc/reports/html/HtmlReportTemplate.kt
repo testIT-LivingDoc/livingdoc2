@@ -1,4 +1,3 @@
-@file:Suppress("MaxLineLength")
 
 package org.livingdoc.reports.html
 

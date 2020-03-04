@@ -12,8 +12,6 @@ private const val SCRIPT_CONTENT = """
                 rowElem.classList.toggle("hidden");
             }"""
 
-class ReportScript {
-    fun reportScript(): String {
-        return " ${SCRIPT_CONTENT.trimIndent()}"
-    }
+fun reportScript(): String {
+    return " ${SCRIPT_CONTENT.trimIndent()}"
 }

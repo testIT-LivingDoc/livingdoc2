@@ -36,22 +36,10 @@ fun checkFailedStatus(document: DocumentResult): Any {
     if (document.results.any { testDataResult ->
             when (testDataResult) {
                 is ScenarioResult -> {
-                    testDataResult.status is Status.Failed ||
-                            testDataResult.status is Status.Exception ||
-                            testDataResult.steps.any { step ->
-                                step.status is Status.Failed || step.status is Status.Exception
-                            }
+                    checkScenarioResultStatus(testDataResult)
                 }
                 is DecisionTableResult -> {
-                    testDataResult.status is Status.Failed ||
-                            testDataResult.status is Status.Exception ||
-                            testDataResult.rows.any { row ->
-                                row.status is Status.Failed ||
-                                        row.status is Status.Exception ||
-                                        row.headerToField.any { (header, field) ->
-                                            field.status is Status.Failed || field.status is Status.Exception
-                                        }
-                            }
+                    checkDecisionTableResultStatus(testDataResult)
                 }
                 else ->
                     false
@@ -59,6 +47,26 @@ fun checkFailedStatus(document: DocumentResult): Any {
         })
         status = Status.Failed(AssertionError(""))
     return status
+}
+
+private fun checkScenarioResultStatus(testDataResult: ScenarioResult): Boolean {
+    return testDataResult.status is Status.Failed ||
+            testDataResult.status is Status.Exception ||
+            testDataResult.steps.any { step ->
+                step.status is Status.Failed || step.status is Status.Exception
+            }
+}
+
+private fun checkDecisionTableResultStatus(testDataResult: DecisionTableResult): Boolean {
+    return testDataResult.status is Status.Failed ||
+            testDataResult.status is Status.Exception ||
+            testDataResult.rows.any { row ->
+                row.status is Status.Failed ||
+                        row.status is Status.Exception ||
+                        row.headerToField.any { (header, field) ->
+                            field.status is Status.Failed || field.status is Status.Exception
+                        }
+            }
 }
 
 /**

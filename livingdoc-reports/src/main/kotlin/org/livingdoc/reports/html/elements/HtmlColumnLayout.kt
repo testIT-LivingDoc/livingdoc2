@@ -114,8 +114,8 @@ fun HtmlColumnLayout.report(documentResult: DocumentResult, context: HtmlErrorCo
             }
             child {
                 HtmlDescription {
-                    content(listOf("tags: ").plus(documentResult.tags.map {
-                            tag -> "<span class=\"tag\">$tag</span>"
+                    content(listOf("tags: ").plus(documentResult.tags.map { tag ->
+                        "<span class=\"tag\">$tag</span>"
                     }))
                 }
             }
@@ -127,7 +127,10 @@ fun HtmlColumnLayout.report(documentResult: DocumentResult, context: HtmlErrorCo
     }
 }
 
-private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult, renderContext: HtmlErrorContext): List<HtmlElement?> {
+private fun handleDecisionTableResult(
+    decisionTableResult: DecisionTableResult,
+    renderContext: HtmlErrorContext
+): List<HtmlElement?> {
     val (headers, rows, tableResult) = decisionTableResult
     val name = decisionTableResult.decisionTable.description.name
     val desc = decisionTableResult.decisionTable.description.descriptiveText
