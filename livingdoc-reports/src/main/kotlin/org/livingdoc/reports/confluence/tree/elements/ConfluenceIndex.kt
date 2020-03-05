@@ -1,11 +1,10 @@
 package org.livingdoc.reports.confluence.tree.elements
 
-import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.summaryTableHeader
 import org.livingdoc.results.documents.DocumentResult
 
-class ConfluenceIndex(reports: List<DocumentResult>) : HtmlElement("div") {
+class ConfluenceIndex(reports: List<DocumentResult>) : ConfluencePage() {
     init {
         val reportsByTag = reports.flatMap { report ->
             listOf(
@@ -26,9 +25,5 @@ class ConfluenceIndex(reports: List<DocumentResult>) : HtmlElement("div") {
                 }
             }
         }
-    }
-
-    override fun toString(): String {
-        return element.html()
     }
 }

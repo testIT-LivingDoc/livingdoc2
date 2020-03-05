@@ -1,8 +1,6 @@
 package org.livingdoc.reports.confluence.tree.elements
 
-import org.jsoup.nodes.Document
 import org.livingdoc.reports.html.elements.HtmlDescription
-import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
@@ -12,12 +10,8 @@ import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
 
-class ConfluenceReport(documentResult: DocumentResult) : HtmlElement("div") {
+class ConfluenceReport(documentResult: DocumentResult) : ConfluencePage() {
     init {
-        Document("").apply {
-            outputSettings().prettyPrint(false)
-        }.appendChild(element)
-
         if (documentResult.tags.isNotEmpty()) {
             child {
                 ConfluenceStatusBar(documentResult.tags)
@@ -31,10 +25,6 @@ class ConfluenceReport(documentResult: DocumentResult) : HtmlElement("div") {
                 else -> throw IllegalArgumentException("Unknown Result type.")
             }
         }
-    }
-
-    override fun toString(): String {
-        return element.html()
     }
 
     private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult) {
