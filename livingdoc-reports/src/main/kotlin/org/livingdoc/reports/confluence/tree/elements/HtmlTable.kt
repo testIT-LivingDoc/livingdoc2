@@ -1,12 +1,15 @@
 package org.livingdoc.reports.confluence.tree.elements
 
+import org.livingdoc.reports.html.MILLISECONDS_DIVIDER
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
+import org.livingdoc.reports.html.elements.checkFailedStatus
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.RowResult
+import java.time.Duration
 
 /**
  * Creates and adds the header for a table displaying a decision table
@@ -79,9 +82,9 @@ fun HtmlTable.cfTagRow(tag: String, documentResults: List<DocumentResult>) {
                 }
             }
 
-            calculateSummaryNumbers(documentResults).forEach { number ->
+            calculateAndGenerateSummaryCells(documentResults).forEach { number ->
                 child {
-                    HtmlElement("td", number.toString())
+                    number
                 }
             }
         }
@@ -94,7 +97,7 @@ fun HtmlTable.cfReportRow(tag: String, documentResults: List<DocumentResult>) {
         HtmlElement("tr") {
             child {
                 HtmlElement("td") {
-                    attr("colspan", "4")
+                    attr("colspan", "5")
 
                     child {
                         HtmlList {
@@ -115,25 +118,63 @@ fun HtmlTable.cfReportRow(tag: String, documentResults: List<DocumentResult>) {
  *
  * TODO: this is copied from the HTML report and should be unified for both reports
  */
-private fun calculateSummaryNumbers(documentResults: List<DocumentResult>): List<Int> {
+private fun calculateAndGenerateSummaryCells(documentResults: List<DocumentResult>): List<HtmlElement> {
+    var time: Duration = Duration.ofMillis(0)
     var numberSuccessful = 0
     var numberFailed = 0
     var numberOther = 0
 
     documentResults.forEach { document ->
-        when (document.documentStatus) {
-            is Status.Executed
-            -> numberSuccessful++
-            is Status.Failed
-            -> numberFailed++
-            is Status.Exception
-            -> numberFailed++
-            else
-            -> numberOther++
+        if (checkFailedStatus(document) is Status.Failed) {
+            numberFailed++
+        } else {
+            when (document.documentStatus) {
+                is Status.Executed
+                -> numberSuccessful++
+                is Status.Failed
+                -> numberFailed++
+                is Status.Exception
+                -> numberFailed++
+                else
+                -> numberOther++
+            }
         }
+
+        time += document.time
     }
 
-    return listOf(numberSuccessful, numberOther, numberFailed)
+    return generateCells(time, numberSuccessful, numberFailed, numberOther)
+}
+
+private fun generateCells(
+    time: Duration,
+    numberSuccessful: Int,
+    numberFailed: Int,
+    numberOther: Int
+): List<HtmlElement> {
+    return listOf(
+        HtmlElement("td", "%.3fs".format(time.toMillis() / MILLISECONDS_DIVIDER)),
+
+        HtmlElement("td") {
+            text { numberSuccessful.toString() }
+            if (numberFailed + numberOther == 0)
+                cssClass("highlight-green")
+        },
+        HtmlElement("td") {
+            text { numberFailed.toString() }
+            if (numberFailed > 0)
+                cssClass("highlight-red")
+            else if (numberOther == 0)
+                cssClass("highlight-green")
+        },
+        HtmlElement("td") {
+            text { numberOther.toString() }
+            if (numberOther > 0)
+                cssClass("highlight-yellow")
+            else if (numberFailed == 0)
+                cssClass("highlight-green")
+        }
+    )
 }
 
 private fun getReportString(value: String, cellStatus: Status): String {

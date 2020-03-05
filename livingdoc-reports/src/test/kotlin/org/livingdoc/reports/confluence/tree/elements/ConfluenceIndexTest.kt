@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
+import java.time.Duration
 
 internal class ConfluenceIndexTest {
     @Test
@@ -14,18 +15,21 @@ internal class ConfluenceIndexTest {
                 .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Executed)
                 .withTags(listOf("slow", "api"))
+                .withTime(Duration.ofMillis(332))
                 .build(),
 
             DocumentResult.Builder()
                 .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Failed(mockk(relaxed = true)))
                 .withTags(listOf("slow"))
+                .withTime(Duration.ofMillis(217))
                 .build(),
 
             DocumentResult.Builder()
                 .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Manual)
                 .withTags(listOf("performance"))
+                .withTime(Duration.ofMillis(1095))
                 .build()
         )
 
@@ -35,20 +39,22 @@ internal class ConfluenceIndexTest {
                     <thead>
                         <tr>
                             <th>Tag</th>
-                            <th>✅</th>
-                            <th>❔</th>
-                            <th>❌</th>
+                            <th>Time</th>
+                            <th>✔</th>
+                            <th>✖</th>
+                            <th>···</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><i>all tags</i></td>
+                            <td>1,644s</td>
                             <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
+                            <td class="highlight-red">1</td>
+                            <td class="highlight-yellow">1</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <ul>
                                     <li>
                                         <ac:link>
@@ -79,12 +85,13 @@ internal class ConfluenceIndexTest {
                         </tr>
                         <tr>
                             <td>slow</td>
+                            <td>0,549s</td>
                             <td>1</td>
+                            <td class="highlight-red">1</td>
                             <td>0</td>
-                            <td>1</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <ul>
                                     <li>
                                         <ac:link>
@@ -107,12 +114,13 @@ internal class ConfluenceIndexTest {
                         </tr>
                         <tr>
                             <td>api</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>0,332s</td>
+                            <td class="highlight-green">1</td>
+                            <td class="highlight-green">0</td>
+                            <td class="highlight-green">0</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <ul>
                                     <li>
                                         <ac:link>
@@ -127,12 +135,13 @@ internal class ConfluenceIndexTest {
                         </tr>
                         <tr>
                             <td>performance</td>
+                            <td>1,095s</td>
                             <td>0</td>
-                            <td>1</td>
                             <td>0</td>
+                            <td class="highlight-yellow">1</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <ul>
                                     <li>
                                         <ac:link>
