@@ -27,8 +27,11 @@ For example a h2 in HTML will be a new section when declared after a h1 which is
     </table>
 
 
-.TODO Example Declaring a MANUAL section in Confluence
-image::pic/scenario-final-view.png[]
+.Example Declaring a MANUAL section in Confluence
+image::pic/MANUAL-in-fixture.png[]
+
+So in the example above the MANUAL tag is used in a header on level 2.
+Everything up to the next level 2 header line is ignored during execution to avoid using unfinished scenarios or tables for testing.
 
 === Expected Exceptions
 You can use a string named after an exception as any expected result of a decision table or scenario.
