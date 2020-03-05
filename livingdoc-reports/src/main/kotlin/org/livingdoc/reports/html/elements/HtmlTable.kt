@@ -69,7 +69,7 @@ fun HtmlTable.headers(headers: List<Header>) {
  * @param errorContext A [HtmlErrorContext] containing popups for error stack traces
  * @param rows The [row results][RowResult] of the decision table
  */
-fun HtmlTable.rows(errorContext: HtmlErrorContext, rows: List<RowResult>) {
+fun HtmlTable.rows(errorContext: HtmlErrorContext, headers: List<Header>, rows: List<RowResult>) {
 
     fun appendCellToDisplayFailedRowIfNecessary(row: HtmlElement, rowStatus: Status) {
         if (rowStatus is Status.Failed || rowStatus is Status.Exception) {
@@ -92,7 +92,9 @@ fun HtmlTable.rows(errorContext: HtmlErrorContext, rows: List<RowResult>) {
     rows.forEach { (headerToField, rowResult) ->
 
         val newRow = HtmlElement("tr")
-        headerToField.values.forEach { (value, cellStatus) ->
+        headers.forEach { header ->
+            val (value, cellStatus) = headerToField[header] ?: error("Invalid header: $header")
+
             newRow.child {
                 HtmlElement("td") {
                     cssClass(HtmlReportTemplate.CSS_CLASS_BORDER_BLACK_ONEPX)
@@ -115,6 +117,7 @@ fun HtmlTable.rows(errorContext: HtmlErrorContext, rows: List<RowResult>) {
                 }
             }
         }
+
         appendCellToDisplayFailedRowIfNecessary(newRow, rowResult)
         appendBody { newRow }
     }
