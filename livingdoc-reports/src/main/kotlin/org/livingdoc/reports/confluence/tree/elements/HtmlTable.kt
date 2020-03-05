@@ -60,13 +60,18 @@ fun HtmlTable.cfRows(headers: List<Header>, rows: List<RowResult>) {
                     cssClass(determineCfClassForStatus(cellStatus))
                     text { getReportString(value, cellStatus) }
 
-                    if (cellStatus is Status.Failed || cellStatus is Status.Exception) {
-                        // TODO Find better way to print the exception
-                        text { cellStatus.toString() }
+                    when (cellStatus) {
+                        is Status.Failed -> child {
+                            ConfluenceError(cellStatus.reason)
+                        }
+                        is Status.Exception -> child {
+                            ConfluenceError(cellStatus.exception)
+                        }
                     }
                 }
             }
         }
+
         appendCellToDisplayFailedRowIfNecessary(newRow, rowResult)
         appendBody { newRow }
     }

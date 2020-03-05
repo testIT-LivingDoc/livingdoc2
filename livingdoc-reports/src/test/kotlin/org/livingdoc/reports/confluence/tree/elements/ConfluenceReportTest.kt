@@ -160,12 +160,24 @@ internal class ConfluenceReportTest {
                         <tr>
                             <td class="highlight-green">2</td>
                             <td class="highlight-grey">3</td>
-                            <td class="highlight-red">6Failed(reason=AssertionError(#1))</td>
+                            <td class="highlight-red">6
+                                <ac:structured-macro ac:name="warning">
+                                    <ac:rich-text-body>
+                                        <pre></pre>
+                                    </ac:rich-text-body>
+                                </ac:structured-macro>
+                            </td>
                         </tr>
                         <tr>
                             <td class="highlight-grey">5</td>
                             <td class="highlight-yellow">6</td>
-                            <td class="highlight-red">11Exception(exception=Throwable(#2))</td>
+                            <td class="highlight-red">11
+                                <ac:structured-macro ac:name="warning">
+                                    <ac:rich-text-body>
+                                        <pre></pre>
+                                    </ac:rich-text-body>
+                                </ac:structured-macro>
+                            </td>
                         </tr>
                         <tr>
                             <td class="highlight-green">2</td>
