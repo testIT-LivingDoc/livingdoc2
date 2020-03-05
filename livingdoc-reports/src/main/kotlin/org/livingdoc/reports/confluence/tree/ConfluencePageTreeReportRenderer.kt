@@ -12,25 +12,14 @@ import com.atlassian.confluence.rest.client.RestClientFactory
 import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResourceProvider
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
-import org.livingdoc.reports.confluence.tree.elements.ConfluenceStatus
-import org.livingdoc.reports.confluence.tree.elements.ConfluenceStatusBar
-import org.livingdoc.reports.confluence.tree.elements.cfHeaders
+import org.livingdoc.reports.confluence.tree.elements.ConfluenceReport
 import org.livingdoc.reports.confluence.tree.elements.cfReportRow
-import org.livingdoc.reports.confluence.tree.elements.cfRows
-import org.livingdoc.reports.confluence.tree.elements.cfSteps
 import org.livingdoc.reports.confluence.tree.elements.cfTagRow
-import org.livingdoc.reports.html.elements.HtmlDescription
-import org.livingdoc.reports.html.elements.HtmlElement
-import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
-import org.livingdoc.reports.html.elements.HtmlTitle
-import org.livingdoc.reports.html.elements.paragraphs
 import org.livingdoc.reports.html.elements.summaryTableHeader
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
-import org.livingdoc.results.examples.decisiontables.DecisionTableResult
-import org.livingdoc.results.examples.scenarios.ScenarioResult
 
 private val VERSION_SEPERATOR = '@'
 
@@ -91,39 +80,13 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         rootPage: Content,
         service: RemoteContentService
     ): ContentId {
-
         // Render report
-        val reportBody = render(documentResult)
+        val reportBody = ConfluenceReport(documentResult).toString()
 
         // Upload report
         return prevPage?.let {
             updatePage(it, reportBody, service, config)
         } ?: createPage(rootPage, documentResult, reportBody, service)
-    }
-
-    fun render(documentResult: DocumentResult): String {
-        // TODO tidy this up
-        return (
-                ConfluenceStatusBar().apply {
-                    documentResult
-                        .tags
-                        .forEach { tag ->
-                            child {
-                                ConfluenceStatus(tag)
-                            }
-                        }
-                }.toString() + "\n" +
-                        documentResult.results
-                            .flatMap { result ->
-                                when (result) {
-                                    is DecisionTableResult -> handleDecisionTableResult(result)
-                                    is ScenarioResult -> handleScenarioResult(result)
-                                    else -> throw IllegalArgumentException("Unknown Result type.")
-                                }
-                            }
-                            .filterNotNull()
-                            .joinToString("\n")
-                ).trim()
     }
 
     private fun renderIndex(
@@ -155,38 +118,6 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
                 cfReportRow(tag, documentResults)
             }
         }.toString()
-    }
-
-    private fun handleDecisionTableResult(decisionTableResult: DecisionTableResult): List<HtmlElement?> {
-        val (headers, rows, tableResult) = decisionTableResult
-        val name = decisionTableResult.decisionTable.description.name
-        val desc = decisionTableResult.decisionTable.description.descriptiveText
-
-        return listOf(
-            HtmlTitle(name),
-            HtmlDescription {
-                paragraphs(desc.split("\n"))
-            },
-            HtmlTable {
-                cfHeaders(headers)
-                cfRows(rows)
-            }
-        )
-    }
-
-    private fun handleScenarioResult(scenarioResult: ScenarioResult): List<HtmlElement?> {
-        val name = scenarioResult.scenario.description.name
-        val desc = scenarioResult.scenario.description.descriptiveText
-
-        return listOf(
-            HtmlTitle(name),
-            HtmlDescription {
-                paragraphs(desc.split("\n"))
-            },
-            HtmlList {
-                cfSteps(scenarioResult.steps)
-            }
-        )
     }
 
     private fun createPage(
