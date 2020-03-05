@@ -23,7 +23,7 @@ internal class ConfluenceLinkTest {
                 <ac:link>
                     <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceLinkTest"></ri:page>
                     <ac:link-body>
-                        <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceLinkTest (0,176s)</span>
+                        <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceLinkTest (${"%.3fs".format(0.176)})</span>
                     </ac:link-body>
                 </ac:link>
             """
