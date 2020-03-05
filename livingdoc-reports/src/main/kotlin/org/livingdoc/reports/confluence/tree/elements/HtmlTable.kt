@@ -33,7 +33,7 @@ fun HtmlTable.cfHeaders(headers: List<Header>) {
  *
  * @param rows The [row results][RowResult] of the decision table
  */
-fun HtmlTable.cfRows(rows: List<RowResult>) {
+fun HtmlTable.cfRows(headers: List<Header>, rows: List<RowResult>) {
 
     fun appendCellToDisplayFailedRowIfNecessary(row: HtmlElement, rowStatus: Status) {
         if (rowStatus is Status.Failed || rowStatus is Status.Exception) {
@@ -50,9 +50,11 @@ fun HtmlTable.cfRows(rows: List<RowResult>) {
     }
 
     rows.forEach { (headerToField, rowResult) ->
-
         val newRow = HtmlElement("tr")
-        headerToField.values.forEach { (value, cellStatus) ->
+
+        headers.forEach { header ->
+            val (value, cellStatus) = headerToField[header] ?: error("Invalid header: $header")
+
             newRow.child {
                 HtmlElement("td") {
                     cssClass(determineCfClassForStatus(cellStatus))

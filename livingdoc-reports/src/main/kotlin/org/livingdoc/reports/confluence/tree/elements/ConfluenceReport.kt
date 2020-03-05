@@ -35,7 +35,7 @@ class ConfluenceReport(documentResult: DocumentResult) : ConfluencePage() {
         child {
             HtmlTable {
                 cfHeaders(headers)
-                cfRows(rows)
+                cfRows(headers, rows)
             }
         }
     }
