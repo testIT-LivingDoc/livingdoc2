@@ -2,9 +2,7 @@ package org.livingdoc.reports.confluence.tree.elements
 
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest
 import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
@@ -21,32 +19,6 @@ import org.livingdoc.results.examples.scenarios.ScenarioResult
 import org.livingdoc.results.examples.scenarios.StepResult
 
 internal class ConfluenceReportTest {
-    @Test
-    fun `tags are rendered correctly`() {
-        val documentResult = DocumentResult.Builder()
-            .withStatus(Status.Executed)
-            .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
-            .withTags(listOf("slow", "api"))
-            .build()
-
-        val renderResult = ConfluenceReport(documentResult).toString()
-
-        assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
-                <h2>
-                    <ac:structured-macro ac:name="status" ac:schema-version="1">
-                        <ac:parameter ac:name="colour">Blue</ac:parameter>
-                        <ac:parameter ac:name="title">slow</ac:parameter>
-                    </ac:structured-macro>
-                    <ac:structured-macro ac:name="status" ac:schema-version="1">
-                        <ac:parameter ac:name="colour">Blue</ac:parameter>
-                        <ac:parameter ac:name="title">api</ac:parameter>
-                    </ac:structured-macro>
-                </h2>
-            """
-        )
-    }
-
     @Test
     fun `decisionTableResult is rendered correctly`() {
         val headerA = Header("a")
@@ -162,7 +134,7 @@ internal class ConfluenceReportTest {
             .withStatus(Status.Failed(mockk(relaxed = true)))
 
         val documentResult = DocumentResult.Builder()
-            .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+            .withDocumentClass(ConfluenceReportTest::class.java)
             .withStatus(Status.Executed)
             .withResult(decisionTableResult.build())
             .withTags(emptyList())
@@ -215,7 +187,7 @@ internal class ConfluenceReportTest {
         val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
 
         val documentResult = DocumentResult.Builder()
-            .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+            .withDocumentClass(ConfluenceReportTest::class.java)
             .withStatus(Status.Executed)
             .withResult(
                 ScenarioResult.Builder()
@@ -253,6 +225,32 @@ internal class ConfluenceReportTest {
                     <li style="color: rgb(255, 0, 0);">D</li>
                     <li style="color: rgb(255, 0, 0);">E</li>
                 </ul>
+            """
+        )
+    }
+
+    @Test
+    fun `tags are rendered correctly`() {
+        val documentResult = DocumentResult.Builder()
+            .withStatus(Status.Executed)
+            .withDocumentClass(ConfluenceReportTest::class.java)
+            .withTags(listOf("slow", "api"))
+            .build()
+
+        val renderResult = ConfluenceReport(documentResult).toString()
+
+        assertThat(renderResult).isEqualToIgnoringWhitespace(
+            """
+                <h2>
+                    <ac:structured-macro ac:name="status" ac:schema-version="1">
+                        <ac:parameter ac:name="colour">Blue</ac:parameter>
+                        <ac:parameter ac:name="title">slow</ac:parameter>
+                    </ac:structured-macro>
+                    <ac:structured-macro ac:name="status" ac:schema-version="1">
+                        <ac:parameter ac:name="colour">Blue</ac:parameter>
+                        <ac:parameter ac:name="title">api</ac:parameter>
+                    </ac:structured-macro>
+                </h2>
             """
         )
     }

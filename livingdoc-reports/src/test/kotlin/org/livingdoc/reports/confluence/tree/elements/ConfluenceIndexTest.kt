@@ -1,35 +1,35 @@
-package org.livingdoc.reports.confluence.tree
+package org.livingdoc.reports.confluence.tree.elements
 
-import com.atlassian.confluence.api.model.content.id.ContentId
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.results.Status
 import org.livingdoc.results.documents.DocumentResult
 
-internal class ConfluencePageTreeReportRendererTest {
-    private val cut = ConfluencePageTreeReportRenderer()
-
+internal class ConfluenceIndexTest {
     @Test
     fun `render summary for tags`() {
         val documents = listOf(
             DocumentResult.Builder()
-                .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+                .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Executed)
-                .withTags(listOf("slow", "api")).build() to ContentId.of(1),
+                .withTags(listOf("slow", "api"))
+                .build(),
 
             DocumentResult.Builder()
-                .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+                .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Failed(mockk(relaxed = true)))
-                .withTags(listOf("slow")).build() to ContentId.of(2),
+                .withTags(listOf("slow"))
+                .build(),
 
             DocumentResult.Builder()
-                .withDocumentClass(ConfluencePageTreeReportRendererTest::class.java)
+                .withDocumentClass(ConfluenceIndexTest::class.java)
                 .withStatus(Status.Manual)
-                .withTags(listOf("performance")).build() to ContentId.of(3)
+                .withTags(listOf("performance"))
+                .build()
         )
 
-        assertThat(cut.renderIndex(documents)).isEqualToIgnoringWhitespace(
+        assertThat(ConfluenceIndex(documents).toString()).isEqualToIgnoringWhitespace(
             """
                 <table>
                     <thead>
@@ -52,25 +52,25 @@ internal class ConfluencePageTreeReportRendererTest {
                                 <ul>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -88,17 +88,17 @@ internal class ConfluencePageTreeReportRendererTest {
                                 <ul>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -116,9 +116,9 @@ internal class ConfluencePageTreeReportRendererTest {
                                 <ul>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -136,9 +136,9 @@ internal class ConfluencePageTreeReportRendererTest {
                                 <ul>
                                     <li>
                                         <ac:link>
-                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest"></ri:page>
+                                            <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRendererTest</span>
+                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>

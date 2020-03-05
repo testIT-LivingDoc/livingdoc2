@@ -12,11 +12,8 @@ import com.atlassian.confluence.rest.client.RestClientFactory
 import com.atlassian.confluence.rest.client.authentication.AuthenticatedWebResourceProvider
 import com.google.common.util.concurrent.MoreExecutors
 import org.livingdoc.config.YamlUtils
+import org.livingdoc.reports.confluence.tree.elements.ConfluenceIndex
 import org.livingdoc.reports.confluence.tree.elements.ConfluenceReport
-import org.livingdoc.reports.confluence.tree.elements.cfReportRow
-import org.livingdoc.reports.confluence.tree.elements.cfTagRow
-import org.livingdoc.reports.html.elements.HtmlTable
-import org.livingdoc.reports.html.elements.summaryTableHeader
 import org.livingdoc.reports.spi.Format
 import org.livingdoc.reports.spi.ReportRenderer
 import org.livingdoc.results.documents.DocumentResult
@@ -97,27 +94,11 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
     ) {
         val tagSummary = renderIndex(reports)
 
-        updatePage(rootPage, tagSummary.toString(), service, config)
+        updatePage(rootPage, tagSummary, service, config)
     }
 
     fun renderIndex(reports: List<Pair<DocumentResult, ContentId>>): String {
-        val reportsByTag = reports.flatMap { report ->
-            listOf(
-                listOf("all" to report),
-                report.first.tags.map { tag ->
-                    tag to report
-                }
-            ).flatten()
-        }.groupBy({ it.first }, { it.second })
-
-        return HtmlTable {
-            summaryTableHeader()
-
-            reportsByTag.map { (tag, documentResults) ->
-                cfTagRow(tag, documentResults)
-                cfReportRow(tag, documentResults)
-            }
-        }.toString()
+        return ConfluenceIndex(reports.map { it.first }).toString()
     }
 
     private fun createPage(

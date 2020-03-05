@@ -1,6 +1,5 @@
 package org.livingdoc.reports.confluence.tree.elements
 
-import com.atlassian.confluence.api.model.content.id.ContentId
 import org.livingdoc.reports.html.elements.HtmlElement
 import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
@@ -68,7 +67,7 @@ fun HtmlTable.cfRows(rows: List<RowResult>) {
     }
 }
 
-fun HtmlTable.cfTagRow(tag: String, documentResults: List<Pair<DocumentResult, ContentId>>) {
+fun HtmlTable.cfTagRow(tag: String, documentResults: List<DocumentResult>) {
     appendBody {
         HtmlElement("tr") {
             child {
@@ -89,7 +88,7 @@ fun HtmlTable.cfTagRow(tag: String, documentResults: List<Pair<DocumentResult, C
     }
 }
 
-fun HtmlTable.cfReportRow(tag: String, documentResults: List<Pair<DocumentResult, ContentId>>) {
+fun HtmlTable.cfReportRow(tag: String, documentResults: List<DocumentResult>) {
     appendBody {
         // TODO configure collapsing
         HtmlElement("tr") {
@@ -116,12 +115,12 @@ fun HtmlTable.cfReportRow(tag: String, documentResults: List<Pair<DocumentResult
  *
  * TODO: this is copied from the HTML report and should be unified for both reports
  */
-private fun calculateSummaryNumbers(documentResults: List<Pair<DocumentResult, ContentId>>): List<Int> {
+private fun calculateSummaryNumbers(documentResults: List<DocumentResult>): List<Int> {
     var numberSuccessful = 0
     var numberFailed = 0
     var numberOther = 0
 
-    documentResults.forEach { (document, _) ->
+    documentResults.forEach { document ->
         when (document.documentStatus) {
             is Status.Executed
             -> numberSuccessful++
