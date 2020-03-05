@@ -3,20 +3,24 @@ package org.livingdoc.results.documents
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.results.Status
 import org.livingdoc.results.TestDataResult
+import java.time.Duration
 
 /**
  * A DocumentResult is the result obtained from a single DocumentExecution.
  */
-data class DocumentResult private constructor(
+data class DocumentResult
+private constructor(
     val documentClass: Class<*>,
     val documentStatus: Status,
     val results: List<TestDataResult<TestData>>,
-    val tags: List<String>
+    val tags: List<String>,
+    val time: Duration
 ) {
     /**
      * Builder can be used to build a [DocumentResult].
      */
     class Builder {
+        private var time: Duration = Duration.ofMillis(0)
         private lateinit var documentClass: Class<*>
         private lateinit var status: Status
         private lateinit var tags: List<String>
@@ -64,7 +68,7 @@ data class DocumentResult private constructor(
          * @return a [DocumentResult] containing the data of this Builder
          */
         fun build(): DocumentResult {
-            return DocumentResult(documentClass, status, results, tags)
+            return DocumentResult(documentClass, status, results, tags, time)
         }
 
         /**
@@ -72,6 +76,12 @@ data class DocumentResult private constructor(
          */
         fun withTags(tags: List<String>): Builder {
             this.tags = tags
+
+            return this
+        }
+
+        fun withTime(time: Duration): Builder {
+            this.time = time
 
             return this
         }

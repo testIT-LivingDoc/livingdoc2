@@ -11,6 +11,7 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.tagging.Tag
 
 /**
  * Tests caching when using a rest api.
@@ -56,6 +57,7 @@ class RestGroup {
         }
     }
 
+    @Tag("markdown")
     @ExecutableDocument("rest://TestingCache.html")
     class CalculatorDocumentMdRest {
 

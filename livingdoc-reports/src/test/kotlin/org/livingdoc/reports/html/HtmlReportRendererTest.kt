@@ -145,44 +145,58 @@ internal class HtmlReportRendererTest {
 
         val renderResult = cut.render(documentResult)
 
-        assertThat(renderResult).isEqualToIgnoringWhitespace(
+        assertThat(renderResult.trimIndent()).isEqualToIgnoringWhitespace(
             """
                 <!DOCTYPE html>
                 <html>
                     <head>
+                        <meta charset="UTF-8">
                         ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
+                        ${HtmlReportTemplate.HTML_HEAD_SCRIPT_CONTENT}
                     </head>
                     <body>
-                        <h2>Title</h2>
-                        <div>
-                            <p>descriptive text</p>
+                        <div class="flex flex-row">
+                            <div class="column">
+                                <h2>HtmlReportRendererTest (${"%.3f".format(0 / 1000f)}s)</h2>
+                                <div>
+                                 <p>tags: </p>
+                                </div>
+                                <h2>Title</h2>
+                                <div>
+                                    <p>descriptive text</p>
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                           <th class="border-black-onepx">a</th>
+                                           <th class="border-black-onepx">b</th>
+                                           <th class="border-black-onepx">a + b = ?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
+                                            <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
+                                            <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
+                                         </tr>
+                                         <tr>
+                                            <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
+                                            <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
+                                            <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
+                                         </tr>
+                                         <tr>
+                                            <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
+                                            <td class="border-black-onepx background-executed"><span class="result-value">1</span></td>
+                                            <td class="border-black-onepx background-report-result"><span class="result-value">3</span></td>
+                                         </tr>
+                                     </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                   <th class="border-black-onepx">a</th>
-                                   <th class="border-black-onepx">b</th>
-                                   <th class="border-black-onepx">a + b = ?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                    <td class="border-black-onepx background-disabled"><span class="result-value">3</span></td>
-                                    <td class="border-black-onepx background-failed"><span class="result-value">6</span><a href="#popup1" class="icon-failed"></a></td>
-                                 </tr>
-                                 <tr>
-                                    <td class="border-black-onepx background-skipped"><span class="result-value">5</span></td>
-                                    <td class="border-black-onepx background-manual"><span class="result-value">6</span></td>
-                                    <td class="border-black-onepx background-exception"><span class="result-value">11</span><a href="#popup2" class="icon-exception"></a></td>
-                                 </tr>
-                                 <tr>
-                                    <td class="border-black-onepx background-executed"><span class="result-value">2</span></td>
-                                    <td class="border-black-onepx background-executed"><span class="result-value">1</span></td>
-                                    <td class="border-black-onepx background-report-result"><span class="result-value">3</span></td>
-                                 </tr>
-                             </tbody>
-                        </table>
+                        <div class="footer">
+                            <p><a href="index.html">↩ Index</a></p>
+                            <p>Generated with <strong>Living Doc 2</strong>.</p>
+                        </div>
 
                         <div id="popup1" class="overlay">
                             <div class="popup">
@@ -208,7 +222,7 @@ internal class HtmlReportRendererTest {
                     </body>
                 </html>
                 """
-        )
+                .trimIndent().replace("\\s+", " "))
     }
 
     @Test
@@ -250,79 +264,34 @@ internal class HtmlReportRendererTest {
                 <!DOCTYPE html>
                 <html>
                     <head>
-                       ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
+                        <meta charset="UTF-8">
+                        ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
+                        ${HtmlReportTemplate.HTML_HEAD_SCRIPT_CONTENT}
                     </head>
                     <body>
-                        <h2>Title</h2>
-                        <div>
-                            <p>descriptive text</p>
+                        <div class="flex flex-row">
+                            <div class="column">
+                                <h2>HtmlReportRendererTest (${"%.3f".format(0 / 1000f)}s)</h2>
+                                <div>
+                                 <p>tags: </p>
+                                </div>
+                                <h2>Title</h2>
+                                <div>
+                                    <p>descriptive text</p>
+                                </div>
+                                <ul>
+                                    <li class="background-executed">A</li>
+                                    <li class="background-manual">B</li>
+                                    <li class="background-skipped">C</li>
+                                    <li class="background-failed">D</li>
+                                    <li class="background-exception">E</li>
+                                </ul>
+                            </div>
                         </div>
-                        <ul>
-                            <li class="background-executed">A</li>
-                            <li class="background-manual">B</li>
-                            <li class="background-skipped">C</li>
-                            <li class="background-failed">D</li>
-                            <li class="background-exception">E</li>
-                        </ul>
-                    </body>
-                </html>
-                """
-        )
-    }
-
-    @Test
-    fun `summary is rendered correctly`() {
-        val stepResultA = StepResult.Builder().withValue("A").withStatus(Status.Executed).build()
-        val stepResultB = StepResult.Builder().withValue("B").withStatus(Status.Manual).build()
-        val stepResultC = StepResult.Builder().withValue("C").withStatus(Status.Skipped).build()
-        val stepResultD = StepResult.Builder().withValue("D").withStatus(Status.Failed(mockk())).build()
-        val stepResultE = StepResult.Builder().withValue("E").withStatus(Status.Exception(mockk())).build()
-
-        val documentResult = DocumentResult.Builder()
-            .withDocumentClass(HtmlReportRendererTest::class.java)
-            .withStatus(Status.Executed)
-            .withResult(
-                ScenarioResult.Builder()
-                    .withStep(stepResultA)
-                    .withStep(stepResultB)
-                    .withStep(stepResultC)
-                    .withStep(stepResultD)
-                    .withStep(stepResultE)
-                    .withStatus(Status.Executed)
-                    .withScenario(
-                        Scenario(
-                            listOf(
-                                Step("A"), Step("B"), Step("C"),
-                                Step("D"), Step("E")
-                            ),
-                            TestDataDescription("Title", false, "descriptive text")
-                        )
-                    )
-                    .build()
-            ).withTags(emptyList())
-            .build()
-
-        val renderResult = cut.render(documentResult)
-
-        assertThat(renderResult).isEqualToIgnoringWhitespace(
-            """
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                       ${HtmlReportTemplate.HTML_HEAD_STYLE_CONTENT}
-                    </head>
-                    <body>
-                        <h2>Title</h2>
-                        <div>
-                            <p>descriptive text</p>
+                        <div class="footer">
+                            <p><a href="index.html">↩ Index</a></p>
+                            <p>Generated with <strong>Living Doc 2</strong>.</p>
                         </div>
-                        <ul>
-                            <li class="background-executed">A</li>
-                            <li class="background-manual">B</li>
-                            <li class="background-skipped">C</li>
-                            <li class="background-failed">D</li>
-                            <li class="background-exception">E</li>
-                        </ul>
                     </body>
                 </html>
                 """

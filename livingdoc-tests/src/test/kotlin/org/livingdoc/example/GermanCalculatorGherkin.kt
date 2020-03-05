@@ -5,7 +5,9 @@ import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
+import org.livingdoc.api.tagging.Tag
 
+@Tag("gherkin")
 @ExecutableDocument("local://GermanCalculator.feature")
 class GermanCalculatorGherkin {
     @ScenarioFixture

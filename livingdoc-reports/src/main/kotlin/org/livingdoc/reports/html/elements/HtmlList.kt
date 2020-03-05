@@ -1,5 +1,6 @@
 package org.livingdoc.reports.html.elements
 
+import org.livingdoc.reports.html.MILLISECONDS_DIVIDER
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.scenarios.StepResult
 import java.nio.file.Path
@@ -43,7 +44,12 @@ fun HtmlList.linkList(reports: List<Pair<DocumentResult, Path>>) {
             HtmlElement("li") {
                 child {
                     HtmlLink(it.second.fileName.toString()) {
-                        resultLink(it.first.documentClass.name, it.first.documentStatus)
+
+                        resultLink(
+                            it.first.documentClass.name + " (" +
+                                    "%.3f".format(it.first.time.toMillis() / MILLISECONDS_DIVIDER) + "s)",
+                            getLinkStatus(it.first)
+                        )
                     }
                 }
             }

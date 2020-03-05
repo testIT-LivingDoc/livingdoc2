@@ -8,10 +8,13 @@ import org.livingdoc.api.documents.Group
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
+import org.livingdoc.api.tagging.Tag
 import org.livingdoc.example.GroupedDocuments.Companion.sut
 
 @Group
 class GroupedDocuments {
+
+    @Tag("markdown")
     @ExecutableDocument("local://TestTexts.md")
     class GroupedDocument1 {
         @ScenarioFixture

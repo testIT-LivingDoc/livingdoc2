@@ -9,6 +9,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
 import org.livingdoc.api.fixtures.scenarios.Step
+import org.livingdoc.api.tagging.Tag
 
 /**
  * This [ExecutableDocument] tests the [Calculator] SUT using [DecisionTableFixtures][DecisionTableFixture].
@@ -16,6 +17,7 @@ import org.livingdoc.api.fixtures.scenarios.Step
  * @see DecisionTableFixture
  * @see ExecutableDocument
  */
+@Tag("html")
 @ExecutableDocument("local://Calculator.html")
 class CalculatorDocumentHtml {
 

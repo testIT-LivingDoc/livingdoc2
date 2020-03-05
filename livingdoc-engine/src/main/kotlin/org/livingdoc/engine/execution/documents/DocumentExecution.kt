@@ -17,6 +17,8 @@ import org.livingdoc.results.TestDataResult
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
+import java.time.Duration
+import kotlin.system.measureTimeMillis
 
 /**
  * A DocumentExecution represents a single execution of a [DocumentFixture].
@@ -45,15 +47,19 @@ internal class DocumentExecution(
                 Status.Skipped
             ).build()
         }
-        try {
-            assertFixtureIsDefinedCorrectly()
-            executeBeforeMethods()
-            executeFixtures()
-            executeAfterMethods()
-            builder.withStatus(Status.Executed)
-        } catch (e: MalformedFixtureException) {
-            builder.withStatus(Status.Exception(e))
-        }
+
+        val time = Duration.ofMillis(measureTimeMillis {
+            try {
+                assertFixtureIsDefinedCorrectly()
+                executeBeforeMethods()
+                executeFixtures()
+                executeAfterMethods()
+                builder.withStatus(Status.Executed)
+            } catch (e: MalformedFixtureException) {
+                builder.withStatus(Status.Exception(e))
+            }
+        })
+        builder.withTime(time)
 
         return builder.build()
     }

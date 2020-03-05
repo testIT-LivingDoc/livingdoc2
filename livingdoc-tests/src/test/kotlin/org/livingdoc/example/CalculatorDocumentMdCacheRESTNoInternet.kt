@@ -7,11 +7,13 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.tagging.Tag
 
 /**
  * Can be used to test if caching works for the rest api without internet.
  * Disabled because it fails if there is no cached file.
  */
+@Tag("markdown")
 @ExecutableDocument("rest://TestingCache.html")
 @Disabled
 class CalculatorDocumentMdRest {

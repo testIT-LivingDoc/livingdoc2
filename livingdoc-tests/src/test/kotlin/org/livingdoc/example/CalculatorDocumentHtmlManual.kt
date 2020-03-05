@@ -6,6 +6,7 @@ import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.api.tagging.Tag
 
 /**
  * This [ExecutableDocument] demonstrates the manual test feature of LivingDoc
@@ -15,6 +16,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
  *
  * @see ExecutableDocument
  */
+@Tag("html")
 @ExecutableDocument("local://CalculatorManual.html")
 class CalculatorDocumentHtmlManual {
 
