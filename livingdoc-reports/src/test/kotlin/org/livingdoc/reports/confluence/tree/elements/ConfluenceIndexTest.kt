@@ -47,7 +47,9 @@ internal class ConfluenceIndexTest {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><i>all tags</i></td>
+                            <td>
+                                <i>all tags</i>
+                            </td>
                             <td>1,644s</td>
                             <td>1</td>
                             <td class="highlight-red">1</td>
@@ -60,7 +62,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (0,332s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -68,7 +70,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (0,217s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -76,7 +78,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (1,095s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -97,7 +99,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (0,332s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -105,7 +107,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(255, 0, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (0,217s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -126,7 +128,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(0, 128, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (0,332s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>
@@ -147,7 +149,7 @@ internal class ConfluenceIndexTest {
                                         <ac:link>
                                             <ri:page ri:content-title="org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest"></ri:page>
                                             <ac:link-body>
-                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest</span>
+                                                <span style="color: rgb(255, 102, 0);">org.livingdoc.reports.confluence.tree.elements.ConfluenceIndexTest (1,095s)</span>
                                             </ac:link-body>
                                         </ac:link>
                                     </li>

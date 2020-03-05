@@ -1,18 +1,19 @@
 package org.livingdoc.reports.confluence.tree.elements
 
+import org.livingdoc.reports.html.MILLISECONDS_DIVIDER
 import org.livingdoc.reports.html.elements.HtmlElement
-import org.livingdoc.results.Status
+import org.livingdoc.results.documents.DocumentResult
 
 /**
  * A link element in a Confluence page tree report
  *
  * @param target The title of the page the link is pointing to
  */
-class ConfluenceLink(target: String, status: Status) : HtmlElement("ac:link") {
+class ConfluenceLink(documentResult: DocumentResult) : HtmlElement("ac:link") {
     init {
         child {
             HtmlElement("ri:page") {
-                attr("ri:content-title", target)
+                attr("ri:content-title", documentResult.documentClass.name)
             }
         }
 
@@ -20,9 +21,12 @@ class ConfluenceLink(target: String, status: Status) : HtmlElement("ac:link") {
             HtmlElement("ac:link-body") {
                 child {
                     HtmlElement("span") {
-                        attr("style", determineCfStylesForStatus(status))
+                        attr("style", determineCfStylesForStatus(documentResult.documentStatus))
 
-                        text { target }
+                        text {
+                            documentResult.documentClass.name +
+                                    " (%.3fs)".format(documentResult.time.toMillis() / MILLISECONDS_DIVIDER)
+                        }
                     }
                 }
             }
