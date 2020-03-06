@@ -150,9 +150,10 @@ tasks.create<JacocoReport>("codeCoverageReport") {
 	}
 
 	reports {
-		csv.isEnabled = false
+		csv.isEnabled = true
 		xml.isEnabled = false
 		html.isEnabled = true
+		csv.destination = file("${buildDir}/reports/jacoco/jacoco.csv")
 		html.destination = file("${buildDir}/reports/jacoco")
 	}
 
