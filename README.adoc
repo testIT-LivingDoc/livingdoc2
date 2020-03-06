@@ -1,6 +1,6 @@
 = LivingDoc 2
 
-image:https://travis-ci.org/LivingDoc/livingdoc.svg?branch=master["Build Status", link="https://travis-ci.org/LivingDoc/livingdoc"]
+image:https://github.com/EnProLivingDoc/livingdoc/workflows/CI%20-%20LivingDoc/badge.svg["CI - LivingDoc", link="https://github.com/EnProLivingDoc/livingdoc/actions?query=workflow%3A%22CI+-+LivingDoc%22"]
 
 The next version of LivingDoc, the acceptance testing tool with integrated
 support for Atlassian Confluence.
