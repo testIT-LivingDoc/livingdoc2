@@ -1,7 +1,5 @@
 package org.livingdoc.api.documents
 
-import org.junit.platform.commons.annotation.Testable
-
 /**
  * A Group contains a number of [ExecutableDocuments][ExecutableDocument], which are executed together.
  *
