@@ -37,6 +37,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Add `@Tag` annotation support similar to JUnit5
 - Groups can now be executed
 - Add time measurement for document execution
+- Report renderer creating a page tree in Attlassian Confluence
 
 === Changed
 
