@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation("org.slf4j:slf4j-api:${Versions.slf4j}")
-	implementation(kotlin("reflect"))
+	implementation(kotlin("reflect", Versions.kotlinVersion))
 	implementation(project(":livingdoc-api"))
 	implementation("com.beust:klaxon:${Versions.klaxon}")
 

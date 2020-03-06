@@ -10,7 +10,7 @@ dependencies {
 	implementation(project(":livingdoc-results"))
 	implementation(project(":livingdoc-testdata"))
 
-	implementation(kotlin("reflect"))
+	implementation(kotlin("reflect", Versions.kotlinVersion))
 
 	api("org.junit.platform:junit-platform-engine:${Versions.junitPlatform}")
 }

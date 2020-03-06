@@ -98,7 +98,7 @@ fun HtmlTable.cfTagRow(tag: String, documentResults: List<DocumentResult>) {
     }
 }
 
-fun HtmlTable.cfReportRow(tag: String, documentResults: List<DocumentResult>) {
+fun HtmlTable.cfReportRow(documentResults: List<DocumentResult>) {
     appendBody {
         HtmlElement("tr") {
             child {

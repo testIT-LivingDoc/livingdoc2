@@ -63,7 +63,7 @@ private fun checkDecisionTableResultStatus(testDataResult: DecisionTableResult):
             testDataResult.rows.any { row ->
                 row.status is Status.Failed ||
                         row.status is Status.Exception ||
-                        row.headerToField.any { (header, field) ->
+                        row.headerToField.any { (_, field) ->
                             field.status is Status.Failed || field.status is Status.Exception
                         }
             }

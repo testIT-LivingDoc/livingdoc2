@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation("org.yaml:snakeyaml:${Versions.snakeyaml}")
-	implementation(kotlin("reflect"))
+	implementation(kotlin("reflect", Versions.kotlinVersion))
 
 	testCompile("org.assertj:assertj-core:${Versions.assertJ}")
 }
