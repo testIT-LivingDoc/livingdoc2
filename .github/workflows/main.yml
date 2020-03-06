@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [8, 11, 13]
+        jdk: [8, 11]
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK ${{ matrix.jdk }}
@@ -19,10 +19,8 @@ jobs:
       run: ./gradlew check -x detekt -x spotlessCheck
     - name: Generate TestCoverage
       run:  ./gradlew codeCoverageReport
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v1
-      with:
-        path: livingdoc-*/build/test-results/test/TEST-*.xml
+    - name: Print Converage
+      run: awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacoco.csv
   lint:
     name: Run linter
     runs-on: ubuntu-latest
@@ -37,7 +35,7 @@ jobs:
       - name: Detekt 
         run: ./gradlew detekt
   documentation:
-    name: JavaDoc creation 
+    name: Create JavaDoc
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -47,10 +45,6 @@ jobs:
              java-version: 8
       - name: Crate Dokka
         run: ./gradlew aggregatedDokka
-      - name: Upload dokka
-        uses: actions/upload-artifact@v1
-        with:
-          path: build/dokka
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
