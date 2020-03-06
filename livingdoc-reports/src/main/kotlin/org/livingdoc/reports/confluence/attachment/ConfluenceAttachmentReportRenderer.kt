@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence
+package org.livingdoc.reports.confluence.attachment
 
 import com.atlassian.confluence.api.model.content.AttachmentUpload
 import com.atlassian.confluence.api.model.content.id.ContentId
@@ -19,18 +19,18 @@ import java.time.ZonedDateTime
 
 private const val MINOR_VERSION = false
 
-@Format("confluence")
-class ConfluenceReportRenderer : ReportRenderer {
+@Format("confluence-attachment")
+class ConfluenceAttachmentReportRenderer : ReportRenderer {
 
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
-        val confluenceConfig = YamlUtils.toObject(config, ConfluenceReportConfig::class)
+        val confluenceConfig = YamlUtils.toObject(config, ConfluenceAttachmentReportConfig::class)
 
         documentResults.forEach {
             renderReport(it, confluenceConfig)
         }
     }
 
-    internal fun renderReport(documentResult: DocumentResult, config: ConfluenceReportConfig) {
+    internal fun renderReport(documentResult: DocumentResult, config: ConfluenceAttachmentReportConfig) {
         val repositoryName = extractRepositoryName(documentResult)
 
         // Check for matching repository; only generate report on match
@@ -53,9 +53,9 @@ class ConfluenceReportRenderer : ReportRenderer {
      *
      * @param report The report text to upload
      * @param contentId The [ContentId] of the page to attach the report to
-     * @param config A [ConfluenceReportConfig] containing further settings for the upload
+     * @param config A [ConfluenceAttachmentReportConfig] containing further settings for the upload
      */
-    internal fun uploadReport(report: String, contentId: ContentId, config: ConfluenceReportConfig) {
+    internal fun uploadReport(report: String, contentId: ContentId, config: ConfluenceAttachmentReportConfig) {
 
         val authenticatedWebResourceProvider = AuthenticatedWebResourceProvider(
             RestClientFactory.newClient(),

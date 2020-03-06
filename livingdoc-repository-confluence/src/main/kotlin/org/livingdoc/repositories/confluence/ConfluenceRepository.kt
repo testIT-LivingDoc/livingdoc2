@@ -30,7 +30,7 @@ class ConfluenceRepository(
     private val config: ConfluenceRepositoryConfig
 ) : DocumentRepository {
     private val client: RemoteContentService
-    private val visioningSeparator = '@'
+    private val versioningSeparator = '@'
 
     data class ConfluenceIdentifier(val documentId: String, val documentVersion: Int)
 
@@ -88,7 +88,7 @@ class ConfluenceRepository(
      * @return A Pair containing the Confluence Page ID and the Page Version
      */
     fun getDocumentIdAndVersion(documentIdentifier: String): ConfluenceIdentifier {
-        val docParams = documentIdentifier.split(visioningSeparator)
+        val docParams = documentIdentifier.split(versioningSeparator)
         val docId = docParams[0]
         if (docParams.size != 2) {
             throw ConfluenceDocumentNotFoundException(docParams.size - 1)
@@ -118,7 +118,7 @@ class ConfluenceRepository(
                 )
             )
 
-            val contentFetcher = if (documentIdentifier.contains(visioningSeparator)) {
+            val contentFetcher = if (documentIdentifier.contains(versioningSeparator)) {
                 val docParams = getDocumentIdAndVersion(documentIdentifier)
                 page.withIdAndVersion(ContentId.valueOf(docParams.documentId), docParams.documentVersion)
             } else {

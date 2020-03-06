@@ -1,4 +1,4 @@
-package org.livingdoc.reports.confluence
+package org.livingdoc.reports.confluence.attachment
 
 /**
  * The configuration object for the Confluence Report.
@@ -11,7 +11,7 @@ package org.livingdoc.reports.confluence
  * @param password The password of the confluence user given by username.
  * @param comment A comment that is added to the attachment
  */
-data class ConfluenceReportConfig(
+data class ConfluenceAttachmentReportConfig(
     var repositoryName: String = "",
     var filename: String = "report.html",
     var baseURL: String = "",

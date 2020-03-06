@@ -13,6 +13,8 @@ dependencies {
 	implementation("org.codehaus.jackson:jackson-mapper-asl:1.9.13")
 	implementation("org.codehaus.jackson:jackson-jaxrs:1.9.13")
 	implementation("org.codehaus.jackson:jackson-xc:1.9.13")
+	implementation("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
+	runtimeOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 	implementation("com.atlassian.confluence:confluence-rest-client:7.0.3")
 	implementation("org.jsoup:jsoup:${Versions.jsoup}")
 	implementation("com.beust:klaxon:${Versions.klaxon}")

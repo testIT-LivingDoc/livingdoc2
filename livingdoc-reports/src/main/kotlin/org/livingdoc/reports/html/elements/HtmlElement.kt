@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element
  * @param tag Defines the tag that specifies this HTML element
  */
 open class HtmlElement(tag: String) {
-    private val element = Element(tag)
+    protected val element = Element(tag)
 
     constructor(tag: String, value: String) : this(tag) {
         element.html(value)
@@ -25,7 +25,7 @@ open class HtmlElement(tag: String) {
     }
 
     override fun toString(): String {
-        return if (element.hasText()) element.toString() else ""
+        return if (element.hasText()) element.outerHtml() else ""
     }
 
     /**

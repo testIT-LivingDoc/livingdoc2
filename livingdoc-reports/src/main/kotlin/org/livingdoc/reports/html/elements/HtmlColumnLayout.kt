@@ -142,7 +142,7 @@ private fun handleDecisionTableResult(
         },
         HtmlTable {
             headers(headers)
-            rows(renderContext, rows)
+            rows(renderContext, headers, rows)
             rowIfTableFailed(renderContext, tableResult, headers.size)
         }
     )
