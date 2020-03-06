@@ -24,7 +24,7 @@ class ConfluenceIndex(reports: List<DocumentResult>) : ConfluencePage() {
 
                 reportsByTag.map { (tag, documentResults) ->
                     cfTagRow(tag, documentResults)
-                    cfReportRow(tag, documentResults)
+                    cfReportRow(documentResults)
                 }
             }
         }

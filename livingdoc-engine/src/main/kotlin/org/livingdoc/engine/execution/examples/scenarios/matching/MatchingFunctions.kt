@@ -37,7 +37,7 @@ object MatchingFunctions {
             else if (isStep || checkIfVar(it)) it
             else it.map { character ->
                 if (regexCharacters.contains(character)) "\\$character"
-                else character
+                else "$character"
             }.joinToString("")
         }
         val outputString = out.joinToString(" ")
