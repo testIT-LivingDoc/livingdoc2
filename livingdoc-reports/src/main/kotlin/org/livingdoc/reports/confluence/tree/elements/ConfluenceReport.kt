@@ -5,6 +5,7 @@ import org.livingdoc.reports.html.elements.HtmlList
 import org.livingdoc.reports.html.elements.HtmlTable
 import org.livingdoc.reports.html.elements.HtmlTitle
 import org.livingdoc.reports.html.elements.paragraphs
+import org.livingdoc.repositories.Document
 import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
