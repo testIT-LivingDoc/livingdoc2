@@ -67,6 +67,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
              java-version: 8
-      - name: Spotless check
+      - name: Publish maven snapshot
         run: ./gradlew publish 
 
