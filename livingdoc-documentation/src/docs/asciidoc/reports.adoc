@@ -8,7 +8,8 @@ Supported Report Formats:
 
 * HTML Report
 * Json Report
-* Confluence Report
+* Confluence Attachment Report
+* Confluence Page Tree Report
 
 Configure the generation of Reports in the `living-doc.yaml` file.
 The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
@@ -59,9 +60,9 @@ The default value is `livingdoc/reports/json`.
 Specify if the JSON Report should be pretty-printed.
 The default value is `true`.
 
-=== Confluence Reports
+=== Confluence Attachment Reports
 
-Confluence reports are HTML reports that are automatically uploaded to the confluence pae of the example after the test execution.
+Confluence reports are HTML reports that are automatically uploaded to the confluence page of the example after the test execution.
 
 ==== Configuration
 
@@ -89,6 +90,32 @@ The password of the confluence user given by username.
 .comment
 Is added to the attachment upload as a comment.
 An empty comment defaults to `Report from [ISO-timestamp]`
+
+=== Confluence Page Tree Reports
+
+Confluence page tree reports create pages detailing the test results for the executed documents under a given root page.
+
+==== Configuration
+
+.rootContentId
+The content id of the page under which the reports should be generated.
+This page will be updated with a summary of the execution.
+
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`.
+Can usually be left empty.
+
+.username
+The username of a confluence user with writing access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
+
+.comment
+Is added to the attachment upload as a comment.
 
 == Create Custom Report Formats
 
