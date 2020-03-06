@@ -7,7 +7,7 @@ import org.livingdoc.results.documents.DocumentResult
 /**
  * A link element in a Confluence page tree report
  *
- * @param target The title of the page the link is pointing to
+ * @param documentResult the result of the document to link to
  */
 class ConfluenceLink(documentResult: DocumentResult) : HtmlElement("ac:link") {
     init {

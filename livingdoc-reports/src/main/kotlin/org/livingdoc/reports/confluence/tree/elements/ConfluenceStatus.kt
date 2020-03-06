@@ -2,6 +2,9 @@ package org.livingdoc.reports.confluence.tree.elements
 
 import org.livingdoc.reports.html.elements.HtmlElement
 
+/**
+ * A ConfluenceStatus represents a single tag in a [ConfluenceStatusBar]
+ */
 class ConfluenceStatus(tag: String) : HtmlElement("ac:structured-macro") {
     init {
         attr("ac:name", "status")

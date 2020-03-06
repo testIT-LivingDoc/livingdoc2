@@ -20,9 +20,11 @@ import org.livingdoc.results.documents.DocumentResult
 
 private val VERSION_SEPERATOR = '@'
 
+/**
+ * A [ReportRenderer] that creates confluence pages under a given index page.
+ */
 @Format("confluence-page-tree")
 class ConfluencePageTreeReportRenderer : ReportRenderer {
-
     override fun render(documentResults: List<DocumentResult>, config: Map<String, Any>) {
         val confluenceConfig = YamlUtils.toObject(config, ConfluencePageTreeReportConfig::class)
 
@@ -53,9 +55,6 @@ class ConfluencePageTreeReportRenderer : ReportRenderer {
         documentResults: List<DocumentResult>,
         service: RemoteContentService
     ): Map<DocumentResult, Content> {
-        // TODO Rewrite with the following line
-        // val children = rootPage.descendants[ContentType.PAGE]
-
         return documentResults.map { documentResult ->
             documentResult to
                     service

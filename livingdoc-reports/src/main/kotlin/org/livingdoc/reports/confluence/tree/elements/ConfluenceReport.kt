@@ -10,6 +10,9 @@ import org.livingdoc.results.documents.DocumentResult
 import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.scenarios.ScenarioResult
 
+/**
+ * ConfluenceReport is a [ConfluencePage] that details the results of a [Document] executed as part of a test run.
+ */
 class ConfluenceReport(documentResult: DocumentResult) : ConfluencePage() {
     init {
         if (documentResult.tags.isNotEmpty()) {

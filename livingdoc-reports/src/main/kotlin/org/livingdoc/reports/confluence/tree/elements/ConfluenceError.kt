@@ -4,6 +4,9 @@ import org.livingdoc.reports.html.elements.HtmlElement
 import java.io.PrintWriter
 import java.io.StringWriter
 
+/**
+ * ConfluenceError displays information about an error that caused a failure in a test run.
+ */
 class ConfluenceError(error: Throwable) : HtmlElement("ac:structured-macro") {
     init {
         attr("ac:name", "warning")
