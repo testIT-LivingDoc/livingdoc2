@@ -21,26 +21,30 @@ internal class BooleanConverterTest : DefaultTypeConverterContract {
         "FaLsE, false"
     )
     fun `values are converted correctly`(value: String, expected: Boolean) {
-        assertThat(cut.convert(value, null, null)).isEqualTo(expected)
+        assertThat(cut.convertValueOnly(value)).isEqualTo(expected)
     }
 
-    @Test fun `leading whitespaces are removed`() {
-        assertThat(cut.convert(" true", null, null)).isTrue()
-        assertThat(cut.convert("\ttrue", null, null)).isTrue()
-        assertThat(cut.convert("\ntrue", null, null)).isTrue()
+    @Test
+    fun `leading whitespaces are removed`() {
+        assertThat(cut.convertValueOnly(" true")).isTrue()
+        assertThat(cut.convertValueOnly("\ttrue")).isTrue()
+        assertThat(cut.convertValueOnly("\ntrue")).isTrue()
     }
 
-    @Test fun `trailing whitespaces are removed`() {
-        assertThat(cut.convert("true ", null, null)).isTrue()
-        assertThat(cut.convert("true\t", null, null)).isTrue()
-        assertThat(cut.convert("true\n", null, null)).isTrue()
+    @Test
+    fun `trailing whitespaces are removed`() {
+        assertThat(cut.convertValueOnly("true ")).isTrue()
+        assertThat(cut.convertValueOnly("true\t")).isTrue()
+        assertThat(cut.convertValueOnly("true\n")).isTrue()
     }
 
-    @Test fun `illegal value throws ConversionException`() {
-        assertThrows(ConversionException::class.java) { cut.convert("neither", null, null) }
+    @Test
+    fun `illegal value throws ConversionException`() {
+        assertThrows(ConversionException::class.java) { cut.convertValueOnly("neither") }
     }
 
-    @Test fun `converter can converted to Kotlin Boolean`() {
+    @Test
+    fun `converter can converted to Kotlin Boolean`() {
         assertThat(cut.canConvertTo(Boolean::class.java)).isTrue()
     }
 }

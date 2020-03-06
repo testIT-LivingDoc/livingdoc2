@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import org.livingdoc.converters.TypeConverterExtensionKt;
 import utils.EnglishDefaultLocale;
 
 
@@ -19,7 +20,7 @@ class ByteConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Byte value = cut.convert("42", null, null);
+        Byte value = TypeConverterExtensionKt.convertValueOnly(cut, "42");
         assertThat(value).isEqualTo(( byte ) 42);
     }
 

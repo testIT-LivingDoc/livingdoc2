@@ -1,8 +1,8 @@
 package org.livingdoc.converters;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class BooleanConverterJavaTest {
@@ -16,7 +16,7 @@ class BooleanConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Boolean value = cut.convert("true", null, null);
+        Boolean value = TypeConverterExtensionKt.convertValueOnly(cut, "true");
         assertThat(value).isTrue();
     }
 

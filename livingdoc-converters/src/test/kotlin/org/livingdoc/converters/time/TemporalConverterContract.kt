@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.livingdoc.api.conversion.Format
 import org.livingdoc.api.conversion.TypeConverter
+import org.livingdoc.converters.contextWithAnnotation
+import org.livingdoc.converters.convertValueOnly
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
-import java.lang.reflect.AnnotatedElement
 import java.time.temporal.Temporal
 
 internal abstract class TemporalConverterContract<T : Temporal> {
@@ -32,54 +33,58 @@ internal abstract class TemporalConverterContract<T : Temporal> {
     fun `default input format variations`(): List<DynamicTest> {
         return validInputVariations
             .map { (value, expectedResult) ->
-                dynamicTest("$value is valid input format", {
-                    val result = cut.convert(value, null, null)
+                dynamicTest("$value is valid input format") {
+                    val result = cut.convertValueOnly(value)
                     assertThat(result).isEqualTo(expectedResult)
-                })
+                }
             }
     }
 
-    @Test fun `non temporal cannot be converted`() {
+    @Test
+    fun `non temporal cannot be converted`() {
         assertThrows(ValueFormatException::class.java) {
-            cut.convert("not a temporal value", null, null)
+            cut.convertValueOnly("not a temporal value")
         }
     }
 
-    @Nested inner class `custom input format` {
+    @Nested
+    inner class `custom input format` {
 
         private val format: Format = mockk()
-        private val element: AnnotatedElement = mockk()
 
-        @Test fun `default format used if no element given`() {
+        @Test
+        fun `default format used if no element given`() {
             val (value, expectedResult) = defaultFormatValue
-            val date = cut.convert(value, null, null)
+            val date = cut.convertValueOnly(value)
             assertThat(date).isEqualTo(expectedResult)
         }
 
-        @Test fun `default format used if no annotation present`() {
-            every { element.getAnnotation(Format::class.java) } returns null
-
+        @Test
+        fun `default format used if no annotation present`() {
+            val context = contextWithAnnotation(emptyList())
             val (value, expectedResult) = defaultFormatValue
-            val date = cut.convert(value, element, null)
+            val date = cut.convert(value, mockk(), context)
             assertThat(date).isEqualTo(expectedResult)
         }
 
-        @Test fun `format can be overridden via annotation`() {
-            every { element.getAnnotation(Format::class.java) } returns format
+        @Test
+        fun `format can be overridden via annotation`() {
+            val context = contextWithAnnotation(listOf(format))
             every { format.value } returns customFormat
 
             val (value, expectedResult) = customFormatValue
-            val date = cut.convert(value, element, null)
+            val date = cut.convert(value, mockk(), context)
             assertThat(date).isEqualTo(expectedResult)
         }
 
-        @Test fun `malformed custom pattern throws exception`() {
-            every { element.getAnnotation(Format::class.java) } returns format
+        @Test
+        fun `malformed custom pattern throws exception`() {
+            val context = contextWithAnnotation(listOf(format))
             every { format.value } returns malformedCustomFormat
 
             val (value) = customFormatValue
             assertThrows(MalformedFormatException::class.java) {
-                cut.convert(value, element, null)
+                cut.convert(value, mockk(), context)
             }
         }
     }

@@ -1,13 +1,16 @@
 package org.livingdoc.converters.collection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import kotlin.reflect.KProperty;
+import kotlin.reflect.jvm.ReflectJvmMapping;
+import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
+import org.livingdoc.converters.TypeConvertersTestFixtures;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.livingdoc.converters.TypeConvertersTestFixtures;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class ListConverterJavaTest {
@@ -23,8 +26,8 @@ class ListConverterJavaTest {
     void javaInteroperabilityIsWorking() throws NoSuchFieldException {
         List<Boolean> expected = Arrays.asList(true, false, false, true);
         Field field = TypeConvertersTestFixtures.NoAnnotations.class.getField("listField");
-
-        List<?> converted = cut.convert("true, false, false, true", field, null);
+        KProperty<?> property = ReflectJvmMapping.getKotlinProperty(field);
+        List<?> converted = TypeConverterExtensionKt.convertValueForProperty(cut, "true, false, false, true", property);
         assertThat(expected).isEqualTo(converted);
     }
 }

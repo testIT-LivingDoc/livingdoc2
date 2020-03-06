@@ -6,6 +6,7 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
+import org.livingdoc.converters.TypeConverterExtensionKt;
 import utils.EnglishDefaultLocale;
 
 
@@ -21,7 +22,7 @@ class BigIntegerConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        BigInteger value = cut.convert("42", null, null);
+        BigInteger value = TypeConverterExtensionKt.convertValueOnly(cut,"42");
         assertThat(value).isEqualTo(BigInteger.valueOf(42L));
     }
 

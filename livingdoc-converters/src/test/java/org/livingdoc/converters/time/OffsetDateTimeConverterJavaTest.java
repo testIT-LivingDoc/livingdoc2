@@ -1,10 +1,11 @@
 package org.livingdoc.converters.time;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
 
 import java.time.OffsetDateTime;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class OffsetDateTimeConverterJavaTest {
@@ -19,7 +20,7 @@ class OffsetDateTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         OffsetDateTime now = OffsetDateTime.now();
-        OffsetDateTime value = cut.convert(now.toString(), null, null);
+        OffsetDateTime value = TypeConverterExtensionKt.convertValueOnly(cut, now.toString());
         assertThat(value).isEqualTo(now);
     }
 

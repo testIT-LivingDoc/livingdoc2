@@ -1,13 +1,15 @@
 package org.livingdoc.converters.time
 
-import java.lang.reflect.AnnotatedElement
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.time.temporal.Temporal
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.Format
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.MalformedFormatException
 import org.livingdoc.converters.exceptions.ValueFormatException
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.time.temporal.Temporal
+import kotlin.reflect.KType
+import kotlin.reflect.full.findAnnotation
 
 /**
  * The AbstractTemporalConverter is the abstraction of the time converters.
@@ -19,18 +21,16 @@ abstract class AbstractTemporalConverter<T : Temporal> : TypeConverter<T> {
      * and calls the parse function which calls the function that is implemented by the actual Converters.
      */
     @Throws(ValueFormatException::class, MalformedFormatException::class)
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
-        val formatter = getDateTimeFormatter(element)
+    override fun convert(value: String, type: KType, context: Context): T {
+        val formatter = getDateTimeFormatter(context)
         return parse(value, formatter)
     }
 
-    private fun getDateTimeFormatter(element: AnnotatedElement?): DateTimeFormatter {
+    private fun getDateTimeFormatter(context: Context): DateTimeFormatter {
         try {
-            val customFormatter = element
-                ?.getAnnotation(Format::class.java)
+            return context.element.findAnnotation<Format>()
                 ?.value
-                ?.let { DateTimeFormatter.ofPattern(it) }
-            return customFormatter ?: defaultFormatter()
+                ?.let { DateTimeFormatter.ofPattern(it) } ?: defaultFormatter()
         } catch (e: IllegalArgumentException) {
             throw MalformedFormatException(e)
         }

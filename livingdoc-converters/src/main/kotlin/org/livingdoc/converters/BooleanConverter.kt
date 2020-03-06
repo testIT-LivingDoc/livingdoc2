@@ -1,8 +1,9 @@
 package org.livingdoc.converters
 
-import java.lang.reflect.AnnotatedElement
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
+import kotlin.reflect.KType
 
 /**
  * This converter is used to convert a String to a boolean, if the String is "true" or "false"
@@ -18,7 +19,7 @@ open class BooleanConverter : TypeConverter<Boolean> {
      * @throws ConversionException if the content is not "true" or "false"
      */
     @Throws(ConversionException::class)
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Boolean {
+    override fun convert(value: String, type: KType, context: Context): Boolean {
         val trimmedLowerCaseValue = value.trim().toLowerCase()
         when (trimmedLowerCaseValue) {
             "true" -> return true

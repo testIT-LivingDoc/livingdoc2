@@ -12,7 +12,7 @@ internal class StringConverterTest : DefaultTypeConverterContract {
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = ["", " ", "foo", "foo bar"])
     fun `any string value is returned as is`(value: String) {
-        assertThat(cut.convert(value, null, null)).isEqualTo(value)
+        assertThat(cut.convertValueOnly(value)).isEqualTo(value)
     }
 
     @Test fun `converter can converted to Kotlin String`() {

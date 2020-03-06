@@ -1,8 +1,9 @@
 package org.livingdoc.converters
 
-import java.lang.reflect.AnnotatedElement
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
+import kotlin.reflect.KType
 
 /**
  * This converter is used to convert a String with a length of 1 to a char
@@ -17,7 +18,7 @@ open class CharacterConverter : TypeConverter<Char> {
      * @return the char value of the given String
      * @throws ConversionException if the length is not 1
      */
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Char {
+    override fun convert(value: String, type: KType, context: Context): Char {
         if (value.length != 1) {
             throw ConversionException("not a char value: '$value'")
         }

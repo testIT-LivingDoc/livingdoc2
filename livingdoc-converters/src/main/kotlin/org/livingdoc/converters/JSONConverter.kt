@@ -3,12 +3,12 @@ package org.livingdoc.converters
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
 import java.io.StringReader
-import java.lang.reflect.AnnotatedElement
-import java.lang.reflect.Field
-import java.lang.reflect.Parameter
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 /**
  * A TypeConverter to convert json strings into custom Types. This is not a Default TypeConverter and must always be
@@ -16,11 +16,11 @@ import java.lang.reflect.Parameter
  */
 class JSONConverter<T> : TypeConverter<T> {
 
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
-        val typeClass = getType(element ?: throw IllegalArgumentException("The element must be given"))
+    override fun convert(value: String, type: KType, context: Context): T {
+        val typeClass = getType(type)
         val klaxon = Klaxon()
         val json = try {
-            klaxon.parser(typeClass.kotlin).parse(StringReader(value)) as? JsonObject
+            klaxon.parser(typeClass).parse(StringReader(value)) as? JsonObject
                 ?: throw ConversionException("Only json objects con be converted: $value")
         } catch (e: KlaxonException) {
             throw ConversionException("Can not parse json string '$value'", e)
@@ -29,7 +29,7 @@ class JSONConverter<T> : TypeConverter<T> {
             throw ConversionException("Can not parse json string '$value'", e)
         }
         try {
-            return klaxon.fromJsonObject(json, typeClass, typeClass.kotlin) as T
+            return klaxon.fromJsonObject(json, typeClass.java, typeClass) as T
         } catch (e: KlaxonException) {
             throw ConversionException(
                 "Can not create object of type '$typeClass' from json '${json.toJsonString(
@@ -39,12 +39,8 @@ class JSONConverter<T> : TypeConverter<T> {
         }
     }
 
-    private fun getType(element: AnnotatedElement): Class<*> {
-        return when (element) {
-            is Field -> element.type
-            is Parameter -> element.type
-            else -> error("annotated element is of a not supported type: $element")
-        } ?: throw TypeConverters.NoTypeConverterFoundException(element)
+    private fun getType(element: KType): KClass<*> {
+        return element.classifier as KClass<*>
     }
 
     /**

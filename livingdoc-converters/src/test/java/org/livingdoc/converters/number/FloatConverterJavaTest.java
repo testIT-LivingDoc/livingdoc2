@@ -1,10 +1,10 @@
 package org.livingdoc.converters.number;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
-
+import org.livingdoc.converters.TypeConverterExtensionKt;
 import utils.EnglishDefaultLocale;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @EnglishDefaultLocale
@@ -19,7 +19,7 @@ class FloatConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Float value = cut.convert("42.01", null, null);
+        Float value = TypeConverterExtensionKt.convertValueOnly(cut, "42.01");
         assertThat(value).isEqualTo(42.01f);
     }
 

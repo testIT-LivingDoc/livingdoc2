@@ -3,95 +3,122 @@ package org.livingdoc.converters
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.TypeConvertersTestFixtures.*
 import kotlin.reflect.KClass
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 
 internal class TypeConvertersTest {
 
-    val booleanClass = java.lang.Boolean::class.java
+    @Nested
+    inner class parameters {
 
-    @Nested inner class parameters {
-
-        @Test fun `annotated parameter`() {
-            val typeConverter = getParameterTypeConverter(AnnotatedMethodParameter::class)
+        @Test
+        fun `annotated parameter`() {
+            val typeConverter = getParameterTypeConverter(contextOf(AnnotatedMethodParameter::class))
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test fun `annotated method`() {
-            val typeConverter = getParameterTypeConverter(AnnotatedMethod::class)
+        @Test
+        fun `annotated method`() {
+            val typeConverter = getParameterTypeConverter(contextOf(AnnotatedMethod::class))
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test fun `annotated class`() {
-            val typeConverter = getParameterTypeConverter(AnnotatedClass::class)
+        @Test
+        fun `annotated class`() {
+            val typeConverter = getParameterTypeConverter(contextOf(AnnotatedClass::class))
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test fun `default fallback without document`() {
-            val typeConverter = getParameterTypeConverter(NoAnnotations::class)
+        @Test
+        fun `default fallback without document`() {
+            val typeConverter = getParameterTypeConverter(contextOf(NoAnnotations::class))
             assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
         }
 
-        @Nested inner class `with document` {
+        @Nested
+        inner class `with document` {
 
-            @Test fun `annotated document class`() {
-                val typeConverter = getParameterTypeConverter(NoAnnotations::class, DocumentWithAnnotation::class)
+            @Test
+            fun `annotated document class`() {
+                val typeConverter =
+                    getParameterTypeConverter(contextOf(DocumentWithAnnotation::class, NoAnnotations::class))
                 assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
             }
 
-            @Test fun `default fallback when no document annotation`() {
-                val typeConverter = getParameterTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
+            @Test
+            fun `default fallback when no document annotation`() {
+                val typeConverter =
+                    getParameterTypeConverter(contextOf(DocumentWithoutAnnotation::class, NoAnnotations::class))
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
         }
 
-        private fun getParameterTypeConverter(
-            fixtureClass: KClass<*>,
-            documentClass: KClass<*>? = null
-        ): TypeConverter<*>? {
-            val method = fixtureClass.java.getMethod("method", booleanClass)
-            val parameter = method.parameters[0]
-            return TypeConverters.findTypeConverter(parameter, documentClass?.java)
+        /**
+         * Use the first parameter of the function with the name method on the context element. [context] element must
+         * be a KClass.
+         */
+        private fun getParameterTypeConverter(context: Context): TypeConverter<*>? {
+            val fixtureClass = context.element as KClass<*>
+            val function = fixtureClass.memberFunctions.first { it.name == "method" }
+            val parameter = function.valueParameters[0]
+            val extendedContext = context.createContext(function).createContext(parameter)
+
+            return TypeConverters.findTypeConverter("", parameter.type, extendedContext)
         }
     }
 
-    @Nested inner class fields {
+    @Nested
+    inner class fields {
 
-        @Test fun `annotated field`() {
-            val typeConverter = getFieldTypeConverter(AnnotatedField::class)
+        @Test
+        fun `annotated field`() {
+            val typeConverter = getFieldTypeConverter(contextOf(AnnotatedField::class))
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test fun `annotated class`() {
-            val typeConverter = getFieldTypeConverter(AnnotatedClass::class)
+        @Test
+        fun `annotated class`() {
+            val typeConverter = getFieldTypeConverter(contextOf(AnnotatedClass::class))
             assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
         }
 
-        @Test fun `default fallback without document`() {
-            val typeConverter = getFieldTypeConverter(NoAnnotations::class)
+        @Test
+        fun `default fallback without document`() {
+            val typeConverter = getFieldTypeConverter(contextOf(NoAnnotations::class))
             assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
         }
 
-        @Nested inner class `with document` {
+        @Nested
+        inner class `with document` {
 
-            @Test fun `annotated document class`() {
-                val typeConverter = getFieldTypeConverter(NoAnnotations::class, DocumentWithAnnotation::class)
+            @Test
+            fun `annotated document class`() {
+                val typeConverter =
+                    getFieldTypeConverter(contextOf(DocumentWithAnnotation::class, NoAnnotations::class))
                 assertThat(typeConverter).isInstanceOf(CustomBooleanConverter::class.java)
             }
 
-            @Test fun `default fallback when no document annotation`() {
-                val typeConverter = getFieldTypeConverter(NoAnnotations::class, DocumentWithoutAnnotation::class)
+            @Test
+            fun `default fallback when no document annotation`() {
+                val typeConverter =
+                    getFieldTypeConverter(contextOf(DocumentWithoutAnnotation::class, NoAnnotations::class))
                 assertThat(typeConverter).isInstanceOf(BooleanConverter::class.java)
             }
         }
 
-        private fun getFieldTypeConverter(
-            fixtureClass: KClass<*>,
-            documentClass: KClass<*>? = null
-        ): TypeConverter<*>? {
-            val field = fixtureClass.java.getField("field")
-            return TypeConverters.findTypeConverter(field, documentClass?.java)
+        /**
+         * Use the property named field of the context element. [context] have a KClass as element.
+         */
+        private fun getFieldTypeConverter(context: Context): TypeConverter<*>? {
+            val fixtureClass = context.element as KClass<*>
+            val field = fixtureClass.memberProperties.first { it.name == "field" }
+            val extendedContext = context.createContext(field)
+            return TypeConverters.findTypeConverter("", field.returnType, extendedContext)
         }
     }
 }

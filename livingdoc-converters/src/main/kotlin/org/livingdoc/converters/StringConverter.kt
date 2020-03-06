@@ -1,7 +1,8 @@
 package org.livingdoc.converters
 
-import java.lang.reflect.AnnotatedElement
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.TypeConverter
+import kotlin.reflect.KType
 
 /**
  * This converter is used to convert a String to a String
@@ -13,7 +14,7 @@ open class StringConverter : TypeConverter<String> {
      * @param value: the input String
      * @return the result of the conversion as a String
      */
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): String = value
+    override fun convert(value: String, type: KType, context: Context): String = value
 
     /**
      * This method returns true, if the parameter targetType is the java String class.

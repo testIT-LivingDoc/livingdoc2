@@ -16,7 +16,7 @@ class StringConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        String value = cut.convert("abc", null, null);
+        String value = TypeConverterExtensionKt.convertValueOnly(cut, "abc");
         assertThat(value).isEqualTo("abc");
     }
 

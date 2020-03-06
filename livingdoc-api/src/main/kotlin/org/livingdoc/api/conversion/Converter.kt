@@ -16,7 +16,6 @@ import kotlin.reflect.KClass
  *
  * @since 2.0
  */
-@Repeatable
 @Target(
     AnnotationTarget.CLASS,
     AnnotationTarget.FIELD,

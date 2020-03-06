@@ -1,10 +1,11 @@
 package org.livingdoc.converters.time;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class LocalDateConverterJavaTest {
@@ -19,7 +20,7 @@ class LocalDateConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         LocalDate now = LocalDate.now();
-        LocalDate value = cut.convert(now.toString(), null, null);
+        LocalDate value = TypeConverterExtensionKt.convertValueOnly(cut, now.toString());
         assertThat(value).isEqualTo(now);
     }
 

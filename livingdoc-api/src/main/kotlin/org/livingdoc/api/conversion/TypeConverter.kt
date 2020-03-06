@@ -1,6 +1,7 @@
 package org.livingdoc.api.conversion
 
 import java.lang.reflect.AnnotatedElement
+import kotlin.reflect.KType
 
 /**
  * Classes implementing this interface are used by LivingDoc to convert a single [String] value into the defined
@@ -33,14 +34,14 @@ interface TypeConverter<T> {
      * exhibit undefined behavior.
      *
      * @param value the value to convert
-     * @param element the element being converted - might be `null`!
-     * @param documentClass the documentClass
+     * @param type the type to convert to
+     * @param context the context for annotations
      * @return the converted target instance
      * @throws ConversionException in case the conversion failed
      * @since 2.0
      */
     @Throws(ConversionException::class)
-    fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T
+    fun convert(value: String, type: KType, context: Context): T
 
     /**
      * Checks whether this [TypeConverter] can convert strings to the given type.

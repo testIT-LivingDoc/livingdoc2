@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
 
 
 class LocalTimeConverterJavaTest {
@@ -19,7 +20,7 @@ class LocalTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         LocalTime now = LocalTime.now();
-        LocalTime value = cut.convert(now.toString(), null, null);
+        LocalTime value = TypeConverterExtensionKt.convertValueOnly(cut, now.toString());
         assertThat(value).isEqualTo(now);
     }
 

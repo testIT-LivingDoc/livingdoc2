@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
 
 
 class ZonedDateTimeConverterJavaTest {
@@ -19,7 +20,7 @@ class ZonedDateTimeConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() {
         ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime value = cut.convert(now.toString(), null, null);
+        ZonedDateTime value =  TypeConverterExtensionKt.convertValueOnly(cut, now.toString());
         assertThat(value).isEqualTo(now);
     }
 

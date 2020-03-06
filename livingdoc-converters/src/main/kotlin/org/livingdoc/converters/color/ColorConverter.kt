@@ -1,9 +1,10 @@
 package org.livingdoc.converters.color
 
+import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.ColorFormatException
-import java.lang.reflect.AnnotatedElement
 import java.util.*
+import kotlin.reflect.KType
 
 /**
  * A class containing methods, that can convert a string to a hex color value.
@@ -32,7 +33,7 @@ class ColorConverter : TypeConverter<String> {
      *
      * @return A lower case hex color value as a string.
      */
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): String {
+    override fun convert(value: String, type: KType, context: Context): String {
         val lowerCaseAndTrimmedValue = value.toLowerCase().trim().replace(" ", "")
 
         return parseHexColor(lowerCaseAndTrimmedValue)

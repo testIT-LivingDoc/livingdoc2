@@ -1,7 +1,8 @@
 package org.livingdoc.converters.number
 
-import java.lang.reflect.AnnotatedElement
+import org.livingdoc.api.conversion.Context
 import java.math.BigDecimal
+import kotlin.reflect.KType
 
 /**
  * This converter converts a BigDecimal or a String to a Float number
@@ -25,13 +26,13 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
      *
      * @param value the string containing the value that should be converted
      */
-    override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Float {
+    override fun convert(value: String, type: KType, context: Context): Float {
         return when (value) {
             NOT_A_NUMBER -> Float.NaN
             POSITIVE_INFINITY -> Float.POSITIVE_INFINITY
             NEGATIVE_INFINITY -> Float.NEGATIVE_INFINITY
             NEGATIVE_ZERO_STRING -> NEGATIVE_ZERO_NUMBER
-            else -> super.convert(value, element, documentClass)
+            else -> super.convert(value, type, context)
         }
     }
 

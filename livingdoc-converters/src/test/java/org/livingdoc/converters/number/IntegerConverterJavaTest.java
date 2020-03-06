@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import org.livingdoc.converters.TypeConverterExtensionKt;
 import utils.EnglishDefaultLocale;
 
 
@@ -19,7 +20,7 @@ class IntegerConverterJavaTest {
 
     @Test
     void javaInteroperabilityIsWorking() {
-        Integer value = cut.convert("42", null, null);
+        Integer value = TypeConverterExtensionKt.convertValueOnly(cut, "42");
         assertThat(value).isEqualTo(42);
     }
 

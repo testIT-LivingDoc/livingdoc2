@@ -3,6 +3,7 @@ package org.livingdoc.converters.number
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.livingdoc.converters.DefaultTypeConverterContract
+import org.livingdoc.converters.convertValueOnly
 
 internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), DefaultTypeConverterContract {
 
@@ -18,15 +19,15 @@ internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), D
     override val germanValue = "42.000,24" to 42000.24
 
     @Test fun `not a number is handled correctly`() {
-        cut.convert(Double.NaN.toString(), null, null)
+        cut.convertValueOnly(Double.NaN.toString())
     }
 
     @Test fun `positive infinity is handled correctly`() {
-        cut.convert(Double.POSITIVE_INFINITY.toString(), null, null)
+        cut.convertValueOnly(Double.POSITIVE_INFINITY.toString())
     }
 
     @Test fun `negative infinity is handled correctly`() {
-        cut.convert(Double.NEGATIVE_INFINITY.toString(), null, null)
+        cut.convertValueOnly(Double.NEGATIVE_INFINITY.toString())
     }
 
     @Test fun `converter can converted to Kotlin Double`() {
@@ -34,6 +35,6 @@ internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), D
     }
 
     @Test fun `converter can handle double specific -0 case`() {
-        assertThat(cut.convert("-0", null, null)).isEqualTo(-0.0)
+        assertThat(cut.convertValueOnly("-0")).isEqualTo(-0.0)
     }
 }

@@ -14,26 +14,30 @@ internal class CharacterConverterTest : DefaultTypeConverterContract {
     @ParameterizedTest(name = "\"{0}\"")
     @ValueSource(strings = [" ", "\t", "a", "z", "0", "9", "-", "$", "|"])
     fun `any char value can be converted`(value: String) {
-        assertThat(cut.convert(value, null, null)).isNotNull()
+        assertThat(cut.convertValueOnly(value)).isNotNull()
     }
 
-    @Test fun `empty string is not a valid char`() {
-        assertThrows(ConversionException::class.java, {
-            cut.convert("", null, null)
-        })
+    @Test
+    fun `empty string is not a valid char`() {
+        assertThrows(ConversionException::class.java) {
+            cut.convertValueOnly("")
+        }
     }
 
-    @Test fun `one character string is a valid char`() {
-        assertThat(cut.convert("a", null, null)).isEqualTo('a')
+    @Test
+    fun `one character string is a valid char`() {
+        assertThat(cut.convertValueOnly("a")).isEqualTo('a')
     }
 
-    @Test fun `two character string is not a valid char`() {
-        assertThrows(ConversionException::class.java, {
-            cut.convert("ab", null, null)
-        })
+    @Test
+    fun `two character string is not a valid char`() {
+        assertThrows(ConversionException::class.java) {
+            cut.convertValueOnly("ab")
+        }
     }
 
-    @Test fun `converter can converted to Kotlin Char`() {
+    @Test
+    fun `converter can converted to Kotlin Char`() {
         assertThat(cut.canConvertTo(Char::class.java)).isTrue()
     }
 }

@@ -1,6 +1,10 @@
 package org.livingdoc.converters.collection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import kotlin.reflect.KProperty;
+import kotlin.reflect.jvm.ReflectJvmMapping;
+import org.junit.jupiter.api.Test;
+import org.livingdoc.converters.TypeConverterExtensionKt;
+import org.livingdoc.converters.TypeConvertersTestFixtures;
 
 import java.lang.reflect.Field;
 import java.util.AbstractMap.SimpleEntry;
@@ -9,8 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
-import org.livingdoc.converters.TypeConvertersTestFixtures;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class MapConverterJavaTest {
@@ -25,11 +28,12 @@ class MapConverterJavaTest {
     @Test
     void javaInteroperabilityIsWorking() throws NoSuchFieldException {
         Map<String, Boolean> expected = Collections.unmodifiableMap(
-            Stream.of(new SimpleEntry<>("true", true), new SimpleEntry<>("false", false))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue)));
+                Stream.of(new SimpleEntry<>("true", true), new SimpleEntry<>("false", false))
+                        .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue)));
         Field field = TypeConvertersTestFixtures.NoAnnotations.class.getField("mapField");
-
-        Map<?, ?> converted = cut.convert("true, true; false, false", field, null);
+        KProperty<?> property = ReflectJvmMapping.getKotlinProperty(field);
+        Map<?, ?> converted = TypeConverterExtensionKt.convertValueForProperty(cut, "true, true; false, false",
+                property);
         assertThat(expected).isEqualTo(converted);
     }
 }
