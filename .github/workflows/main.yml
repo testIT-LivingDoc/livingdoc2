@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
              java-version: 8
-      - name: Crate Dokka
+      - name: Create Dokka
         run: ./gradlew aggregatedDokka
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
