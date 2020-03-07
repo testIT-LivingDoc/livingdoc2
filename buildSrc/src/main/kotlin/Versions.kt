@@ -14,6 +14,7 @@ object Versions {
     val flexmark = "0.28.32"
     val klaxon = "5.2"
     val gherkin = "9.0.0"
+    const val jgit = "5.6.1.202002131546-r"
 
     //Test
     val junitPlatform = "1.5.2"
