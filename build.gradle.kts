@@ -31,6 +31,7 @@ val livingdocKotlinProjects by extra(
 		project(":livingdoc-reports"),
 		project(":livingdoc-repositories"),
 		project(":livingdoc-repository-file"),
+		project(":livingdoc-repository-git"),
 		project(":livingdoc-repository-rest"),
 		project(":livingdoc-repository-confluence"),
 		project(":livingdoc-results"),
