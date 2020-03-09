@@ -1,11 +1,8 @@
 package org.livingdoc.jvm.scenario
 
-import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.livingdoc.jvm.api.extension.context.FixtureContext
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step

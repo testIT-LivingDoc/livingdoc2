@@ -84,12 +84,14 @@ data class ScenarioResult private constructor(
         fun withUnassignedSkipped(): Builder {
             checkFinalized()
             this.scenario!!.steps.forEach {
-                withStep(
-                    StepResult.Builder()
-                        .withValue(it.value)
-                        .withStatus(Status.Skipped)
-                        .build()
-                )
+                val stepresult = StepResult.Builder()
+                    .withValue(it.value)
+                    .withStatus(Status.Skipped)
+                    .build()
+                if (!this.steps.contains(stepresult))
+                    withStep(
+                        stepresult
+                    )
             }
             return this
         }

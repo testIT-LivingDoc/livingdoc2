@@ -22,41 +22,34 @@ class ScenarioFixture(
     override fun execute(scenario: Scenario): TestDataResult<Scenario> {
         val srBuilder =
             ScenarioResult.Builder().withFixtureSource(fixtureModel.context.fixtureClass.java).withScenario(scenario)
-
-        val shouldExecute = manager.shouldExecute()
-        // unassigned Skipped sollte man sich nochmal ansehen
-        if (shouldExecute.disabled) {
-            srBuilder.withStatus(Status.Disabled(shouldExecute.reason.orEmpty())).withUnassignedSkipped()
-        } else {
-            try {
-                manager.onBeforeFixture()
-
+        var successfulExecution = true
+        if (shouldExecute(srBuilder)) {
+            if (onBeforeScenarioCallback(srBuilder)) {
                 val fixture = ScenarioFixtureInstance.createFixtureInstance(fixtureModel.context.fixtureClass)
-                val results = executeSteps(scenario, fixture)
-                results.forEach{
-                    srBuilder.withStep(it)
+                if (onBeforeScenarioMethod(fixture, srBuilder)) {
+                    successfulExecution = executeSteps(scenario, fixture, srBuilder)
                 }
-
-                manager.onAfterFixture()
-
+                successfulExecution = successfulExecution and onAfterScenarioMethod(fixture, srBuilder)
+            }
+            successfulExecution = successfulExecution and onAfterScenarioCallback(srBuilder)
+            if (successfulExecution) {
                 srBuilder.withStatus(Status.Executed)
-
-                // laut Leon macht eine IllegalStateException an der Stelle keinen Sinn, daher brauchen wir das Failed
-                // auch nicht. Daher waere ein throwable auch besser
-            } catch (throwable: Throwable) {
-                val processedThrowable = manager.handleTestExecutionException(throwable)
-                if (processedThrowable != null) {
-                    srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped().build()
-                }
             }
         }
 
         return srBuilder.build()
     }
 
-    private fun executeSteps(scenario: Scenario, fixture: ScenarioFixtureInstance): List<StepResult> {
+    /**
+     * executes all steps in sequence until an exception occurs the resut is not executed
+     */
+    private fun executeSteps(
+        scenario: Scenario,
+        fixture: ScenarioFixtureInstance,
+        srBuilder: ScenarioResult.Builder
+    ): Boolean {
         var stopExecution = false
-        return scenario.steps.map { step ->
+        val results = scenario.steps.map { step ->
             if (stopExecution) {
                 StepResult.Builder().withValue(step.value).withStatus(Status.Skipped).build()
             } else {
@@ -67,8 +60,15 @@ class ScenarioFixture(
                 result
             }
         }
+        results.forEach {
+            srBuilder.withStep(it)
+        }
+        return !stopExecution
     }
 
+    /**
+     * executes a single step
+     */
     private fun executeStep(
         fixture: ScenarioFixtureInstance,
         stepValue: String
@@ -79,7 +79,8 @@ class ScenarioFixture(
         val parameterList = function.valueParameters
             .map { parameter ->
                 val parameterName = getParameterName(parameter)
-                parameter to (matchingResult.variableToValue[parameterName] ?: error("Missing parameter value: $parameterName"))
+                parameter to (matchingResult.variableToValue[parameterName]
+                    ?: error("Missing parameter value: $parameterName"))
             }.toMap()
 
         try {
@@ -104,5 +105,83 @@ class ScenarioFixture(
 
     private fun getParameterName(parameter: KParameter): String {
         return parameter.findAnnotation<Binding>()!!.value
+    }
+
+    private fun shouldExecute(srBuilder: ScenarioResult.Builder): Boolean {
+        val shouldExecute = manager.shouldExecute()
+        // TODO unassigned Skipped sollte man sich nochmal ansehen
+        return if (shouldExecute.disabled) {
+            srBuilder.withStatus(Status.Disabled(shouldExecute.reason.orEmpty())).withUnassignedSkipped()
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun onBeforeScenarioCallback(srBuilder: ScenarioResult.Builder): Boolean {
+        return try {
+            manager.onBeforeFixture()
+            true
+        } catch (throwable: Throwable) {
+            val processedThrowable = manager.handleBeforeMethodExecutionException(throwable)
+            if (processedThrowable != null) {
+                srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
+                false
+            } else {
+                true
+            }
+        }
+    }
+
+    /**
+     * execute before non static member functions annotated with @Before
+     */
+    private fun onBeforeScenarioMethod(fixture: ScenarioFixtureInstance, srBuilder: ScenarioResult.Builder): Boolean {
+        var succeeded = true
+        fixtureModel.beforeMethods.forEach {
+            try {
+                ReflectionHelper.invokeWithoutParameterWithoutReturnValue(it, fixture)
+            } catch (throwable: Throwable) {
+                val processedThrowable = manager.handleBeforeMethodExecutionException(throwable)
+                if (processedThrowable != null) {
+                    srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
+                    succeeded = false
+                }
+            }
+        }
+
+        return succeeded
+    }
+
+    private fun onAfterScenarioMethod(fixture: ScenarioFixtureInstance, srBuilder: ScenarioResult.Builder): Boolean {
+        var succeeded = true
+        fixtureModel.afterMethods.forEach {
+            try {
+                ReflectionHelper.invokeWithoutParameterWithoutReturnValue(it, fixture)
+            } catch (throwable: Throwable) {
+                val processedThrowable = manager.handleAfterMethodExecutionException(throwable)
+                if (processedThrowable != null) {
+                    srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
+                    succeeded = false
+                }
+            }
+        }
+
+        return succeeded
+    }
+
+    private fun onAfterScenarioCallback(srBuilder: ScenarioResult.Builder): Boolean {
+        return try {
+            manager.onAfterFixture()
+            true
+        } catch (throwable: Throwable) {
+            val processedThrowable = manager.handleAfterMethodExecutionException(throwable)
+            if (processedThrowable != null) {
+                srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
+                false
+            } else {
+                true
+            }
+        }
     }
 }

@@ -102,6 +102,25 @@ internal class ScenarioResultBuilderTest {
     }
 
     @Test
+    fun `unassignedSkipped is called multiple times`() {
+        val result = ScenarioResult.Builder()
+            .withScenario(scenarioWithSteps)
+            .withFixtureSource(fixtureClass)
+            .withStatus(Status.Executed)
+            .withUnassignedSkipped()
+            .withUnassignedSkipped()
+            .withUnassignedSkipped()
+            .build()
+
+        assertThat(result.scenario).isEqualTo(scenarioWithSteps)
+        assertThat(result.fixtureSource).isEqualTo(fixtureClass)
+        assertThat(result.status).isEqualTo(Status.Executed)
+        assertThat(result.steps).hasSize(2)
+        assertThat(result.steps[0].status).isEqualTo(Status.Skipped)
+        assertThat(result.steps[1].status).isEqualTo(Status.Skipped)
+    }
+
+    @Test
     fun `test scenario without scenario`() {
         val builder = ScenarioResult.Builder()
             .withFixtureSource(fixtureClass)
