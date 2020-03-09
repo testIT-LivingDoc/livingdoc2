@@ -23,9 +23,9 @@ internal class GitFileResolverTest {
 
     @Test
     fun `finds existing file`() {
-        val content = cut.resolve(GitDocumentIdentifier("TestTexts.md"))
+        val file = cut.resolve(GitDocumentIdentifier("TestTexts.md"))
 
-        assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
+        assertThat(file).hasContent(
             """
                 # Scenarios
 
@@ -54,9 +54,9 @@ internal class GitFileResolverTest {
 
     @Test
     fun `finds previous version of file`() {
-        val content = cut.resolve(GitDocumentIdentifier("TestTexts.md", "4f8fb05601e2bd84cf2fb05741ff5a868f285c6b"))
+        val file = cut.resolve(GitDocumentIdentifier("TestTexts.md", "4f8fb05601e2bd84cf2fb05741ff5a868f285c6b"))
 
-        assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
+        assertThat(file).hasContent(
             """
                 # Scenarios
 
