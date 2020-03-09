@@ -1,13 +1,11 @@
 package org.livingdoc.jvm.decisiontable
 
-import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.repositories.model.decisiontable.Row
 import org.livingdoc.results.examples.decisiontables.RowResult
 
 class RowExecution(
-    val context: FixtureContext,
     private val fixtureModel: DecisionTableFixtureModel,
     private val row: Row,
     private val inputHeaders: Set<Header>,
@@ -17,7 +15,7 @@ class RowExecution(
         val rowResultBuilder = RowResult.Builder()
             .withRow(row)
 
-        getHeaderToFieldMapForRow(row, inputHeaders).forEach {(header, field) ->
+        getHeaderToFieldMapForRow(row, inputHeaders).forEach { (header, field) ->
             val fieldResult = Input(header, field).setInput()
             rowResultBuilder.withFieldResult(header, fieldResult)
         }

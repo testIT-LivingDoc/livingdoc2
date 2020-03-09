@@ -2,16 +2,18 @@ package org.livingdoc.jvm.decisiontable
 
 import org.livingdoc.api.After
 import org.livingdoc.api.Before
-import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.AfterRow
 import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
-import org.livingdoc.repositories.model.decisiontable.Field
-import kotlin.reflect.*
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KProperty
 import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
@@ -30,22 +32,12 @@ class DecisionTableFixtureModel(
     /**
      * Lists of methods
      */
-    val beforeRowMethods: List<KCallable<*>>
-    val afterRowMethods: List<KCallable<*>>
-    val beforeFirstCheckMethods: List<KCallable<*>>
-
-    val inputFields: List<KProperty<*>>
-    val inputMethods: List<KCallable<*>>
-    private val inputAliases: MutableSet<String>
-    private val inputAliasToField: MutableMap<String, KProperty<*>>
-    private val inputAliasToMethod: MutableMap<String, KCallable<*>>
-
-    val checkMethods: List<KCallable<*>>
-    private val checkAliases: Set<String>
-    private val checkAliasToMethod: Map<String, KCallable<*>>
-
-    val aliases: Set<String>
-        get() = inputAliases + checkAliases
+    val beforeRowMethods: List<KFunction<*>> =
+        fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<BeforeRow>() }
+    val afterRowMethods: List<KFunction<*>> =
+        fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<AfterRow>() }
+    val beforeFirstCheckMethods: List<KFunction<*>> =
+        fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<BeforeFirstCheck>() }
 
     val beforeMethods: List<KCallable<*>> = fixtureClass.declaredMembers.filter { method ->
         method.hasAnnotation<Before>()
@@ -55,83 +47,37 @@ class DecisionTableFixtureModel(
         method.hasAnnotation<After>()
     }.sortedBy { method -> method.name }
 
-    init {
-        // method analysis
+    val inputFields: List<KProperty<*>> =
+        fixtureClass.declaredMemberProperties.filter { field -> field.hasAnnotation<Input>() }
+    val inputMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Input>() }
+    val checkMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Check>() }
 
-        val beforeRowMethods = mutableListOf<KCallable<*>>()
-        val afterRowMethods = mutableListOf<KCallable<*>>()
-        val beforeFirstCheckMethods = mutableListOf<KCallable<*>>()
-        val inputMethods = mutableListOf<KCallable<*>>()
-        val checkMethods = mutableListOf<KCallable<*>>()
+    val aliases: Set<String>
+        get() = inputAliases + checkAliases
 
-        fixtureClass.declaredMemberFunctions.forEach { method ->
-            if (method.hasAnnotation<BeforeRow>()) beforeRowMethods.add(method)
-            if (method.hasAnnotation<AfterRow>()) afterRowMethods.add(method)
-            if (method.hasAnnotation<BeforeFirstCheck>()) beforeFirstCheckMethods.add(method)
-            if (method.hasAnnotation<Input>()) inputMethods.add(method)
-            if (method.hasAnnotation<Check>()) checkMethods.add(method)
-        }
+    private val inputAliases: Set<String> get() = inputAliasToField.keys + inputAliasToMethod.keys
+    private val inputAliasToField: Map<String, KProperty<*>> = inputFields.map { field ->
+        val alias = field.findAnnotation<Input>()!!.value
+        alias to field
+    }.toMap()
+    private val inputAliasToMethod: Map<String, KFunction<*>> = inputMethods.map { method ->
+        val alias = method.findAnnotation<Input>()!!.value
+        alias to method
+    }.toMap()
 
-        this.beforeRowMethods = beforeRowMethods
-        this.afterRowMethods = afterRowMethods
-        this.beforeFirstCheckMethods = beforeFirstCheckMethods
-        this.inputMethods = inputMethods
-        this.checkMethods = checkMethods
-
-        // field analysis
-
-        val inputFields = mutableListOf<KProperty<*>>()
-        fixtureClass.declaredMembers.forEach { field ->
-            if (field is KProperty && field.hasAnnotation<Input>()) inputFields.add(field)
-        }
-        this.inputFields = inputFields
-
-        // input alias analysis
-
-        val inputAliases = mutableSetOf<String>()
-        val inputAliasToField = mutableMapOf<String, KProperty<*>>()
-        inputFields.forEach { field ->
-            val alias = field.findAnnotation<Input>()?.value
-            if (alias != null) {
-                inputAliases.add(alias)
-                inputAliasToField[alias] = field
-            }
-        }
-
-        val inputAliasToMethod = mutableMapOf<String, KCallable<*>>()
-        inputMethods.forEach { method ->
-            val alias = method.findAnnotation<Input>()?.value
-            if (alias != null) {
-                inputAliases.add(alias)
-                inputAliasToMethod[alias] = method
-            }
-        }
-        this.inputAliases = inputAliases
-        this.inputAliasToField = inputAliasToField
-        this.inputAliasToMethod = inputAliasToMethod
-
-        // check alias analysis
-
-        val checkAliases = mutableSetOf<String>()
-        val checkAliasToMethod = mutableMapOf<String, KCallable<*>>()
-        checkMethods.forEach { method ->
-            val alias = method.findAnnotation<Check>()?.value
-            if (alias != null) {
-                checkAliases.add(alias)
-                checkAliasToMethod[alias] = method
-            }
-        }
-        this.checkAliases = checkAliases
-        this.checkAliasToMethod = checkAliasToMethod
-    }
+    private val checkAliases: Set<String> get() = checkAliasToMethod.keys
+    private val checkAliasToMethod: Map<String, KFunction<*>> = checkMethods.map { method ->
+        val alias = method.findAnnotation<Check>()!!.value
+        alias to method
+    }.toMap()
 
     fun isInputAlias(alias: String): Boolean = inputAliases.contains(alias)
     fun isFieldInput(alias: String): Boolean = inputAliasToField.containsKey(alias)
     fun isMethodInput(alias: String): Boolean = inputAliasToMethod.containsKey(alias)
 
     fun getInputField(alias: String): KProperty<*>? = inputAliasToField[alias]
-    fun getInputMethod(alias: String): KCallable<*>? = inputAliasToMethod[alias]
+    fun getInputMethod(alias: String): KFunction<*>? = inputAliasToMethod[alias]
 
     fun isCheckAlias(alias: String): Boolean = checkAliases.contains(alias)
-    fun getCheckMethod(alias: String): KCallable<*>? = checkAliasToMethod[alias]
+    fun getCheckMethod(alias: String): KFunction<*>? = checkAliasToMethod[alias]
 }

@@ -2,7 +2,6 @@ package org.livingdoc.jvm.decisiontable
 
 import kotlin.reflect.KCallable
 
-
 /**
  * This function tests a list of functions for their number of parameters that should be zero
  * @param methods The list of methods that should be checked

@@ -1,6 +1,5 @@
 package org.livingdoc.jvm.decisiontable
 
-import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.fixture.Fixture
 import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
@@ -11,13 +10,12 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 import org.livingdoc.results.examples.decisiontables.RowResult
 
 class DecisionTableFixture(
-    val context: FixtureContext,
-    private val manager: FixtureExtensionsInterface,
-    private val fixtureModel: DecisionTableFixtureModel
+    private val fixtureModel: DecisionTableFixtureModel,
+    private val manager: FixtureExtensionsInterface
 ) : Fixture<DecisionTable> {
     override fun execute(testData: DecisionTable): TestDataResult<DecisionTable> {
         val resultBuilder = DecisionTableResult.Builder()
-            .withFixtureSource(context.fixtureClass.java)
+            .withFixtureSource(fixtureModel.fixtureClass.java)
             .withDecisionTable(testData)
 
         var exceptionThrown = false
@@ -72,7 +70,6 @@ class DecisionTableFixture(
         // TODO Implement parallel execution
         return testData.rows.map { row ->
             RowExecution(
-                context,
                 fixtureModel,
                 row,
                 inputHeaders,

@@ -13,13 +13,11 @@ import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.findAnnotation
 
 class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
-    private lateinit var decisionTableFixtureModel: DecisionTableFixtureModel
 
     override fun isCompatible(testData: TestData): Boolean = testData is DecisionTable
 
     override fun match(fixtureClass: KClass<*>, testData: DecisionTable): Boolean {
-        decisionTableFixtureModel = DecisionTableFixtureModel(fixtureClass)
-        DecisionTableFixtureChecker.check(decisionTableFixtureModel)
+        DecisionTableFixtureChecker.check(DecisionTableFixtureModel(fixtureClass))
 
         val headerNames = testData.headers.map { it.name }
         val numberOfHeaders = headerNames.size
@@ -37,6 +35,7 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
     }
 
     override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<DecisionTable> {
-        return DecisionTableFixture(context, manager, decisionTableFixtureModel)
+        val model = DecisionTableFixtureModel(context.fixtureClass)
+        return DecisionTableFixture(model, manager)
     }
 }

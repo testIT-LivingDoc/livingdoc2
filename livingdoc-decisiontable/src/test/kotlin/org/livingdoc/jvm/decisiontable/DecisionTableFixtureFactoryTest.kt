@@ -1,11 +1,7 @@
 package org.livingdoc.jvm.decisiontable
 
-import io.mockk.mockk
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.livingdoc.jvm.api.extension.context.FixtureContext
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Field
 import org.livingdoc.repositories.model.decisiontable.Header
@@ -13,12 +9,7 @@ import org.livingdoc.repositories.model.decisiontable.Row
 
 internal class DecisionTableFixtureFactoryTest {
 
-    private lateinit var cut: DecisionTableFixtureFactory
-
-    @BeforeEach
-    fun `initialize factory`() {
-        cut = DecisionTableFixtureFactory()
-    }
+    private val cut = DecisionTableFixtureFactory()
 
     @Test
     fun `can handle decisiontables`() {
@@ -93,16 +84,5 @@ internal class DecisionTableFixtureFactoryTest {
         )
 
         Assertions.assertThat(cut.match(CalculatorFixture::class, decisionTable)).isFalse()
-    }
-
-    @Test
-    fun `can create correct fixture from context`() {
-        val context = mockk<FixtureContext>()
-        val manager = mockk<FixtureExtensionsInterface>()
-
-        Assertions.assertThat(cut.getFixture(context, manager))
-            .isInstanceOfSatisfying(DecisionTableFixture::class.java) {
-                Assertions.assertThat(it.context).isEqualTo(context)
-            }
     }
 }

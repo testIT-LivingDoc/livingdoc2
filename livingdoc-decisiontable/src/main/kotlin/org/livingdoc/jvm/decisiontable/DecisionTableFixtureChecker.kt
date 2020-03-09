@@ -10,7 +10,6 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 
-
 internal object DecisionTableFixtureChecker {
     fun check(model: DecisionTableFixtureModel): List<String> {
         return mutableListOf<String>().apply {
@@ -67,7 +66,7 @@ internal object DecisionTableFixtureChecker {
             annotatedElement.annotations
                 .filterIsInstance(annotation.java)
                 .map { flatMapper.invoke(it) }
-                .forEach { handler.invoke(it)}
+                .forEach { handler.invoke(it) }
         }
     }
 

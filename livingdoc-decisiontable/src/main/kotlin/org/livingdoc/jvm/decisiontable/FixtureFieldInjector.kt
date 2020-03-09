@@ -1,5 +1,3 @@
 package org.livingdoc.jvm.decisiontable
 
-class FixtureFieldInjector{
-
-}
+class FixtureFieldInjector
