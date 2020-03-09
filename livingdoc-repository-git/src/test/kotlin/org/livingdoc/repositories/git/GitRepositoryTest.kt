@@ -7,6 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.DocumentNotFoundException
 import org.livingdoc.repositories.DocumentRepository
 
+@Disabled("This test requires a remote git repository")
 internal class GitRepositoryTest {
     private val cut: DocumentRepository = GitRepository(
         "git", GitRepositoryConfig(
@@ -15,7 +16,6 @@ internal class GitRepositoryTest {
     )
 
     @Test
-    @Disabled("This test requires a remote git repository")
     fun `can load document file`() {
         assertThat(cut.getDocument("TestTexts.md")).satisfies { document ->
             assertThat(document.elements).hasSize(4)
@@ -23,7 +23,6 @@ internal class GitRepositoryTest {
     }
 
     @Test
-    @Disabled("This test requires a remote git repository")
     fun `throws if document cannot be found`() {
         assertThrows<DocumentNotFoundException> {
             cut.getDocument("NonExistentDocument.md")

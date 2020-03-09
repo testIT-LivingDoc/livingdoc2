@@ -5,12 +5,11 @@ import org.eclipse.jgit.lib.Constants
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-
+@Disabled("This test requires configuration of a remote git repository")
 class GitRepositoryResolverTest {
     private val config = GitRepositoryConfig()
 
     @Test
-    @Disabled("This test requires configuration of a local git repository")
     fun `works with existing repository`() {
         val cut = GitRepositoryResolver(config)
 
@@ -30,7 +29,6 @@ class GitRepositoryResolverTest {
     }
 
     @Test
-    @Disabled("This test requires configuration of a remote git repository")
     fun `clones non existent repository`() {
         val cut = GitRepositoryResolver(config)
 
