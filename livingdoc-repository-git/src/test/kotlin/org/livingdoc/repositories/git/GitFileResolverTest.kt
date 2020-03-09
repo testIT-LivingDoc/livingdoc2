@@ -2,6 +2,7 @@ package org.livingdoc.repositories.git
 
 import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.DocumentNotFoundException
@@ -20,23 +21,71 @@ class GitFileResolverTest {
     )
 
     @Test
+    @Disabled("This test requires configuration of a local git repository")
     fun `finds existing file`() {
-        val content = cut.resolve("Calculator/Calculator.feature")
+        val content = cut.resolve("TestTexts.md")
 
         assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
             """
-                Feature: Calculator
-                  Scenario: The calculator can add
-                    Given a calculator
-                    When I add 2 and 3
-                    Then I get 5
-                    But result is less than 10
-                    And result is greater than 0
+                # Scenarios
+
+                # Test A
+                
+                - concatenate {a} and {b} will result in {a}{b}
+                - concatenate ddd and dd will result in ddddd
+                - concatenate ddd and cc will result in dddcc
+                
+                # Test B
+                
+                - concatenate () and () will result in ()()
+                
+                # Test C
+                
+                this test will also run with strange characters
+                
+                - concatenate bla and 〈〉 will result in bla〈〉
+                
+                # Test D
+                
+                - nullifying cdf and rising will give us 0.0F as output
             """
         )
     }
 
     @Test
+    @Disabled("This test requires configuration of a local git repository")
+    fun `finds previous version of file`() {
+        val content = cut.resolve("TestTexts.md", "4f8fb05601e2bd84cf2fb05741ff5a868f285c6b")
+
+        assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
+            """
+                # Scenarios
+
+                # Test A
+                
+                - concatenate {a} and {b} will result in {a}{b}
+                - concatenate ddd and dd will result in ddddd
+                
+                # Test B
+                
+                - concatenate () and () will result in ()()
+                
+                # Test C
+                
+                this test will also run with strange characters
+                
+                - concatenate bla and 〈〉 will result in bla〈〉
+                
+                # Test D
+                
+                - nullifying cdf and rising will give us 0.0F as output
+            """
+        )
+    }
+
+
+    @Test
+    @Disabled("This test requires configuration of a local git repository")
     fun `throws exception when file cannot be found`() {
         val path = "Calculator.md"
 
@@ -50,6 +99,7 @@ class GitFileResolverTest {
     }
 
     @Test
+    @Disabled("This test requires configuration of a local git repository")
     fun `throws exception when path is directory`() {
         val path = "Calculator"
 

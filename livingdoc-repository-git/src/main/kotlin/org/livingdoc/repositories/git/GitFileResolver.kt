@@ -18,9 +18,9 @@ class GitFileResolver(private val repository: Repository) {
      *
      * @returns an input stream containing the contents of the file
      */
-    fun resolve(path: String): InputStream {
-        val ref = repository.findRef("HEAD")
-        val commit = repository.parseCommit(ref.leaf.objectId)
+    fun resolve(path: String, revision: String = Constants.HEAD): InputStream {
+        val commitId = repository.resolve(revision)
+        val commit = repository.parseCommit(commitId)
 
         val treeWalk = TreeWalk.forPath(repository, path, commit.tree)
             ?: throw DocumentNotFoundException("Could not find document at $path")
