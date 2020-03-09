@@ -1,8 +1,11 @@
 package org.livingdoc.repositories.git
 
-class GitRepositoryConfig(
+/**
+ * This class contains the configuration for loading files from a remote git repository
+ */
+data class GitRepositoryConfig(
     var remoteUri: String = "",
-    var path: String = "",
     var localPath: String = "",
-    var ref: String = "origin/master"
+    var username: String = "",
+    var password: String = ""
 )
