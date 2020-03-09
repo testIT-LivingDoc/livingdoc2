@@ -35,7 +35,7 @@ jobs:
       - name: Detekt 
         run: ./gradlew detekt
   documentation:
-    name: Create JavaDoc
+    name: Create KDoc
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,6 +46,7 @@ jobs:
       - name: Create Dokka
         run: ./gradlew aggregatedDokka
       - name: Deploy
+        if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
