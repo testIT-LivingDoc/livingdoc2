@@ -11,7 +11,7 @@ import org.livingdoc.api.fixtures.decisiontables.Input
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.KProperty
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.declaredMembers
@@ -47,8 +47,8 @@ class DecisionTableFixtureModel(
         method.hasAnnotation<After>()
     }.sortedBy { method -> method.name }
 
-    val inputFields: List<KProperty<*>> =
-        fixtureClass.declaredMemberProperties.filter { field -> field.hasAnnotation<Input>() }
+    val inputFields: List<KMutableProperty<*>> =
+        fixtureClass.declaredMemberProperties.filter { field -> field.hasAnnotation<Input>() }.filterIsInstance<KMutableProperty<*>>()
     val inputMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Input>() }
     val checkMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Check>() }
 
@@ -56,7 +56,7 @@ class DecisionTableFixtureModel(
         get() = inputAliases + checkAliases
 
     private val inputAliases: Set<String> get() = inputAliasToField.keys + inputAliasToMethod.keys
-    private val inputAliasToField: Map<String, KProperty<*>> = inputFields.map { field ->
+    private val inputAliasToField: Map<String, KMutableProperty<*>> = inputFields.map { field ->
         val alias = field.findAnnotation<Input>()!!.value
         alias to field
     }.toMap()
@@ -75,8 +75,9 @@ class DecisionTableFixtureModel(
     fun isFieldInput(alias: String): Boolean = inputAliasToField.containsKey(alias)
     fun isMethodInput(alias: String): Boolean = inputAliasToMethod.containsKey(alias)
 
-    fun getInputField(alias: String): KProperty<*>? = inputAliasToField[alias]
+    fun getInputField(alias: String): KMutableProperty<*>? = inputAliasToField[alias]
     fun getInputMethod(alias: String): KFunction<*>? = inputAliasToMethod[alias]
+    fun getInput(alias: String): KCallable<*>? = getInputField(alias)?.setter ?: getInputMethod(alias)
 
     fun isCheckAlias(alias: String): Boolean = checkAliases.contains(alias)
     fun getCheckMethod(alias: String): KFunction<*>? = checkAliasToMethod[alias]
