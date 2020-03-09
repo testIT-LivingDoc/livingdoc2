@@ -10,7 +10,7 @@ import java.io.InputStream
 /**
  * A GitFileResolver can resolve file paths in git repositories
  */
-class GitFileResolver(private val repository: Repository) {
+internal class GitFileResolver(private val repository: Repository) {
     /**
      * Open the file at path as an input stream
      *
@@ -18,19 +18,19 @@ class GitFileResolver(private val repository: Repository) {
      *
      * @returns an input stream containing the contents of the file
      */
-    fun resolve(path: String, revision: String = Constants.HEAD): InputStream {
-        val commitId = repository.resolve(revision)
+    fun resolve(identifier: GitDocumentIdentifier): InputStream {
+        val commitId = repository.resolve(identifier.revision)
         val commit = repository.parseCommit(commitId)
 
-        val treeWalk = TreeWalk.forPath(repository, path, commit.tree)
-            ?: throw DocumentNotFoundException("Could not find document at $path")
+        val treeWalk = TreeWalk.forPath(repository, identifier.path, commit.tree)
+            ?: throw DocumentNotFoundException("Could not find document at ${identifier.path}")
 
         val blobId = treeWalk.getObjectId(0)
 
         try {
             return repository.open(blobId, Constants.OBJ_BLOB).openStream()
         } catch (e: IncorrectObjectTypeException) {
-            throw DocumentNotFoundException("$path is a directory")
+            throw DocumentNotFoundException("${identifier.path} is a directory")
         }
     }
 }

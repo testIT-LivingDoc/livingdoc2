@@ -8,7 +8,7 @@ import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.DocumentNotFoundException
 import java.io.File
 
-class GitFileResolverTest {
+internal class GitFileResolverTest {
     private val cut = GitFileResolver(
         FileRepositoryBuilder()
             .setBare()
@@ -23,7 +23,7 @@ class GitFileResolverTest {
     @Test
     @Disabled("This test requires configuration of a local git repository")
     fun `finds existing file`() {
-        val content = cut.resolve("TestTexts.md")
+        val content = cut.resolve(GitDocumentIdentifier("TestTexts.md"))
 
         assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
             """
@@ -55,7 +55,7 @@ class GitFileResolverTest {
     @Test
     @Disabled("This test requires configuration of a local git repository")
     fun `finds previous version of file`() {
-        val content = cut.resolve("TestTexts.md", "4f8fb05601e2bd84cf2fb05741ff5a868f285c6b")
+        val content = cut.resolve(GitDocumentIdentifier("TestTexts.md", "4f8fb05601e2bd84cf2fb05741ff5a868f285c6b"))
 
         assertThat(String(content.readAllBytes())).isEqualToIgnoringWhitespace(
             """
@@ -90,7 +90,7 @@ class GitFileResolverTest {
         val path = "Calculator.md"
 
         val exception = assertThrows<DocumentNotFoundException> {
-            cut.resolve(path)
+            cut.resolve(GitDocumentIdentifier(path))
         }
 
         assertThat(exception)
@@ -104,7 +104,7 @@ class GitFileResolverTest {
         val path = "Calculator"
 
         val exception = assertThrows<DocumentNotFoundException> {
-            cut.resolve(path)
+            cut.resolve(GitDocumentIdentifier(path))
         }
 
         assertThat(exception)
