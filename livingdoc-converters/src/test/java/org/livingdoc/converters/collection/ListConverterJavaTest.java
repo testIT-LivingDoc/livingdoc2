@@ -1,5 +1,6 @@
 package org.livingdoc.converters.collection;
 
+import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KProperty;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class ListConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaList() {
-        assertThat(cut.canConvertTo(List.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(List.class))).isTrue();
     }
 
     @Test

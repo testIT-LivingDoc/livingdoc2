@@ -18,6 +18,6 @@ internal class ShortConverterTest : BoundedNumberConverterContract<Short>(), Def
     override val germanValue = "10.000,12" to 10000.toShort()
 
     @Test fun `converter can converted to Kotlin Short`() {
-        assertThat(cut.canConvertTo(Short::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Short::class)).isTrue()
     }
 }

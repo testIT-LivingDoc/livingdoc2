@@ -18,6 +18,6 @@ internal class IntegerConverterTest : BoundedNumberConverterContract<Int>(), Def
     override val germanValue = "42.000,12" to 42000
 
     @Test fun `converter can converted to Kotlin Int`() {
-        assertThat(cut.canConvertTo(Int::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Int::class)).isTrue()
     }
 }

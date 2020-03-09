@@ -1,5 +1,6 @@
 package org.livingdoc.converters.time;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 import org.livingdoc.converters.TypeConverterExtensionKt;
 
@@ -14,7 +15,7 @@ class OffsetDateTimeConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaOffsetDateTime() {
-        assertThat(cut.canConvertTo(OffsetDateTime.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(OffsetDateTime.class))).isTrue();
     }
 
     @Test

@@ -2,6 +2,7 @@ package org.livingdoc.converters.time
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.reflect.KClass
 
 /**
  * This converter parses a String to the time format with offset from UTC and a zone configuration regarding summer time
@@ -12,5 +13,5 @@ open class ZonedDateTimeConverter : AbstractTemporalConverter<ZonedDateTime>() {
     override fun doParse(value: String, formatter: DateTimeFormatter): ZonedDateTime =
         ZonedDateTime.parse(value, formatter)
 
-    override fun canConvertTo(targetType: Class<*>) = ZonedDateTime::class.java == targetType
+    override fun canConvertTo(targetType: KClass<*>) = ZonedDateTime::class == targetType
 }

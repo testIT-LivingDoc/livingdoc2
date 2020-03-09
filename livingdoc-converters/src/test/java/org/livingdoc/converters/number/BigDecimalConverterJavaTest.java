@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 
 import org.livingdoc.converters.TypeConverterExtensionKt;
@@ -17,7 +18,7 @@ class BigDecimalConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaBigDecimal() {
-        assertThat(cut.canConvertTo(BigDecimal.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(BigDecimal.class))).isTrue();
     }
 
     @Test

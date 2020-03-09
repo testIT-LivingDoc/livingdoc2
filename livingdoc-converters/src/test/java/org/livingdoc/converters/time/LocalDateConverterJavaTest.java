@@ -1,5 +1,6 @@
 package org.livingdoc.converters.time;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 import org.livingdoc.converters.TypeConverterExtensionKt;
 
@@ -14,7 +15,7 @@ class LocalDateConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaLocalDate() {
-        assertThat(cut.canConvertTo(LocalDate.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(LocalDate.class))).isTrue();
     }
 
     @Test

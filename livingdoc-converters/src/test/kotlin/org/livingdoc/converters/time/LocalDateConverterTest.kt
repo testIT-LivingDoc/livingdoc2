@@ -20,7 +20,8 @@ internal class LocalDateConverterTest : TemporalConverterContract<LocalDate>(), 
     override val customFormatValue = "12.05.2017" to parse("2017-05-12")
     override val malformedCustomFormat = "dd.MM.uuuu V"
 
-    @Test fun `converter can converted to LocalDate`() {
-        assertThat(cut.canConvertTo(LocalDate::class.java)).isTrue()
+    @Test
+    fun `converter can converted to LocalDate`() {
+        assertThat(cut.canConvertTo(LocalDate::class)).isTrue()
     }
 }

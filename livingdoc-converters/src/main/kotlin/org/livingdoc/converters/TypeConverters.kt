@@ -13,21 +13,24 @@ import kotlin.reflect.KType
  */
 object TypeConverters {
 
+    /**
+     * Convert a given String [value] to the [type] using the [context] to search Type Converter.
+     */
+    fun convertStringToType(value: String, type: KType, context: Context): Any? {
+        return findTypeConverter(value, type, context).convert(value, type, context)
+    }
+
     internal fun findTypeConverter(value: String, type: KType, context: Context): TypeConverter<*> {
         val classifier = type.classifier ?: throw IllegalArgumentException("Given type has no classifier: $type")
         classifier as KClass<*>
         return findTypeConverterRecursive(value, classifier, context) ?: throw NoTypeConverterFoundException(type)
     }
 
-    fun convertType(value: String, type: KType, context: Context): Any? {
-        return findTypeConverter(value, type, context).convert(value, type, context)
-    }
-
     private fun findTypeConverterRecursive(value: String, type: KClass<*>, context: Context): TypeConverter<*>? {
         val annotations = context.element.annotations.filterIsInstance<Converter>()
         var typeConverter = annotations.flatMap { it.value.toList() }
             .map { TypeConverterManager.getInstance(it) }
-            .firstOrNull { it.canConvertTo(type.java) }
+            .firstOrNull { it.canConvertTo(type) }
         if (typeConverter == null) {
             val parent = context.parent
             typeConverter = if (parent != null) {
@@ -42,7 +45,7 @@ object TypeConverters {
 
     private fun findDefaultConverterFor(type: KClass<*>): TypeConverter<*>? {
         return TypeConverterManager.getDefaultConverters()
-            .firstOrNull { it.canConvertTo(type.java) }
+            .firstOrNull { it.canConvertTo(type) }
     }
 
     internal class NoTypeConverterFoundException(annotatedElement: KAnnotatedElement) :

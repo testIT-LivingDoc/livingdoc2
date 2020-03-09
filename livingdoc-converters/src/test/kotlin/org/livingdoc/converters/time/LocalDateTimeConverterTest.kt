@@ -23,6 +23,6 @@ internal class LocalDateTimeConverterTest : TemporalConverterContract<LocalDateT
     override val malformedCustomFormat = "dd.MM.uuuu HH:mm V"
 
     @Test fun `converter can converted to LocalDateTime`() {
-        assertThat(cut.canConvertTo(LocalDateTime::class.java)).isTrue()
+        assertThat(cut.canConvertTo(LocalDateTime::class)).isTrue()
     }
 }

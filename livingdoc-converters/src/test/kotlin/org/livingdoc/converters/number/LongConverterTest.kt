@@ -18,6 +18,6 @@ internal class LongConverterTest : BoundedNumberConverterContract<Long>(), Defau
     override val germanValue = "42.000,12" to 42000L
 
     @Test fun `converter can converted to Kotlin Long`() {
-        assertThat(cut.canConvertTo(Long::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Long::class)).isTrue()
     }
 }

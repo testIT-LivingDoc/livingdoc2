@@ -45,6 +45,9 @@ internal class BooleanConverterTest : DefaultTypeConverterContract {
 
     @Test
     fun `converter can converted to Kotlin Boolean`() {
-        assertThat(cut.canConvertTo(Boolean::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Boolean::class)).isTrue()
+        assertThat(cut.canConvertTo(java.lang.Boolean::class)).isTrue()
+        assertThat(cut.canConvertTo(Boolean::class.javaObjectType.kotlin)).isTrue()
+        assertThat(cut.canConvertTo(Boolean::class.javaPrimitiveType!!.kotlin)).isTrue()
     }
 }

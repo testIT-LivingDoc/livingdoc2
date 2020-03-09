@@ -3,6 +3,7 @@ package org.livingdoc.converters
 import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
@@ -28,9 +29,7 @@ open class BooleanConverter : TypeConverter<Boolean> {
         throw ConversionException("Not a boolean value: '$value'")
     }
 
-    override fun canConvertTo(targetType: Class<*>): Boolean {
-        val isJavaObjectType = Boolean::class.javaObjectType == targetType
-        val isKotlinType = Boolean::class.java == targetType
-        return isJavaObjectType || isKotlinType
+    override fun canConvertTo(targetType: KClass<*>): Boolean {
+        return Boolean::class == targetType
     }
 }

@@ -1,5 +1,6 @@
 package org.livingdoc.converters.number;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 import org.livingdoc.converters.TypeConverterExtensionKt;
 import utils.EnglishDefaultLocale;
@@ -14,7 +15,7 @@ class FloatConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaFloat() {
-        assertThat(cut.canConvertTo(Float.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(Float.class))).isTrue();
     }
 
     @Test

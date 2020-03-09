@@ -25,6 +25,6 @@ internal class ZonedDateTimeConverterTest : TemporalConverterContract<ZonedDateT
     override val malformedCustomFormat = "dd.MM.uuuu HH:mm X V"
 
     @Test fun `converter can converted to ZonedDateTime`() {
-        assertThat(cut.canConvertTo(ZonedDateTime::class.java)).isTrue()
+        assertThat(cut.canConvertTo(ZonedDateTime::class)).isTrue()
     }
 }

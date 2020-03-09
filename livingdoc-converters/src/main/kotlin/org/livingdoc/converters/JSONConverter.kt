@@ -46,5 +46,5 @@ class JSONConverter<T> : TypeConverter<T> {
     /**
      * This type converter can convert json to every target type.
      */
-    override fun canConvertTo(targetType: Class<*>) = true
+    override fun canConvertTo(targetType: KClass<*>) = true
 }

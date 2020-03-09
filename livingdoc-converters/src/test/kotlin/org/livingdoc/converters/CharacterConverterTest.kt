@@ -38,6 +38,6 @@ internal class CharacterConverterTest : DefaultTypeConverterContract {
 
     @Test
     fun `converter can converted to Kotlin Char`() {
-        assertThat(cut.canConvertTo(Char::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Char::class)).isTrue()
     }
 }

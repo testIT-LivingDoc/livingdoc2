@@ -18,6 +18,6 @@ internal class ByteConverterTest : BoundedNumberConverterContract<Byte>(), Defau
     override val germanValue = "100,12" to 100.toByte()
 
     @Test fun `converter can converted to Kotlin Byte`() {
-        assertThat(cut.canConvertTo(Byte::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Byte::class)).isTrue()
     }
 }

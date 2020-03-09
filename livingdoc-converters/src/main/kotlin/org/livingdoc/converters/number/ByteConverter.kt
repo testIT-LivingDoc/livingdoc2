@@ -1,6 +1,7 @@
 package org.livingdoc.converters.number
 
 import java.math.BigDecimal
+import kotlin.reflect.KClass
 
 /**
  * This converter converts a BigDecimal to a Byte
@@ -17,9 +18,7 @@ open class ByteConverter : AbstractNumberConverter<Byte>() {
      */
     override fun convertToTarget(number: BigDecimal): Byte = number.toByte()
 
-    override fun canConvertTo(targetType: Class<*>): Boolean {
-        val isJavaObjectType = Byte::class.javaObjectType == targetType
-        val isKotlinType = Byte::class.java == targetType
-        return isJavaObjectType || isKotlinType
+    override fun canConvertTo(targetType: KClass<*>): Boolean {
+        return Byte::class == targetType
     }
 }

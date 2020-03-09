@@ -31,7 +31,7 @@ internal class DoubleConverterTest : BoundedNumberConverterContract<Double>(), D
     }
 
     @Test fun `converter can converted to Kotlin Double`() {
-        assertThat(cut.canConvertTo(Double::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Double::class)).isTrue()
     }
 
     @Test fun `converter can handle double specific -0 case`() {

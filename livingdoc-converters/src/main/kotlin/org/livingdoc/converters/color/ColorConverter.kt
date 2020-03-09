@@ -4,6 +4,7 @@ import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.ColorFormatException
 import java.util.*
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
@@ -18,7 +19,7 @@ class ColorConverter : TypeConverter<String> {
         prop.load(fis)
     }
 
-    override fun canConvertTo(targetType: Class<*>): Boolean = String::class.java == targetType
+    override fun canConvertTo(targetType: KClass<*>): Boolean = String::class == targetType
 
     /**
      * Converts a given string to a lower case hex color value string.

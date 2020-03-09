@@ -19,6 +19,6 @@ internal class BigDecimalConverterTest : NumberConverterContract<BigDecimal>(), 
     override val germanValue = "42.000.000.000.000,12" to BigDecimal("42000000000000.12")
 
     @Test fun `converter can converted to BigDecimal`() {
-        assertThat(cut.canConvertTo(BigDecimal::class.java)).isTrue()
+        assertThat(cut.canConvertTo(BigDecimal::class)).isTrue()
     }
 }

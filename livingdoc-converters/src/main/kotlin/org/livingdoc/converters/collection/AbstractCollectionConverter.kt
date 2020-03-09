@@ -3,7 +3,7 @@ package org.livingdoc.converters.collection
 import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.ConversionException
 import org.livingdoc.api.conversion.TypeConverter
-import org.livingdoc.converters.TypeConverters.convertType
+import org.livingdoc.converters.TypeConverters.convertStringToType
 import org.livingdoc.converters.collection.Tokenizer.tokenizeToStringList
 import kotlin.reflect.KType
 
@@ -16,7 +16,7 @@ abstract class AbstractCollectionConverter<T : Collection<*>> : TypeConverter<T>
         val typeArgument = type.arguments.getOrNull(0)?.type ?: error("Bad type argument: $type")
 
         val convertedValues = tokenizeToStringList(value)
-            .map { convertType(it, typeArgument, context) }
+            .map { convertStringToType(it, typeArgument, context) }
         return convertToTarget(convertedValues)
     }
 

@@ -23,6 +23,6 @@ internal class OffsetDateTimeConverterTest : TemporalConverterContract<OffsetDat
     override val malformedCustomFormat = "dd.MM.uuuu HH:mm X V"
 
     @Test fun `converter can converted to OffsetDateTime`() {
-        assertThat(cut.canConvertTo(OffsetDateTime::class.java)).isTrue()
+        assertThat(cut.canConvertTo(OffsetDateTime::class)).isTrue()
     }
 }

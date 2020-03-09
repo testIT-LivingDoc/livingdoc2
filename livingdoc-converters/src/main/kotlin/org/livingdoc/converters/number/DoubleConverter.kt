@@ -2,6 +2,7 @@ package org.livingdoc.converters.number
 
 import org.livingdoc.api.conversion.Context
 import java.math.BigDecimal
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
@@ -43,9 +44,7 @@ open class DoubleConverter : AbstractNumberConverter<Double>() {
      */
     override fun convertToTarget(number: BigDecimal): Double = number.toDouble()
 
-    override fun canConvertTo(targetType: Class<*>): Boolean {
-        val isJavaObjectType = Double::class.javaObjectType == targetType
-        val isKotlinType = Double::class.java == targetType
-        return isJavaObjectType || isKotlinType
+    override fun canConvertTo(targetType: KClass<*>): Boolean {
+        return Double::class == targetType
     }
 }

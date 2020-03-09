@@ -1,11 +1,12 @@
 package org.livingdoc.api.conversion
 
 import java.lang.reflect.AnnotatedElement
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
- * Classes implementing this interface are used by LivingDoc to convert a single [String] value into the defined
- * target type. The converted value is used by LivingDoc as a parameter to invoke a methods or when assigning a new value to
+ * Classes implementing this interface are used by LivingDoc to convert a single [String] value into the defined target
+ * type. The converted value is used by LivingDoc as a parameter to invoke a methods or when assigning a new value to
  * a field.
  *
  *
@@ -50,5 +51,5 @@ interface TypeConverter<T> {
      * @return true if the converter can convert to the given type
      * @since 2.0
      */
-    fun canConvertTo(targetType: Class<*>): Boolean
+    fun canConvertTo(targetType: KClass<*>): Boolean
 }

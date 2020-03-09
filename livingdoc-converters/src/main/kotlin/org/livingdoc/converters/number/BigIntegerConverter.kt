@@ -2,6 +2,8 @@ package org.livingdoc.converters.number
 
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.reflect.KClass
+
 /**
  * This converter converts a BigDecimal to a BigInteger
  */
@@ -17,5 +19,5 @@ open class BigIntegerConverter : AbstractNumberConverter<BigInteger>() {
      */
     override fun convertToTarget(number: BigDecimal): BigInteger = number.toBigInteger()
 
-    override fun canConvertTo(targetType: Class<*>) = BigInteger::class.java == targetType
+    override fun canConvertTo(targetType: KClass<*>) = BigInteger::class == targetType
 }

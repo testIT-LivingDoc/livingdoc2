@@ -16,6 +16,6 @@ internal class StringConverterTest : DefaultTypeConverterContract {
     }
 
     @Test fun `converter can converted to Kotlin String`() {
-        assertThat(cut.canConvertTo(String::class.java)).isTrue()
+        assertThat(cut.canConvertTo(String::class.java.kotlin)).isTrue()
     }
 }

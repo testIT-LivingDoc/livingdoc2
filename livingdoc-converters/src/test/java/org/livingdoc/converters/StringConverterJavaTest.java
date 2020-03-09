@@ -2,6 +2,7 @@ package org.livingdoc.converters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 
 
@@ -11,7 +12,7 @@ class StringConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaString() {
-        assertThat(cut.canConvertTo(String.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(String.class))).isTrue();
     }
 
     @Test

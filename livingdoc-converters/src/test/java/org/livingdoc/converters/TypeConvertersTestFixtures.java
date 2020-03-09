@@ -1,5 +1,7 @@
 package org.livingdoc.converters;
 
+import kotlin.jvm.JvmClassMappingKt;
+import kotlin.reflect.KClass;
 import kotlin.reflect.KType;
 import org.jetbrains.annotations.NotNull;
 import org.livingdoc.api.conversion.Context;
@@ -73,8 +75,8 @@ public class TypeConvertersTestFixtures {
         }
 
         @Override
-        public boolean canConvertTo(Class<?> targetType) {
-            return Boolean.class.isAssignableFrom(targetType);
+        public boolean canConvertTo(@NotNull KClass<?> targetType) {
+            return Boolean.class.isAssignableFrom(JvmClassMappingKt.getJavaClass(targetType));
         }
     }
 }

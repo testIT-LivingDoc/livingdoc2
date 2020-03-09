@@ -1,5 +1,6 @@
 package org.livingdoc.converters.collection;
 
+import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KProperty;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class MapConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaMap() {
-        assertThat(cut.canConvertTo(Map.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(Map.class))).isTrue();
     }
 
     @Test

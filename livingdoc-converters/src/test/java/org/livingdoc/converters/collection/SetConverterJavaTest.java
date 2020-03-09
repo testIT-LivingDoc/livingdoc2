@@ -1,5 +1,6 @@
 package org.livingdoc.converters.collection;
 
+import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KProperty;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class SetConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaSet() {
-        assertThat(cut.canConvertTo(Set.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(Set.class))).isTrue();
     }
 
     @Test

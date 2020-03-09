@@ -9,7 +9,7 @@ import org.livingdoc.converters.convertValueForProperty
 internal class MapConverterTest : CollectionConverterContract() {
 
     override val cut = MapConverter()
-    override val collectionClass = Map::class.java
+    override val collectionClass = Map::class
     override val fixtureClass = MapFake::class
     override val booleanInput: String = "true, true; false, false"
     override val intInput: String = "1, 1; 2, 2; 3, 3"

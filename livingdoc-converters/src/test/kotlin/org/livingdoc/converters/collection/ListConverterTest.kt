@@ -5,7 +5,7 @@ import org.livingdoc.api.conversion.Converter
 internal class ListConverterTest : CollectionConverterContract() {
 
     override val cut = ListConverter()
-    override val collectionClass = List::class.java
+    override val collectionClass = List::class
     override val fixtureClass = ListFake::class
     override val booleanInput: String = "true, false, false, true"
     override val intInput: String = "1, 2, 3, 4"

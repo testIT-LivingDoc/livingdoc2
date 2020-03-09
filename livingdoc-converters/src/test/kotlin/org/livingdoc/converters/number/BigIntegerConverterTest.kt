@@ -19,6 +19,6 @@ internal class BigIntegerConverterTest : NumberConverterContract<BigInteger>(), 
     override val germanValue = "42.000.000.000.000,12" to BigInteger("42000000000000")
 
     @Test fun `converter can converted to BigInteger`() {
-        assertThat(cut.canConvertTo(BigInteger::class.java)).isTrue()
+        assertThat(cut.canConvertTo(BigInteger::class)).isTrue()
     }
 }

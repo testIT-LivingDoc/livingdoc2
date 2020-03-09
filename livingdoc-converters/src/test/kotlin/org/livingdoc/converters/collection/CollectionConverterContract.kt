@@ -24,7 +24,7 @@ internal abstract class CollectionConverterContract : DefaultTypeConverterContra
     abstract val booleanExpectation: Any
     abstract val booleanInput: String
     abstract val intInput: String
-    abstract val collectionClass: Class<*>
+    abstract val collectionClass: KClass<*>
     abstract val fixtureClass: KClass<*>
 
     @Test

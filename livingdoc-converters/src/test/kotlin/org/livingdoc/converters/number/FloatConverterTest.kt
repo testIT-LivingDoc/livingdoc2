@@ -35,7 +35,7 @@ internal class FloatConverterTest : BoundedNumberConverterContract<Float>(), Def
 
     @Test
     fun `converter can converted to Kotlin Float`() {
-        assertThat(cut.canConvertTo(Float::class.java)).isTrue()
+        assertThat(cut.canConvertTo(Float::class)).isTrue()
     }
 
     @Test

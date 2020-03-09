@@ -2,6 +2,7 @@ package org.livingdoc.converters
 
 import org.livingdoc.api.conversion.Context
 import org.livingdoc.api.conversion.TypeConverter
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
@@ -19,5 +20,5 @@ open class StringConverter : TypeConverter<String> {
     /**
      * This method returns true, if the parameter targetType is the java String class.
      */
-    override fun canConvertTo(targetType: Class<*>) = String::class.java == targetType
+    override fun canConvertTo(targetType: KClass<*>) = String::class == targetType
 }

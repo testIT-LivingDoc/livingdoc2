@@ -2,6 +2,7 @@ package org.livingdoc.converters.number;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 
 import org.livingdoc.converters.TypeConverterExtensionKt;
@@ -15,7 +16,7 @@ class ByteConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaByte() {
-        assertThat(cut.canConvertTo(Byte.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(Byte.class))).isTrue();
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 import org.livingdoc.converters.TypeConverterExtensionKt;
 
@@ -14,7 +15,7 @@ class LocalDateTimeConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaLocalDateTime() {
-        assertThat(cut.canConvertTo(LocalDateTime.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(LocalDateTime.class))).isTrue();
     }
 
     @Test

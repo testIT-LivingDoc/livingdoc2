@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigInteger;
 
+import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
 
 import org.livingdoc.converters.TypeConverterExtensionKt;
@@ -17,7 +18,7 @@ class BigIntegerConverterJavaTest {
 
     @Test
     void converterCanConvertedToJavaBigInteger() {
-        assertThat(cut.canConvertTo(BigInteger.class)).isTrue();
+        assertThat(cut.canConvertTo(JvmClassMappingKt.getKotlinClass(BigInteger.class))).isTrue();
     }
 
     @Test

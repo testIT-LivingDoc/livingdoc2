@@ -2,12 +2,12 @@ package org.livingdoc.api.documents
 
 /**
  * This annotation is used to mark a class as an executable document. The Living Doc engine looks for this annotation to
- * find the documents that should be executed. The annotated class can contain [org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture]
- * and [org.livingdoc.api.fixtures.scenarios.ScenarioFixture]s. The executed contents are referenced as a parameter
+ * find the documents that should be executed. The annotated class can contain [DecisionTableFixture]
+ * and [ScenarioFixture]s. The executed contents are referenced as a parameter
  * of the annotation.
  *
  * An ExecutableDocument can be grouped by using the [Group] annotation.
- * An ExecutableDocument can be disabled by using the [org.livingdoc.api.disabled.Disabled] annotation.
+ * An ExecutableDocument can be disabled by using the [Disabled] annotation.
  */
 /*
 @Testable
