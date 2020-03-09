@@ -1,7 +1,8 @@
 package org.livingdoc.jvm.scenario
 
-import org.livingdoc.api.conversion.Context
 import org.livingdoc.converters.TypeConverters
+import org.livingdoc.converters.contextOf
+import org.livingdoc.converters.createContext
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.instanceParameter
@@ -16,9 +17,9 @@ object ReflectionHelper {
         fixture: ScenarioFixtureInstance,
         args: Map<KParameter, String>
     ) {
-
+        val context = contextOf(fixture.instance::class) // TODO
         val convertedArguments = args.map { (key, value) ->
-            key to TypeConverters.convertStringToType(value, key.type, Context(key, null))
+            key to TypeConverters.convertStringToType(value, key.type, context.createContext(key))
         }.toMap()
 
         val instanceParameter = function.instanceParameter ?: error("function must be instance member")
