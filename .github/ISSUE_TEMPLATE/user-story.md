@@ -28,5 +28,5 @@ _Tasks:_
 - [ ] Task 1
 - [ ] #LinkedIssueNumber
 
-_Description:_
+_Description:_  
 Context, Implementation, ...
