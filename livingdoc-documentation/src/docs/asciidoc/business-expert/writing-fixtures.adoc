@@ -64,7 +64,7 @@ With this knowledge we can go ahead and write a simple scenario.
     adding 1 and 2 equals 3
 
 In this example the values for `a` and `b` are replaced with string values as well as the expectation `c`.
-The test behind will be able to extract the values for `a = 1` and `b = 2` and check if it matches `c = 3`.
+The test script that is prepared by a test engineer should be able to use `a = 1` and `b = 2` and check if it matches `c = 3`.
 If the result of the test written behind does match the value of the expectation, the implementation is correct.
 
 In Confluence a bullet list must contain at least two elements to be recognized as a scenario.
