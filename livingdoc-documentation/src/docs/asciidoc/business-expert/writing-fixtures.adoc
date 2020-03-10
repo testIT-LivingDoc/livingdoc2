@@ -56,7 +56,7 @@ Hence it should be self-contained.
 
 In this example, the purpose of the decision table above is converted into a sentence.
 The input values `a` and `b` exist as well as the result `c`.
-When writing a scenario it have to be clear what an input values and what the result is.
+When writing a scenario it has to be clear what an input values and what the result is.
 
 With this knowledge we can go ahead and write a simple scenario.
 
