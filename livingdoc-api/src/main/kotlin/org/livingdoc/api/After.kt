@@ -1,21 +1,18 @@
 package org.livingdoc.api
 
+import org.livingdoc.api.documents.ExecutableDocument
+import org.livingdoc.api.documents.Group
+
 /**
- * Methods annotated with this annotation are invoked after the last fixture of an [ExecutableDocument] or the
- * last scenario [Step] method was invoked.
- *
+ * Methods annotated with this annotation are invoked after all other methods or nested classes where invoked. This
+ * method can be used in [ExecutableDocuments][ExecutableDocument], [Groups][Group] and Fixtures.
  *
  * **Constraints:**
- *
  *  1. The annotated method must not have any parameters!
  *  1. If multiple methods of a single fixture are annotated the invocation order is non-deterministic!
  *
- *
  * @see ExecutableDocument
- *
- * @see Step
- *
- * @see ScenarioFixture
+ * @See Group
  *
  * @since 2.0
  */

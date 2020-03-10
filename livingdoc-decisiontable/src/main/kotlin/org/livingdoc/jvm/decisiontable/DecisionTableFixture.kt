@@ -1,7 +1,7 @@
 package org.livingdoc.jvm.decisiontable
 
 import org.livingdoc.jvm.api.fixture.Fixture
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
+import org.livingdoc.jvm.api.fixture.FixtureManager
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
 import org.livingdoc.repositories.model.decisiontable.Header
 import org.livingdoc.results.Status
@@ -10,7 +10,7 @@ import org.livingdoc.results.examples.decisiontables.DecisionTableResult
 
 class DecisionTableFixture(
     private val fixtureModel: DecisionTableFixtureModel,
-    private val manager: FixtureExtensionsInterface
+    private val manager: FixtureManager
 ) : Fixture<DecisionTable> {
     override fun execute(testData: DecisionTable): TestDataResult<DecisionTable> {
         val resultBuilder = DecisionTableResult.Builder()

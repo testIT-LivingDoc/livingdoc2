@@ -3,12 +3,14 @@ package org.livingdoc.jvm.api.fixture
 import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
 
 /**
- * This interface should be used by Fixtures to interact with the livingdoc engine.
- *
- * TODO rename this interface
+ * This interface should be used by Fixtures to interact with the livingdoc engine. It provides simple interface for all
+ * function of the Livingdoc engine and the extensions.
  */
-interface FixtureExtensionsInterface {
+interface FixtureManager {
 
+    /**
+     * Evaluates if the current Fixture should be executed.
+     */
     fun shouldExecute(): ConditionEvaluationResult
 
     fun onBeforeFixture()

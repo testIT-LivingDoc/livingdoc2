@@ -18,6 +18,7 @@ data class ConditionEvaluationResult(
          */
         fun disabled(reason: String? = null) =
             ConditionEvaluationResult(false, reason)
+
         /**
          * Create a enabled ConditionEvaluationResult with an optional [reason] why the test should be enabled
          */

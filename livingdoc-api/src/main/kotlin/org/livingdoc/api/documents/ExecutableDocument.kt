@@ -17,15 +17,11 @@ annotation class ExecutableDocument(
     /**
      * The [Group] that this ExecutableDocument belongs too.
      *
-     *
      * This augments the usual lookup functionality, in which an ExecutableDocument that is declared nested inside a
      * class annotated with [Group] is considered part of that group.
      *
-     *
-     *
      * Note that an ExecutableDocument can only belong to a single group. It is an error if the [Group] specified
      * by this attribute on the annotation and the [Group] discovered by the nested class lookup are different.
-     *
      *
      * @see Group
      */

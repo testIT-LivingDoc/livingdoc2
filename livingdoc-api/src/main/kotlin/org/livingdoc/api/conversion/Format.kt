@@ -1,9 +1,9 @@
 package org.livingdoc.api.conversion
 
 /**
- * Defines a format to be interpreted and used by a [TypeConverter]. The syntax of that format depends on the [ ].
- * Generally these formats tend to be regular expressions or date formats. For details you'll have to take a
- * look at the used [TypeConverter]'s documentation.
+ * Defines a format to be interpreted and used by a [TypeConverter]. The syntax of that format depends on the
+ * [TypeConverter]. Generally these formats tend to be regular expressions or date formats. For details you'll have to
+ * take a look at the used [TypeConverter]'s documentation.
  *
  * @since 2.0
  */

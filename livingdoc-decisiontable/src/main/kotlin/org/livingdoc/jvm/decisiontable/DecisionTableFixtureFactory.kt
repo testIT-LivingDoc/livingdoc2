@@ -4,7 +4,7 @@ import org.livingdoc.api.fixtures.decisiontables.Check
 import org.livingdoc.api.fixtures.decisiontables.Input
 import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.fixture.Fixture
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
+import org.livingdoc.jvm.api.fixture.FixtureManager
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.decisiontable.DecisionTable
@@ -34,7 +34,7 @@ class DecisionTableFixtureFactory : FixtureFactory<DecisionTable> {
         return numberOfHeaders == numberOfMatchedHeaders && aliases.size == numberOfMatchedHeaders
     }
 
-    override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<DecisionTable> {
+    override fun getFixture(context: FixtureContext, manager: FixtureManager): Fixture<DecisionTable> {
         val model = DecisionTableFixtureModel(context.fixtureClass)
         return DecisionTableFixture(model, manager)
     }

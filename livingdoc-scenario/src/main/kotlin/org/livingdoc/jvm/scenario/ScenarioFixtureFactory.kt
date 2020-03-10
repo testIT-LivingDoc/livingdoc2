@@ -3,7 +3,7 @@ package org.livingdoc.jvm.scenario
 import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.fixture.Fixture
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
+import org.livingdoc.jvm.api.fixture.FixtureManager
 import org.livingdoc.jvm.api.fixture.FixtureFactory
 import org.livingdoc.repositories.model.TestData
 import org.livingdoc.repositories.model.scenario.Scenario
@@ -32,7 +32,7 @@ class ScenarioFixtureFactory : FixtureFactory<Scenario> {
         }
     }
 
-    override fun getFixture(context: FixtureContext, manager: FixtureExtensionsInterface): Fixture<Scenario> {
+    override fun getFixture(context: FixtureContext, manager: FixtureManager): Fixture<Scenario> {
         val fixtureModel = ScenarioFixtureModel(context)
         return ScenarioFixture(fixtureModel, manager)
     }

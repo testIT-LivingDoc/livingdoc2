@@ -6,9 +6,7 @@ package org.livingdoc.api.fixtures.decisiontables
  * evaluated by the [Check] methods. This is a purely optional mechanic! Depending on the test case, directly
  * executing that logic inside a [Check] method might be the best approach.
  *
- *
  * **Constraints:**
- *
  *  1. The annotated method must not have any parameters!
  *  1. If multiple methods of a single fixture are annotated the invocation order is non-deterministic!
  *

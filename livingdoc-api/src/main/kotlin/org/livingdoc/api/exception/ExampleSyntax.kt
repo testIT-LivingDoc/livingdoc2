@@ -5,8 +5,7 @@ package org.livingdoc.api.exception
  */
 object ExampleSyntax {
     /**
-     * The string that the business expert defines in the Example to indicate
-     * an exception is expected to be thrown.
+     * The string that the business expert defines in the Example to indicate an exception is expected to be thrown.
      */
     const val EXCEPTION = "error"
 }

@@ -3,9 +3,8 @@ package org.livingdoc.api.conversion
 /**
  * Overrides the used language ([java.util.Locale]) for the annotated field or parameter.
  * A full list of [TypeConverter] considering this annotation can be found in the documentation.
- * The [.value] has to be specified according to the [BCP 47](https://tools.ietf.org/html/bcp47)
+ * The [value] has to be specified according to the [BCP 47](https://tools.ietf.org/html/bcp47)
  * standard.
- *
  *
  * **Examples for this are:** `de`, `de-DE`, `en-US` etc.
  *

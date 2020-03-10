@@ -9,14 +9,12 @@ import kotlin.reflect.KType
  * type. The converted value is used by LivingDoc as a parameter to invoke a methods or when assigning a new value to
  * a field.
  *
+ * The location where a [TypeConverter] is used is declared with the [Converter] annotation. Some [TypeConverter]
+ * implementation can be configured by annotating the target of the [Converter] annotation with additional annotations
+ * like [Format].
  *
- * The location where a [TypeConverter] is used is declared with the [Converter] annotation.
- * Some [TypeConverter] implementation can be configured by annotating the target of the [Converter] annotation
- * with additional annotations like [Format].
- *
- * @param <T> the target type
+ * @param T the target type
  * @see Converter
- *
  * @see Format
  *
  * @since 2.0
@@ -25,14 +23,12 @@ interface TypeConverter<T> {
     /**
      * Converts the given [String] value into an instance of this [TypeConverter]'s target type.
      *
+     * The [AnnotatedElement] is the element who's value should be converted (`method` or `field`) or `null`. It can be
+     * used to access additional configuration annotations like [Format].
      *
-     * The [AnnotatedElement] is the element who's value should be converted (`method` or `field`)
-     * or `null`. It can be used to access additional configuration annotations like [Format].
-     *
-     *
-     * The only exception this method is allowed to throw is a [ConversionException]. If any other runtime exception
-     * is thrown during the conversion it has to be either packaged as a [ConversionException] or LivingDoc might
-     * exhibit undefined behavior.
+     * The only exception this method is allowed to throw is a [ConversionException]. If any other runtime exception is
+     * thrown during the conversion it has to be either packaged as a [ConversionException] or LivingDoc might exhibit
+     * undefined behavior.
      *
      * @param value the value to convert
      * @param type the type to convert to

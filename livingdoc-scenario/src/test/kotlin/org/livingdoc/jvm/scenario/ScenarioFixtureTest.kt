@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
 import org.livingdoc.jvm.api.extension.context.FixtureContext
 import org.livingdoc.jvm.api.fixture.Fixture
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
+import org.livingdoc.jvm.api.fixture.FixtureManager
 import org.livingdoc.repositories.model.TestDataDescription
 import org.livingdoc.repositories.model.scenario.Scenario
 import org.livingdoc.repositories.model.scenario.Step
@@ -48,9 +48,9 @@ class ScenarioFixtureTest {
             "executed"
         ),
         handleThrowable: (Throwable) -> Throwable? = { it }
-    ): FixtureExtensionsInterface {
+    ): FixtureManager {
         // mocking manager
-        val manager = mockk<FixtureExtensionsInterface>()
+        val manager = mockk<FixtureManager>()
         every {
             manager.shouldExecute()
         }.returns(conditionEvaluationResult)

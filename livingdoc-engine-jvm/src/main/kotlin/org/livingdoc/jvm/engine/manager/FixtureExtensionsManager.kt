@@ -1,7 +1,7 @@
 package org.livingdoc.jvm.engine.manager
 
 import org.livingdoc.jvm.api.extension.ConditionEvaluationResult
-import org.livingdoc.jvm.api.fixture.FixtureExtensionsInterface
+import org.livingdoc.jvm.api.fixture.FixtureManager
 import org.livingdoc.jvm.engine.EngineContext
 
 /**
@@ -11,7 +11,7 @@ import org.livingdoc.jvm.engine.EngineContext
 internal class FixtureExtensionsManager(
     private val extensionManager: ExtensionManager,
     private val context: EngineContext
-) : FixtureExtensionsInterface {
+) : FixtureManager {
     override fun shouldExecute(): ConditionEvaluationResult {
         return extensionManager.shouldExecute(context)
     }
