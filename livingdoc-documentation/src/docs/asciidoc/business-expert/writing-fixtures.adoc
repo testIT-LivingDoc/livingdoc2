@@ -17,7 +17,7 @@ A column can contain either a test input or an expectation.
 
 Decision tables are easily created by writing them as a markdown table, a HTML table or using confluence.
 
-Following is a example of a valid table you can recreate using any of the ways.
+Table 1 is an example of a valid table that you can recreate using any of the ways mentioned before.
 
 
 .Example Decision Table
