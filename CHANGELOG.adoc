@@ -38,6 +38,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - Groups can now be executed
 - Add time measurement for document execution
 - Report renderer creating a page tree in Attlassian Confluence
+- Git repository for loading documents from remote git repositories
 
 === Changed
 
