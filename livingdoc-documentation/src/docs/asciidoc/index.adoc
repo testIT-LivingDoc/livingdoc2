@@ -17,3 +17,5 @@ include::fixtures.adoc[]
 include::annotate-tests.adoc[]
 
 include::reports.adoc[]
+
+include::git-repository.adoc[]
