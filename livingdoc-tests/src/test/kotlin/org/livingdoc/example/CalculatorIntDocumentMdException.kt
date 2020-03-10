@@ -2,6 +2,7 @@ package org.livingdoc.example
 
 import org.assertj.core.api.Assertions.assertThat
 import org.livingdoc.api.Before
+import org.livingdoc.api.disabled.Disabled
 import org.livingdoc.api.documents.ExecutableDocument
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
 import org.livingdoc.api.fixtures.decisiontables.Check
@@ -13,6 +14,7 @@ import org.livingdoc.api.fixtures.scenarios.Step
 import org.livingdoc.api.tagging.Tag
 
 @Tag("markdown")
+@Disabled("Exception as expected result currently not supported in the new engine")
 @ExecutableDocument("local://CalculatorInt.md")
 class CalculatorIntDocumentMdException {
 
