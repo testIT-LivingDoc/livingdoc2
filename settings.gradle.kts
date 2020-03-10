@@ -31,6 +31,7 @@ include(
 	"livingdoc-reports",
 	"livingdoc-repositories",
 	"livingdoc-repository-file",
+	"livingdoc-repository-git",
 	"livingdoc-repository-rest",
 	"livingdoc-repository-confluence",
 	"livingdoc-results",
