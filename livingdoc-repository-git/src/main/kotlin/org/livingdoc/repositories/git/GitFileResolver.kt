@@ -20,6 +20,7 @@ internal class GitFileResolver(private val repository: Repository) {
      */
     fun resolve(identifier: GitDocumentIdentifier): InputStream {
         val commitId = repository.resolve(identifier.revision)
+            ?: throw DocumentNotFoundException("Could not find revision ${identifier.revision}")
         val commit = repository.parseCommit(commitId)
 
         val treeWalk = TreeWalk.forPath(repository, identifier.path, commit.tree)
