@@ -19,6 +19,8 @@ object ReflectionHelper {
     ) {
         val context = contextOf(fixture.instance::class) // TODO
         val convertedArguments = args.map { (key, value) ->
+            // TODO what if type is error?
+            // TODO handle it here or in converter?
             key to TypeConverters.convertStringToType(value, key.type, context.createContext(key))
         }.toMap()
 

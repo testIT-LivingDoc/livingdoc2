@@ -60,7 +60,9 @@ class ScenarioFixture(
                 result
             }
         }
+
         results.forEach {
+            println(it)
             srBuilder.withStep(it)
         }
         return !stopExecution
@@ -103,8 +105,11 @@ class ScenarioFixture(
         return ScenarioStepMatcher(fixtureModel.stepTemplates).match(stepValue)
     }
 
-    private fun getParameterName(parameter: KParameter): String {
-        return parameter.findAnnotation<Binding>()!!.value
+    private fun getParameterName(parameter: KParameter): String? {
+        var parameterName = parameter.findAnnotation<Binding>()?.value
+        return if (parameterName.isNullOrEmpty()) {
+            parameter.name
+        } else parameterName
     }
 
     private fun shouldExecute(srBuilder: ScenarioResult.Builder): Boolean {

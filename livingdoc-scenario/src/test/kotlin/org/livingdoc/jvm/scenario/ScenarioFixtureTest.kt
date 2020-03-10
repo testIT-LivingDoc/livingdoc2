@@ -54,8 +54,8 @@ class ScenarioFixtureTest {
         every {
             manager.shouldExecute()
         }.returns(conditionEvaluationResult)
-        every { manager.onAfterFixture() }.returns(Unit)
-        every { manager.onBeforeFixture() }.returns(Unit)
+        every { manager.onAfterFixture() } answers {}
+        every { manager.onBeforeFixture() } answers {}
         every {
             manager.handleTestExecutionException(any())
         } answers { handleThrowable(it.invocation.args[0] as Throwable) }
@@ -81,7 +81,7 @@ class ScenarioFixtureTest {
         return sut
     }
 
-    fun createTwoStepScenario(): Scenario {
+    private fun createTwoStepScenario(): Scenario {
         val step1 = Step("step1")
         val step2 = Step("step2")
         val steps = listOf(step1, step2)
@@ -153,7 +153,7 @@ class ScenarioFixtureTest {
         Assertions.assertThat(scenarioResult.status).isEqualTo(Status.Executed)
     }
 
-    fun setupDisabledScenarioContext(): ScenarioFixture {
+    private fun setupDisabledScenarioContext(): ScenarioFixture {
         // mocking context
         val context = mockk<FixtureContext>()
         every {
@@ -185,19 +185,28 @@ class ScenarioFixtureTest {
         // TODO
         @Test
         fun `parameter values are passed as method parameters with the same name`() {
+            every { fixture.before1() } answers {}
+            every { fixture.before2() } answers {}
+            every { fixture.after2() } answers {}
+            every { fixture.after1() } answers {}
+            every { fixture.parameterizedStep(any()) } answers {}
 
             val step = Step("Step with parameter: wonderful")
             val scenario = Scenario(steps = listOf(step))
             val scenarioResult =
                 createScenarioFixture(ExtendedLifeCycleFixture::class).execute(scenario) as ScenarioResult
 
-            Assertions.assertThat(scenarioResult.steps).isNotEmpty
             verify { fixture.parameterizedStep("wonderful") }
         }
 
-        // TODO
         @Test
         fun `parameter values are passed to methods based on explicit name bindings`() {
+
+            every { fixture.before1() } answers {}
+            every { fixture.before2() } answers {}
+            every { fixture.after2() } answers {}
+            every { fixture.after1() } answers {}
+            every { fixture.parameterizedStepWithBinding(any()) } answers {}
 
             val step = Step("Step with parameter passed by explicit name bindings: explicit")
             val scenario = Scenario(steps = listOf(step))
@@ -213,7 +222,8 @@ class ScenarioFixtureTest {
             val step = Step("Step with mismatching parameter: Oh noes!")
             val scen = Scenario(steps = listOf(step))
             val result =
-                (createScenarioFixture(fixture = ExtendedLifeCycleFixture()::class).execute(scen) as ScenarioResult).status
+                (createScenarioFixture(fixture = ExtendedLifeCycleFixture()::class)
+                    .execute(scen) as ScenarioResult).status
 
             Assertions.assertThat(result).isInstanceOf(Status.Exception::class.java)
         }
@@ -288,7 +298,8 @@ class ScenarioFixtureTest {
                 every { fixture.before1() } throws IllegalStateException()
 
                 Assertions.assertThat(
-                    (execute(Scenario(listOf(Step("step1"), Step("step2")))) as ScenarioResult).status)
+                    (execute(Scenario(listOf(Step("step1"), Step("step2")))) as ScenarioResult).status
+                )
                     .isInstanceOf(Status.Exception::class.java)
             }
 
