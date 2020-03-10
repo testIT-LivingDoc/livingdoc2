@@ -4,6 +4,8 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
+import org.livingdoc.repositories.cache.CacheHelper
+import org.livingdoc.repositories.cache.InvalidCachePolicyException
 import java.io.File
 import java.lang.Exception
 
@@ -23,16 +25,22 @@ class GitRepositoryResolver(
      * Clones the configured remote git repository into the local path and returns a reference to the local repository
      */
     fun resolve(): Repository {
-        val repoDirectory = File(config.localPath)
+        val repoDirectory = File(config.cache.path)
 
         return if (repoDirectory.list().isNullOrEmpty()) {
             // We need to clone the remote repository
             cloneRepository(repoDirectory)
         } else {
-            initializeRepository(repoDirectory)
-                .also { repository ->
-                    fetchUpdates(repository)
+            val repository = initializeRepository(repoDirectory)
+
+            when (config.cache.cachePolicy) {
+                CacheHelper.CACHE_ALWAYS -> fetchUpdates(repository)
+                CacheHelper.CACHE_ONCE -> {
                 }
+                else -> throw InvalidCachePolicyException(config.cache.cachePolicy)
+            }
+
+            repository
         }
     }
 
@@ -44,20 +52,6 @@ class GitRepositoryResolver(
             .setBare()
             .setGitDir(repoDirectory)
             .build()
-    }
-
-    /**
-     * Clones a remote repository to the local path
-     */
-    private fun cloneRepository(repoDirectory: File): Repository {
-        return Git.cloneRepository()
-            .setCloneAllBranches(false)
-            .setGitDir(repoDirectory)
-            .setBare(true)
-            .setURI(config.remoteUri)
-            .setCredentialsProvider(credentials)
-            .call()
-            .repository
     }
 
     /**
@@ -74,5 +68,19 @@ class GitRepositoryResolver(
             // swallow the exception and continue
             println(e)
         }
+    }
+
+    /**
+     * Clones a remote repository to the local path
+     */
+    private fun cloneRepository(repoDirectory: File): Repository {
+        return Git.cloneRepository()
+            .setCloneAllBranches(false)
+            .setGitDir(repoDirectory)
+            .setBare(true)
+            .setURI(config.remoteUri)
+            .setCredentialsProvider(credentials)
+            .call()
+            .repository
     }
 }

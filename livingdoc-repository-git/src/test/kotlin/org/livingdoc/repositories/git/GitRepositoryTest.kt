@@ -6,12 +6,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.livingdoc.repositories.DocumentNotFoundException
 import org.livingdoc.repositories.DocumentRepository
+import org.livingdoc.repositories.cache.CacheConfiguration
 
-@Disabled("This test requires a remote git repository")
+@Disabled("This test requires configuration of a remote git repository")
 internal class GitRepositoryTest {
     private val cut: DocumentRepository = GitRepository(
         "git", GitRepositoryConfig(
-            localPath = createTempDir().absolutePath
+            cache = CacheConfiguration(
+                path = createTempDir().absolutePath
+            )
         )
     )
 
