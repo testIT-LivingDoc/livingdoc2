@@ -54,7 +54,7 @@ Hence it should be self-contained.
 .Example Scenario - Structure
     adding {a} and {b} equals {c}
 
-Here for example we wrote our decision table in to a sentence.
+In this example, the purpose of the decision table above is converted into a sentence.
 The input values `a` and `b` exist as well as the result `c`.
 When writing a scenario it have to be clear what an input values and what the result is.
 
