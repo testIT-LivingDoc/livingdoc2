@@ -35,7 +35,7 @@ Table 1 is an example of a valid table that you can recreate using any of the wa
 |===
 
 In this example the columns `value a` and `value b` are test inputs and the column
-`a + b = ?` is an expectation.
+`a + b = ?` contains the expected result.
 When a test case is running, each row is executed as a test.
 So in the end it will check if `1 + 2 = 3`.
 If the result of the test written behind does match the value of the result cell, the implementation is correct.
