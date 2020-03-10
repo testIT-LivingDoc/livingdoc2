@@ -15,8 +15,8 @@ By writting a meaningful scenario the test case can be executed.
 > Decision Table: A table where each row represents a test case.
 A column can contain either a test input or an expectation.
 
-Decision tables are easily created.
-You can write them as a markdown table, a HTML table or using confluence.
+Decision tables are easily created by writing them as a markdown table, a HTML table or using confluence.
+
 Following is a example of a valid table you can recreate using any of the ways.
 
 
