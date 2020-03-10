@@ -1,4 +1,4 @@
-== Writing Fixtures
+== Writing Test Data
 In LivingDoc, it is possible to prepare test data (also known as examples) in different ways.
 
 First of all there are the decision tables.
