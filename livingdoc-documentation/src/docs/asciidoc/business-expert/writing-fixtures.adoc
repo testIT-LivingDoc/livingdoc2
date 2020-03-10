@@ -43,7 +43,7 @@ If the result of the test written behind does match the value of the result cell
 === Scenario
 > Scenario: An example describing a single test case as a sequence of steps.
 Each step is represented as a sentence containing either one or more test inputs
-or one or more expectations.
+and any number of expectations.
 
 Scenario Fixtures don't need any tables.
 The input values and the result are contained inside a sentence or message.
