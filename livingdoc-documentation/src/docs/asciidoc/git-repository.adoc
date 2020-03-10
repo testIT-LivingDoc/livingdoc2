@@ -1,1 +1,15 @@
-Test
+== Git-repository
+
+=== Configuration
+
+The configuration consists of:
+
+* [clone] The repository directory, the remote URI and the parameter for the authentication (credentials), whether the repo is bare (true in our case) and set clone all branches (false).
+
+* [fetch] Only bare and repo directory.
+
+* [init] remote URI and credentials.
+
+=== Example
+
+=== Document-ID format
