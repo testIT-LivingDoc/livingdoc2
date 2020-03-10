@@ -72,7 +72,7 @@ In Confluence a bullet list must contain at least two elements to be recognized 
 
 ==== Gherkin
 LivingDoc supports link:https://cucumber.io/docs/gherkin/[Gherkin].
-Gherkin can be seen as a more structured and defined scenario fixture containing keywords and rules.
+Gherkin is a more structured language to describe test data by using some defined keywords and rules.
 Have a look at the official documentation of link:https://cucumber.io/docs/gherkin/[Gherkin] to find out more.
 
 For now LivingDoc only support s Gherkin in plain HTML.
