@@ -1,5 +1,5 @@
 == Writing Fixtures
-In LivingDoc it is possible to write different kinds of fixtures.
+In LivingDoc, it is possible to prepare test data (also known as examples) in different ways.
 
 First of all there are the decision tables.
 It is a simple table containing input values and multiple possible functions for each column.
