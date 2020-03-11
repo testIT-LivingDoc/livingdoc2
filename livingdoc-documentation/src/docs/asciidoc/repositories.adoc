@@ -136,7 +136,7 @@ An example of the `livingdoc.yml`
 ----
 repositories:
   - name: "git"
-    factory: "org.livingdoc.repositories.git.GitRpositoryFactory"
+    factory: "org.livingdoc.repositories.git.GitRepositoryFactory"
     config:
       remoteUri: "http://git.example.specifications.git"
       username: "livingdoc"
