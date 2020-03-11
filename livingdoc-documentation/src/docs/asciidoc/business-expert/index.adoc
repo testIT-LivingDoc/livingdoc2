@@ -4,8 +4,8 @@
 == Introduction
 This page is intended to provide a detailed explanation of how to use LivingDoc in the role of a business expert.
 
-include::writing-fixtures.adoc[]
+include::writing-testdata.adoc[]
 
-include::creating-fixtures.adoc[]
+include::creating-testdata.adoc[]
 
-include::additional-information.adoc[]
+include::test-reports.adoc[]

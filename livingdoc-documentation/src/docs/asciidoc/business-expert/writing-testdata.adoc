@@ -9,8 +9,10 @@ Another possiblity are scenario fixtures which are written in plain text.
 In this case every line is a test case.
 By writting a meaningful scenario the test case can be executed.
 
+=== LivingDoc Syntax
 
-=== Decision Tables
+
+==== Decision Tables
 
 > Decision Table: A table where each row represents a test case.
 A column can contain either a test input or an expectation.
@@ -40,7 +42,7 @@ When a test case is executed, each row is considered as a seperate test.
 So in the end it will check if `1 + 2 = 3`.
 If the result of the test written behind does match the value of the result cell, the implementation is correct in terms of fulfilling the tests requirements.
 
-=== Scenario
+==== Scenario
 > Scenario: An example describing a single test case as a sequence of steps.
 Each step is represented as a sentence containing either one or more test inputs
 and any number of expectations.
@@ -69,8 +71,46 @@ If the result of this test does match the value of the expectation, the implemen
 
 In Confluence a bullet list must contain at least two elements to be recognized as a scenario.
 
+==== Annotation for manual Tests
+It is possible to exclude a table or scenario from execution.
+You can use `MANUAL` to mark them.
+By declaring a section in a page as `MANUAL` the whole selection will be  ignored when tests are run.
+This way, the user can work on decision tables and scenarios without the risk of breaking existing tests.
 
-==== Gherkin
+A `MANUAL` section is created by writing `MANUAL` in any place of the header.
+The `MANUAL` is valid until the next section or header is declared.
+It is not necessary to declare a section with the same hierarchy.
+For example a h2 in HTML will be a new section when declared after a h1 which is manual.
+
+.Example Declaring a MANUAL section in Markdown
+    # Section (it is a MANUAL)
+    - adding 1 and 2 equals 3
+
+    # MANUAL Section XY
+    - adding 3 and 6 equals 9
+
+.Example Declaring a MANUAL section in HTML
+    <h1>MANUAL Test</h1>
+    <table>
+        ...
+    </table>
+
+
+.Example Declaring a MANUAL section in Confluence
+image::pic/MANUAL-in-fixture.png[]
+
+So in the example above the MANUAL tag is used in a header on level 2.
+Everything up to the next level 2 header line is ignored during execution to avoid using unfinished scenarios or tables for testing.
+
+==== Expected Exceptions
+You can use a string named after an exception as any expected result of a decision table or scenario.
+The exception can be used to check for unwanted behavior.
+For example, you can add corrupt input values to check whether a function behaves as you would expect.
+A test is only successful if the exception thrown from the underlying code matches the exception you specify as the result.
+If no exception is thrown, but you expect one, the test will fail.
+
+
+=== Gherkin
 LivingDoc supports link:https://cucumber.io/docs/gherkin/[Gherkin].
 Gherkin is a more structured language to describe test data by using some defined keywords and rules.
 Have a look at the official documentation of link:https://cucumber.io/docs/gherkin/[Gherkin] to find out more.
