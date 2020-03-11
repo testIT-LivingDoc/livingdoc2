@@ -7,6 +7,7 @@ dependencies {
 	testRuntime(project(":livingdoc-repository-file"))
 	testRuntime(project(":livingdoc-repository-rest"))
 
+
 	testImplementation(project(":livingdoc-api"))
 	testImplementation(project(":livingdoc-converters"))
 	testImplementation(project(":livingdoc-format-gherkin"))
