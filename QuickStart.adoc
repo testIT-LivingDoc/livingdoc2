@@ -1,1 +1,179 @@
 = Quick start
+
+This quick start guide covers a simple use-case including specification file. 
+Prerequisite to start working with LivingDoc as a test-engineer is to follow 
+the Getting-started steps mentioned in our README.
+
+== Simple case code
+
+Assume you the requirment is to write a calculator for Integer numbers. 
+The calculator should be able to sum, subtract, multiply and divide. 
+
+This functionality has to be implemented 
+
+.CalculatorInt.kt
+[source,Java]
+----
+ class CalculatorInt {
+
+    fun sum(a: Int, b: Int): Int {
+        return a + b
+    }
+
+    fun diff(a: Int, b: Int): Int {
+        return a - b
+    }
+
+    fun multiply(a: Int, b: Int): Int {
+        return a * b
+    }
+
+    fun divide(a: Int, b: Int): Int {
+        return a / b
+    }
+}
+----
+
+See link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/-/blob/master/livingdoc-tests/src/main/kotlin/org/livingdoc/example/CalculatorInt.kt:[CalculatorInt.kt]
+
+After that it is needed to implement the DecisionTableFixture in a separate class.
+
+First we have to decide where we want to get our specification from. In our case
+we want it from a markdown file from our local system.
+Therefore we have to add the following annotations.
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+@Tag("markdown")
+@ExecutableDocument("local://CalculatorInt.md")
+----
+
+The next step is to write the DecisionTableFixtures.
+Each DecisionTableFixture has to be specified in its own class after a DecisionTableFixtures annotation, see.
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+@DecisionTableFixture
+    class CalculatorDecisionTableFixture {
+----
+
+The next step is to specifiy our calculator from above as a System under test (SUT)
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+private lateinit var sut: CalculatorInt
+----
+
+Afterwards we need specify the input for our calculator and initialize it. We do this again with annotations. 
+In this case we do it for the two values the calculator should get and init the caculator before a table row.
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+        @Input("a")
+        private var valueA = 0
+        private var valueB = 0
+
+        @BeforeRow
+        fun beforeRow() {
+            sut = CalculatorInt()
+        }
+
+        @Input("b")
+        fun setValueB(valueB: Int) {
+            this.valueB = valueB
+        }
+----
+
+The actual test case is set via a check annotation. In this case we want to check, if 
+the values from our table is equal to the expected result. 
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+        @Check("a * b = ?")
+        fun checkMultiply(expectedValue: Int) {
+            val result = sut.multiply(valueA, valueB)
+            assertThat(result).isEqualTo(expectedValue)
+        }
+----
+
+Another possibility instead of a Decision Table is to write a ScenarioFixture.
+In this case we have to use the following
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+    @ScenarioFixture
+    class CalculatorScenarioFixture {
+----
+
+The init of the SUT is analog, but instead of beforeRow the annotation is named before
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+    @Before
+----
+
+Further, instead of a step we have to use a Step with a Binding which serves as Input.
+
+.CalculatorIntDocumentMdException.kt 
+[source,Java]
+----
+       @Step("adding {a} and {b} equals {c}")
+        fun add(
+            @Binding("a") a: Int,
+            @Binding("b") b: Int,
+            @Binding("c") c: Int
+        ) {
+            val result = sut.sum(a, b)
+            assertThat(result).isEqualTo(c)
+        }
+----
+
+See link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/-/blob/master/livingdoc-tests/src/test/kotlin/org/livingdoc/example/CalculatorIntDocumentMdException.kt:[CalculatorIntDocumentMdException.kt]
+
+== Simple case specification
+
+The glue code is one part of using LivingDoc, the other part is the specification document. 
+This can be in markdown, html or feature (gherkin) files. 
+In our case we have specified CalculatorInt.md to deliver the TestData for our tests, realised as
+DecisionTable and Scenario Fixtures. 
+
+In this case our DecisionTableFixture has a description, a headline and a table.
+The first two rows represent the input values, and the third and fourth the expected value of a calculator action.
+
+.CalculatorInt.md 
+[source,md]
+----
+# Calculator
+
+The CalculatorInt is used to test Exceptions as expected output.
+
+Examples
+
+|  a |  b | a * b = ? | a / b = ? |
+|----|----|-----------|-----------|
+| -1 | -1 |  1        |    1      |
+|  1 |  0 |  0        | error     |
+| -1 |  0 | -0        | error     |
+----
+
+For the ScenarioFixture this happens not in a table but in a setence.
+
+.CalculatorInt.md
+[source,md]
+----
+# Scenario
+
+- adding 1 and 2 equals 3
+- dividing 1 by 0 equals error
+
+----
+
+See link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/-/blob/master/livingdoc-tests/src/test/docs/CalculatorInt.md:[CalculatorInt.md]
+
+Further information can be found in our link:https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/blob/master/livingdoc-documentation/src/docs/asciidoc/index.adoc:[End-User Documentation]. 
+
