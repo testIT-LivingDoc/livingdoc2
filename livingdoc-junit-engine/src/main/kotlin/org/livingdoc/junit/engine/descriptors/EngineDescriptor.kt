@@ -14,7 +14,8 @@ class EngineDescriptor(uniqueId: UniqueId, private val documentClasses: List<KCl
     override fun mayRegisterTests() = true
 
     override fun execute(context: LivingDocContext, dynamicTestExecutor: Node.DynamicTestExecutor): LivingDocContext {
-        context.livingDoc.execute(documentClasses).flatMap { it.documentResults }.forEach { documentResult -> // TODO handle groupResults
+        context.livingDoc.execute(documentClasses).flatMap { it.documentResults }.forEach { documentResult ->
+            // TODO handle groupResults
             val documentDescriptor = ExecutableDocumentDescriptor(
                 uniqueId(uniqueId, documentResult.documentClass),
                 documentResult

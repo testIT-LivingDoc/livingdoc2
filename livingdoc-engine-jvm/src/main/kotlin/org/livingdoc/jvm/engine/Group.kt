@@ -19,6 +19,7 @@ internal class Group(
     private val fixtureManager: FixtureManager,
     private val extensionManager: ExtensionManager
 ) {
+    @Suppress("ReturnCount")
     fun execute(): GroupResult {
         val conditionEvaluationResult = extensionManager.shouldExecute(context)
         if (conditionEvaluationResult.disabled) {

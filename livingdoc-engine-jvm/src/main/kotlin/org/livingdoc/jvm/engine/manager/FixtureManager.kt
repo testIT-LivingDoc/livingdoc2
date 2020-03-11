@@ -57,7 +57,8 @@ internal class FixtureManager {
         parent: EngineContext,
         extensionContext: ExtensionContext
     ): EngineContext {
-        val extensionRegistry = ExtensionRegistryImpl.createRegistryFrom(loadExtensions(fixtureClass), parent.extensionRegistry)
+        val extensionRegistry =
+            ExtensionRegistryImpl.createRegistryFrom(loadExtensions(fixtureClass), parent.extensionRegistry)
         return EngineContext(parent, extensionContext, extensionRegistry)
     }
 }

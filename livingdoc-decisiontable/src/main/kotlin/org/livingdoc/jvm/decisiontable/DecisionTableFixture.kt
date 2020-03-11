@@ -44,7 +44,7 @@ class DecisionTableFixture(
                     checkHeaders
                 ).execute()
                 resultBuilder.withRow(result)
-            } catch (e: Throwable) {
+            } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
                 val exception = manager.handleTestExecutionException(e)
                 if (exception != null) {
                     exceptionThrown = true
@@ -63,7 +63,7 @@ class DecisionTableFixture(
         return try {
             manager.onBeforeFixture()
             true
-        } catch (e: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
             val exception = manager.handleBeforeMethodExecutionException(e)
             if (exception != null) {
                 resultBuilder.withStatus(Status.Exception(e))
@@ -78,7 +78,7 @@ class DecisionTableFixture(
         return try {
             manager.onAfterFixture()
             true
-        } catch (e: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
             val processedThrowable = manager.handleAfterMethodExecutionException(e)
             if (processedThrowable != null) {
                 resultBuilder.withStatus(Status.Exception(e))

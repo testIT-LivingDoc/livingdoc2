@@ -48,7 +48,8 @@ class DecisionTableFixtureModel(
     }.sortedBy { method -> method.name }
 
     val inputFields: List<KMutableProperty<*>> =
-        fixtureClass.declaredMemberProperties.filter { field -> field.hasAnnotation<Input>() }.filterIsInstance<KMutableProperty<*>>()
+        fixtureClass.declaredMemberProperties.filter { field -> field.hasAnnotation<Input>() }
+            .filterIsInstance<KMutableProperty<*>>()
     val inputMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Input>() }
     val checkMethods: List<KFunction<*>> = fixtureClass.declaredMemberFunctions.filter { it.hasAnnotation<Check>() }
 

@@ -24,7 +24,10 @@ internal class ExtensionRegistryImpl(private val extensions: List<Extension>, pr
             return ExtensionRegistryImpl(defaultExtensions, null)
         }
 
-        fun createRegistryFrom(extensionTypes: List<KClass<Extension>>, parentRegistry: ExtensionRegistry): ExtensionRegistry {
+        fun createRegistryFrom(
+            extensionTypes: List<KClass<Extension>>,
+            parentRegistry: ExtensionRegistry
+        ): ExtensionRegistry {
             return ExtensionRegistryImpl(extensionTypes.map { instantiateExtension(it) }, parentRegistry)
         }
 

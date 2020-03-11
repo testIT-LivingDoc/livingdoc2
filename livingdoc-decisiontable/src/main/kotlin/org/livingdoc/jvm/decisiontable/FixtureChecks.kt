@@ -21,7 +21,10 @@ internal fun checkThatMethodsHaveNoParameters(methods: List<KCallable<*>>, annot
  * @param annotationClass the class where the methods are from
  * @return a list of messages with a message for every method that has more or less than one parameter
  */
-internal fun checkThatMethodsHaveExactlyOneParameter(methods: List<KCallable<*>>, annotationClass: Class<*>): List<String> {
+internal fun checkThatMethodsHaveExactlyOneParameter(
+    methods: List<KCallable<*>>,
+    annotationClass: Class<*>
+): List<String> {
     val annotationName = annotationClass.simpleName
     return methods
         .filter { it.parameters.size != 1 }

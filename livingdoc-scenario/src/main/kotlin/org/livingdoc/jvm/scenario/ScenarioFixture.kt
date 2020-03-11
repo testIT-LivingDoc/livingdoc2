@@ -88,7 +88,7 @@ class ScenarioFixture(
         try {
             ReflectionHelper.invokeWithParameterWithoutReturnValue(function, fixture, parameterList)
             stepResultBuilder.withStatus(Status.Executed)
-        } catch (t: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") t: Throwable) {
             val throwable = manager.handleTestExecutionException(t)
             if (throwable != null) {
                 stepResultBuilder.withStatus(Status.Exception(throwable))
@@ -106,15 +106,13 @@ class ScenarioFixture(
     }
 
     private fun getParameterName(parameter: KParameter): String? {
-        var parameterName = parameter.findAnnotation<Binding>()?.value
-        return if (parameterName.isNullOrEmpty()) {
-            parameter.name
-        } else parameterName
+        val parameterName = parameter.findAnnotation<Binding>()?.value
+        return if (parameterName.isNullOrEmpty()) parameter.name else parameterName
     }
 
     private fun shouldExecute(srBuilder: ScenarioResult.Builder): Boolean {
         val shouldExecute = manager.shouldExecute()
-        // TODO unassigned Skipped sollte man sich nochmal ansehen
+        // TODO review usage of unassigned Skipped
         return if (shouldExecute.disabled) {
             srBuilder.withStatus(Status.Disabled(shouldExecute.reason.orEmpty())).withUnassignedSkipped()
             false
@@ -127,7 +125,7 @@ class ScenarioFixture(
         return try {
             manager.onBeforeFixture()
             true
-        } catch (throwable: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
             val processedThrowable = manager.handleBeforeMethodExecutionException(throwable)
             if (processedThrowable != null) {
                 srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
@@ -146,7 +144,7 @@ class ScenarioFixture(
         fixtureModel.beforeMethods.forEach {
             try {
                 ReflectionHelper.invokeWithoutParameterWithoutReturnValue(it, fixture)
-            } catch (throwable: Throwable) {
+            } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
                 val processedThrowable = manager.handleBeforeMethodExecutionException(throwable)
                 if (processedThrowable != null) {
                     srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
@@ -163,7 +161,7 @@ class ScenarioFixture(
         fixtureModel.afterMethods.forEach {
             try {
                 ReflectionHelper.invokeWithoutParameterWithoutReturnValue(it, fixture)
-            } catch (throwable: Throwable) {
+            } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
                 val processedThrowable = manager.handleAfterMethodExecutionException(throwable)
                 if (processedThrowable != null) {
                     srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()
@@ -179,7 +177,7 @@ class ScenarioFixture(
         return try {
             manager.onAfterFixture()
             true
-        } catch (throwable: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") throwable: Throwable) {
             val processedThrowable = manager.handleAfterMethodExecutionException(throwable)
             if (processedThrowable != null) {
                 srBuilder.withStatus(Status.Exception(processedThrowable)).withUnassignedSkipped()

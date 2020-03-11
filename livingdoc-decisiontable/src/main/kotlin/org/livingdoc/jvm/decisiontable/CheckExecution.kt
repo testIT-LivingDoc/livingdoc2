@@ -21,7 +21,7 @@ class CheckExecution(
         try {
             FixtureMethodInvoker.invoke(checkMethod, field.value)
             fieldResultBuilder.withStatus(Status.Executed)
-        } catch (e: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
             fieldResultBuilder.withStatus(Status.Exception(e))
         }
 
