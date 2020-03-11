@@ -1,15 +1,48 @@
 == Git-repository
+This feature allows to load documents from a remote git repository within LivingDoc code.
 
 === Configuration
 
+To configure the git-repository use the GitRepositoryConfig class.
+
 The configuration consists of:
 
-* [clone] The repository directory, the remote URI and the parameter for the authentication (credentials), whether the repo is bare (true in our case) and set clone all branches (false).
+*  [remoteUri] The URL from which the git repository should be clones
 
-* [fetch] Only bare and repo directory.
+*  [username]
 
-* [init] remote URI and credentials.
+*  [password]
+
+*  [cacheConfiguration] Default is caching is always activated, can be changed.
+
 
 === Example
+For this example we assume the configuration in the data class was done correctly.
+To be able to do that, do not forget to specify the repository-git in the gradle file.
+
+.Example SetUp
+  private val repo: DocumentRepository = GitRepository(
+        "git", GitRepositoryConfig(
+            cache = CacheConfiguration(
+                path = createTempDir().absolutePath
+            )
+        )
+    )
+
+.Example Load of a document "TestTexts.md"
+   val document = repo.getDocument("TestTexts.md")
+   // Now you can use the document respectively the TestData, like this:
+   document.elements
+
 
 === Document-ID format
+
+The document-ID represents the path and the version of a document/file.
+The "TestTexts.md" file is located in the "root" directory, if this is not the case you should specify the full
+path before (e.g. "Calculator/Calculator.md"")
+
+Further the second part represents the "version" or more specific the commit of a document. This can be added via "@"
+after the path.
+
+.Example Document-ID format
+ "Calculator.md@4f8fb05601e2bd84cf2fb05741ff5a868f285c6b"
