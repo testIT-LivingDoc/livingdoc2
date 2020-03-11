@@ -6,7 +6,6 @@ dependencies {
 	testRuntime(project(":livingdoc-junit-engine"))
 	testRuntime(project(":livingdoc-repository-file"))
 	testRuntime(project(":livingdoc-repository-rest"))
-	testRuntime(project(":livingdoc-repository-git"))
 
 
 	testImplementation(project(":livingdoc-api"))
