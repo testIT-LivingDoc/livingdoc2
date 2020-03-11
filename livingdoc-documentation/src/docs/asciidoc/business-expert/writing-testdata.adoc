@@ -1,26 +1,18 @@
 == Writing Test Data
 In LivingDoc, it is possible to prepare test data (also known as examples) in different ways.
-
-First of all there are the decision tables.
-It is a simple table containing input values and multiple possible functions for each column.
-Each row therby represnt a test case where the given input values are calculated using the fuctions and checked with the corresponding result.
-
-Another possiblity are scenario fixtures which are written in plain text.
-In this case every line is a test case.
-By writting a meaningful scenario the test case can be executed.
+The following section will explain how the two possibilities for writing test data are used.
 
 === LivingDoc Syntax
 
-
 ==== Decision Tables
-
 > Decision Table: A table where each row represents a test case.
 A column can contain either a test input or an expectation.
 
+Decision tables are a simple table containing input values and multiple possible functions for each column.
+Each row therby represents a test case where the given input values are calculated using the functions and checked with the corresponding result.
 Decision tables are easily created by writing them as a markdown table, a HTML table or using confluence.
 
 Table 1 is an example of a valid table that you can recreate using any of the ways mentioned before.
-
 
 .Example Decision Table
 
@@ -47,7 +39,10 @@ If the result of the test written behind does match the value of the result cell
 Each step is represented as a sentence containing either one or more test inputs
 and any number of expectations.
 
-Scenario Fixtures don't need any tables.
+Scenario are written in plain text.
+In this case every line is a test case.
+By writting a meaningful scenario the test case can be executed.
+Scenario  don't need any tables.
 The input values and the result are contained inside a sentence or message.
 
 It has to be possible to extract any necessary information out of the message in order to create a test case.
@@ -115,5 +110,5 @@ LivingDoc supports link:https://cucumber.io/docs/gherkin/[Gherkin].
 Gherkin is a more structured language to describe test data by using some defined keywords and rules.
 Have a look at the official documentation of link:https://cucumber.io/docs/gherkin/[Gherkin] to find out more.
 
-For now LivingDoc only support s Gherkin in plain HTML.
+For now LivingDoc only supports Gherkin in plain HTML.
 The `<gherkin>` tag is nested inside a `<pre>` tag of the HTML file.
