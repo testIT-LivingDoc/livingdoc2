@@ -40,8 +40,8 @@ Each step is represented as a sentence containing either one or more test inputs
 and any number of expectations.
 
 Scenario are written in plain text.
-In this case every line is a test case.
-By writting a meaningful scenario the test case can be executed.
+In this case every line can be used for a test case or a test step.
+By writing a meaningful scenario the data inside each sentence can be used and executed.
 Scenario  don't need any tables.
 The input values and the result are contained inside a sentence or message.
 
@@ -64,7 +64,8 @@ In this example the values for `a` and `b` are replaced with string values as we
 The test script that is prepared by a test engineer should be able to use `a = 1` and `b = 2` and check if it matches `c = 3`.
 If the result of this test does match the value of the expectation, the implementation is considered as correct.
 
-In Confluence a bullet list must contain at least two elements to be recognized as a scenario.
+A list that wants to represent a scenario must contain at least two elements.
+Otherwise it is not recognized as one and won't be executed.
 
 ==== Annotation for manual Tests
 It is possible to exclude a table or scenario from execution.
