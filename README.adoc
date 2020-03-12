@@ -22,7 +22,7 @@ Each stakeholder has a specific task with LivingDoc. They can be defined as foll
 As for now, local files, Confluence and REST Repositories are supported.
 For more information, on how to use the different repositories see link:livingdoc-documentation/src/docs/asciidoc#using-document-repositories:[Repository documentation].
 
-You should also take a look at the link:doc/quality-goals.adoc[Qualiy Goals] defined for LivingDoc 2.
+You should also take a look at the link:doc/quality-goals.adoc[Quality Goals] defined for LivingDoc 2.
 
 
 == Getting started
@@ -54,15 +54,15 @@ Because the LivingDoc 2 Engine is an extension of the JUnit 5 Engine, you will n
 === How to install
 
 Depending on your environment you can use the gradle wrapper `gradlew` and `gradlew.bat` or install gradle globally on your machine.
-For for convenience we will use `gradle` in the rest of the documentation as command name.
-So for example `gradle build` mean:
+For convenience we will use `gradle` in the rest of the documentation as command name.
+So for example `gradle build` means:
 
 * Windows wrapper: `gradlew.bat build`
 * Linux wrapper: `./gradlew build`
 * Linux without wrapper: `gradle build`
 
 If you want to use your own build of livingdocs in other projects on your machine, you can publish the artifacts to your local maven repository by running `gradle publishToMavenLocal`.
-After this step the livingdocs Test Framework can be used in other project by importing them with the group id `org.livingdoc` and the artifact id matching the project name.
+After this step the livingdocs Test Framework can be used in other projects by importing them with the group id `org.livingdoc` and the artifact id matching the project name.
 
 
 === How to write tests
@@ -89,7 +89,7 @@ It contains a first starting point if you want to see some executable fixtures.
 
 
 
-Architectual Descision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
+Architectual Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
 
 You can find the description of some keywords at the link:doc/glossary.adoc[Glossary].
 
