@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.0.0[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
-== link:++https://gilbert.informatik.uni-stuttgart.de/enpro-ws2019-20/enpro-livingdoc/compare/b81fe455...master++[Unreleased]
+== link:++https://github.com/EnproLivingDoc/livingdoc/compare/b81fe455...master++[Unreleased]
 
 === Added
 
@@ -25,7 +25,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 - A `@Group` annotation that can be used to group `@ExecutableDocument` classes
 - Navigation from Junit Test results to Fixture code
 - Support for specifying scenarios with Gherkin, either as feature or html file
-- Added the possibility to execute the rows of a DecisionTableFixture in parallel, with the introduction of a a newly added parameter to the `@DecisionTableFixture` annotation. so that it is possible to specify if the rows should be executed in parallel (default is serial)
+- Added the possibility to execute the rows of a DecisionTableFixture in parallel, with the introduction of a newly added parameter to the `@DecisionTableFixture` annotation, so that it is possible to specify if the rows should be executed in parallel (default is serial)
 - Add the option to leave cells in a DecisionTable empty to only report the result
 - Test titles and descriptions now appear in the generated reports
 - Add caching of documents for the RESTRepository and ConfluenceRepository
