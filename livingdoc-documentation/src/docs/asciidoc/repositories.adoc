@@ -57,7 +57,7 @@ repositories:
 
 === Confluence Repository
 The Confluence Repository uses the unique DocumentID of a confluence-page to identify the Executable Documents.
-To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html:[Confluence documentation].
+To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html[Confluence documentation].
 
 To use this repository use the factory: `org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory`.
 
