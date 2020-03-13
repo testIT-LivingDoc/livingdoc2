@@ -12,6 +12,9 @@ A primitive implementation could look like this:
 .CalculatorInt.kt
 [source,Java]
 ----
+/**
+* A primitive implementation of a calculator, which is our SUT (System under Test) here
+*/
  class CalculatorInt {
 
     fun sum(a: Int, b: Int): Int {
@@ -38,7 +41,7 @@ See link:livingdoc-tests/src/main/kotlin/org/livingdoc/example/CalculatorInt.kt[
 
 For the testing, it is needed to implement some fixture code in a separate class. This code provides some functions which act as a kind of blueprint for concrete testcases.
 
-First we have to decide where we want to get our specification from. 
+First we have to decide where we want to get our specification from.
 Assume that it should be retrieved from a markdown file from the local file system. Therefore some annotations need to be added to the fixture class:
 .CalculatorIntDocumentMdException.kt
 [source,Java]
@@ -47,7 +50,7 @@ Assume that it should be retrieved from a markdown file from the local file syst
 @ExecutableDocument("local://CalculatorInt.md")
 ----
 
-The tag annotation marks this document as related to the keyword "markdown". 
+The tag annotation marks this document as related to the keyword "markdown".
 This tag is used to group the test results in reports.The ExecutableDocument annotation is used to specify the example/specification data source.
 
 The next step is to write the DecisionTableFixtures.
@@ -177,6 +180,6 @@ The ScenarioFixture example does not use tables but small sentences instead.
 
 The completed file can be seen here: link:livingdoc-tests/src/test/docs/CalculatorInt.md[CalculatorInt.md]
 
-When the fixture from above is used in a Living Doc execution, it will retrieve the data from the markdown file and the test subject will be tested with the fixture methods and the example test data. 
+When the fixture from above is used in a Living Doc execution, it will retrieve the data from the markdown file and the test subject will be tested with the fixture methods and the example test data.
 
 Further information can be found in our link:livingdoc-documentation/src/docs/asciidoc/index.adoc[End-User Documentation].
