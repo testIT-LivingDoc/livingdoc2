@@ -10,7 +10,7 @@ Assume you have the requirement to write a calculator for Integer numbers which 
 A primitive implementation could look like this:
 
 .CalculatorInt.kt
-[source,Kotlin]
+[source,gradle]
 ----
 /**
 * A primitive implementation of a calculator, which is our SUT (System under Test) here
@@ -47,7 +47,7 @@ Assume that it should be retrieved from a markdown file from the local file syst
 Therefore some annotations need to be added to the fixture class:
 .CalculatorIntDocumentMdException.kt
 
-[source,Kotlin]
+[source,gradle]
 ----
 @Tag("markdown")
 @ExecutableDocument("local://CalculatorInt.md")
@@ -60,16 +60,16 @@ The next step is to write the DecisionTableFixtures.
 Each DecisionTableFixture has to be specified in its own class after a DecisionTableFixtures annotation, see.
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 @DecisionTableFixture
-    class CalculatorDecisionTableFixture {
+class CalculatorDecisionTableFixture {
 ----
 
 The next step is to specify our calculator from above as a System under test (SUT)
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 private lateinit var sut: CalculatorInt
 ----
@@ -79,7 +79,7 @@ We do this again with annotations.
 In this case we do it for the two values the calculator should get and init the calculator before a table row.
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 @Input("a")
 private var valueA = 0
@@ -100,7 +100,7 @@ The actual test case is set via a check annotation.
 In this case we want to check, if the values from our table is equal to the expected result.
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 @Check("a * b = ?")
 fun checkMultiply(expectedValue: Int) {
@@ -112,7 +112,7 @@ fun checkMultiply(expectedValue: Int) {
 Another possibility instead of a Decision Table is to write a ScenarioFixture.
 In this case we have to use the following .CalculatorIntDocumentMdException.kt
 
-[source,Kotlin]
+[source,gradle]
 ----
 @ScenarioFixture
 class CalculatorScenarioFixture {
@@ -121,7 +121,7 @@ class CalculatorScenarioFixture {
 The init of the SUT is analog, but instead of beforeRow the annotation is named before
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 @Before
 ----
@@ -129,17 +129,17 @@ The init of the SUT is analog, but instead of beforeRow the annotation is named 
 Further, instead of a step we have to use a Step with a Binding which serves as Input.
 
 .CalculatorIntDocumentMdException.kt
-[source,Kotlin]
+[source,gradle]
 ----
 @Step("adding {a} and {b} equals {c}")
 fun add(
     @Binding("a") a: Int,
     @Binding("b") b: Int,
     @Binding("c") c: Int
-        ) {
-            val result = sut.sum(a, b)
-            assertThat(result).isEqualTo(c)
-        }
+) {
+    val result = sut.sum(a, b)
+    assertThat(result).isEqualTo(c)
+}
 ----
 
 The completed file can be seen here: link:livingdoc-tests/src/test/kotlin/org/livingdoc/example/CalculatorIntDocumentMdException.kt[CalculatorIntDocumentMdException.kt]
