@@ -1,0 +1,11 @@
+= Documentation for business experts
+:toc:
+
+== Introduction
+This page is intended to provide a detailed explanation of how to use LivingDoc in the role of a business expert.
+
+include::writing-testdata.adoc[]
+
+include::creating-testdata.adoc[]
+
+include::test-reports.adoc[]
