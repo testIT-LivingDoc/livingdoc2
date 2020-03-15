@@ -61,9 +61,10 @@ So for example `gradle build` means:
 * Linux wrapper: `./gradlew build`
 * Linux without wrapper: `gradle build`
 
-If you want to use your own build of livingdocs in other projects on your machine, you can publish the artifacts to your local maven repository by running `gradle publishToMavenLocal`.
-After this step the livingdocs Test Framework can be used in other projects by importing them with the group id `org.livingdoc` and the artifact id matching the project name.
+If you want to use your own build of livingdoc in other projects on your machine, you can publish the artifacts to your local maven repository by running `gradle publishToMavenLocal`.
+After this step the livingdoc Test Framework can be used in other projects by importing them with the group id `org.livingdoc` and the artifact id matching the project name.
 
+If you are interested in a simple example, we refer to our link:QuickStart.adoc[] guide.
 
 === How to write tests
 A good point to learn how to write the tests behind is documented at the link:livingdoc-documentation/src/docs/asciidoc/index.adoc[Fixture Description].
@@ -89,7 +90,7 @@ It contains a first starting point if you want to see some executable fixtures.
 
 
 
-Architectual Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
+Architectural Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
 
 You can find the description of some keywords at the link:doc/glossary.adoc[Glossary].
 
