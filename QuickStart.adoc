@@ -10,11 +10,11 @@ Assume you have the requirement to write a calculator for Integer numbers which 
 A primitive implementation could look like this:
 
 .CalculatorInt.kt
-[source,gradle]
+[source,kotlin]
 ----
 /**
-* A primitive implementation of a calculator, which is our SUT (System under Test) here
-*/
+ * A primitive implementation of a calculator, which is our SUT (System under Test) here
+ */
  class CalculatorInt {
 
     fun sum(a: Int, b: Int): Int {
@@ -36,113 +36,6 @@ A primitive implementation could look like this:
 ----
 
 See link:livingdoc-tests/src/main/kotlin/org/livingdoc/example/CalculatorInt.kt[CalculatorInt.kt]
-
-== Fixture Code
-
-For the testing, it is needed to implement some fixture code in a separate class.
-This code provides some functions which act as a kind of blueprint for concrete testcases.
-
-First we have to decide where we want to get our specification from.
-Assume that it should be retrieved from a markdown file from the local file system.
-Therefore some annotations need to be added to the fixture class:
-.CalculatorIntDocumentMdException.kt
-
-[source,gradle]
-----
-@Tag("markdown")
-@ExecutableDocument("local://CalculatorInt.md")
-----
-
-The tag annotation marks this document as related to the keyword "markdown".
-This tag is used to group the test results in reports.The ExecutableDocument annotation is used to specify the example/specification data source.
-
-The next step is to write the DecisionTableFixtures.
-Each DecisionTableFixture has to be specified in its own class after a DecisionTableFixtures annotation, see.
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-@DecisionTableFixture
-class CalculatorDecisionTableFixture {
-----
-
-The next step is to specify our calculator from above as a System under test (SUT)
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-private lateinit var sut: CalculatorInt
-----
-
-Afterwards we need specify the input for our calculator and initialize it.
-We do this again with annotations.
-In this case we do it for the two values the calculator should get and init the calculator before a table row.
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-@Input("a")
-private var valueA = 0
-private var valueB = 0
-
-@BeforeRow
-fun beforeRow() {
-    sut = CalculatorInt()
-}
-
-@Input("b")
-fun setValueB(valueB: Int) {
-    this.valueB = valueB
-}
-----
-
-The actual test case is set via a check annotation.
-In this case we want to check, if the values from our table is equal to the expected result.
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-@Check("a * b = ?")
-fun checkMultiply(expectedValue: Int) {
-    val result = sut.multiply(valueA, valueB)
-    assertThat(result).isEqualTo(expectedValue)
-}
-----
-
-Another possibility instead of a Decision Table is to write a ScenarioFixture.
-In this case we have to use the following .CalculatorIntDocumentMdException.kt
-
-[source,gradle]
-----
-@ScenarioFixture
-class CalculatorScenarioFixture {
-----
-
-The init of the SUT is analog, but instead of beforeRow the annotation is named before
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-@Before
-----
-
-Further, instead of a step we have to use a Step with a Binding which serves as Input.
-
-.CalculatorIntDocumentMdException.kt
-[source,gradle]
-----
-@Step("adding {a} and {b} equals {c}")
-fun add(
-    @Binding("a") a: Int,
-    @Binding("b") b: Int,
-    @Binding("c") c: Int
-) {
-    val result = sut.sum(a, b)
-    assertThat(result).isEqualTo(c)
-}
-----
-
-The completed file can be seen here: link:livingdoc-tests/src/test/kotlin/org/livingdoc/example/CalculatorIntDocumentMdException.kt[CalculatorIntDocumentMdException.kt]
 
 == Simple case specification
 
@@ -183,6 +76,112 @@ The ScenarioFixture example does not use tables but small sentences instead.
 
 The completed file can be seen here: link:livingdoc-tests/src/test/docs/CalculatorInt.md[CalculatorInt.md]
 
-When the fixture from above is used in a Living Doc execution, it will retrieve the data from the markdown file and the test subject will be tested with the fixture methods and the example test data.
+== Fixture Code
+
+For the testing, it is needed to implement some fixture code. Like unit test cases the fixtures should be implemented in a separate class as part of a test module.
+
+First we have to decide where we want to get our specification from.
+Assume that it should be retrieved from a markdown file from the local file system.
+Therefore we create a class and annotate it with `@ExecutableDocument` and specify the location of the markdown specification file:
+.CalculatorIntDocumentMdException.kt
+
+[source,kotlin]
+----
+@ExecutableDocument("local://CalculatorInt.md")
+class CalculatorDocument {
+----
+
+The ExecutableDocument annotation is used to specify the example/specification data source.
+
+Assume we have a DecisionTable in our markdown specification file. The next step is to write the DecisionTableFixtures.
+Each Decision Table Fixture has to be specified in its own class and must be annotated with `@DecisionTableFixtures`.
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+@DecisionTableFixture
+class CalculatorDecisionTableFixture {
+----
+
+The next step is to specify our calculator from above as a System under test (SUT)
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+private lateinit var sut: CalculatorInt
+----
+
+Afterwards we need specify the input for our calculator and initialize it.
+We do this again with annotations. In this example you can see `@Input` can be used on mutable properties and functions.
+In this case we add `@Input` annotations for the two input values of the calculator. We also create an new instance of our calculator for each a table row.
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+@Input("a")
+private var valueA = 0
+private var valueB = 0
+
+@BeforeRow
+fun beforeRow() {
+    sut = CalculatorInt()
+}
+
+@Input("b")
+fun setValueB(valueB: Int) {
+    this.valueB = valueB
+}
+----
+
+The actual test case is added via a check annotation.
+In this case we want to check, if the values from our table is equal to the expected result.
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+@Check("a * b = ?")
+fun checkMultiply(expectedValue: Int) {
+    val result = sut.multiply(valueA, valueB)
+    assertThat(result).isEqualTo(expectedValue)
+}
+----
+
+Another possibility instead of a Decision Table is to write a ScenarioFixture.
+In this case we have to use the following .CalculatorIntDocumentMdException.kt
+
+[source,kotlin]
+----
+@ScenarioFixture
+class CalculatorScenarioFixture {
+----
+
+The init of the SUT is analog, but instead of the `@BeforeRow` annotation we use the `@Before` annotation to init the SUT once for each scenario.
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+@Before
+----
+
+Each step of a scenario is mapped to a function annotated with `@Step` and a matching template.
+Templates can contain variables, which can be bound to parameters of the annotated function using `@Binding`.
+
+.CalculatorIntDocumentMdException.kt
+[source,kotlin]
+----
+@Step("adding {a} and {b} equals {c}")
+fun add(
+    @Binding("a") a: Int,
+    @Binding("b") b: Int,
+    @Binding("c") c: Int
+) {
+    val result = sut.sum(a, b)
+    assertThat(result).isEqualTo(c)
+}
+----
+
+The completed file can be seen here: link:livingdoc-tests/src/test/kotlin/org/livingdoc/example/CalculatorIntDocumentMdException.kt[CalculatorIntDocumentMdException.kt]
+
+When the fixture from above is used in a Living Doc execution, it will retrieve the data from the markdown file, the test subject will be tested with the fixture methods and the example test data.
 
 Further information can be found in our link:livingdoc-documentation/src/docs/asciidoc/index.adoc[End-User Documentation].
