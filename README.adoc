@@ -90,7 +90,7 @@ It contains a first starting point if you want to see some executable fixtures.
 
 
 
-Architecture Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
+Architectural Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
 
 You can find the description of some keywords at the link:doc/glossary.adoc[Glossary].
 
