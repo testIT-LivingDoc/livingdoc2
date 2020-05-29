@@ -1,22 +1,30 @@
 package org.livingdoc.engine.execution.examples.decisiontables
 
 import org.livingdoc.api.fixtures.decisiontables.AfterRow
-import org.livingdoc.api.fixtures.decisiontables.AfterTable
 import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow
-import org.livingdoc.api.fixtures.decisiontables.BeforeTable
 import org.livingdoc.api.fixtures.decisiontables.Check
+import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
 import org.livingdoc.api.fixtures.decisiontables.Input
+import org.livingdoc.engine.execution.ScopedFixtureModel
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
-class DecisionTableFixtureModel(
+/**
+ * This class represents a Decision Table Fixture
+ */
+internal class DecisionTableFixtureModel(
     val fixtureClass: Class<*>
-) {
+) : ScopedFixtureModel(fixtureClass) {
+    /**
+     * Can the steps of this fixture be executed in parallel
+     */
+    val parallelExecution: Boolean = fixtureClass.getAnnotation(DecisionTableFixture::class.java)?.parallel ?: false
 
-    val beforeTableMethods: List<Method>
-    val afterTableMethods: List<Method>
+    /**
+     * Lists of methods
+     */
     val beforeRowMethods: List<Method>
     val afterRowMethods: List<Method>
     val beforeFirstCheckMethods: List<Method>
@@ -38,8 +46,6 @@ class DecisionTableFixtureModel(
 
         // method analysis
 
-        val beforeTableMethods = mutableListOf<Method>()
-        val afterTableMethods = mutableListOf<Method>()
         val beforeRowMethods = mutableListOf<Method>()
         val afterRowMethods = mutableListOf<Method>()
         val beforeFirstCheckMethods = mutableListOf<Method>()
@@ -47,8 +53,6 @@ class DecisionTableFixtureModel(
         val checkMethods = mutableListOf<Method>()
 
         fixtureClass.declaredMethods.forEach { method ->
-            if (method.isAnnotatedWith(BeforeTable::class)) beforeTableMethods.add(method)
-            if (method.isAnnotatedWith(AfterTable::class)) afterTableMethods.add(method)
             if (method.isAnnotatedWith(BeforeRow::class)) beforeRowMethods.add(method)
             if (method.isAnnotatedWith(AfterRow::class)) afterRowMethods.add(method)
             if (method.isAnnotatedWith(BeforeFirstCheck::class)) beforeFirstCheckMethods.add(method)
@@ -56,8 +60,6 @@ class DecisionTableFixtureModel(
             if (method.isAnnotatedWith(Check::class)) checkMethods.add(method)
         }
 
-        this.beforeTableMethods = beforeTableMethods
-        this.afterTableMethods = afterTableMethods
         this.beforeRowMethods = beforeRowMethods
         this.afterRowMethods = afterRowMethods
         this.beforeFirstCheckMethods = beforeFirstCheckMethods

@@ -1,7 +1,7 @@
 === Decision Table Fixtures
 
 > Decision Table: A table where each row represents a test case. A column can contain
-either a test input or an expectation.
+either a test input or an expectation. The rows can be executed either sequential or in parallel.
 
 .Example Decision Table
 
@@ -27,7 +27,7 @@ comparable to the phases of a unit test class:
 
 .Execution Phases
 * `before table`
-* create fixture instance
+* create fixture instance (parallel or not)
 * `before row`
 * set inputs
 * `before first check`
@@ -39,7 +39,7 @@ Given the example at the beginning of this chapter, the execution would be as
 follows:
 
 * execute `before table` methods
-* create new fixture instance
+* create new fixture instance (parallel or not)
 * execute `before row` methods
 * set input matching `value a` to `1`
 * set input matching `value b` to `2`
@@ -85,9 +85,47 @@ The occurrence of any `Exception` in `before row`, `before first check` or
 of any `Exception` in `before table` or `after table` mark the entire table
 with `exception`.
 
+
 ==== Annotations
 
 The following annotations can be used to implement a decision table fixture.
+
+==== @DecisionTableFixture
+This annotation is used to declare a class as a decision table fixture that contains all necessary steps.
+The annotation allows the specification of a parameter `parallel` with a boolean. The parameter is set to false
+by default. That means the rows of the decision table fixture will executed in sequential order.
+If `parallel` is set to true, the rows will be executed in parallel.
+
+.Example parallel execution:
+[source, java]
+----
+@DecisionTableFixture(parallel = true)
+class ParallelDecisionTableFixture {
+    ...
+}
+----
+
+.Example sequential execution:
+[source, java]
+----
+@DecisionTableFixture(parallel = false)
+class SequentialDecisionTableFixture {
+    ...
+}
+----
+
+or
+
+[source, java]
+----
+@DecisionTableFixture
+class SequentialDecisionTableFixture {
+    ...
+}
+----
+
+The annotated class must be static.
+
 
 ===== @BeforeTable
 
@@ -258,3 +296,48 @@ void deleteTestData() {
 ----
 include::{moduleBase}/src/main/java/examples/decisiontables/CalculatorFixture.java[]
 ----
+
+==== Benchmarks
+
+The following tables lists some benchmark results.
+The benchmarks were run on an i5-5200U with 8GB of RAM.
+
+.Benchmark Results
+[cols="3*<,>"]
+|===
+| Benchmark
+| Execution Mode
+| Number of Rows
+| Average Time (ms)
+
+| Simple Operation
+| sequential
+| 1,000
+| 13.111
+
+| Simple Operation
+| sequential
+| 1,000,000
+| 14456.335
+
+| Simple Operation
+| parallel
+| 1,000
+| 5.456
+
+| Simple Operation
+| parallel
+| 1,000,000
+| 8900.850
+
+| Expensive Operation
+| sequential
+| 10
+| 7987.379
+
+| Expensive Operation
+| parallel
+| 10
+| 4845.735
+
+|===

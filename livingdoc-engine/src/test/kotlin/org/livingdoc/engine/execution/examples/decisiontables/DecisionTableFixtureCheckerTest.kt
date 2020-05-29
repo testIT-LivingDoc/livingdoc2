@@ -16,12 +16,12 @@ internal class DecisionTableFixtureCheckerTest {
 
     @Test fun `before table methods must not have parameters`() {
         val errors = executeCheck(MalformedFixtures.BeforeTableWithParameter::class)
-        assertThat(errors).containsExactly("@BeforeTable method <static ${methodPrefix}BeforeTableWithParameter.beforeTable(java.lang.String)> has 1 parameter(s) - must not have any!")
+        assertThat(errors).containsExactly("@Before method <static ${methodPrefix}BeforeTableWithParameter.beforeTable(java.lang.String)> has 1 parameter(s) - must not have any!")
     }
 
     @Test fun `before table methods must be static`() {
         val errors = executeCheck(MalformedFixtures.NonStaticBeforeTable::class)
-        assertThat(errors).containsExactly("@BeforeTable method <${methodPrefix}NonStaticBeforeTable.beforeTable()> must be static!")
+        assertThat(errors).containsExactly("@Before method <${methodPrefix}NonStaticBeforeTable.beforeTable()> must be static!")
     }
 
     @Test fun `before row methods must not have parameters`() {
@@ -106,12 +106,12 @@ internal class DecisionTableFixtureCheckerTest {
 
     @Test fun `after table methods must not have parameters`() {
         val errors = executeCheck(MalformedFixtures.AfterTableWithParameter::class)
-        assertThat(errors).containsExactly("@AfterTable method <static ${methodPrefix}AfterTableWithParameter.afterTable(java.lang.String)> has 1 parameter(s) - must not have any!")
+        assertThat(errors).containsExactly("@After method <static ${methodPrefix}AfterTableWithParameter.afterTable(java.lang.String)> has 1 parameter(s) - must not have any!")
     }
 
     @Test fun `after table methods must not be static`() {
         val errors = executeCheck(MalformedFixtures.NonStaticAfterTable::class)
-        assertThat(errors).containsExactly("@AfterTable method <${methodPrefix}NonStaticAfterTable.afterTable()> must be static!")
+        assertThat(errors).containsExactly("@After method <${methodPrefix}NonStaticAfterTable.afterTable()> must be static!")
     }
 
     private fun executeCheck(fixtureClass: KClass<*>): List<String> {

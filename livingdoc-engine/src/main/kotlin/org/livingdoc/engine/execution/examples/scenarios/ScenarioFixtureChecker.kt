@@ -1,14 +1,14 @@
 package org.livingdoc.engine.execution.examples.scenarios
 
-import org.livingdoc.api.fixtures.scenarios.After
-import org.livingdoc.api.fixtures.scenarios.Before
+import org.livingdoc.api.After
+import org.livingdoc.api.Before
 import org.livingdoc.api.fixtures.scenarios.Binding
 import org.livingdoc.api.fixtures.scenarios.Step
+import org.livingdoc.engine.execution.checkThatMethodsAreNonStatic
+import org.livingdoc.engine.execution.checkThatMethodsHaveNoParameters
 import org.livingdoc.engine.execution.examples.scenarios.matching.StepTemplate
 import org.livingdoc.engine.execution.examples.scenarios.matching.Variable
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import kotlin.reflect.KClass
 
 internal object ScenarioFixtureChecker {
 
@@ -52,21 +52,21 @@ internal object ScenarioFixtureChecker {
 
     private fun beforeScenarioMethodsHaveValidSignature(model: ScenarioFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeMethods, Before::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeMethods, Before::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.beforeMethods, Before::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.beforeMethods, Before::class.java))
         return errors
     }
 
     private fun afterScenarioMethodsHaveValidSignature(model: ScenarioFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterMethods, After::class))
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.afterMethods, After::class))
+        errors.addAll(elements = checkThatMethodsHaveNoParameters(model.afterMethods, After::class.java))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.afterMethods, After::class.java))
         return errors
     }
 
     private fun stepMethodsHaveValidSignature(model: ScenarioFixtureModel): Collection<String> {
         val errors = mutableListOf<String>()
-        errors.addAll(elements = checkThatMethodsAreNonStatic(model.stepMethods, Step::class))
+        errors.addAll(elements = checkThatMethodsAreNonStatic(model.stepMethods, Step::class.java))
         errors.addAll(elements = checkThatStepTemplateMethodsHaveCorrectNumberOfParameters(model.stepTemplateToMethod))
         errors.addAll(elements = checkThatMethodParametersAreNamed(model.stepMethods))
         return errors
@@ -77,7 +77,7 @@ internal object ScenarioFixtureChecker {
     ): Collection<String> {
         return stepTemplateToMethod
             .filter { (stepTemplate, method) ->
-                stepTemplate.fragments.filter { it is Variable }.count() != method.parameterCount
+                stepTemplate.fragments.filterIsInstance<Variable>().count() != method.parameterCount
             }
             .map { (stepTemplate, method) ->
                 "Method <$method> is annotated with a step template which has wrong parameter count: '$stepTemplate'"
@@ -87,30 +87,14 @@ internal object ScenarioFixtureChecker {
     @Suppress("MaximumLineLength")
     private fun checkThatMethodParametersAreNamed(methods: Collection<Method>): Collection<String> {
         return methods
-            .filter { it.parameters.any { !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java) } }
+            .filter { method ->
+                method.parameters.any {
+                    !it.isNamePresent && !it.isAnnotationPresent(Binding::class.java)
+                }
+            }
             .map { method ->
                 "Method <$method> has a parameter without a name! " +
-                        "Either add @${Binding::class.simpleName} annotation or compile with '-parameters' flag"
+                        "Either add @${Binding::class.java.simpleName} annotation or compile with '-parameters' flag"
             }
-    }
-
-    private fun checkThatMethodsHaveNoParameters(
-        methods: Collection<Method>,
-        annotationClass: KClass<*>
-    ): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { it.parameterCount > 0 }
-            .map { "@$annotationName method <$it> has ${it.parameterCount} parameter(s) - must not have any!" }
-    }
-
-    private fun checkThatMethodsAreNonStatic(
-        methods: Collection<Method>,
-        annotationClass: KClass<*>
-    ): Collection<String> {
-        val annotationName = annotationClass.java.simpleName
-        return methods
-            .filter { Modifier.isStatic(it.modifiers) }
-            .map { "@$annotationName method <$it> must not be static!" }
     }
 }

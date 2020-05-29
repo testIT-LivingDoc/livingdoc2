@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="livingdoc.buildSrc.main" target="11" />
+      <module name="livingdoc.buildSrc.test" target="11" />
+      <module name="livingdoc.livingdoc-api.main" target="11" />
+      <module name="livingdoc.livingdoc-api.test" target="11" />
+      <module name="livingdoc.livingdoc-config.main" target="11" />
+      <module name="livingdoc.livingdoc-config.test" target="11" />
+      <module name="livingdoc.livingdoc-converters.main" target="11" />
+      <module name="livingdoc.livingdoc-converters.test" target="11" />
+      <module name="livingdoc.livingdoc-documentation.main" target="11" />
+      <module name="livingdoc.livingdoc-documentation.test" target="11" />
+      <module name="livingdoc.livingdoc-engine.jmh" target="11" />
+      <module name="livingdoc.livingdoc-engine.main" target="11" />
+      <module name="livingdoc.livingdoc-engine.test" target="11" />
+      <module name="livingdoc.livingdoc-extensions-api.main" target="11" />
+      <module name="livingdoc.livingdoc-extensions-api.test" target="11" />
+      <module name="livingdoc.livingdoc-format-gherkin.main" target="11" />
+      <module name="livingdoc.livingdoc-format-gherkin.test" target="11" />
+      <module name="livingdoc.livingdoc-junit-engine.main" target="11" />
+      <module name="livingdoc.livingdoc-junit-engine.test" target="11" />
+      <module name="livingdoc.livingdoc-reports.main" target="11" />
+      <module name="livingdoc.livingdoc-reports.test" target="11" />
+      <module name="livingdoc.livingdoc-repositories.main" target="11" />
+      <module name="livingdoc.livingdoc-repositories.test" target="11" />
+      <module name="livingdoc.livingdoc-repository-confluence.main" target="11" />
+      <module name="livingdoc.livingdoc-repository-confluence.test" target="11" />
+      <module name="livingdoc.livingdoc-repository-file.main" target="11" />
+      <module name="livingdoc.livingdoc-repository-file.test" target="11" />
+      <module name="livingdoc.livingdoc-repository-rest.main" target="11" />
+      <module name="livingdoc.livingdoc-repository-rest.test" target="11" />
+      <module name="livingdoc.livingdoc-results.main" target="11" />
+      <module name="livingdoc.livingdoc-results.test" target="11" />
+      <module name="livingdoc.livingdoc-testdata.main" target="11" />
+      <module name="livingdoc.livingdoc-testdata.test" target="11" />
+      <module name="livingdoc.livingdoc-tests.main" target="11" />
+      <module name="livingdoc.livingdoc-tests.test" target="11" />
+      <module name="livingdoc.main" target="11" />
+      <module name="livingdoc.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
   </component>

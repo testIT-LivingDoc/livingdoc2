@@ -1,0 +1,56 @@
+== Annotate Tests
+
+=== Disabled
+Like in JUnit, it is possible to disable a class and exclude it from execution.
+Simply annotate the class with `@Disabled` from the `org.livingdoc.api.disabled` package.
+
+.Example Disable a Fixture class
+    @Disabled
+    @DecisionTableFixture
+    class ExampleDecisionTableFixture { ... }
+
+=== Manual
+A `MANUAL` works like a `@Disabled` on the page side.
+By declaring a section in a page as `MANUAL` the whole selection will be  ignored when tests are run.
+This way, the user can work on decision tables and scenarios without the risk of breaking existing tests.
+
+A `MANUAL` section is created by writing `MANUAL` in any place of the header.
+The `MANUAL` is valid until the next section or header is declared.
+It is not necessary to declare a section with the same hierarchy.
+For example a h2 in HTML will be a new section when declared after a h1 which is manual.
+
+.Example Declaring a MANUAL section in Markdown
+    # Section (it is a MANUAL)
+    - adding 1 and 2 equals 3
+
+    # MANUAL Section XY
+    - adding 3 and 6 equals 9
+
+.Example Declaring a MANUAL section in HTML
+    <h1>MANUAL Test</h1>
+    <table>
+        ...
+    </table>
+
+=== Fail Fast for specific Exception Types
+Some tests need a long time to prepare, run or clean up.
+For example, if you have a test suite containing several spring API Tests which are defined via LivingDoc,
+a simple error could lead to an IllegalStateException since some bean is missing.
+This will at times lead to failure for the complete suite without any benefit of executing further tests past the first one.
+
+Annotating an Executable Document or a Group with `@FailFast(onExceptionTypes = [SomeException, SomeOtherException])` will skip every other test if this
+exception occurs. This also works if you execute the tests in parallel.
+
+=== Tagging
+When there is a large number of tests, there might be some interest in tagging tests to only execute some tests with a
+specified tag or to exclude some.
+
+Executable Documents that have the  `@Tag("tagName")` Annotation can be included or excluded for execution by
+including or excluding their tag name. This can be done in livingdoc.yml and as a property when livingdoc is called in the command line.
+
+.Example Including and excluding tags in livingdoc.yml
+ tags:
+   include:
+     - "linux"
+   exclude:
+     - "slow"

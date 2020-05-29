@@ -1,6 +1,104 @@
 = LivingDoc 2
 
-image:https://travis-ci.org/LivingDoc/livingdoc.svg?branch=master["Build Status", link="https://travis-ci.org/LivingDoc/livingdoc"]
+image:https://github.com/EnProLivingDoc/livingdoc/workflows/CI%20-%20LivingDoc/badge.svg["CI - LivingDoc", link="https://github.com/EnProLivingDoc/livingdoc/actions?query=workflow%3A%22CI+-+LivingDoc%22"]
 
 The next version of LivingDoc, the acceptance testing tool with integrated
 support for Atlassian Confluence.
+
+== Features
+LivingDoc 2 allows you to apply behaviour driven development by allowing users to create and define test cases.
+These test cases can be written as plain text (scenario fixtures) or as tables with input values and formulas with results (decision tables).
+
+=== Concept
+When developing software, it is important that all participants have a common knowledge base on which to discuss functions and define goals.
+Each stakeholder has a specific task with LivingDoc. They can be defined as follows.
+
+==== Example of roles
+* User: Writes the Example/TestData. He therefore describes in a record or table what the input parameters are and what the result must be.
+* Tester: Is responsible for writing the test fixtures. They get their input values and the results via annotations. The test cases are then implemented to verify that the implementation is correct.
+* Developer: Implements the required functionality in the system under test.
+
+=== Supported Platforms
+As for now, local files, Confluence and REST Repositories are supported.
+For more information, on how to use the different repositories see link:livingdoc-documentation/src/docs/asciidoc#using-document-repositories:[Repository documentation].
+
+You should also take a look at the link:doc/quality-goals.adoc[Quality Goals] defined for LivingDoc 2.
+
+
+== Getting started
+
+There is several documentation available:
+
+* The link:https://github.com/EnproLivingDoc/livingdoc/wiki/Developer-Documentation[Developer Documentation] focuses on topics that are important for developers of LivingDoc 2. In addition, the repository contains link:https://github.com/EnproLivingDoc/livingdoc/tree/master/doc/decisions[architectural decisions] besides other link:https://github.com/EnproLivingDoc/livingdoc/tree/master/doc[documents] and the code documentation is extracted to link:https://enprolivingdoc.github.io/livingdoc/[Github Pages].
+* The link:https://github.com/EnproLivingDoc/livingdoc/blob/master/livingdoc-documentation/src/docs/asciidoc/index.adoc[End-User Documentation] focuses on topics that are relevant for users of LivingDoc 2, either test engineers or business experts. Its ASCIIDoc-based source is included in the repository.
+
+If you want to start working with LivingDoc 2 you will need to clone this repository or add dependencies to your project via link:https://maven.apache.org/[Maven] or link:https://gradle.org/[Gradle].
+You can use the following fragment from our demo project to add the necessary dependencies.
+
+.build.gradle.kts
+[source, gradle]
+----
+dependencies {
+        ...
+	testRuntime("org.livingdoc:livingdoc-junit-engine:2.0-SNAPSHOT")
+	testRuntime("org.livingdoc:livingdoc-repository-file:2.0-SNAPSHOT")
+	testRuntime("org.livingdoc:livingdoc-repository-rest:2.0-SNAPSHOT")
+
+	testImplementation("org.livingdoc:livingdoc-api:2.0-SNAPSHOT")
+        ...
+}
+----
+
+Because the LivingDoc 2 Engine is an extension of the JUnit 5 Engine, you will need to add JUnit 5 to your project as well.
+
+=== How to install
+
+Depending on your environment you can use the gradle wrapper `gradlew` and `gradlew.bat` or install gradle globally on your machine.
+For convenience we will use `gradle` in the rest of the documentation as command name.
+So for example `gradle build` means:
+
+* Windows wrapper: `gradlew.bat build`
+* Linux wrapper: `./gradlew build`
+* Linux without wrapper: `gradle build`
+
+If you want to use your own build of livingdoc in other projects on your machine, you can publish the artifacts to your local maven repository by running `gradle publishToMavenLocal`.
+After this step the livingdoc Test Framework can be used in other projects by importing them with the group id `org.livingdoc` and the artifact id matching the project name.
+
+If you are interested in a simple example, we refer to our link:QuickStart.adoc[] guide.
+
+=== How to write tests
+A good point to learn how to write the tests behind is documented at the link:livingdoc-documentation/src/docs/asciidoc/index.adoc[Fixture Description].
+There, you'll find a detailed description on how link:livingdoc-documentation/src/docs/asciidoc/fixtures-decision-tables.adoc[Decision Tables] and link:livingdoc-documentation/src/docs/asciidoc/fixtures-scenarios.adoc[Scenario Fixtures] work.
+
+== Contributing
+LivingDoc 2 is developed using link:https://kotlinlang.org/[Kotlin] and link:https://gradle.org/[Gradle].
+
+=== How to import/open with IntelliJ
+1. Cloning this repository
+2. File -> Open
+3. Search for your cloned repository
+4. Select the file `build.gradle.kts` -> Press `Ok`
+
+=== Structure
+When your IDE is finished and the project is loaded, you will see the components LivingDoc 2 consists of.
+The engine is the heart of the project.
+It contains the logic of how the repository contents are handled and used.
+Each of the repository components defines its own approach to receiving data.
+For example, via local files or REST.
+There is also a link:livingdoc-tests/[test project].
+It contains a first starting point if you want to see some executable fixtures.
+
+
+
+Architectural Decision Records can be found at the documentation of link:doc/decisions/README.adoc[ADR].
+
+You can find the description of some keywords at the link:doc/glossary.adoc[Glossary].
+
+== External example project
+We did set up an external project using LivingDoc 2.
+Head over to the link:https://github.com/LivingDoc/livingdoc-demo[Demo Project] to see LivingDoc 2 in action!
+
+== License
+LivingDoc 2 is licensed under the link:http://www.apache.org/licenses/LICENSE-2.0[Apache License 2.0].
+
+See link:LICENSE[] for the full license.

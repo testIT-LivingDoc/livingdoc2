@@ -1,0 +1,141 @@
+== Generate Reports
+
+A Report represent the Results of executing a Document.
+The Report include the Document and the Status of the execution.
+A Report can be represented in different formats like HTML or PDF.
+
+Supported Report Formats:
+
+* HTML Report
+* Json Report
+* Confluence Attachment Report
+* Confluence Page Tree Report
+
+Configure the generation of Reports in the `living-doc.yaml` file.
+The `living-doc.yaml` contains the yaml based configuration of LivingDoc.
+This file should be placed in the `src/test/resources` directory.
+
+[source,yaml]
+----
+reports:
+  - name: "default-html"
+    format: "html"
+    config:
+      outputDir: "livingdoc/reports/html"
+----
+
+`reports` is a list of different reports.
+Each report have a `name` as unique identifier.
+Each report also specifies the `format` of the generated Report.
+Optionally a `config` can be specified for Report format specific parameters.
+
+Configuration from the command line and environment dependent configuration can be archived using the Java System Property `livingdoc.reports.include` to specify a comma separated list of report names that should be generated.
+The provided list act as a whitelist, so only reports from the list are generated.
+If this property is not specified all reports that are configured are generated.
+For more information about the configuration see link:configuration.adoc[Configuration].
+
+=== HTML Reports
+
+The HTML Report format is similar to the HTML Document format, with additional coloring to represent the Status of the execution.
+
+==== Configuration
+
+.outputDir
+The directory where the HTML Reports are save.
+The default value is `livingdoc/reports/html`.
+
+.generateIndex
+A boolean that sets whether an index file should be generated that contains links to all other reports
+ and shows a summary grouped by tags. Default is `false`.
+
+=== Json Reports
+
+==== Configuration
+
+.outputDir
+The directory where the JSON Reports are save.
+The default value is `livingdoc/reports/json`.
+
+.prettyPrinted
+Specify if the JSON Report should be pretty-printed.
+The default value is `true`.
+
+=== Confluence Attachment Reports
+
+Confluence reports are HTML reports that are automatically uploaded to the confluence page of the example after the test execution.
+
+==== Configuration
+
+.repositoryName
+Sets for which repo the reports should be generated for.
+Must match the name given in this config
+
+.filename
+The filename of the attachment in confluence.
+Defaults to `report.html`
+
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`.
+Can usually be left empty.
+
+.username
+The username of a confluence user with writing access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
+
+.comment
+Is added to the attachment upload as a comment.
+An empty comment defaults to `Report from [ISO-timestamp]`
+
+=== Confluence Page Tree Reports
+
+Confluence page tree reports create pages detailing the test results for the executed documents under a given root page.
+
+==== Configuration
+
+.rootContentId
+The content id of the page under which the reports should be generated.
+This page will be updated with a summary of the execution.
+
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`.
+Can usually be left empty.
+
+.username
+The username of a confluence user with writing access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
+
+.comment
+Is added to the attachment upload as a comment.
+
+== Create Custom Report Formats
+
+This documentation is for developer which want to implement own Report Formats.
+
+To create a new Report Format, you must create a `ReportRenderer` that contains the logic for generating the reports.
+It is called after the execution of the LivingDoc tests.
+The `ReportRenderer` have one method `render(documentResult, config)` that must be implemented.
+The first argument is the `DocumentResult` which represent the the Result of executing a single Document with all Examples and Fixtures defined by the Document.
+The second argument is a configuration which can be used for Report Format specific configuration, like output directory for the Reports.
+The `render` method must not only generate the Reports but also store the Reports in an appropriate format and location.
+
+A ReportRenderer must be annotated with `@Format` and the unique Format identifier must be passed as argument of the Annotation.
+In order to be discovered the Java SPI configuration file `META-INF/services/org.livingdoc.reports.spi.ReportRenderer` must be created.
+The content of the file is the fully qualified class name of your ReportRenderer implementation as:
+
+[source]
+----
+org.livingdoc.reports.html.HtmlReportRenderer
+----
+
+Now to use your ReportRenderer to generate Reports, the ReportRenderer must be in the classpath while LivingDoc is executed.
+In the reports configuration of LivingDoc use the unique format id to configure a Report that uses your Format.

@@ -3,6 +3,9 @@ package org.livingdoc.converters.number
 import java.lang.reflect.AnnotatedElement
 import java.math.BigDecimal
 
+/**
+ * This converter converts a BigDecimal or a String to a Float number
+ */
 open class FloatConverter : AbstractNumberConverter<Float>() {
 
     companion object {
@@ -16,6 +19,12 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
     override val lowerBound: Float = -Float.MAX_VALUE
     override val upperBound: Float = Float.MAX_VALUE
 
+    /**
+     * This function returns the float representation of the content of value and provides the recognition of some edge
+     * cases.
+     *
+     * @param value the string containing the value that should be converted
+     */
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): Float {
         return when (value) {
             NOT_A_NUMBER -> Float.NaN
@@ -26,6 +35,11 @@ open class FloatConverter : AbstractNumberConverter<Float>() {
         }
     }
 
+    /**
+     * This function returns the float representation of the given BigDecimal value.
+     *
+     * @param number the BigDecimal containing the value that should be converted
+     */
     override fun convertToTarget(number: BigDecimal): Float = number.toFloat()
 
     override fun canConvertTo(targetType: Class<*>): Boolean {

@@ -1,0 +1,48 @@
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on https://keepachangelog.com/en/1.0.0[Keep a Changelog],
+and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
+
+== link:++https://github.com/EnproLivingDoc/livingdoc/compare/b81fe455...master++[Unreleased]
+
+=== Added
+
+- Changelog to document changes between versions
+- The Livingdoc configuration can be specified via Java System Properties
+- Repository to load data from a webserver
+- Confluence Document Repository to load Examples from Confluence
+- Annotation to disable documents and fixtures
+- Test Reports can be configured in the `livingdoc.yml`
+- Test Reports in pretty-printed JSON format
+- Custom Test Report formats can be added and used via Java SPI
+- Add manual test annotation to markdown and HTML documents so the test will not be executed by junit but appear in the reports as manually executed
+- Add possibility to specify a confluence document version
+- Exceptions as expected output can be specified in the Examples with the keyword "error"
+- Add converter to convert colors
+- Add converter to convert json to typed objects
+- A `@Group` annotation that can be used to group `@ExecutableDocument` classes
+- Navigation from Junit Test results to Fixture code
+- Support for specifying scenarios with Gherkin, either as feature or html file
+- Added the possibility to execute the rows of a DecisionTableFixture in parallel, with the introduction of a newly added parameter to the `@DecisionTableFixture` annotation, so that it is possible to specify if the rows should be executed in parallel (default is serial)
+- Add the option to leave cells in a DecisionTable empty to only report the result
+- Test titles and descriptions now appear in the generated reports
+- Add caching of documents for the RESTRepository and ConfluenceRepository
+- Added support for html reports as attachments in confluence
+- HTML reports can generate a index file with links to all reports
+- Reorganized the file and directory structure of reports
+- Add fail fast for specific exception types
+- Interpret checkboxes as boolean values
+- Add `@Tag` annotation support similar to JUnit5
+- Groups can now be executed
+- Add time measurement for document execution
+- Report renderer creating a page tree in Attlassian Confluence
+- Git repository for loading documents from remote git repositories
+
+=== Changed
+
+- DecisionTables and Scenarios without a matching fixture will now
+  generate an exception instead of being silently ignored.
+- Updated to gradle version 5.6.4
+- `@Before` and `@After` annotations can now also be used on methods inside classes annotated with `@ExecutableDocument`

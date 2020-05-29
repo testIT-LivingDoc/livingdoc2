@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.livingdoc.api.fixtures.decisiontables.BeforeRow;
 import org.livingdoc.api.fixtures.decisiontables.Check;
+import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture;
 import org.livingdoc.api.fixtures.decisiontables.Input;
 
-
+@DecisionTableFixture
 public class CalculatorDecisionTableFixture {
 
     Calculator sut;

@@ -1,5 +1,8 @@
 package org.livingdoc.api.fixtures.decisiontables;
 
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -16,8 +19,11 @@ import java.lang.annotation.Target;
  * LivingDoc will evaluate the fixture class for consistency when it is first loaded. Only decision table related annotations
  * can be used within a decision table fixture!
  *
- * @see BeforeTable
- * @see AfterTable
+ * The parameter parallel allows the specification via the annotation, that the rows should be executed in parallel. The default value
+ * of parallel is false, that means if not specified the rows will be executed serial.
+ *
+ * @see Before
+ * @see After
  * @see BeforeRow
  * @see AfterRow
  * @see BeforeFirstCheck
@@ -30,7 +36,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DecisionTableFixture {
 
-    String[] value();
+    String[] value() default "";
+    boolean parallel() default false;
 
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)

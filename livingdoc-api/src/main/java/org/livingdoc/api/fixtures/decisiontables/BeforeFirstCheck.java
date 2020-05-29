@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 
 /**
- * Methods annotated with this annotation are invoked before the first {@link Check} is executed. These methods are
- * generally used to execute test code based on the {@link Input} values and store the results to be evaluated by the {@link
- * Check} methods. This is a purely optional mechanic! Depending on the test case, directly executing that logic inside a
- * {@link Check} method might be the best approach.
+ * Methods annotated with this annotation are always invoked before the first {@link Check} of each row is executed.
+ * These methods are generally used to execute test code based on the {@link Input} values and store the results to be
+ * evaluated by the {@link Check} methods. This is a purely optional mechanic! Depending on the test case, directly
+ * executing that logic inside a {@link Check} method might be the best approach.
  * <p>
  * <b>Constraints:</b>
  * <ol>

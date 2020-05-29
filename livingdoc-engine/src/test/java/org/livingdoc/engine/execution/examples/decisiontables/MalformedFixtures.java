@@ -1,14 +1,10 @@
 package org.livingdoc.engine.execution.examples.decisiontables;
 
-import org.livingdoc.api.fixtures.decisiontables.AfterRow;
-import org.livingdoc.api.fixtures.decisiontables.AfterTable;
-import org.livingdoc.api.fixtures.decisiontables.BeforeFirstCheck;
-import org.livingdoc.api.fixtures.decisiontables.BeforeRow;
-import org.livingdoc.api.fixtures.decisiontables.BeforeTable;
-import org.livingdoc.api.fixtures.decisiontables.Check;
-import org.livingdoc.api.fixtures.decisiontables.Input;
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
+import org.livingdoc.api.fixtures.decisiontables.*;
 
-
+@DecisionTableFixture
 public class MalformedFixtures {
 
     public static class NoDefaultConstructor {
@@ -20,7 +16,7 @@ public class MalformedFixtures {
 
     public static class BeforeTableWithParameter {
 
-        @BeforeTable
+        @Before
         static void beforeTable(String param) {
         }
 
@@ -28,7 +24,7 @@ public class MalformedFixtures {
 
     public static class NonStaticBeforeTable {
 
-        @BeforeTable
+        @Before
         void beforeTable() {
         }
 
@@ -182,7 +178,7 @@ public class MalformedFixtures {
 
     public static class AfterTableWithParameter {
 
-        @AfterTable
+        @After
         static void afterTable(String param) {
         }
 
@@ -190,7 +186,7 @@ public class MalformedFixtures {
 
     public static class NonStaticAfterTable {
 
-        @AfterTable
+        @After
         void afterTable() {
         }
 

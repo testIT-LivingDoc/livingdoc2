@@ -1,0 +1,4 @@
+org.livingdoc.reports.html.HtmlReportRenderer
+org.livingdoc.reports.json.JsonReportRenderer
+org.livingdoc.reports.confluence.attachment.ConfluenceAttachmentReportRenderer
+org.livingdoc.reports.confluence.tree.ConfluencePageTreeReportRenderer

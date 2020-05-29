@@ -3,3 +3,131 @@
 > Scenario: An example describing a single test case as a sequence of steps.
 Each step is represented as a sentence containing either one or more test inputs
 or one or more expectations.
+
+.Example Scenario Fixture - User
+    adding 1 and 2 equals 3
+
+In this example the values for `a` and `b` as well as the expectation `c` are represented in a string.
+
+.Example Scenario Fixture - Tester
+    adding {a} and {b} equals {c}
+
+==== Life Cycle
+The execution of a scenario fixture follows a very specific life cycle.
+
+.Execution Phases
+* create fixture instance
+* `before`
+* set input parameter via `binding`
+* use those `bindings` as parameters for `step`
+* execute `step`
+* execute `after`
+
+
+Given the example at the beginning of this chapter, the execution would be as
+follows:
+
+* create new fixture instance
+* execute `before` method
+* add parameters as `bindings` to the `step` method
+* bind `value 1` to `variable a`
+* bind `value 2`  to `variable b`
+* bind `value 3`  to `variable c`
+* execute `step` method, does `1 + 2` equal `3`?
+* execute `after` method
+
+==== Exception Handling
+When executing a scenario, there are a few points where exceptions can occur.
+
+* An exception in a `before` method will stop the scenario from being executed with the exception of `after` methods.
+* An exception in a `step` method will stop the next steps in the scenario from being executed with the exception of `after` methods.
+
+==== Annotations
+The following annotations can be used to implement a scenario fixture.
+
+==== @ScenarioFixture
+This annotation is used to declare a class as a scenario fixture that contains all necessary steps.
+
+The annotated class must be static.
+
+===== @Before
+The annotated method must not be static and is _not_ allowed to have any parameters.
+
+These methods are generally used to execute setup code for each test case.
+
+Multiple methods can be bound by this annotation.
+As a general rule there should not be any chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@Before
+void before(){
+    ...
+}
+----
+
+
+===== @Binding
+This annotation is used on method parameters in order to set a test input value on the fixture.
+
+Binds a name to the annotated parameter.
+If the bound name occurs as parameter in a `@Step` annotation of this method,
+the extracted value will be converted and passed to this method during execution.
+
+.Example
+[source, java]
+----
+@Binding("a") Float a
+----
+
+
+===== @Step
+Specifies a template for scenario steps.
+
+If a scenario step matches the template, the annotated method will be called during execution (see `@ScenarioFixture`).
+Templates for scenario steps are simply strings and can contain optional parameters.
+Matches between scenario steps and step templates do not have to be exact.
+The step template is used to identify parameters in scenario steps.
+
+Extracted parameters are passed to the annotated method. Mapping of extracted parameters to parameter lists can be controlled with the `@Binding` parameter annotation.
+
+These methods can execute some assertion logic to verify that the actual value resulting from
+some action is equal to the expressed expectation provided as the parameter of the method.
+It can also handle some logic for a later Step to perform the assertion logic.
+
+This annotation can be used multiple times on the same target in order to define additional
+mappings for this check. This can be useful if multiple languages or alternative spelling need to be
+supported.
+
+.Example
+[source, java]
+----
+@Step("adding {a} and {b} equals {c}")
+void add(
+    @Binding("a") Float a,
+    @Binding("b") Float b,
+    @Binding("c") Float c
+    ) {
+        ...
+    }
+----
+
+
+===== @After
+The annotated method must not be static and is _not_ allowed to have any parameters.
+
+These methods are generally used to cleanup whatever was created in a corresponding `@Before` method.
+They are invoked after the last scenario `@Step` method was invoked.
+
+Multiple methods can be bound by this annotation.
+As a general rule there should not be any chronological dependency between these methods.
+
+.Example
+[source, java]
+----
+@After
+void after(){
+    ...
+}
+----

@@ -1,5 +1,7 @@
 plugins {
 	`java-library`
+	`maven-publish`
+	kotlin("jvm")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -14,11 +16,16 @@ val javadocJar by tasks.creating(Jar::class) {
 	from(tasks.javadoc)
 }
 
-artifacts {
-	archives(javadocJar)
-	archives(sourcesJar)
-}
-
 tasks.withType<JavaCompile>().configureEach {
 	options.encoding = "UTF-8"
+}
+
+publishing {
+	publications {
+		create<MavenPublication>("maven") {
+			artifact(sourcesJar)
+			artifact(javadocJar)
+			from(components["java"])
+		}
+	}
 }

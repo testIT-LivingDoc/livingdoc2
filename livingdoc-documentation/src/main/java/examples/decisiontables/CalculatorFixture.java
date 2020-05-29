@@ -1,16 +1,19 @@
 package examples.decisiontables;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Offset.offset;
-
+import implementations.Calculator;
 import org.livingdoc.api.fixtures.decisiontables.Check;
 import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture;
 import org.livingdoc.api.fixtures.decisiontables.Input;
 
-import implementations.Calculator;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 
+/**
+ * This example demonstrates a decision table fixture and its annotation possibility. Other than in the sample
+ * we have no executable document.
+ */
 
-@DecisionTableFixture("Calculator")
+@DecisionTableFixture(value ="Calculator", parallel = true)
 public class CalculatorFixture {
 
     Calculator sut = new Calculator();

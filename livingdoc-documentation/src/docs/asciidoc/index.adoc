@@ -1,3 +1,19 @@
 = LivingDoc Documentation
+:toc:
+
+== Introduction
+The next version of LivingDoc, the acceptance testing tool with integrated
+support for Atlassian Confluence.
+
+The following document is a starting point to get ready and use LivingDoc 2.
+It provides you with examples of how you need to configure your environment and how to write fixtures.
+
+include::configuration.adoc[]
+
+include::repositories.adoc[]
 
 include::fixtures.adoc[]
+
+include::annotate-tests.adoc[]
+
+include::reports.adoc[]

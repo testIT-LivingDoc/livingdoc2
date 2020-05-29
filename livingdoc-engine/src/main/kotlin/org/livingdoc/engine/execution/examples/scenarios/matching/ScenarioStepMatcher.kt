@@ -1,5 +1,6 @@
 package org.livingdoc.engine.execution.examples.scenarios.matching
 
+// maybe refactor this exception to yield more information
 class NoMatchingStepTemplate(msg: String) : RuntimeException(msg)
 
 internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>) {
@@ -10,12 +11,19 @@ internal class ScenarioStepMatcher(private val stepTemplates: List<StepTemplate>
     )
 
     fun match(step: String): MatchingResult {
-        val bestAlignment = stepTemplates
-            .map { it.alignWith(step, maxCostOfAlignment = 15) }
-            .minBy { it.totalCost }
-        if (bestAlignment == null || bestAlignment.isMisaligned()) {
+
+        if (stepTemplates.isEmpty())
+            throw NoMatchingStepTemplate("StepTemplate list must not be empty")
+
+        val bestFit = stepTemplates
+            .map { it.alignWith(step, maxLevelOfStemming = 4.0f) }
+            .sortedWith(compareBy({ it.totalCost.first }, { it.totalCost.second }))
+            .first()
+
+        if (bestFit.isMisaligned()) {
             throw NoMatchingStepTemplate("No matching template!")
         }
-        return MatchingResult(bestAlignment.stepTemplate, bestAlignment.variables)
+
+        return MatchingResult(bestFit.stepTemplate, bestFit.variables)
     }
 }

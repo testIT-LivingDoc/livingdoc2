@@ -12,17 +12,22 @@ object Versions {
     val snakeyaml= "1.18"
     val jsoup = "1.11.2"
     val flexmark = "0.28.32"
+    val klaxon = "5.2"
+    val gherkin = "9.0.0"
+    const val jgit = "5.6.1.202002131546-r"
 
     //Test
-    val junitPlatform = "1.5.1"
-    val junitJupiter = "5.5.1"
+    val junitPlatform = "1.5.2"
+    val junitJupiter = "5.5.2"
     val mockk = "1.9.3"
     val logback = "1.2.3"
     val assertJ = "3.11.1"
+    val wiremock = "2.25.1"
 
     //Plugins
     val buildScanPlugin = "2.2.1"
     val spotlessPlugin = "3.23.0"
+    val dokkaPlugin =  "0.10.0"
 
     //AsciiDoctor
     val asciidoctorPlugin = "1.5.3"

@@ -1,0 +1,16 @@
+input=expected
+ #66ff33=#66ff33
+ #00bfff=#00bfff
+ #000 = #000000
+ #abc = #aabbcc
+ #fff = #ffffff
+ #FFF = #ffffff
+green=#008000
+blue=#0000ff
+rgb( 122, 234, 100)=#7aea64
+rgb(0,191,255)=#00bfff
+r gb(0,191,255) =#00bfff
+ rgb(0,    191,   255) = #00bfff
+rgb(10,191,255) = #0abfff
+rgb(15,145,234) = #0f91ea
+rgb(16,145,234) = #1091ea

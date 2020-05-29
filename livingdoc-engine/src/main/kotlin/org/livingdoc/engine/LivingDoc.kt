@@ -1,19 +1,20 @@
 package org.livingdoc.engine
 
 import org.livingdoc.api.documents.ExecutableDocument
-import org.livingdoc.api.fixtures.decisiontables.DecisionTableFixture
-import org.livingdoc.api.fixtures.scenarios.ScenarioFixture
-import org.livingdoc.engine.execution.DocumentResult
+import org.livingdoc.api.documents.Group
+import org.livingdoc.api.tagging.Tag
+import org.livingdoc.config.ConfigProvider
+import org.livingdoc.engine.config.TaggingConfig
 import org.livingdoc.engine.execution.ExecutionException
-import org.livingdoc.engine.execution.examples.ExampleResult
-import org.livingdoc.engine.execution.examples.decisiontables.DecisionTableExecutor
-import org.livingdoc.engine.execution.examples.scenarios.ScenarioExecutor
-import org.livingdoc.repositories.Document
+import org.livingdoc.engine.execution.MalformedFixtureException
+import org.livingdoc.engine.execution.groups.GroupFixture
+import org.livingdoc.engine.execution.groups.ImplicitGroup
+import org.livingdoc.reports.ReportsManager
 import org.livingdoc.repositories.RepositoryManager
-import org.livingdoc.repositories.config.Configuration
-import org.livingdoc.repositories.model.decisiontable.DecisionTable
-import org.livingdoc.repositories.model.scenario.Scenario
-import kotlin.reflect.KClass
+import org.livingdoc.repositories.config.RepositoryConfiguration
+import org.livingdoc.results.documents.DocumentResult
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 /**
  * Executes the given document class and returns the [DocumentResult]. The document's class must be annotated
@@ -24,97 +25,105 @@ import kotlin.reflect.KClass
  * @since 2.0
  */
 class LivingDoc(
-    val repositoryManager: RepositoryManager = RepositoryManager.from(Configuration.load()),
-    val decisionTableExecutor: DecisionTableExecutor = DecisionTableExecutor(),
-    val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
-    val scenarioExecutor: ScenarioExecutor = ScenarioExecutor(),
-    val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
+    private val configProvider: ConfigProvider = ConfigProvider.load(),
+    private val repositoryManager: RepositoryManager =
+        RepositoryManager.from(RepositoryConfiguration.from(configProvider)),
+    private val decisionTableToFixtureMatcher: DecisionTableToFixtureMatcher = DecisionTableToFixtureMatcher(),
+    private val scenarioToFixtureMatcher: ScenarioToFixtureMatcher = ScenarioToFixtureMatcher()
 ) {
-
-    @Throws(ExecutionException::class)
-    fun execute(documentClass: Class<*>): DocumentResult {
-        val documentClassModel = ExecutableDocumentModel.of(documentClass)
-
-        val document = loadDocument(documentClassModel)
-
-        val results: List<ExampleResult> = document.elements.mapNotNull { element ->
-            when (element) {
-                is DecisionTable -> {
-                    decisionTableToFixtureMatcher
-                        .findMatchingFixture(element, documentClassModel.decisionTableFixtures)
-                        ?.let { decisionTableExecutor.execute(element, it) }
-                }
-                is Scenario -> {
-                    scenarioToFixtureMatcher.findMatchingFixture(element, documentClassModel.scenarioFixtures)
-                        ?.let { scenarioExecutor.execute(element, it) }
-                }
-                else -> null
-            }
-        }
-
-        return DocumentResult(results)
-    }
-
-    private fun loadDocument(documentClassModel: ExecutableDocumentModel): Document {
-        return with(documentClassModel.documentIdentifier) {
-            repositoryManager.getRepository(repository).getDocument(id)
-        }
-    }
-}
-
-private data class DocumentIdentifier(
-    val repository: String,
-    val id: String
-)
-
-private data class ExecutableDocumentModel(
-    val documentIdentifier: DocumentIdentifier,
-    val decisionTableFixtures: List<Class<*>>,
-    val scenarioFixtures: List<Class<*>>
-) {
-
     companion object {
+        /**
+         * Indicates whether the execution should fail fast due to a specific
+         * thrown exception and not execute any more tests.
+         */
+        var failFastActivated: Boolean = false
 
-        fun of(documentClass: Class<*>): ExecutableDocumentModel {
-            validate(documentClass)
-            return ExecutableDocumentModel(
-                documentIdentifier = getDocumentIdentifier(documentClass),
-                decisionTableFixtures = getDecisionTableFixtures(documentClass),
-                scenarioFixtures = getScenarioFixtures(documentClass)
-            )
-        }
+        /**
+         * Global ExecutorService which uses a WorkStealing(Thread)Pool
+         * for the parallel execution of tasks in the LivingDoc engine
+         */
+        val executor: ExecutorService = Executors.newWorkStealingPool()
+    }
 
-        private fun getDocumentIdentifier(document: Class<*>): DocumentIdentifier {
-            val annotation = document.executableDocumentAnnotation!!
-            val values = annotation.value.split("://")
-                .also { require(it.size == 2) { "Illegal annotation value '${annotation.value}'." } }
-            return DocumentIdentifier(values[0], values[1])
-        }
-
-        private fun validate(document: Class<*>) {
-            if (document.executableDocumentAnnotation == null) {
-                throw IllegalArgumentException(
-                    "ExecutableDocument annotation is not present on class ${document.canonicalName}."
-                )
+    val taggingConfig = TaggingConfig.from(configProvider)
+    /**
+     * Executes the given document classes and returns the list of [DocumentResults][DocumentResult]. The document
+     * classes must be annotated with [ExecutableDocument].
+     *
+     * @param documentClasses the document classes to execute
+     * @return a list of [DocumentResults][DocumentResult] of the execution
+     * @throws ExecutionException in case the execution failed in a way that did not produce a viable result
+     */
+    @Throws(ExecutionException::class)
+    fun execute(documentClasses: List<Class<*>>): List<DocumentResult> {
+        // Execute documents
+        val documentResults = documentClasses.filter {
+            val tags = getTags(it)
+            when {
+                taggingConfig.includedTags.isNotEmpty() && tags.none { tag -> taggingConfig.includedTags.contains(tag) }
+                    -> false
+                tags.any { tag -> taggingConfig.excludedTags.contains(tag) } -> false
+                else -> true
             }
+        }.groupBy { documentClass ->
+            extractGroup(documentClass)
+        }.flatMap { (groupClass, documentClasses) ->
+            executeGroup(groupClass, documentClasses)
         }
 
-        private fun getDecisionTableFixtures(document: Class<*>) =
-            getFixtures(document, DecisionTableFixture::class)
+        // Generate reports
+        val reportsManager = ReportsManager.from(configProvider)
+        reportsManager.generateReports(documentResults)
 
-        private fun getScenarioFixtures(document: Class<*>) =
-            getFixtures(document, ScenarioFixture::class)
+        // Return results for further processing
+        return documentResults
+    }
 
-        private fun getFixtures(document: Class<*>, annotationClass: KClass<out Annotation>): List<Class<*>> {
-            val declaredInside = document.declaredClasses
-                .filter { it.isAnnotationPresent(annotationClass.java) }
-            val fromAnnotation = document.executableDocumentAnnotation!!.fixtureClasses
-                .map { it.java }
-                .filter { it.isAnnotationPresent(annotationClass.java) }
-            return declaredInside + fromAnnotation
+    private fun getTags(documentClass: Class<*>): List<String> {
+        return documentClass.getAnnotationsByType(Tag::class.java).map {
+            it.value
+        }
+    }
+
+    /**
+     * Executes the given group, which contains the given document classes and returns the list of
+     * [DocumentResults][DocumentResult]. The group class must be annotated with [Group] and the document classes must
+     * be annotated with [ExecutableDocument].
+     *
+     * @param groupClass the group that contains the documentClasses
+     * @param documentClasses the document classes to execute
+     * @return a list of [DocumentResults][DocumentResult] of the execution
+     * @throws ExecutionException in case the execution failed in a way that did not produce a viable result
+     */
+    @Throws(ExecutionException::class)
+    private fun executeGroup(groupClass: Class<*>, documentClasses: List<Class<*>>): List<DocumentResult> {
+        return GroupFixture(
+            groupClass,
+            documentClasses,
+            repositoryManager,
+            decisionTableToFixtureMatcher,
+            scenarioToFixtureMatcher
+        ).execute()
+    }
+
+    private fun extractGroup(documentClass: Class<*>): Class<*> {
+        val declaringGroup = documentClass.declaringClass?.takeIf { declaringClass ->
+            declaringClass.isAnnotationPresent(Group::class.java)
         }
 
-        private val Class<*>.executableDocumentAnnotation: ExecutableDocument?
-            get() = getAnnotation(ExecutableDocument::class.java)
+        val annotationGroup =
+            documentClass.getAnnotation(ExecutableDocument::class.java).group.java.takeIf { annotationClass ->
+                annotationClass.isAnnotationPresent(Group::class.java)
+            }
+
+        if (declaringGroup != null && annotationGroup != null && declaringGroup != annotationGroup)
+            throw MalformedFixtureException(
+                documentClass, listOf(
+                    "Ambiguous group definition: declared inside ${declaringGroup.name}, " +
+                            "annotation specifies ${annotationGroup.name}"
+                )
+            )
+
+        return declaringGroup ?: annotationGroup ?: ImplicitGroup::class.java
     }
 }

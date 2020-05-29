@@ -81,7 +81,7 @@ class StepTemplateTest {
     fun `aligns with scenario step descriptions`() {
         val cut = StepTemplate.parse("My name is {username}.")
         val result = cut.alignWith("My name is Peter.")
-        assertThat(result).isInstanceOf(Alignment::class.java)
+        assertThat(result).isInstanceOf(RegMatching::class.java)
     }
 
     @Test

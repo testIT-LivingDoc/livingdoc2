@@ -1,5 +1,7 @@
 plugins {
 	`kotlin-dsl`
+	"org.jetbrains.dokka"
+	kotlin("jvm") version embeddedKotlinVersion
 }
 
 repositories {

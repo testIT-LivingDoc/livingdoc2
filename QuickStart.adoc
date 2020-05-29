@@ -1,0 +1,188 @@
+= Quick start
+
+This quick start guide covers a use-case including a simple specification file.
+Before this can be started, the steps from the Getting Started section of the link:README.adoc[README] must first be performed.
+
+== Test Subject
+
+Assume you have the requirement to write a calculator for Float numbers which should be able to sum, subtract, multiply and divide.
+
+A primitive implementation could look like this:
+
+.Calculator.kt
+[source,kotlin]
+----
+/**
+ * A primitive implementation of a calculator, which is our SUT (System under Test) here
+ */
+ class Calculator {
+
+    fun sum(a: Float, b: Float): Float {
+        return a + b
+    }
+
+    fun diff(a: Float, b: Float: Float {
+        return a - b
+    }
+
+    fun multiply(a: Float, b: Float: Float {
+        return a * b
+    }
+
+    fun divide(a: Float, b: Float): Float {
+        return a / b
+    }
+}
+----
+
+See link:livingdoc-tests/src/main/kotlin/org/livingdoc/example/Calculator.kt[Calculator.kt]
+
+== Simple case specification
+
+The fixture code is one part of using LivingDoc, the other part is the specification document with the example data.
+This can be in markdown, html or feature (gherkin) files.
+In our case we have specified Calculator.md to deliver the TestData for our tests, realised as DecisionTable and Scenario Fixtures.
+
+The DecisionTable example consists of a headline, a description and a table.
+The first two columns of the table represent the input values, and the third and fourth the expected value of a calculator action.
+
+.Calculator.md
+[source,md]
+----
+# Calculator
+
+Examples
+
+|  a |  b | a + b = ? | a - b = ? | a * b = ? | a / b = ? |
+|----|----|-----------|-----------|-----------|-----------|
+|  0 |  0 |  0        |  0        |  0        | NaN       |
+|  1 |  0 |  1        |  1        |  0        | Infinity  |
+|  0 |  1 |  1        | -1        |  0        |  0        |
+|  1 |  1 |  2        |  0        |  1        |  1        |
+----
+
+The ScenarioFixture example does not use tables but small sentences instead.
+
+.Calculator.md
+[source,md]
+----
+# Scenario 1
+
+- adding 1 and 2 equals 3
+- adding 1 and 4 equals 5
+- multiplying 3 and 2 equals 6
+
+----
+
+The completed file can be seen here: link:livingdoc-tests/src/test/docs/Calculator.md[Calculator.md]
+
+== Fixture Code
+
+For the testing, it is needed to implement some fixture code. Like unit test cases the fixtures should be implemented in a separate class as part of a test module.
+
+First we have to decide where we want to get our specification from.
+Assume that it should be retrieved from a markdown file from the local file system.
+Therefore we create a class and annotate it with `@ExecutableDocument` and specify the location of the markdown specification file:
+.CalculatorDocumentMd.kt
+
+[source,kotlin]
+----
+@ExecutableDocument("local://Calculator.md")
+class CalculatorDocumentMd {
+----
+
+The ExecutableDocument annotation is used to specify the example/specification data source.
+
+Assume we have a DecisionTable in our markdown specification file. The next step is to write the DecisionTableFixtures.
+Each Decision Table Fixture has to be specified in its own class and must be annotated with `@DecisionTableFixtures`.
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@DecisionTableFixture
+class CalculatorDecisionTableFixture {
+----
+
+The next step is to specify our calculator from above as a System under test (SUT)
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+private lateinit var sut: Calculator
+----
+
+Afterwards we need specify the input for our calculator and initialize it.
+We do this again with annotations. In this example you can see `@Input` can be used on mutable properties and functions.
+In this case we add `@Input` annotations for the two input values of the calculator. We also create an new instance of our calculator for each a table row.
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@Input("a")
+private var valueA: Float = 0f
+private var valueB: Float = 0f
+
+@BeforeRow
+fun beforeRow() {
+    sut = Calculator()
+}
+
+@Input("b")
+fun setValueB(valueB: Float) {
+    this.valueB = valueB
+}
+----
+
+The actual test case is added via a check annotation.
+In this case we want to check, if the values from our table is equal to the expected result.
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@Check("a * b = ?")
+fun checkMultiply(expectedValue: Float) {
+    val result = sut.multiply(valueA, valueB)
+    assertThat(result).isEqualTo(expectedValue)
+}
+----
+
+Another possibility instead of a Decision Table is to write a ScenarioFixture.
+In this case we have to use the following
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@ScenarioFixture
+class CalculatorScenarioFixture {
+----
+
+The init of the SUT is analog, but instead of the `@BeforeRow` annotation we use the `@Before` annotation to init the SUT once for each scenario.
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@Before
+----
+
+Each step of a scenario is mapped to a function annotated with `@Step` and a matching template.
+Templates can contain variables, which can be bound to parameters of the annotated function using `@Binding`.
+
+.CalculatorDocumentMd.kt
+[source,kotlin]
+----
+@Step("adding {a} and {b} equals {c}")
+fun add(
+    @Binding("a") a: Float,
+    @Binding("b") b: Float,
+    @Binding("c") c: Float
+) {
+    val result = sut.sum(a, b)
+    assertThat(result).isEqualTo(c)
+}
+----
+
+The completed file can be seen here: link:livingdoc-tests/src/test/kotlin/org/livingdoc/example/CalculatorDocumentMd.kt[CalculatorDocumentMd.kt]
+
+When the fixture from above is used in a Living Doc execution, it will retrieve the data from the markdown file, the test subject will be tested with the fixture methods and the example test data.
+
+Further information can be found in our link:livingdoc-documentation/src/docs/asciidoc/index.adoc[End-User Documentation].

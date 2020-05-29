@@ -1,5 +1,22 @@
 == Writing Fixture Code
 
+In the following, the supported fixtures are explained.
+
 include::fixtures-decision-tables.adoc[]
 
 include::fixtures-scenarios.adoc[]
+
+=== Special Cases
+This section shows some details that are valid for decision tables and scenarios.
+
+==== Expecting Exceptions as Output
+Some inputs lead to an `Exception` being thrown.
+As a business expert, you can expect this to happen by using the keyword `error` as expected value in the
+decision table or scenario.
+If an `Exception` is thrown and expected, the test is marked as executed successfully.
+
+==== Reporting the actual result
+If you do not really know what to expect in the decision table, you can just leave the field with
+the expected value empty and LivingDoc reports the result of the fixture.
+
+This means that error ("error") and an empty value ("") are reserved keywords for LivingDoc and these strings cannot be used as expected strings.

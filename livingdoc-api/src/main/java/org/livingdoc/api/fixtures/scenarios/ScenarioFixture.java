@@ -1,5 +1,8 @@
 package org.livingdoc.api.fixtures.scenarios;
 
+import org.livingdoc.api.After;
+import org.livingdoc.api.Before;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;

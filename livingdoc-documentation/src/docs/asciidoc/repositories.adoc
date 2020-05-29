@@ -1,0 +1,202 @@
+== Using Document Repositories
+
+In LivingDoc you can configure where the Executable Document is stored.
+A Document Repository is a configurable Location for multiple Executable Document.
+LivingDoc currently provides three types of Document Repositories, but it is also possible to create your own Document Repository type if it is not supported yet.
+
+Supported Document Repositories:
+
+* File Repository
+* REST Repository
+* Confluence Repository
+* Git Repository
+
+To configure the Document Repository use the `livingdoc.yml` config file.
+This file should be placed in the `src/test/resources` directory.
+The config file uses the yaml format, the top level element `repositories` is used to specify all used Document Repositories.
+[source, yaml]
+----
+repositories:
+  - name: "local"
+    factory: "org.livingdoc.repositories.file.FileRepositoryFactory"
+    config:
+      documentRoot: "src/test/docs"
+----
+`repositories` contains a list of different repository configurations.
+Each repository configuration has a `name` which is later used to reference this repository in the fixture classes.
+Each repository configuration also contains a `factory` which is the class file used as factory for the repository.
+Optionally a `config` can be specified to pass Document Repository specific parameters for the repository.
+
+=== REST Repository
+The REST Repository is used to get an Executable Document from an external HTTP endpoint.
+
+To use this repository use the factory: `org.livingdoc.repositories.rest.RESTRepositoryFactory`.
+
+==== Configuration
+.baseURL
+The baseURL of the endpoint to get the documents from. Has to have the format `protocol://host:port`
+
+.cacheConfig
+The REST Repository supports caching of Documents. This might be helpful if you do not have internet at some later time.
+For information about caching, check out section <<caching>>
+
+The configuration can look similar to this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "rest"
+    factory: "org.livingdoc.repositories.rest.RESTRepositoryFactory"
+    config:
+      baseURL: "http://rest.example.com"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----
+
+=== Confluence Repository
+The Confluence Repository uses the unique DocumentID of a confluence-page to identify the Executable Documents.
+To get the DocumentID see link:https://confluence.atlassian.com/confkb/how-to-get-confluence-page-id-648380445.html[Confluence documentation].
+
+To use this repository use the factory: `org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory`.
+
+==== Configuration
+.baseURL
+The baseURL of the Confluence Server with the format `protocol://host:port`
+
+.path
+The Context path of the Confluence Server, for example `/`
+
+.username
+The username of a confluence user with access to the Executable Documents.
+
+.password
+The password of the confluence user given by username.
+
+.cacheConfig
+The ConfluenceRepository supports caching of Documents.
+For information about caching, check out section <<caching>>
+
+The `livingdoc.yml` could look like this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "confluence"
+    factory: "org.livingdoc.repositories.confluence.ConfluenceRepositoryFactory"
+    config:
+      baseURL: "http://confluence.example.com"
+      path: "/"
+      username: "livingdoc"
+      password: "very good password"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----
+
+==== Special Features
+When you work with confluence, it is possible to get a specific version of a Confluence page.
+Within your `ExecutableDocument` annotation, you can specify a version by appending `@` to your document identifier.
+
+See link:https://confluence.atlassian.com/doc/page-history-and-page-comparison-views-139379.html[Confluence Page Version History] to learn more about the history of a Confluence page.
+The version history shows you versions like `v.3` and `v.12`.
+In your document you should add `@3` or `@12` to specify a version.
+
+For example, `@ExecutableDocument("confluence://123456789@3")` gets the page with ID 123456789 and version v.3.
+
+It is possible to delete a version from the Confluence page.
+By default, Confluence not only deletes the specific version, but also reduces each page version by one.
+Therefore, it is possible for your defined tests to point to the next version of the page.
+
+=== Git Repository
+This feature allows to load documents from a remote git repository within LivingDoc code.
+
+==== Configuration
+
+The configuration consists of:
+
+.remoteUri
+The URL from which the git repository should be cloned
+
+.username
+Username of the corresponding Git repository
+
+.password
+Password for the corresponding username
+
+.cacheConfiguration
+See below <<caching>>
+
+An example of the `livingdoc.yml`
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "git"
+    factory: "org.livingdoc.repositories.git.GitRepositoryFactory"
+    config:
+      remoteUri: "http://git.example.specifications.git"
+      username: "livingdoc"
+      password: "very good password"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----
+
+==== Document-ID format
+
+The document-ID represents the path and the version of a document/file.
+The "TestTexts.md" file is located in the "root" directory, if this is not the case you should specify the full
+path before (e.g. "Calculator/Calculator.md")
+
+Further the second part represents the "version" or more specific the commit of a document. This can be added via "@"
+after the path.
+
+
+==== Example
+
+For example, `@ExecutableDocument("git://Calculator/Calculator.md@4f8fb05601e2bd84cf2fb05741ff5a868f285c6b")`
+loads the Calculator.md from the Calculator folder, which was part of the commit 4f8fb05601e2bd84cf2fb05741ff5a868f285c6b.
+
+
+[#caching]
+=== Caching of Documents
+
+Some types of repositories support caching of documents.
+This is helpful if you want to continue testing but do not have internet or want to save your mobile data.
+
+==== Configuration for caching
+
+If the repository supports caching, you can add these parameters to the configuration to configure caching.
+Make sure to check out the respective repository-documentation because every repository might tweak these parameters a little.
+
+.cacheConfig
+All configuration-parameters for caching are nested under the `cacheConfig` parameter.
+
+.cacheConfig/path
+The path parameter defines where to cache the files. The default value is `build/livingdoc/cache/`.
+
+.cacheConfig/cachePolicy
+The different cache policy options specify when to cache. The available options are:
+
+* `cacheAlways` = Always gets the Documents from the endpoint and caches the retrieved Documents, i.e. keeps the cache up to date. This is the default value.
+* `noCache` = Never caches. If you do not have internet, you cannot retrieve Documents.
+* `cacheOnce` = Caches once and then uses this cache every time the tests are executed. If you do not have internet when there is no cache yet, an exception is thrown.
+
+The configuration for a repository with caching will look similar to this:
+
+.livingdoc.yml
+[source,yaml]
+----
+repositories:
+  - name: "some-repository-name"
+    factory: "org.livingdoc.repositories.somerepository.SomeRepositoryFactory"
+    config:
+      someRepositoryParameter: "someRepositoryValue"
+      cacheConfig:
+        path: "build/livingdoc/cache/"
+        cachePolicy: "cacheAlways"
+----

@@ -10,11 +10,18 @@ import org.livingdoc.api.conversion.Language
 import org.livingdoc.api.conversion.TypeConverter
 import org.livingdoc.converters.exceptions.NumberRangeException
 
+/**
+ * The AbstractNumberConverter is the abstraction of the numeric converters.
+ */
 abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
     abstract val lowerBound: T?
     abstract val upperBound: T?
 
+    /**
+     * This function takes the given value as a string, parses it to BigDecimal and calls the convertToTarget method
+     * that is implemented by the actual Converters.
+     */
     @Throws(ConversionException::class)
     override fun convert(value: String, element: AnnotatedElement?, documentClass: Class<*>?): T {
         val locale = getLocale(element)
@@ -66,5 +73,8 @@ abstract class AbstractNumberConverter<T : Number> : TypeConverter<T> {
 
     private fun bigDecimalOf(value: T?) = BigDecimal(value!!.toString())
 
+    /**
+     * This function stub is used for the conversion from BigDecimal to the desired type of the actual converter
+     */
     protected abstract fun convertToTarget(number: BigDecimal): T
 }

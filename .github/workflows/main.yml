@@ -1,0 +1,54 @@
+name: CI - LivingDoc
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    name: Test with JDK ${{ matrix.jdk }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk: [8, 11]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK ${{ matrix.jdk }}
+      uses: actions/setup-java@v1
+      with:
+           java-version: ${{ matrix.jdk }}
+    - name: Gradle Test
+      run: ./gradlew check -x detekt -x spotlessCheck
+    - name: Generate TestCoverage
+      run:  ./gradlew codeCoverageReport
+    - name: Print Converage
+      run: awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' build/reports/jacoco/jacoco.csv
+  lint:
+    name: Run linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+             java-version: 8
+      - name: Spotless check
+        run: ./gradlew spotlessCheck
+      - name: Detekt 
+        run: ./gradlew detekt
+  documentation:
+    name: Create KDoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+             java-version: 8
+      - name: Create Dokka
+        run: ./gradlew aggregatedDokka
+      - name: Deploy
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build/dokka

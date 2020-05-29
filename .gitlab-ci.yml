@@ -1,0 +1,75 @@
+default:
+  image: openjdk:8-jdk
+
+stages:
+  - build
+  - test
+  - documentation
+  - deploy
+
+build:
+  stage: build
+  script:
+    - ./gradlew assemble
+  artifacts:
+    name: build-artifacts
+    expire_in: 1d
+    paths:
+      - build
+      - livingdoc-*/build
+
+test project:
+  stage: test
+  script:
+    - ./gradlew check -x detekt -x spotlessCheck
+    - ./gradlew codeCoverageReport
+    - cat build/reports/jacoco/index.html
+  artifacts:
+    name: test-artifacts
+    expire_in: 1d
+    paths:
+      - build/reports/jacoco
+      - livingdoc-*/build/reports/tests/test
+    reports:
+      junit:
+        - livingdoc-*/build/test-results/test/TEST-*.xml
+
+lint project:
+  stage: test
+  script:
+    - ./gradlew spotlessCheck
+    - ./gradlew detekt
+
+generate documentation:
+  stage: test
+  script:
+    - ./gradlew aggregatedDokka
+  dependencies:
+    - build
+  artifacts:
+    name: documentation-artifacts
+    expire_in: 1d
+    paths:
+      - build/dokka
+
+pages:
+  stage: deploy
+  script:
+    - mv build/dokka public
+  dependencies:
+    - generate documentation
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+
+publish:
+  stage: deploy
+  script:
+    - ./gradlew publish
+  dependencies:
+    - build
+  only:
+    - master
